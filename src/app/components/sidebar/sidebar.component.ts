@@ -8,8 +8,9 @@ declare interface RouteInfo {
 }
 export const ROUTES: RouteInfo[] = [
   // { path: '/admin/dashboard', title: 'Bảng điều khiển',  icon: 'ni-tv-2 text-primary', class: '' },
-  { path: '/admin/dashboard', title: 'Bảng điều khiển',  icon: '', class: 'bi bi-layout-wtf' },
+
   // { path: './quest-type', title: 'Quest Type',  icon:'ni-planet text-blue', class: '' },
+  { path: '/admin/dashboard', title: 'Bảng điều khiển',  icon: '', class: 'bi bi-layout-wtf' },
   { path: './quest', title: 'Quest',  icon:'ni-planet text-blue', class: '' },
   { path: '/admin/quest-type', title: 'Thể loại Quest',  icon:'ni-planet text-blue', class: '' },
   { path: '/admin/quest', title: 'Khu vực',  icon:'ni-planet text-blue', class: '' },
@@ -34,15 +35,15 @@ export const ROUTES: RouteInfo[] = [
 })
 export class SidebarComponent implements OnInit {
 
-  public menuItems: any[]=[];
-  public isCollapsed = true;
+  // public menuItems: any[]=[];
+  // public isCollapsed = true;
 
-  constructor(private router: Router) { }
+  // constructor(private router: Router) { }
 
   ngOnInit() {
-    this.menuItems = ROUTES.filter(menuItem => menuItem);
-    this.router.events.subscribe((event) => {
-      this.isCollapsed = true;
-   });
+  //   this.menuItems = ROUTES.filter(menuItem => menuItem);
+  //   this.router.events.subscribe((event) => {
+  //     this.isCollapsed = true;
+  //  });
   }
 }
