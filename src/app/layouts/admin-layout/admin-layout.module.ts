@@ -7,7 +7,7 @@ import { AdminLayoutComponent } from './admin-layout.component';
 
 @NgModule({
   declarations: [
-    AdminLayoutComponent
+    // AdminLayoutComponent
   ],
   imports: [
     CommonModule,

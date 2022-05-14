@@ -7,9 +7,12 @@ import { Component, OnInit } from '@angular/core';
 })
 export class QuestTypeComponent implements OnInit {
 
-  constructor() { }
+  public datasets: any;
+  public data: any;
+  public salesChart:any;
+  public clicked: boolean = true;
+  public clicked1: boolean = false;
 
-  ngOnInit(): void {
+  ngOnInit() {
   }
-
 }

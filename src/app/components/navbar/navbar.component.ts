@@ -27,6 +27,8 @@ export class NavbarComponent implements OnInit {
     }
 
     for(var item = 0; item < this.listTitles.length; item++){
+      var k=this.listTitles[item];
+      var test=this.listTitles[item].path;
         if(this.listTitles[item].path === titlee){
             return this.listTitles[item].title;
         }
