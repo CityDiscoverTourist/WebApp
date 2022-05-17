@@ -1,11 +1,29 @@
-<!-- Sidenav -->
-<app-sidebar></app-sidebar>
-<div class="main-content">
-  <!-- Top navbar -->
-  <app-navbar></app-navbar>
-  <!-- Pages -->
-  <router-outlet></router-outlet>
-  <div class="container-fluid">
-    <app-footer></app-footer>
-  </div>
+<div class="d-flex master">
+  <!-- <aside class="aside"> -->
+  <aside class="aside overflow-hidden"> <!--#23-->
+      <h2 class="mb-0">
+        <!-- <a [routerLink]="['/admin']" class="border-bottom border-secondary branding px-4">CTDT</a>       -->
+        <a  class="border-bottom border-secondary branding px-4">CTDT</a>      
+      </h2>
+    <!-- <nav class="h-100 menu"> -->
+    <nav class="menu"><!--#23-->
+      <div class="divider"><i class="bi bi-box-seam"></i> QUESTS</div>      
+      <div class="divider"><i class="bi bi-plus"></i> THANH TOÁN</div>      
+      <!-- <a [routerLink]="['./','products']">Products</a> -->
+      <a>KHU VỰC</a>
+      <a href="#">KHÁCH HÀNG</a>
+      <a href="#">THÀNH PHỐ</a>
+    </nav>
+  </aside>
+  <!-- <main class="flex-fill "> -->
+  <main class="flex-fill main-container">
+    <header
+      class="header"
+      style="height: 52px; top: 0; z-index: 10;"
+      class="bg-white shadow-sm position-sticky"
+    ></header>
+    <div class="main">
+      <router-outlet></router-outlet>
+    </div>
+  </main>
 </div>

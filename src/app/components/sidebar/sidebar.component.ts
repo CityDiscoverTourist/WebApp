@@ -35,15 +35,11 @@ export const ROUTES: RouteInfo[] = [
 })
 export class SidebarComponent implements OnInit {
 
-  // public menuItems: any[]=[];
-  // public isCollapsed = true;
 
-  // constructor(private router: Router) { }
+
+  constructor(private router: Router) { }
 
   ngOnInit() {
-  //   this.menuItems = ROUTES.filter(menuItem => menuItem);
-  //   this.router.events.subscribe((event) => {
-  //     this.isCollapsed = true;
-  //  });
+
   }
 }

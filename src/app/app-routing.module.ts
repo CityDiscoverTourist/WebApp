@@ -44,6 +44,20 @@ const routes: Routes = [
             (m) => m.QuestTypeModule
           ),
       },
+      {
+        path: 'city',
+        loadChildren: () =>
+          import('src/app/pages/city/city.module').then(
+            (m) => m.CityModule
+          ),
+      },
+      {
+        path: 'location',
+        loadChildren: () =>
+          import('src/app/pages/location/location.module').then(
+            (m) => m.LocationModule
+          ),
+      },
     ],
   },
   {

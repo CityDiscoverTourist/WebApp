@@ -1,1 +1,520 @@
-<p>quest-type-create works!</p>
+<!-- <div class="container py-3" *rxLet="vm$ as vm"> -->
+<div class="container py-3">
+
+  <!-- <div class="alert alert-danger" *ngIf="vm.error">
+      {{vm.error}}
+    </div> -->
+  <!-- <form [formGroup]="form"> -->
+  <form >
+    <div class="mb-3">
+      <div class="btn-group" dropdown>
+        <!-- <button type="button" class="btn btn-primary" (click)="submit$.next(form)"> -->
+        <button
+          type="button"
+          class="btn btn-primary"
+          
+        >
+        <!-- <button
+          type="button"
+          class="btn btn-primary"
+          (click)="submit$.next({form,redirect:true})"
+        > -->
+          SAVE AND GOTO
+        </button>
+        <button
+          id="button-split"
+          type="button"
+          dropdownToggle
+          class="btn btn-primary dropdown-toggle dropdown-toggle-split"
+          aria-controls="dropdown-split"
+        >
+          <span class="caret"></span>
+          <span class="sr-only visually-hidden">toggle</span>
+        </button>
+        <ul
+          id="dropdown-split"
+          *dropdownMenu
+          class="dropdown-menu"
+          role="menu"
+          aria-labelledby="button-split"
+        >
+          <li role="menuitem">
+            <button
+              class="dropdown-item"
+              type="button"
+            >
+            <!-- <button
+              class="dropdown-item"
+              type="button"
+              (click)="submit$.next({form,redirect:false})"
+            > -->
+              SAVE AND RESSET
+            </button>
+          </li>
+        </ul>
+      </div>
+
+      <!-- <button type="button" class="btn btn-primary" (click)="submitForm()"> -->
+      <!-- <button type="button" class="btn btn-primary" (click)="submit$.next(form)">
+          SAVE
+        </button> -->
+    </div>
+    <div class="row">
+      <div class="col-8">
+        <div class="card mb-3">
+          <div class="bg-white card-header d-flex justify-content-between py-3">
+            <span>Product types</span>
+            <span>Setup</span>
+          </div>
+          <div class="card-body">
+            <div class="d-flex">
+              <div class="form-check me-5">
+                <input
+                  class="form-check-input"
+                  type="radio"
+                  name="productType"
+                  id="normalProduct"
+                  [value]="0"
+                  formControlName="productType"
+                />
+                <!-- [value]="'normal'" -->
+                <label class="form-check-label" for="normalProduct">
+                  Normal product
+                </label>
+              </div>
+              <div class="form-check">
+                <input
+                  class="form-check-input"
+                  type="radio"
+                  name="productType"
+                  id="expiryProduct"
+                  [value]="1"
+                  formControlName="productType"
+                />
+                <label class="form-check-label" for="expiryProduct">
+                  Expiry product
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- product type -->
+        <div class="card mb-3">
+          <div class="card-header bg-white py-3">Product information</div>
+          <div class="card-body">
+            <div class="form-group mb-3">
+              <label class="form-label" for="productName">Product name</label>
+              <input
+                type="text"
+                class="form-control"
+                placeholder="Enter product name"
+                formControlName="productName"
+              />
+              <!-- <input
+                type="text"
+                class="form-control"
+                placeholder="Enter product name"
+                formControlName="productName"
+                [ngClass]="{ 'is-invalid': form?.hasError('productName') }"
+              /> -->
+              <!-- <div class="invalid-feedback" *ngIf="hasError('productName')"> -->
+              <!-- <div class="invalid-feedback" *ngIf="form?.errorOf('productName')"> -->
+              <div
+                class="invalid-feedback"
+              >
+              <!-- <div
+                class="invalid-feedback"
+                *ngIf="form?.hasErrorOf('productName', 'required')"
+              > -->
+                Product name is require
+              </div>
+              <div
+                class="invalid-feedback"
+              >
+              <!-- <div
+                class="invalid-feedback"
+                *ngIf="form?.hasErrorOf('productName', 'minLength')"
+              > -->
+                Product name must be at least 10 characters
+              </div>
+            </div>
+            <div class="row mb-3">
+              <div class="col">
+                <div class="form-group">
+                  <label class="form-label" for="sku">SKU</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    formControlName="sku"
+                  />
+                  <!-- <input
+                    type="text"
+                    class="form-control"
+                    formControlName="sku"
+                    [ngClass]="{ 'is-invalid': form.hasError('sku') }"
+                  /> -->
+                  <div
+                    class="invalid-feedback"
+                  >
+                  <!-- <div
+                    class="invalid-feedback"
+                    *ngIf="form.hasErrorOf('sku', 'forbiddenPrefix')"
+                  > -->
+                    SKU is not allowed to have POS as prefix
+                  </div>
+                </div>
+              </div>
+              <div class="col">
+                <div class="form-group">
+                  <label class="form-label" for="weight">Weight</label>
+                  <div class="input-group mb-3">
+                    <input
+                      type="text"
+                      class="form-control"
+                      aria-label="Weight"
+                      formControlName="weight"
+                    />
+                    <!-- <select class="form-control">
+                      <option value="g">g</option>
+                      <option value="kg">kg</option>
+                    </select> -->
+                    <ng-select
+                      class="weight-options"
+                      [clearable]="false"
+                      [items]="['g', 'kg']"
+                      style="width: 60px"
+                      formControlName="weightUnit"
+                    ></ng-select>
+                    <!-- <button
+                      class="btn btn-outline-secondary dropdown-toggle"
+                      type="button"
+                      data-bs-toggle="dropdown"
+                      aria-expanded="false"
+                    >
+                      Weight
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                      <li><a class="dropdown-item" href="#">g</a></li>
+                      <li><a class="dropdown-item" href="#">kg</a></li>
+                    </ul> -->
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row mb-3">
+              <div class="col">
+                <div class="form-group">
+                  <label class="form-label" for="barcode">Barcode</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    formControlName="barcode"
+                  />
+                </div>
+              </div>
+              <div class="col">
+                <div class="form-group">
+                  <label class="form-label" for="weight">Unit</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    formControlName="unit"
+                  />
+                </div>
+              </div>
+            </div>
+            <button
+              type="button"
+              class="btn btn-sm btn-primary"
+            >
+            <!-- <button
+              type="button"
+              class="btn btn-sm btn-primary"
+              (click)="toggleDescription$.next()"
+            > -->
+              Product description
+            </button>
+            <div class="mt-3">
+              <quill-editor [styles]="{ height: '200px' }"></quill-editor>
+            </div>
+            <!-- <div class="mt-3" *ngIf="vm.showProductDescription">
+              <quill-editor [styles]="{ height: '200px' }"></quill-editor>
+            </div> -->
+          </div>
+        </div>
+        <div class="card mb-3">
+          <div class="card-header bg-white py-3">Pricing</div>
+          <div class="card-body">
+            <div class="row mb-3">
+              <div class="col">
+                <div class="form-group">
+                  <label class="form-label" for="salePrice">Sale price</label>
+                  <input
+                    type="number"
+                    class="form-control"
+                    formControlName="salePrice"
+                  />
+                  <!-- <input
+                    type="number"
+                    class="form-control"
+                    formControlName="salePrice"
+                    [ngClass]="{ 'is-invalid': form.hasError('salePrice') }"
+                  /> -->
+                  <!-- [ngClass]="{'is-invalid':hasError('salePrice')}" -->
+                  <!-- <div class="invalid-feedback" *ngIf="hasError('salePrice')"> -->
+                  <div
+                    class="invalid-feedback"
+                  >
+                  <!-- <div
+                    class="invalid-feedback"
+                    *ngIf="form?.hasErrorOf('salePrice', 'required')"
+                  > -->
+                    SalePrice is require, min > 100000
+                  </div>
+                </div>
+              </div>
+              <div class="col">
+                <div class="form-group">
+                  <label class="form-label" for="wholesalePrice"
+                    >Wholesale price</label
+                  >
+                  <input
+                    type="number"
+                    class="form-control"
+                    formControlName="wholesalePrice"
+                  />
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-6">
+                <div class="form-group">
+                  <label class="form-label" for="importPrice"
+                    >Import price</label
+                  >
+                  <input
+                    type="number"
+                    class="form-control"
+                    formControlName="importPrice"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- images -->
+        <div class="card mb-3">
+          <div class="card-body">
+            <!-- <div class="card-header bg-white py-3">Images</div> -->
+            <div class="bg-white border-bottom-0 card-header mb-3 p-0 px-0">
+              Images
+            </div>
+            <div
+              class="border rounded text-center"
+              style="border-style: dashed !important"
+            >
+              <!-- <div
+              class="border p-3 py-4 rounded text-center"
+              style="border-style: dashed !important"
+            > -->
+              <div
+                class="custom-dropzone"
+                ngx-dropzone
+                [accept]="'image/*'"
+              >
+              <!-- <div
+                class="custom-dropzone"
+                ngx-dropzone
+                [accept]="'image/*'"
+                (change)="selectedFiles$.next($event.addedFiles)"
+              > -->
+                <ngx-dropzone-label>
+                  <div>
+                    <!-- <h2>My custom dropzone</h2> -->
+                    <i class="bi bi-plus"></i>
+                    <span>drap and drop images here or</span>
+                    <span class="ms-1 text-decoration-underline text-primary">
+                      upload from your computer</span
+                    >
+                    <!-- <span   class="ms-1" > upload from your computer</span> -->
+                    <!-- <a class="ms-1" href="#"> upload from your computer</a> -->
+                  </div>
+                </ngx-dropzone-label>
+                <ngx-dropzone-image-preview
+                  ngProjectAs="ngx-dropzone-preview"
+                  [removable]="true"
+                >
+                <!-- <ngx-dropzone-image-preview
+                  ngProjectAs="ngx-dropzone-preview"
+                  *ngFor="let f of vm.files"
+                  [file]="f"
+                  [removable]="true"
+                > -->
+                <!-- <ngx-dropzone-image-preview
+                  ngProjectAs="ngx-dropzone-preview"
+                  *ngFor="let f of vm.files"
+                  [file]="f"
+                  [removable]="true"
+                  (removed)="removedFiles$.next(f)"
+                > -->
+                  <!-- <ngx-dropzone-label
+                    >{{ f.name }} ({{ f.type }})</ngx-dropzone-label -->
+                  >
+                </ngx-dropzone-image-preview>
+              </div>
+              <!-- <div>
+              <i class="bi bi-plus"></i>
+              <span>drap and drop images here or</span>
+              <a class="ms-1" href="#"> upload from your computer</a>
+            </div> -->
+            </div>
+          </div>
+        </div>
+        <div class="card mb-3">
+          <div class="card-header bg-white py-3">
+            <div class="d-flex align-items-center">
+              <span style="min-height: 1.5rem" class="me-3">Inventory</span>
+              <div class="form-check form-switch mb-0">
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  role="switch"
+                  id="inventory"
+                  formControlName="inventoryInit"
+                />
+                <label class="form-check-label" for="inventory"></label>
+              </div>
+            </div>
+            <div class="fw-normal mt-3">
+              Initializing inventory and import price at branches
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="row mb-3" style="font-weight: 500">
+              <div class="col align-self-center">Branch</div>
+              <div class="col">Init qty</div>
+              <div class="col">Import price</div>
+            </div>
+            <div class="row mb-3">
+              <div class="align-self-center col">Default branch</div>
+              <div class="col form-group">
+                <!-- <label for="initQty" class="sr-only"></label> -->
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="inventoryInitQty"
+                />
+              </div>
+              <div class="col form-group">
+                <!-- <label for="importPrice" class="sr-only"></label> -->
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="inventoryImportPrice"
+                />
+              </div>
+            </div>
+          </div>
+          <!-- inventory -->
+        </div>
+        <!-- left col -->
+      </div>
+      <div class="col-4">
+        <div class="card mb-3">
+          <div class="card-header bg-white py-3">Additional info</div>
+          <div class="card-body">
+            <div class="form-group mb-3">
+              <label for="category" class="form-label">Category</label>
+              <ng-select
+                [items]="[1, 2, 3, 4]"
+                formControlName="category"
+                class="header-p-0"
+              >
+                <ng-template ng-header-tmp>
+                  <button
+                    class="btn btn-default btn-sm rounded-0 text-start w-100"
+                    (click)="showAddCategory()"
+                  >
+                    <i class="bi bi-plus-circle"></i>
+                    Add category
+                  </button>
+                </ng-template>
+              </ng-select>
+            </div>
+            <div class="form-group mb-3">
+              <label for="brand" class="form-label">Brand</label>
+              <ng-select
+                [items]="[1, 2, 3, 4]"
+                formControlName="brand"
+              ></ng-select>
+            </div>
+            <div class="form-group">
+              <label for="tags" class="form-label">Tags</label>
+              <textarea
+                rows="3"
+                class="form-control"
+                formControlName="tags"
+              ></textarea>
+            </div>
+          </div>
+        </div>
+        <!-- additional info -->
+        <div class="card mb-3">
+          <div class="card-body">
+            <div class="d-flex align-items-end justify-content-between">
+              <div>
+                <strong>Status</strong>
+                <div>Able to sell</div>
+              </div>
+              <div class="form-check form-switch mb-0">
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  role="switch"
+                  id="sellable"
+                  formControlName="sellable"
+                />
+                <label class="form-check-label" for="sellable"></label>
+              </div>
+            </div>
+            <hr />
+            <div class="d-flex align-items-end justify-content-between">
+              <div>
+                <strong>Tax</strong>
+                <div>Apply tax</div>
+              </div>
+              <div class="form-check form-switch mb-0">
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  role="switch"
+                  id="tax"
+                  formControlName="taxable"
+                />
+                <label class="form-check-label" for="tax"></label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- right col -->
+    </div>
+    <!-- row -->
+    <div>
+      <button
+        type="button"
+        class="btn btn-primary"
+      >
+      <!-- <button
+        type="button"
+        class="btn btn-primary"
+        (click)="submit$.next({form,redirect:true})"
+      > -->
+        SAVE
+      </button>
+      <!-- <button type="button" class="btn btn-primary" (click)="submitForm()">
+          SAVE
+        </button> -->
+    </div>
+  </form>
+</div>

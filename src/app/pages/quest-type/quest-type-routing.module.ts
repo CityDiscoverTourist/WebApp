@@ -30,6 +30,12 @@ const routes: Routes = [
         import('./quest-type-edit/quest-type-edit.module').then(m=>m.QuestTypeEditModule)
       },
       {
+        path: 'create',
+        // component: ProductCreateComponent,
+        loadChildren:()=>
+        import('./quest-type-create/quest-type-create.module').then(m=>m.QuestTypeCreateModule)
+      },
+      {
         path: ':id',
         // component: ProductCreateComponent,
         loadChildren:()=>

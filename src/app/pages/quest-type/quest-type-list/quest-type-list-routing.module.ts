@@ -6,7 +6,11 @@ const routes: Routes = [
   {
     path: '',
     component: QuestTypeListComponent,
-  }
+  },
+  {
+    path: 'list',
+    component: QuestTypeListComponent,
+  },
 ]
 @NgModule({
   imports: [RouterModule.forChild(routes)],
