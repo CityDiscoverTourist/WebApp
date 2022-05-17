@@ -1,6 +1,12 @@
 export interface LocationIndex{
     id:string;
     name:string;
+    description:string;
+    longitude:string;
+    latitude:string;
+    address:string;
     status:string;
-    createdAt:Date;
+    areaId:number;
+    locationTypeId:number;
+    // createdAt:Date;
 }
