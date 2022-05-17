@@ -11,22 +11,8 @@ export class LocationComponent implements OnInit {
   records :LocationIndex[]= [];
   @ViewChild('colCreatedAt', { static: true }) colCreatedAt!: TemplateRef<any>;
   // columns: any[] = [
-  columns: TableColumn[] = [
-    // {
-    //   prop: 'image',
-    // },
-    {
-      prop: 'name',
-    },
-    {
-      prop: 'status',
-    },
-    {
-      prop: 'createdAt',
-    },
-  ];
+  columns: TableColumn[];
   constructor() {
-   
   }
 
   ngOnInit(): void {
@@ -35,7 +21,25 @@ export class LocationComponent implements OnInit {
       name:`${i} name`,
       status:`${i} status`,
       createdAt:new Date("20/5/2022"),
-    } as LocationIndex))
+    } as LocationIndex));
+    this.initTable();
+  }
+  initTable(){
+    this.columns=[
+      // {
+      //   prop: 'image',
+      // },
+      {
+        prop: 'name',
+      },
+      {
+        prop: 'status',
+      },
+      {
+        prop: 'createdAt',
+        cellTemplate:this.colCreatedAt,
+      },
+    ];
   }
 
   onPage(event: any) {}
