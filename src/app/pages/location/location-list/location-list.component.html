@@ -33,7 +33,7 @@
     <!-- https://github.com/swimlane/ngx-datatable/blob/master/src/app/basic/virtual.component.ts -->
     <div class="border overflow-hidden rouded shadow-sm">
       <ngx-datatable
-          class="material rounded"
+          class="material rounded datatable-header-cell"
           [rows]="records"
           [columns]="columns"
           columnMode="force"
@@ -41,6 +41,10 @@
           [footerHeight]="50"
           [rowHeight]=50
           (page)="onPage($event)"
+          [externalPaging]="true"
+          [count]="50"
+          [offset]="0"
+          [limit]="20"
         >
         </ngx-datatable>
     </div>

@@ -15,7 +15,8 @@ export class LocationListComponent implements OnInit {
   constructor() {}
 
   ngOnInit(): void {
-    this.records = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(
+    // this.records = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(
+    this.records = [...Array(10).keys()].map(
       (i) =>
         ({
           id: `${i} id`,
@@ -33,12 +34,9 @@ export class LocationListComponent implements OnInit {
   }
   initTable() {
     this.columns = [
-      // {
-      //   prop: 'image',
-      // },
       {
         prop: 'name',
-        canAutoResize: true,
+        maxWidth: 250,
         name: 'Tên khu vực',
       },
       {
@@ -48,21 +46,36 @@ export class LocationListComponent implements OnInit {
       },
       {
         prop: 'longitude',
+        maxWidth: 120,
+        name: 'Kinh độ',
+      },
+      {
+        prop: 'latitude',
+        maxWidth: 120,
+        name: 'Vĩ độ',
+      },
+      {
+        prop: 'address',
         canAutoResize: true,
-        name: 'longitude',
+        name: 'Địa chỉ',
       },
       {
         prop: 'status',
         // canAutoResize: true,
-        maxWidth: 400,
+        maxWidth: 100,
         name: 'Trạng thái',
         sortable: false,
       },
       {
-        prop: 'createdAt',
-        maxWidth: 400,
-        cellTemplate: this.colCreatedAt,
-        name: 'Ngày tạo',
+        prop: 'areaId',
+        maxWidth: 100,
+        name: 'Khu vực',
+        sortable: false,
+      },
+      {
+        prop: 'locationTypeId',
+        maxWidth: 100,
+        name: 'Loại vị trí',
         sortable: false,
       },
     ];
