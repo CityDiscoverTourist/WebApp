@@ -1,0 +1,55 @@
+<!-- <router-outlet></router-outlet> -->
+<div class="p-3">
+  <div class="d-flex align-items-center justify-content-between mb-3">
+    <!-- <div class="btn-group">
+          <button type="button" class="btn btn-default">
+            <i class="bi bi-download"></i> Export
+          </button>
+          <button type="button" class="btn btn-default">
+            <i class="bi bi-upload"></i> Import
+          </button>
+        </div> -->
+    <div class="flex-fill"></div>
+    <button type="button" class="btn btn-primary">
+      <i class="bi bi-plus"></i> Add Product
+    </button>
+  </div>
+  <!-- search -->
+  <div class="input-group mb-3">
+    <span class="input-group-text" id="search-icon"
+      ><i class="bi bi-search"></i
+    ></span>
+    <input
+      type="text"
+      class="form-control"
+      placeholder="Tìm kiếm vị trí"
+      aria-label="Tìm kiếm vị trí"
+      aria-describedby="search-icon"
+    />
+  </div>
+  <!-- table -->
+  <!-- https://github.com/swimlane/ngx-datatable/blob/master/src/app/basic/virtual.component.ts -->
+  <ngx-datatable
+        class="material"
+        [rows]="records"
+        [columns]="columns"
+        columnMode="flex"
+        [headerHeight]="50"
+        [footerHeight]="50"
+        [rowHeight]=50
+        [scrollbarV]="true"
+        (page)="onPage($event)"
+      >
+        <!-- <ngx-datatable-column name="Name" [width]="300">
+          <ng-template let-value="value" ngx-datatable-cell-template>
+            <strong>{{ value }}</strong>
+          </ng-template>
+        </ngx-datatable-column>
+        <ngx-datatable-column name="Gender" [width]="300">
+          <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+            <i [innerHTML]="row['name']"></i> and <i>{{ value }}</i>
+          </ng-template>
+        </ngx-datatable-column>
+        <ngx-datatable-column name="Row Height" prop="height" [width]="80"> </ngx-datatable-column> -->
+      </ngx-datatable>
+</div>
