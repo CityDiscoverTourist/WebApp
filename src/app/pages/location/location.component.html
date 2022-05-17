@@ -29,15 +29,15 @@
   </div>
   <!-- table -->
   <!-- https://github.com/swimlane/ngx-datatable/blob/master/src/app/basic/virtual.component.ts -->
-  <ngx-datatable
-        class="material"
+  <div class="border overflow-hidden rouded shadow-sm">
+    <ngx-datatable
+        class="material rounded"
         [rows]="records"
         [columns]="columns"
-        columnMode="flex"
+        columnMode="force"
         [headerHeight]="50"
         [footerHeight]="50"
         [rowHeight]=50
-        [scrollbarV]="true"
         (page)="onPage($event)"
       >
         <!-- <ngx-datatable-column name="Name" [width]="300">
@@ -52,6 +52,7 @@
         </ngx-datatable-column>
         <ngx-datatable-column name="Row Height" prop="height" [width]="80"> </ngx-datatable-column> -->
       </ngx-datatable>
+  </div>
 </div>
 
 
