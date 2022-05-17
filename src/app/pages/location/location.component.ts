@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { id } from '@swimlane/ngx-datatable';
+import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { id, TableColumn } from '@swimlane/ngx-datatable';
 import { LocationIndex } from 'src/app/models';
 
 @Component({
@@ -9,10 +9,12 @@ import { LocationIndex } from 'src/app/models';
 })
 export class LocationComponent implements OnInit {
   records :LocationIndex[]= [];
-  columns: any[] = [
-    {
-      prop: 'image',
-    },
+  @ViewChild('colCreatedAt', { static: true }) colCreatedAt!: TemplateRef<any>;
+  // columns: any[] = [
+  columns: TableColumn[] = [
+    // {
+    //   prop: 'image',
+    // },
     {
       prop: 'name',
     },

@@ -53,3 +53,8 @@
         <ngx-datatable-column name="Row Height" prop="height" [width]="80"> </ngx-datatable-column> -->
       </ngx-datatable>
 </div>
+
+
+<ng-template #colCreatedAt let-value="value">
+  {{ value | date: "dd/MM/yyyy" }}
+</ng-template>
