@@ -1,5 +1,5 @@
 <router-outlet></router-outlet>
-<div class="m-3 ">
+<div class="bg-white m-3 p-3 rounded">
   <div class="d-flex align-items-center justify-content-between mb-3">
     <!-- <div class="btn-group">
           <button type="button" class="btn btn-default">
@@ -16,9 +16,9 @@
     </button>
   </div>
 
-  <div class="p-3 rounded bg-white">
+  <!-- <div class="p-3 rounded bg-white"> -->
     <div class="input-group mb-3">
-      <span class="input-group-text bg-white" id="search-icon"
+      <span class="input-group-text bg-white border-end-0" id="search-icon"
         ><i class="bi bi-search"></i
       ></span>
       <input
@@ -33,7 +33,7 @@
     <!-- https://github.com/swimlane/ngx-datatable/blob/master/src/app/basic/virtual.component.ts -->
     <div class="border overflow-hidden rouded shadow-sm">
       <ngx-datatable
-          class="material rounded datatable-header-cell"
+          class="material rounded "
           [rows]="records"
           [columns]="columns"
           columnMode="force"
@@ -42,14 +42,17 @@
           [rowHeight]=50
           (page)="onPage($event)"
           [externalPaging]="true"
-          [count]="50"
+          [externalSorting]="true"
+          [count]="10"
           [offset]="0"
           [limit]="20"
+          (sort)="onSort($event)"
         >
-        </ngx-datatable>
+        
+      </ngx-datatable>
     </div>
   </div>
-</div>
+<!-- </div> -->
 
 
 <ng-template #colCreatedAt let-value="value">

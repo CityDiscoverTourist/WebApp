@@ -20,8 +20,8 @@ export class QuestComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.productPageState.connect(this.questService.getCategories(), (_, curr) => ({
-      categories: curr,
-    }));
+    // this.productPageState.connect(this.questService.getCategories(), (_, curr) => ({
+    //   categories: curr,
+    // }));
   }
 }

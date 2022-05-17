@@ -3,9 +3,11 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { RxState } from '@rx-angular/state';
 import { DatatableComponent, TableColumn } from '@swimlane/ngx-datatable';
 import { BehaviorSubject, Observable, shareReplay, Subject, switchMap, tap } from 'rxjs';
-import { IdValue, PagingMetadata, PagingRequest, QuestListItem, QuestListSearch } from 'src/app/models';
+// import { IdValue, PagingMetadata, PagingRequest, QuestListItem, QuestListSearch } from 'src/app/models';
+import { QuestListItem, QuestListSearch } from 'src/app/models';
 import { QuestService } from 'src/app/services';
-import { PagingInfo, SortInfo } from 'src/app/types';
+// import { PagingInfo, SortInfo } from 'src/app/types';
+import { SortInfo } from 'src/app/types';
 
 declare type FormType = {
   keyword: string;
@@ -34,26 +36,26 @@ export class QuestListComponent implements OnInit {
     categories: new FormControl(),
   });
 
-  search$ = new BehaviorSubject<PagingRequest<QuestListSearch>>({});
+  // search$ = new BehaviorSubject<PagingRequest<QuestListSearch>>({});
 
-  submitSearch$ = new Subject<Partial<FormType>>();
-  resetSearch$ = new Subject<void>();
+  // submitSearch$ = new Subject<Partial<FormType>>();
+  // resetSearch$ = new Subject<void>();
 
-  get categories$(): Observable<IdValue[]> {
-    // console.log(`get categories`, this.tmp++);
-    // console.log(this.productPageState.select('categories'));
-    return this.productPageState.select('categories').pipe(shareReplay(1)); //todo: recheck getter with change detection
-  }
+  // get categories$(): Observable<IdValue[]> {
+  //   // console.log(`get categories`, this.tmp++);
+  //   // console.log(this.productPageState.select('categories'));
+  //   return this.productPageState.select('categories').pipe(shareReplay(1)); //todo: recheck getter with change detection
+  // }
 
-  get product$(): Observable<QuestListItem[]> {
-    return this.productListState.select('products').pipe(shareReplay(1));
-  }
-  get metadata$(): Observable<PagingMetadata> {
-    return this.productListState.select('metadata').pipe(shareReplay(1));
-    // .pipe(tap(m=>console.log(`metadata`,m)
-    // )
-    // );
-  }
+  // get product$(): Observable<QuestListItem[]> {
+  //   return this.productListState.select('products').pipe(shareReplay(1));
+  // }
+  // get metadata$(): Observable<PagingMetadata> {
+  //   return this.productListState.select('metadata').pipe(shareReplay(1));
+  //   // .pipe(tap(m=>console.log(`metadata`,m)
+  //   // )
+  //   // );
+  // }
 
   get loading$(): Observable<boolean> {
     return this.productListState.select('loading').pipe(shareReplay(1));
@@ -76,25 +78,25 @@ export class QuestListComponent implements OnInit {
 
   ngOnInit(): void {
  
-    this.productListState.hold(this.submitSearch$, (form) => {
-      this.search$.next({
-        ...this.search$.getValue(),
-        ...form,
-        currentPage: 0,
-      }),
-        //#25
-        this.table.offset;
-    });
-    this.productListState.connect(this.resetSearch$, (prev, _) => ({
-      metadata: { ...prev.metadata, currentPage: 0 },
-    }));
+    // this.productListState.hold(this.submitSearch$, (form) => {
+    //   this.search$.next({
+    //     ...this.search$.getValue(),
+    //     ...form,
+    //     currentPage: 0,
+    //   }),
+    //     //#25
+    //     this.table.offset;
+    // });
+    // this.productListState.connect(this.resetSearch$, (prev, _) => ({
+    //   metadata: { ...prev.metadata, currentPage: 0 },
+    // }));
 
-    //reset
-    this.productListState.hold(this.resetSearch$, () => {
-      this.searchForm.reset();
-      this.search$.next({ currentPage: 0 });
-      this.table.offset = 0;
-    });
+    // //reset
+    // this.productListState.hold(this.resetSearch$, () => {
+    //   this.searchForm.reset();
+    //   this.search$.next({ currentPage: 0 });
+    //   this.table.offset = 0;
+    // });
 
     this.initTable();
   }
@@ -143,18 +145,18 @@ export class QuestListComponent implements OnInit {
     ];
   }
 
-  onPage(paging: PagingInfo) {
-    console.log(paging);
-    this.search$.next({
-      ...this.search$.getValue(),
-      currentPage: paging.offset,
-    });
-  }
-  onSort(event: SortInfo) {
-    this.search$.next({
-      ...this.search$.getValue(),
-      sortBy: event.column.prop,
-      sortDir: event.newValue,
-    });
-  }
+  // onPage(paging: PagingInfo) {
+  //   console.log(paging);
+  //   this.search$.next({
+  //     ...this.search$.getValue(),
+  //     currentPage: paging.offset,
+  //   });
+  // }
+  // onSort(event: SortInfo) {
+  //   this.search$.next({
+  //     ...this.search$.getValue(),
+  //     sortBy: event.column.prop,
+  //     sortDir: event.newValue,
+  //   });
+  // }
 }

@@ -1,7 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
-import { IdValue, Quest } from '../models';
+// import { IdValue, Quest } from '../models';
+import {  Quest } from '../models';
 
 @Injectable({
   providedIn: 'root'
@@ -29,12 +30,12 @@ export class QuestService {
     );
   }
 
-  getCategories(): Observable<IdValue[]> {
-    return of(
-      [...Array(6).keys()].map(x => ({
-        id: x,
-        value: `Category ${x}`,
-      })),
-    );
-  }
+  // getCategories(): Observable<IdValue[]> {
+  //   return of(
+  //     [...Array(6).keys()].map(x => ({
+  //       id: x,
+  //       value: `Category ${x}`,
+  //     })),
+  //   );
+  // }
 }

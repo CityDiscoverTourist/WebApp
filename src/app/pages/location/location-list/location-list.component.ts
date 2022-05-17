@@ -1,6 +1,8 @@
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { TableColumn } from '@swimlane/ngx-datatable';
-import { LocationIndex } from 'src/app/models';
+import { Subject } from 'rxjs';
+import { LocationIndex, SearchInfo } from 'src/app/models';
+import { PageInfo, SortInfo } from 'src/app/types';
 
 @Component({
   selector: 'app-location-list',
@@ -12,11 +14,14 @@ export class LocationListComponent implements OnInit {
   @ViewChild('colCreatedAt', { static: true }) colCreatedAt!: TemplateRef<any>;
   // columns: any[] = [
   columns: TableColumn[];
-  constructor() {}
+  constructor(
+  ) {
+    this.connect();
+  }
 
   ngOnInit(): void {
     // this.records = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(
-    this.records = [...Array(10).keys()].map(
+    this.records = [...Array(50).keys()].map(
       (i) =>
         ({
           id: `${i} id`,
@@ -38,6 +43,7 @@ export class LocationListComponent implements OnInit {
         prop: 'name',
         maxWidth: 250,
         name: 'Tên khu vực',
+        sortable: true,
       },
       {
         prop: 'description',
@@ -48,38 +54,53 @@ export class LocationListComponent implements OnInit {
         prop: 'longitude',
         maxWidth: 120,
         name: 'Kinh độ',
+        sortable: false,
       },
       {
         prop: 'latitude',
         maxWidth: 120,
         name: 'Vĩ độ',
+        sortable: false,
       },
       {
         prop: 'address',
         canAutoResize: true,
         name: 'Địa chỉ',
+        sortable: true,
       },
       {
         prop: 'status',
         // canAutoResize: true,
         maxWidth: 100,
         name: 'Trạng thái',
-        sortable: false,
+        sortable: true,
       },
       {
         prop: 'areaId',
         maxWidth: 100,
         name: 'Khu vực',
-        sortable: false,
+        sortable: true,
       },
       {
         prop: 'locationTypeId',
         maxWidth: 100,
         name: 'Loại vị trí',
-        sortable: false,
+        sortable: true,
       },
     ];
   }
 
-  onPage(event: any) {}
+  onPage(paging: PageInfo) {
+    console.log(paging);
+    this.search$.next({page:paging.offset});
+  }
+  onSort(event:SortInfo){
+    console.log(event);
+    this.search$.next({sort:{sortBy:event.column.prop,dir:event.newValue}});
+  }
+
+  search$=new Subject<SearchInfo>();
+  connect(){
+    
+  }
 }

@@ -1,5 +1,5 @@
 <!-- <router-outlet></router-outlet> -->
-<div class="m-3 ">
+<div class=" p-3 rounded">
     <div class="d-flex align-items-center justify-content-between mb-3">
       <!-- <div class="btn-group">
             <button type="button" class="btn btn-default">
@@ -10,16 +10,19 @@
             </button>
           </div> -->
       <!-- <a routerLink="../location" class="text-color-app">Quản lý vị trí</a> -->
-      <a [routerLink]="['../']" class="text-style">Quản lý vị trí</a>
+      <a [routerLink]="['../']" class="text-style mx-3">Quản lý vị trí</a>
       <div class="flex-fill"></div>
       <button type="button" class="btn btn-primary">
         <i class="bi bi-plus"></i> Thêm loại vị trí
       </button>
     </div>
-  
+    
+  <!-- search -->
     <div class="p-3 rounded bg-white">
+      <div class="bg-white">
+        <div class="h5" style="color: #0088FF;">Tất cả loại vị trí</div>
       <div class="input-group mb-3">
-        <span class="input-group-text bg-white" id="search-icon"
+        <span class="input-group-text bg-white border-end-0" id="search-icon"
           ><i class="bi bi-search"></i
         ></span>
         <input
@@ -47,6 +50,7 @@
       </div>
     </div>
   </div>
+</div>
   
   
   <ng-template #colCreatedAt let-value="value">
