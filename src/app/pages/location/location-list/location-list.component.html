@@ -9,52 +9,71 @@
             <i class="bi bi-upload"></i> Import
           </button>
         </div> -->
-    <a [routerLink]="['./','location-type']" class="text-style">Loại vị trí</a>
+    <a [routerLink]="['./', 'location-type']" class="text-style">Loại vị trí</a>
     <div class="flex-fill"></div>
-    <button type="button" class="btn btn-primary">
+    <button type="button" class="btn btn-primary" style="min-width:120px;">
       <i class="bi bi-plus"></i> Thêm vị trí
     </button>
   </div>
 
-  <!-- <div class="p-3 rounded bg-white"> -->
-    <div class="input-group mb-3">
-      <span class="input-group-text bg-white border-end-0" id="search-icon"
-        ><i class="bi bi-search"></i
-      ></span>
-      <input
-        type="text"
-        class="border-start-0 form-control outline-none"
-        placeholder="Tìm kiếm vị trí"
-        aria-label="Tìm kiếm vị trí"
-        aria-describedby="search-icon"
-      />
+  <div class="p-3 rounded bg-white">
+    <div class="d-flex ">
+      <div class="input-group me-3">
+        <span class="input-group-text bg-white border-end-0" id="search-icon"
+          ><i class="bi bi-search"></i
+        ></span>
+        <input
+          type="text"
+          class="border-start-0 form-control outline-none"
+          placeholder="Tìm kiếm vị trí"
+          aria-label="Tìm kiếm vị trí"
+          aria-describedby="search-icon"
+        />
+      </div>
+      <ng-select [items]="[1,2,3,4,5,6,7,8,9,10]"
+      [clearable]="false"
+      [closeOnSelect]="true"
+      style="min-width:200px;"
+      class="me-3"
+      ></ng-select>
+      <div class="btn-group">
+        <button type="button" class="btn btn-primary" style="min-width: 120px"
+        >
+          <i class="bi bi-search"></i>
+          Tìm kiếm
+        </button>
+        <button type="button" class="btn btn-default" style="min-width: 100px"
+        >
+          <i class="bi bi-x-lg"></i>
+          Xóa
+        </button>
+      </div>
     </div>
     <!-- table -->
     <!-- https://github.com/swimlane/ngx-datatable/blob/master/src/app/basic/virtual.component.ts -->
     <div class="border overflow-hidden rouded shadow-sm">
       <ngx-datatable
-          class="material rounded "
-          [rows]="records"
-          [columns]="columns"
-          columnMode="force"
-          [headerHeight]="50"
-          [footerHeight]="50"
-          [rowHeight]=50
-          (page)="onPage($event)"
-          [externalPaging]="true"
-          [externalSorting]="true"
-          [count]="10"
-          [offset]="0"
-          [limit]="20"
-          (sort)="onSort($event)"
-        >
-        
+        class="material rounded"
+        [rows]="records"
+        [columns]="columns"
+        columnMode="force"
+        [headerHeight]="50"
+        [footerHeight]="50"
+        [rowHeight]="50"
+        (page)="onPage($event)"
+        [externalPaging]="true"
+        [externalSorting]="true"
+        [count]="10"
+        [offset]="0"
+        [limit]="20"
+        (sort)="onSort($event)"
+      >
       </ngx-datatable>
     </div>
   </div>
-<!-- </div> -->
+  <!-- </div> -->
 
-
-<ng-template #colCreatedAt let-value="value">
-  {{ value | date: "dd/MM/yyyy" }}
-</ng-template>
+  <ng-template #colCreatedAt let-value="value">
+    {{ value | date: "dd/MM/yyyy" }}
+  </ng-template>
+</div>
