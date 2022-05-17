@@ -1,6 +1,6 @@
-<!-- <router-outlet></router-outlet> -->
-<div class="p-3">
-  <div class="d-flex align-items-center justify-content-between mb-3">
+<router-outlet></router-outlet>
+<!-- <div class="m-3 ">
+  <div class="d-flex align-items-center justify-content-between mb-3"> -->
     <!-- <div class="btn-group">
           <button type="button" class="btn btn-default">
             <i class="bi bi-download"></i> Export
@@ -9,41 +9,46 @@
             <i class="bi bi-upload"></i> Import
           </button>
         </div> -->
+    <!-- <a routerLink="['location-type']" class="text-color-app">Loại vị trí</a> -->
+    <!-- <a [routerLink]="['./','location-type']" class="text-color-app">Loại vị trí</a>
     <div class="flex-fill"></div>
     <button type="button" class="btn btn-primary">
       <i class="bi bi-plus"></i> Add Product
     </button>
   </div>
-  <div class="input-group mb-3">
-    <span class="input-group-text" id="search-icon"
-      ><i class="bi bi-search"></i
-    ></span>
-    <input
-      type="text"
-      class="form-control"
-      placeholder="Tìm kiếm vị trí"
-      aria-label="Tìm kiếm vị trí"
-      aria-describedby="search-icon"
-    />
-  </div>
-  <!-- table -->
-  <!-- https://github.com/swimlane/ngx-datatable/blob/master/src/app/basic/virtual.component.ts -->
-  <div class="border overflow-hidden rouded shadow-sm">
-    <ngx-datatable
-        class="material rounded"
-        [rows]="records"
-        [columns]="columns"
-        columnMode="force"
-        [headerHeight]="50"
-        [footerHeight]="50"
-        [rowHeight]=50
-        (page)="onPage($event)"
-      >
-      </ngx-datatable>
+
+  <div class="p-3 rounded bg-white">
+    <div class="input-group mb-3">
+      <span class="input-group-text bg-white" id="search-icon"
+        ><i class="bi bi-search"></i
+      ></span>
+      <input
+        type="text"
+        class="border-start-0 form-control outline-none"
+        placeholder="Tìm kiếm vị trí"
+        aria-label="Tìm kiếm vị trí"
+        aria-describedby="search-icon"
+      />
+    </div> -->
+    <!-- table -->
+    <!-- https://github.com/swimlane/ngx-datatable/blob/master/src/app/basic/virtual.component.ts -->
+    <!-- <div class="border overflow-hidden rouded shadow-sm">
+      <ngx-datatable
+          class="material rounded"
+          [rows]="records"
+          [columns]="columns"
+          columnMode="force"
+          [headerHeight]="50"
+          [footerHeight]="50"
+          [rowHeight]=50
+          (page)="onPage($event)"
+        >
+        </ngx-datatable>
+    </div>
   </div>
 </div>
 
 
 <ng-template #colCreatedAt let-value="value">
   {{ value | date: "dd/MM/yyyy" }}
-</ng-template>
+</ng-template> -->

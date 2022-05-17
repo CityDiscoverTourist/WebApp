@@ -12,19 +12,27 @@ const routes: Routes = [
     path: '',
     component: LocationComponent,
     children: [
-      // {
-      //   path: '',
-      //   loadChildren: () =>
-      //     import('./location-list/location-list.module').then(
-      //       (m) => m.LocationListModule
-      //     ),
-      // },
+      {
+        path: '',
+        loadChildren: () =>
+          import('./location-list/location-list.module').then(
+            (m) => m.LocationListModule
+          ),
+      },
       {
         path: 'list',
         // component: ProductCreateComponent,
         loadChildren: () =>
         import('./location-list/location-list.module').then(
           (m) => m.LocationListModule
+        ),
+      },
+      {
+        path: 'location-type',
+        // component: ProductCreateComponent,
+        loadChildren: () =>
+        import('./location-type/location-type.module').then(
+          (m) => m.LocationTypeModule
         ),
       },
      
