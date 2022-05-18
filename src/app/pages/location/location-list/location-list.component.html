@@ -30,12 +30,21 @@
           aria-describedby="search-icon"
         />
       </div>
-      <ng-select [items]="[1,2,3,4,5,6,7,8,9,10]"
+      <ng-select [items]="locationtypes$ | async"
+      bindValue="id"
+      bindLabel="value"
+      [closeOnSelect]="true"
+      [multiple]="true"
+      style="min-width:200px;"
+      placeholder="Loại vị trí"
+      class="me-3"
+      ></ng-select>
+      <!-- <ng-select [items]="[1,2,3,4,5,6,7,8,9,10]"
       [clearable]="false"
       [closeOnSelect]="true"
       style="min-width:200px;"
       class="me-3"
-      ></ng-select>
+      ></ng-select> -->
       <div class="btn-group">
         <button type="button" class="btn btn-primary" style="min-width: 120px"
         >
@@ -63,9 +72,9 @@
         (page)="onPage($event)"
         [externalPaging]="true"
         [externalSorting]="true"
-        [count]="10"
+        [count]="20"
         [offset]="0"
-        [limit]="20"
+        [limit]="10"
         (sort)="onSort($event)"
       >
       </ngx-datatable>
@@ -77,3 +86,6 @@
     {{ value | date: "dd/MM/yyyy" }}
   </ng-template>
 </div>
+
+
+

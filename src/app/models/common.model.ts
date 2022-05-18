@@ -38,3 +38,7 @@ export interface SearchInfo{
   sort?: { sortBy: string; dir: 'asc' | 'desc' };
   page?:number;
 }
+  export interface IdValue {
+    id: number;
+    value: string;
+  }

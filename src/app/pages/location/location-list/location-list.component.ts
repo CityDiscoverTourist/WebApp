@@ -1,13 +1,17 @@
-import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Inject, INJECTOR, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { RxState } from '@rx-angular/state';
 import { TableColumn } from '@swimlane/ngx-datatable';
-import { Subject } from 'rxjs';
-import { LocationIndex, SearchInfo } from 'src/app/models';
+import { Observable, Subject } from 'rxjs';
+import { IdValue, LocationIndex, SearchInfo } from 'src/app/models';
 import { PageInfo, SortInfo } from 'src/app/types';
+import { LocationListPageState, LOCATION_PAGE_STATE } from './states/locationListPageState.state';
 
 @Component({
   selector: 'app-location-list',
   templateUrl: './location-list.component.html',
   styleUrls: ['./location-list.component.scss'],
+  changeDetection:ChangeDetectionStrategy.OnPush,
+  providers:[RxState]
 })
 export class LocationListComponent implements OnInit {
   records: LocationIndex[] = [];
@@ -15,6 +19,7 @@ export class LocationListComponent implements OnInit {
   // columns: any[] = [
   columns: TableColumn[];
   constructor(
+    @Inject(LOCATION_PAGE_STATE)private locationPageState:RxState<LocationListPageState>
   ) {
     this.connect();
   }
@@ -44,6 +49,7 @@ export class LocationListComponent implements OnInit {
         maxWidth: 250,
         name: 'Tên khu vực',
         sortable: true,
+        // cellClass:"ng-select text-size"
       },
       {
         prop: 'description',
@@ -92,7 +98,11 @@ export class LocationListComponent implements OnInit {
 
   onPage(paging: PageInfo) {
     console.log(paging);
+    console.log("alo ",this.search$);
     this.search$.next({page:paging.offset});
+    console.log("alo ",this.search$);
+    
+
   }
   onSort(event:SortInfo){
     console.log(event);
@@ -100,7 +110,12 @@ export class LocationListComponent implements OnInit {
   }
 
   search$=new Subject<SearchInfo>();
+  get locationtypes$():Observable<IdValue[]>{
+    return this.locationPageState.select('locationtypes');
+  }
   connect(){
     
   }
+
+  
 }
