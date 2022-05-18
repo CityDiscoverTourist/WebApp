@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, Inject, INJECTOR, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { RxState } from '@rx-angular/state';
 import { TableColumn } from '@swimlane/ngx-datatable';
-import { Observable, Subject } from 'rxjs';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { IdValue, LocationIndex, SearchInfo } from 'src/app/models';
 import { PageInfo, SortInfo } from 'src/app/types';
 import { LocationListPageState, LOCATION_PAGE_STATE } from './states';
@@ -21,7 +21,8 @@ export class LocationListComponent implements OnInit {
   constructor(
     @Inject(LOCATION_PAGE_STATE)private locationPageState:RxState<LocationListPageState>
   ) {
-    this.connect();
+    // this.connect();
+    this.search$.subscribe(x=>console.log(x));
   }
 
   ngOnInit(): void {
@@ -97,19 +98,20 @@ export class LocationListComponent implements OnInit {
   }
 
   onPage(paging: PageInfo) {
-    console.log(paging);
-    console.log("alo ",this.search$);
-    this.search$.next({page:paging.offset});
-    console.log("alo ",this.search$);
+    // console.log(paging);
+    // this.search$.next({page:paging.offset});
+    this.search$.next({...this.search$.getValue(),page:paging.offset});
+    
     
 
   }
   onSort(event:SortInfo){
-    console.log(event);
-    this.search$.next({sort:{sortBy:event.column.prop,dir:event.newValue}});
+    // console.log(event);
+    // this.search$.next({sort:{sortBy:event.column.prop,dir:event.newValue}});
+    this.search$.next({...this.search$.getValue(),sort:{sortBy:event.column.prop,dir:event.newValue}});
   }
 
-  search$=new Subject<SearchInfo>();
+  search$=new BehaviorSubject<SearchInfo>({});
   get locationtypes$():Observable<IdValue[]>{
     return this.locationPageState.select('locationtypes');
   }
