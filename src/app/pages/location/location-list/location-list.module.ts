@@ -5,7 +5,7 @@ import { LocationListRoutingModule } from './location-list-routing.module';
 import { LocationListComponent } from './location-list.component';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { NgSelectModule } from '@ng-select/ng-select';
-import { LocationListPageState, LOCATION_PAGE_STATE } from './states/locationListPageState.state';
+import { LocationListPageState, LOCATION_PAGE_STATE } from './states/locationListPage.state';
 import { RxState } from '@rx-angular/state';
 
 const lib = [NgSelectModule, NgxDatatableModule];

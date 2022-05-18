@@ -4,7 +4,7 @@ import { TableColumn } from '@swimlane/ngx-datatable';
 import { Observable, Subject } from 'rxjs';
 import { IdValue, LocationIndex, SearchInfo } from 'src/app/models';
 import { PageInfo, SortInfo } from 'src/app/types';
-import { LocationListPageState, LOCATION_PAGE_STATE } from './states/locationListPageState.state';
+import { LocationListPageState, LOCATION_PAGE_STATE } from './states';
 
 @Component({
   selector: 'app-location-list',
