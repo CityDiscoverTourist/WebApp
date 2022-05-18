@@ -37,13 +37,17 @@ export class LocationListComponent implements OnInit {
     //khi submit load data
     this.locationListState.connect(
       this.search$.pipe(switchMap(s=>this.locationSerice.
-        getLocations({...s,...this.searchForm.value} as LocationListSearch)),
+        getLocations(s)),
       ),
       (_,result)=>({
         locations:result.records,
         metadata:result.metadata
       })
     )
+    //bam nut cap nhat lai cai search hold ko thay doi state
+    this.locationListState.hold(
+      this.submitSearch$,
+    (form:FormGroup)=>this.search$.next({...this.search$.getValue(),...form.value}),);
   }
 
   ngOnInit(): void {
@@ -119,7 +123,7 @@ export class LocationListComponent implements OnInit {
   }
 
   onPage(paging: PageInfo) {
-    // console.log(paging);
+    console.log(paging);
     // this.search$.next({page:paging.offset});
     this.search$.next({...this.search$.getValue(),page:paging.offset});
     
@@ -127,12 +131,12 @@ export class LocationListComponent implements OnInit {
 
   }
   onSort(event:SortInfo){
-    // console.log(event);
+    console.log(event);
     // this.search$.next({sort:{sortBy:event.column.prop,dir:event.newValue}});
     this.search$.next({...this.search$.getValue(),sort:{sortBy:event.column.prop,dir:event.newValue}});
   }
 
-  search$=new BehaviorSubject<SearchInfo>({});
+  search$=new BehaviorSubject<LocationListSearch>({});
   get locationtypes$():Observable<IdValue[]>{
     return this.locationPageState.select('locationtypes');
   }
@@ -145,7 +149,8 @@ export class LocationListComponent implements OnInit {
     locationtypes:new FormControl()
   })
 
-  submitSearch$=new Subject<FormGroup|null>();
+  // submitSearch$=new Subject<FormGroup|null>();//tam thoi bi loi ne xoa (click)="submitSearch$.next(null)"
+  submitSearch$=new Subject<FormGroup>();//tam thoi bi loi ne xoa (click)="submitSearch$.next(null)"
 
   get locations$():Observable<LocationListItem[]>{
     return this.locationListState.select('locations');

@@ -27,5 +27,5 @@ export interface Location{
 }
 
 export interface LocationListSearch extends SearchInfo{
-    locationtypeIds:number[]
+    locationtypeIds?:number[]
 }
