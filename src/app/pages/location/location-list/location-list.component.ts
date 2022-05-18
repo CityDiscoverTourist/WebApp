@@ -2,46 +2,66 @@ import { ChangeDetectionStrategy, Component, Inject, INJECTOR, OnInit, TemplateR
 import { FormControl, FormGroup } from '@angular/forms';
 import { RxState } from '@rx-angular/state';
 import { TableColumn } from '@swimlane/ngx-datatable';
-import { BehaviorSubject, Observable, Subject } from 'rxjs';
-import { IdValue, LocationIndex, SearchInfo } from 'src/app/models';
+import { BehaviorSubject, mergeMap, Observable, of, Subject, switchMap } from 'rxjs';
+import { IdValue, LocationListItem, SearchInfo } from 'src/app/models';
+import { LocationService } from 'src/app/services/location.service';
 import { PageInfo, SortInfo } from 'src/app/types';
-import { LocationListPageState, LOCATION_PAGE_STATE } from './states';
+import { LocationListPageState, LocationListState, LOCATION_PAGE_STATE } from './states';
+import { LocationListSearch } from 'src/app/models';
 
 @Component({
   selector: 'app-location-list',
   templateUrl: './location-list.component.html',
   styleUrls: ['./location-list.component.scss'],
-  changeDetection:ChangeDetectionStrategy.OnPush,
+  // changeDetection:ChangeDetectionStrategy.OnPush,
   providers:[RxState]
 })
 export class LocationListComponent implements OnInit {
-  records: LocationIndex[] = [];
+  // records: LocationListItem[] = [];
   @ViewChild('colCreatedAt', { static: true }) colCreatedAt!: TemplateRef<any>;
   // columns: any[] = [
   columns: TableColumn[];
   constructor(
-    @Inject(LOCATION_PAGE_STATE)private locationPageState:RxState<LocationListPageState>
+    @Inject(LOCATION_PAGE_STATE)private locationPageState:RxState<LocationListPageState>,
+    private locationSerice:LocationService,
+    private locationListState:RxState<LocationListState>,
   ) {
     // this.connect();
+    console.log("-------");
+    
     this.search$.subscribe(x=>console.log(x));
+    console.log("----------");
+    
+    this.submitSearch$.subscribe(x=>console.log(x));
+    
+    //khi submit load data
+    this.locationListState.connect(
+      this.search$.pipe(switchMap(s=>this.locationSerice.
+        getLocations({...s,...this.searchForm.value} as LocationListSearch)),
+      ),
+      (_,result)=>({
+        locations:result.records,
+        metadata:result.metadata
+      })
+    )
   }
 
   ngOnInit(): void {
     // this.records = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(
-    this.records = [...Array(50).keys()].map(
-      (i) =>
-        ({
-          id: `${i} id`,
-          name: `${i} name`,
-          description: `${i} description`,
-          longitude: `${i} longitude `,
-          latitude: `${i} latitude`,
-          address: `${i} address`,
-          status: `${i} status`,
-          areaId: i * 2,
-          locationTypeId: i * 3,
-        } as LocationIndex)
-    );
+    // this.records = [...Array(50).keys()].map(
+    //   (i) =>
+    //     ({
+    //       id: `${i} id`,
+    //       name: `${i} name`,
+    //       description: `${i} description`,
+    //       longitude: `${i} longitude `,
+    //       latitude: `${i} latitude`,
+    //       address: `${i} address`,
+    //       status: `${i} status`,
+    //       areaId: i * 2,
+    //       locationTypeId: i * 3,
+    //     } as LocationListItem)
+    // );
     this.initTable();
   }
   initTable() {
@@ -125,8 +145,10 @@ export class LocationListComponent implements OnInit {
     locationtypes:new FormControl()
   })
 
-  submitSearch$=new Subject<FormGroup>();
+  submitSearch$=new Subject<FormGroup|null>();
 
-
+  get locations$():Observable<LocationListItem[]>{
+    return this.locationListState.select('locations');
+  }
   
 }

@@ -6,4 +6,5 @@ export interface LocationListPageState{
     locationtypes:IdValue[]
 }
 
+
 export const LOCATION_PAGE_STATE=new InjectionToken<RxState<LocationListPageState>>("LOCATION_PAGE_STATE");

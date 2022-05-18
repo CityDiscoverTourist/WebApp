@@ -42,3 +42,14 @@ export interface SearchInfo{
     id: number;
     value: string;
   }
+
+  export interface PagingMetadata {
+    currentPage: number;
+    count: number;
+    itemPerPage: number;
+  }
+
+  export interface Paging<T> {
+    records: T[];
+    metadata: PagingMetadata;
+  }

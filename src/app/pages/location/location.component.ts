@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { RxState } from '@rx-angular/state';
 import { id, TableColumn } from '@swimlane/ngx-datatable';
-import { LocationIndex } from 'src/app/models';
+import { LocationListItem } from 'src/app/models';
 import { LocationService } from 'src/app/services/location.service';
 import { LocationtypeService } from 'src/app/services/locationtype.service';
 import { LocationListPageState, LOCATION_PAGE_STATE } from './location-list/states/locationListPage.state';

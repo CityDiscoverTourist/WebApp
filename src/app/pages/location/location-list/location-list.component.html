@@ -29,7 +29,7 @@
           placeholder="Tìm kiếm vị trí"
           aria-label="Tìm kiếm vị trí"
           aria-describedby="search-icon"
-          formControlName="kwyword"
+          formControlName="keyword"
         />
       </div>
       <ng-select [items]="locationtypes$ | async"
@@ -56,6 +56,7 @@
           Tìm kiếm
         </button>
         <button type="button" class="btn btn-default" style="min-width: 100px"
+        (click)="submitSearch$.next(null)"
         >
           <i class="bi bi-x-lg"></i>
           Xóa
@@ -68,7 +69,7 @@
     <div class="border overflow-hidden rouded shadow-sm">
       <ngx-datatable
         class="material rounded"
-        [rows]="records"
+        [rows]="locations$ | async"
         [columns]="columns"
         columnMode="force"
         [headerHeight]="50"
