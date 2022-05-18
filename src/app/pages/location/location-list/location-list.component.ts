@@ -47,7 +47,7 @@ export class LocationListComponent implements OnInit {
     //bam nut cap nhat lai cai search hold ko thay doi state
     this.locationListState.hold(
       this.submitSearch$,
-    (form:FormGroup)=>this.search$.next({...this.search$.getValue(),...form.value,page:1}),);
+    (form:FormGroup)=>this.search$.next({...this.search$.getValue(),...form.value,page:0}),);
   }
 
   ngOnInit(): void {
