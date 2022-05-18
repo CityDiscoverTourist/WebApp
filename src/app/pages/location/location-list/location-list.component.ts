@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, Inject, INJECTOR, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { FormControl, FormGroup } from '@angular/forms';
 import { RxState } from '@rx-angular/state';
 import { TableColumn } from '@swimlane/ngx-datatable';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
@@ -118,6 +119,14 @@ export class LocationListComponent implements OnInit {
   connect(){
     
   }
+
+  searchForm=new FormGroup({
+    keyword:new FormControl(),
+    locationtypes:new FormControl()
+  })
+
+  submitSearch$=new Subject<FormGroup>();
+
 
   
 }

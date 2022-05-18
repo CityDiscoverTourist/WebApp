@@ -7,6 +7,7 @@ import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { LocationListPageState, LOCATION_PAGE_STATE } from './states/locationListPage.state';
 import { RxState } from '@rx-angular/state';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 const lib = [NgSelectModule, NgxDatatableModule];
 
@@ -17,6 +18,8 @@ const lib = [NgSelectModule, NgxDatatableModule];
   imports: [
     CommonModule,
     LocationListRoutingModule,
+    FormsModule,
+    ReactiveFormsModule,
     ...lib
   ],
   // providers:[{

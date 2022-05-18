@@ -17,6 +17,7 @@
   </div>
 
   <div class="p-3 rounded bg-white">
+    <form [formGroup]="searchForm">
     <div class="d-flex ">
       <div class="input-group me-3">
         <span class="input-group-text bg-white border-end-0" id="search-icon"
@@ -28,6 +29,7 @@
           placeholder="Tìm kiếm vị trí"
           aria-label="Tìm kiếm vị trí"
           aria-describedby="search-icon"
+          formControlName="kwyword"
         />
       </div>
       <ng-select [items]="locationtypes$ | async"
@@ -38,6 +40,7 @@
       style="min-width:200px;"
       placeholder="Loại vị trí"
       class="me-3"
+      formControlName="locationtypes"
       ></ng-select>
       <!-- <ng-select [items]="[1,2,3,4,5,6,7,8,9,10]"
       [clearable]="false"
@@ -47,6 +50,7 @@
       ></ng-select> -->
       <div class="btn-group">
         <button type="button" class="btn btn-primary" style="min-width: 120px"
+        (click)="submitSearch$.next(searchForm)"
         >
           <i class="bi bi-search"></i>
           Tìm kiếm
@@ -58,6 +62,7 @@
         </button>
       </div>
     </div>
+  </form>
     <!-- table -->
     <!-- https://github.com/swimlane/ngx-datatable/blob/master/src/app/basic/virtual.component.ts -->
     <div class="border overflow-hidden rouded shadow-sm">
