@@ -1,30 +1,59 @@
-<!-- <router-outlet></router-outlet> -->
-<div class="p-3 rounded">
-  <div class="d-flex align-items-center justify-content-between mb-3">
-    <!-- <a [routerLink]="['../']" class="text-style mx-3">Quản lý vị trí</a> -->
+<div class="pt-4 px-5">
+  <div class="d-flex align-items-center justify-content-between mb-3 px-3">
     <div class="flex-fill"></div>
-    <button type="button" class="btn btn-primary">
-      <i class="bi bi-plus"></i> Thêm khu vực
+    <button type="button" class="btn btn-primary" style="min-width: 120px">
+      <i class="bi bi-plus"></i> Thêm vị trí
     </button>
   </div>
-
-  <!-- search -->
-  <div class="p-3 rounded bg-white">
-    <div class="bg-white">
-      <div class="input-group mb-3">
-        <span class="input-group-text bg-white border-end-0" id="search-icon"
-          ><i class="bi bi-search"></i
-        ></span>
-        <input
-          type="text"
-          class="border-start-0 form-control outline-none"
-          placeholder="Tìm kiếm vị trí"
-          aria-label="Tìm kiếm vị trí"
-          aria-describedby="search-icon"
-        />
-      </div>
+  <div class="bg-white m-3 p-3 rounded">
+    <div class="p-3 rounded bg-white">
+      <form class="mb-4">
+        <div class="d-flex">
+          <div class="input-group me-3">
+            <span
+              class="input-group-text bg-white border-end-0"
+              id="search-icon"
+              ><i class="bi bi-search"></i
+            ></span>
+            <input
+              type="text"
+              class="border-start-0 form-control outline-none"
+              placeholder="Tìm kiếm vị trí"
+              aria-label="Tìm kiếm vị trí"
+              aria-describedby="search-icon"
+              formControlName="keyword"
+            />
+          </div>
+          <ng-select
+            [items]="[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]"
+            [clearable]="false"
+            [closeOnSelect]="true"
+            style="min-width: 200px"
+            class="me-3"
+          ></ng-select>
+          <div class="btn-group">
+            <button
+              type="button"
+              class="btn btn-primary"
+              style="min-width: 120px"
+            >
+              <!-- (click)="submitSearch$.next(searchForm)" -->
+              <i class="bi bi-search"></i>
+              Tìm kiếm
+            </button>
+            <button
+              type="button"
+              class="btn btn-default"
+              style="min-width: 100px"
+            >
+              <!-- (click)="submitSearch$.next(null)" -->
+              <i class="bi bi-x-lg"></i>
+              Reset
+            </button>
+          </div>
+        </div>
+      </form>
       <!-- table -->
-      <!-- https://github.com/swimlane/ngx-datatable/blob/master/src/app/basic/virtual.component.ts -->
       <div class="border overflow-hidden rouded shadow-sm">
         <ngx-datatable
           class="material rounded"
@@ -34,14 +63,16 @@
           [headerHeight]="50"
           [footerHeight]="50"
           [rowHeight]="50"
+          [count]="40"
+          [offset]="1"
+          [limit]="10"
           (page)="onPage($event)"
         >
         </ngx-datatable>
       </div>
     </div>
+    <ng-template #colCreatedAt let-value="value">
+      {{ value | date: "dd/MM/yyyy" }}
+    </ng-template>
   </div>
 </div>
-
-<ng-template #colCreatedAt let-value="value">
-  {{ value | date: "dd/MM/yyyy" }}
-</ng-template>

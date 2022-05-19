@@ -16,7 +16,7 @@ export class AreaListComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.records=[1,2,3,4,5].map(i=>({
+    this.records=[...Array(50).keys()].map(i=>({
       id: i,
       name: "ssss",
       status: "sss",
