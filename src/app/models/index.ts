@@ -5,3 +5,4 @@ export * from "./city.model";
 export * from "./pagination.model";
 export * from "./locationtype.model";
 export * from "./location.model";
+export * from "./area.model";

@@ -58,6 +58,13 @@ const routes: Routes = [
             (m) => m.LocationModule
           ),
       },
+      {
+        path: 'area',
+        loadChildren: () =>
+          import('src/app/pages/area/area.module').then(
+            (m) => m.AreaModule
+          ),
+      },
     ],
   },
   {
