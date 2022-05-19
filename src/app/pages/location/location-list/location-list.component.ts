@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, Inject, INJECTOR, OnInit, TemplateR
 import { FormControl, FormGroup } from '@angular/forms';
 import { RxState } from '@rx-angular/state';
 import { DatatableComponent, TableColumn } from '@swimlane/ngx-datatable';
-import { BehaviorSubject, mergeMap, Observable, of, retry, Subject, switchMap } from 'rxjs';
+import { BehaviorSubject, mergeMap, Observable, of, retry, Subject, switchMap, tap } from 'rxjs';
 import { IdValue, LocationListItem, PagingMetadata, SearchInfo } from 'src/app/models';
 import { LocationService } from 'src/app/services/location.service';
 import { PageInfo, SortInfo } from 'src/app/types';
@@ -41,7 +41,9 @@ export class LocationListComponent implements OnInit {
       ),
       (_,result)=>({
         locations:result.records,
-        metadata:result.metadata
+        // metadata:result.metadata
+        //doi sau current page
+        metadata:{...result.metadata}
       })
     )
     //bam nut cap nhat lai cai search hold ko thay doi state
@@ -49,7 +51,14 @@ export class LocationListComponent implements OnInit {
       this.submitSearch$,
     // (form:FormGroup)=>this.search$.next({...this.search$.getValue(),...form. value,page:0}),);
     // (form:FormGroup)=>this.search$.next({...this.search$.getValue(),...form. value}),);
-    (form:FormGroup)=>this.search$.next({...this.search$.getValue(),...form. value,page:{currentPage:0}}),);
+    // (form:FormGroup)=>this.search$.next({...this.search$.getValue(),...form. value,page:{currentPage:0}}),);
+    //edit the declre type cho de
+    // (form:{keyword:string, locationtypes:number[]})=>
+    (form)=>{
+    // this.search$.next({...this.search$.g
+    //submit reset nhay ve page 0
+  this.search$.next({...this.search$.getValue(),...form,currentPage:0}),this.table.offset=0;});
+    // (form:{keyword:string, locationtypes:number[]})=>this.search$.next({...this.search$.getValue(),...form, value,page:{currentPage:0}}),);
     
 // nhay ve page 1
 //them hold ko can update metadata
@@ -65,6 +74,7 @@ export class LocationListComponent implements OnInit {
       ()=>{
         this.searchForm.reset();
         //reset ve trang 1
+       this.submitSearch$.next({})
         this.table.offset=0;
         // this.search$.next({})
       }
@@ -148,7 +158,9 @@ export class LocationListComponent implements OnInit {
   onPage(paging: PageInfo) {
     console.log(paging);
     // this.search$.next({page:paging.offset});
-    this.search$.next({...this.search$.getValue(),page:paging.offset});
+    // this.search$.next({...this.search$.getValue(),page:paging.offset});
+    //doi cho map vs cai SearchInfo va Pagingmetadata  currentPage: number;
+    this.search$.next({...this.search$.getValue(),currentPage:paging.offset});
     
     
 
@@ -173,7 +185,9 @@ export class LocationListComponent implements OnInit {
   })
 
   // submitSearch$=new Subject<FormGroup|null>();//tam thoi bi loi ne xoa (click)="submitSearch$.next(null)"
-  submitSearch$=new Subject<FormGroup>();//tam thoi bi loi ne xoa (click)="submitSearch$.next(null)"
+  //submitSearch$=new Subject<FormGroup>();//tam thoi bi loi ne xoa (click)="submitSearch$.next(null)"
+  submitSearch$=new Subject<Partial<FromType>>()
+  // submitSearch$=new Subject<FromType>()
 
   get locations$():Observable<LocationListItem[]>{
     return this.locationListState.select('locations');
@@ -184,9 +198,15 @@ t2=0;
   get metadata$():Observable<PagingMetadata>{
     console.log(`getting metadata ${this.t2++}`);
     
-    return this.locationListState.select('metadata');
+    return this.locationListState.select('metadata').pipe(tap(m=>console.log(m)
+    ));
   }
   
   @ViewChild(DatatableComponent) table!: DatatableComponent;
 
+}
+
+declare type FromType={
+  keyword:string;
+  locationtypes:number[];
 }

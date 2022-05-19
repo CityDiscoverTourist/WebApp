@@ -50,8 +50,9 @@
       ></ng-select> -->
       <div class="btn-group">
         <button type="button" class="btn btn-primary" style="min-width: 120px"
-        (click)="submitSearch$.next(searchForm)"
+        (click)="submitSearch$.next(searchForm.value)"
         >
+        <!-- (click)="submitSearch$.next(searchForm)" -->
           <i class="bi bi-search"></i>
           Tìm kiếm
         </button>
