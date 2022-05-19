@@ -1,6 +1,10 @@
-import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Component, Inject, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { RxState } from '@rx-angular/state';
 import { TableColumn } from '@swimlane/ngx-datatable';
-import { AreaListItem } from 'src/app/models';
+import { Observable } from 'rxjs';
+import { AreaListItem, IdValue } from 'src/app/models';
+import { AreaService } from 'src/app/services/area.service';
+import { AreaListPageState, AreaListState, AREA_PAGE_STATE } from './states';
 
 @Component({
   selector: 'app-area-list',
@@ -12,7 +16,11 @@ export class AreaListComponent implements OnInit {
   @ViewChild('colCreatedAt', { static: true }) colCreatedAt!: TemplateRef<any>;
   // columns: any[] = [
   columns: TableColumn[];
-  constructor() {
+  constructor(
+    @Inject(AREA_PAGE_STATE)private areaPageState:RxState<AreaListPageState>,
+    private areaSerice:AreaService,
+    private areaListState:RxState<AreaListState>,
+  ) {
   }
 
   ngOnInit(): void {
@@ -50,4 +58,8 @@ export class AreaListComponent implements OnInit {
   }
 
   onPage(event: any) {}
+
+  get citytypes$():Observable<IdValue[]>{
+    return this.areaPageState.select('citytypes');
+  }
 }
