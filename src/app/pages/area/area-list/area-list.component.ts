@@ -4,6 +4,7 @@ import { TableColumn } from '@swimlane/ngx-datatable';
 import { Observable } from 'rxjs';
 import { AreaListItem, IdValue } from 'src/app/models';
 import { AreaService } from 'src/app/services/area.service';
+import { PageInfo, SortInfo } from 'src/app/types';
 import { AreaListPageState, AreaListState, AREA_PAGE_STATE } from './states';
 
 @Component({
@@ -57,7 +58,21 @@ export class AreaListComponent implements OnInit {
     ];
   }
 
-  onPage(event: any) {}
+  onPage(paging: PageInfo) {
+    console.log(paging);
+    // this.search$.next({page:paging.offset});
+    // this.search$.next({...this.search$.getValue(),page:paging.offset});
+    //doi cho map vs cai SearchInfo va Pagingmetadata  currentPage: number;
+    // this.search$.next({...this.search$.getValue(),currentPage:paging.offset});
+    
+    
+
+  }
+  onSort(event:SortInfo){
+    console.log(event);
+    // this.search$.next({sort:{sortBy:event.column.prop,dir:event.newValue}});
+    // this.search$.next({...this.search$.getValue(),sort:{sortBy:event.column.prop,dir:event.newValue}});
+  }
 
   get citytypes$():Observable<IdValue[]>{
     return this.areaPageState.select('citytypes');

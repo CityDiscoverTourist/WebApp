@@ -3,3 +3,9 @@ export interface City{
     name:string;
     status:string;
 }
+
+export interface CityForTest{
+    id:number;
+    name:string;
+    status:string;
+}

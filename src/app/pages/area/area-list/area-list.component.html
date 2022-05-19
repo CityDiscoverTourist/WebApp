@@ -1,4 +1,4 @@
-<div class="pt-4 px-5">
+<div class="pt-3 px-5">
   <div class="d-flex align-items-center justify-content-between mb-3 px-3">
     <div class="flex-fill"></div>
     <button type="button" class="btn btn-primary" style="min-width: 120px">
@@ -6,7 +6,7 @@
     </button>
   </div>
   <div class="bg-white m-3 p-3 rounded">
-    <div class="p-3 rounded bg-white">
+    <div class="rounded bg-white">
       <form class="mb-4">
         <div class="d-flex">
           <div class="input-group me-3">
@@ -78,6 +78,7 @@
           [offset]="1"
           [limit]="10"
           (page)="onPage($event)"
+          (sort)="onSort($event)"
         >
         </ngx-datatable>
       </div>
