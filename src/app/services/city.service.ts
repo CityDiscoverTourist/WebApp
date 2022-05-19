@@ -1,8 +1,8 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { catchError, map } from 'rxjs';
+import { catchError, map, Observable, of } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { pagination, Pagination } from '../models';
+import { IdValue, pagination, Pagination } from '../models';
 import { City } from '../models/city.model';
 import { BaseService } from './base.service ';
 
@@ -105,4 +105,13 @@ export class CityService extends BaseService {
   //             catchError(this.handleError)
   //         );
   // }
+
+  getCityType():Observable<IdValue[]>{
+    return of([...Array(6).keys()].map(
+      (i) =>
+        ({
+          id: i,
+          value: `${i} id`
+        })));
+  }
 }
