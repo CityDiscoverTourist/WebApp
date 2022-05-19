@@ -7,7 +7,7 @@
   </div>
   <div class="bg-white m-3 p-3 rounded">
     <div class="rounded bg-white">
-      <form class="mb-4">
+      <form class="mb-4" [formGroup]="searchForm">
         <div class="d-flex">
           <div class="input-group me-3">
             <span
@@ -47,6 +47,7 @@
               type="button"
               class="btn btn-primary"
               style="min-width: 120px"
+              (click)="submitSearch$.next(searchForm.value)"
             >
               <!-- (click)="submitSearch$.next(searchForm)" -->
               <i class="bi bi-search"></i>
@@ -56,6 +57,7 @@
               type="button"
               class="btn btn-default"
               style="min-width: 100px"
+              (click)="resetSearch$.next()"
             >
               <!-- (click)="submitSearch$.next(null)" -->
               <i class="bi bi-x-lg"></i>
@@ -68,15 +70,15 @@
       <div class="border overflow-hidden rouded shadow-sm">
         <ngx-datatable
           class="material rounded"
-          [rows]="records"
+          [rows]="areas$ | async"
           [columns]="columns"
           columnMode="force"
           [headerHeight]="50"
           [footerHeight]="50"
           [rowHeight]="50"
-          [count]="40"
-          [offset]="1"
-          [limit]="10"
+          [count]="(metadata$ | async)?.count || 0"
+          [offset]="(metadata$ | async)?.currentPage || 0"
+          [limit]="(metadata$ | async)?.itemPerPage || 0"
           (page)="onPage($event)"
           (sort)="onSort($event)"
         >

@@ -4,7 +4,7 @@ export interface AreaListItem {
   id:number;
   name: string;
   status: string;
-  cityId: number;
+  // cityId: number;
 }
 
 
