@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component, Inject, INJECTOR, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { RxState } from '@rx-angular/state';
-import { TableColumn } from '@swimlane/ngx-datatable';
-import { BehaviorSubject, mergeMap, Observable, of, Subject, switchMap } from 'rxjs';
-import { IdValue, LocationListItem, SearchInfo } from 'src/app/models';
+import { DatatableComponent, TableColumn } from '@swimlane/ngx-datatable';
+import { BehaviorSubject, mergeMap, Observable, of, retry, Subject, switchMap } from 'rxjs';
+import { IdValue, LocationListItem, PagingMetadata, SearchInfo } from 'src/app/models';
 import { LocationService } from 'src/app/services/location.service';
 import { PageInfo, SortInfo } from 'src/app/types';
 import { LocationListPageState, LocationListState, LOCATION_PAGE_STATE } from './states';
@@ -47,7 +47,30 @@ export class LocationListComponent implements OnInit {
     //bam nut cap nhat lai cai search hold ko thay doi state
     this.locationListState.hold(
       this.submitSearch$,
-    (form:FormGroup)=>this.search$.next({...this.search$.getValue(),...form.value,page:0}),);
+    // (form:FormGroup)=>this.search$.next({...this.search$.getValue(),...form. value,page:0}),);
+    // (form:FormGroup)=>this.search$.next({...this.search$.getValue(),...form. value}),);
+    (form:FormGroup)=>this.search$.next({...this.search$.getValue(),...form. value,page:{currentPage:0}}),);
+    
+// nhay ve page 1
+//them hold ko can update metadata
+// this.locationListState.connect(
+//   this.resetSearch$,
+//   (prev,_)=>({
+//     metadata:{...prev.metadata, currentPage:0}
+//   })
+// )
+
+    this.locationListState.hold(
+      this.resetSearch$,
+      ()=>{
+        this.searchForm.reset();
+        //reset ve trang 1
+        this.table.offset=0;
+        // this.search$.next({})
+      }
+    )
+    https://www.youtube.com/watch?v=nTVjAiyycq8&t=3s
+    53
   }
 
   ngOnInit(): void {
@@ -155,5 +178,15 @@ export class LocationListComponent implements OnInit {
   get locations$():Observable<LocationListItem[]>{
     return this.locationListState.select('locations');
   }
+
+  resetSearch$ =new Subject<void>();
+t2=0;
+  get metadata$():Observable<PagingMetadata>{
+    console.log(`getting metadata ${this.t2++}`);
+    
+    return this.locationListState.select('metadata');
+  }
   
+  @ViewChild(DatatableComponent) table!: DatatableComponent;
+
 }

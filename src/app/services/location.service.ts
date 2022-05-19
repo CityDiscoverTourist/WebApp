@@ -42,7 +42,7 @@ export class LocationService {
           } as LocationListItem),
           ),
           metadata:{
-            currentPage:1,
+            currentPage:0,
             itemPerPage:25,
             count:200
           }

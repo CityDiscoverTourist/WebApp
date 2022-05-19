@@ -56,11 +56,11 @@
           Tìm kiếm
         </button>
         <button type="button" class="btn btn-default" style="min-width: 100px"
-        
+        (click)="resetSearch$.next()"
         >
         <!-- (click)="submitSearch$.next(null)" -->
           <i class="bi bi-x-lg"></i>
-          Xóa
+          Reset
         </button>
       </div>
     </div>
@@ -79,12 +79,16 @@
         (page)="onPage($event)"
         [externalPaging]="true"
         [externalSorting]="true"
-        [count]="20"
-        [offset]="0"
-        [limit]="10"
+        [count]="(metadata$|async)?.count||0"
+        [offset]="(metadata$|async)?.currentPage||0"
+        [limit]="(metadata$|async)?.itemPerPage||0"
         (sort)="onSort($event)"
       >
       </ngx-datatable>
+      <!-- [count]="20"
+        [offset]="0"
+        [limit]="10" -->
+      
     </div>
   </div>
   <!-- </div> -->
