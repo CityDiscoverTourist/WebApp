@@ -7,7 +7,7 @@ import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
-const lib = [NgSelectModule, NgxDatatableModule];
+const lib = [NgSelectModule];
 @NgModule({
   declarations: [
     AreaListComponent
@@ -17,6 +17,7 @@ const lib = [NgSelectModule, NgxDatatableModule];
     AreaListRoutingModule,
     FormsModule,
     ReactiveFormsModule,
+    NgxDatatableModule,
     ...lib
   ]
 })

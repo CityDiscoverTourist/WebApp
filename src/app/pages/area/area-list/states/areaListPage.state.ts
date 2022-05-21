@@ -3,7 +3,7 @@ import { RxState } from "@rx-angular/state";
 import { IdValue } from "src/app/models";
 
 export interface AreaListPageState{
-    citytypes:IdValue[]
+    cityIds:IdValue[]
 }
 
 

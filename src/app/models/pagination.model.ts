@@ -6,7 +6,7 @@
 export interface Pagination<T> {
   message: string;
   data: T[];
-  paginations: pagination[];
+  pagination: pagination[];
   status: string;
 }
 

@@ -4,7 +4,7 @@ import { RxState } from '@rx-angular/state';
 import { DatatableComponent, TableColumn } from '@swimlane/ngx-datatable';
 import { BehaviorSubject, Observable, shareReplay, Subject, switchMap, tap } from 'rxjs';
 // import { IdValue, PagingMetadata, PagingRequest, QuestListItem, QuestListSearch } from 'src/app/models';
-import { QuestListItem, QuestListSearch } from 'src/app/models';
+import { Quest, QuestListItem, QuestListSearch } from 'src/app/models';
 import { QuestService } from 'src/app/services';
 // import { PagingInfo, SortInfo } from 'src/app/types';
 import { SortInfo } from 'src/app/types';
@@ -28,12 +28,14 @@ import {
 })
 export class QuestListComponent implements OnInit {
 
+  records: Quest[] = [];
+
   @ViewChild('colCreatedAt', { static: true }) colCreatedAt!: TemplateRef<any>;
   columns: TableColumn[] = [];
 
   searchForm = new FormGroup({
-    keyword: new FormControl(),
-    categories: new FormControl(),
+    // keyword: new FormControl(),
+    // categories: new FormControl(),
   });
 
   // search$ = new BehaviorSubject<PagingRequest<QuestListSearch>>({});
@@ -99,45 +101,53 @@ export class QuestListComponent implements OnInit {
     // });
 
     this.initTable();
+    this.questService.getQuests().subscribe(data=>{
+      console.log(data);
+      
+      this.records=data;
+    })
   }
 
   initTable() {
     this.columns = [
       {
-        prop: 'image',
+        prop: 'id',
+        name:'STT',
         width: 50,
         maxWidth: 80,
         sortable: false,
       },
       {
-        prop: 'productName',
+        prop: 'title',
         // flexGrow:1,
+          name:'Tên',
         canAutoResize: true,
         sortable: false,
       },
       {
-        prop: 'category',
-        maxWidth: 150,
+        prop: 'description',
+        canAutoResize: true,
         sortable: false,
       },
       {
-        prop: 'brand',
-        maxWidth: 150,
+        prop: 'price',
+        maxWidth: 200,
         sortable: false,
       },
       {
-        prop: 'availableQty',
+        prop: 'estimatedTime',
         name: 'Available',
-        maxWidth: 100,
+        maxWidth: 120,
         sortable: true,
       },
       {
-        prop: 'totalQty',
-        maxWidth: 100,
+        prop: 'createdDate',
+        cellTemplate: this.colCreatedAt,
+        maxWidth: 120,
         sortable: true,
       },
       {
-        prop: 'createdAt',
+        prop: 'availableTime',
         cellTemplate: this.colCreatedAt,
         sortable: true,
         maxWidth: 120,

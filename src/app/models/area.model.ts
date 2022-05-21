@@ -1,10 +1,12 @@
 import { SearchInfo } from "./common.model";
 
 export interface AreaListItem {
+  index:number;
   id:number;
   name: string;
   status: string;
   // cityId: number;
+  cityId: string;
 }
 
 

@@ -53,3 +53,18 @@ export interface SearchInfo{
     records: T[];
     metadata: PagingMetadata;
   }
+  export interface PagingMetadataTest {
+    totalCount: number;
+    totalPages: number;
+    pageSize: number;
+    currentPage:number;
+    hasNext:boolean;
+    hasPrevious:boolean;
+  }
+
+  export interface PagingTest<T> {
+    message:string;
+    data: T[];
+    pagination: PagingMetadataTest;
+    status:string;
+  }

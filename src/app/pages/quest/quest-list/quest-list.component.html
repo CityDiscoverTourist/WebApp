@@ -1,15 +1,15 @@
-    <!-- <div class="p-3">
+ <div class="p-3">
         <div class="d-flex align-items-center justify-content-between mb-3">
         
           <div class="flex-fill"></div>
         
           <a routerLink="./create" type="button" class="btn btn-primary">
-            <i class="bi bi-plus"></i> Add Product
+            <i class="bi bi-plus"></i> Thêm quest
           </a>
         </div>
       
         <div class="p-3 rounded bg-white">
-          <form [formGroup]="searchForm">
+          <form>
           <div class="d-flex align-items-center justify-content-between mb-3">
             <div class="input-group me-3">
               <span class="input-group-text bg-white" id="search-icon"
@@ -18,14 +18,14 @@
               <input
                 type="text"
                 class="border-start-0 form-control"
-                placeholder="Search by product name, barcode or sku"
+                placeholder="Tìm kiếm theo tên mô tả quest"
                 aria-label="Search product"
                 aria-describedby="search-icon"
-                formControlName="keyword"
-                (keyup.enter)="search$.next(searchForm.value)"
+                
+               
               />
                 </div>
-            <ng-select
+            <!-- <ng-select
               [items]="categories$ | async"
               bindValue="id"
               bindLabel="value"
@@ -35,17 +35,15 @@
               style="min-width: 200px"
               class="me-3"
               formControlName="categories"
-            ></ng-select>
+            ></ng-select> -->
       
             <div class="btn-group">
               <button type="button" class="btn btn-primary" style="min-width: 100px"
-                (click)="submitSearch$.next(searchForm.value)"
               >
                 <i class="bi bi-search"></i>
                 Search
               </button>
               <button type="button" class="btn btn-default" style="min-width: 100px"
-              (click)="resetSearch$.next()"
               >
                 <i class="bi bi-x-lg"></i>
                 Clear
@@ -53,26 +51,28 @@
             </div>
           </div>
         </form>
-          TABLE
           <div class="border overflow-hidden rounded shadow-sm" style="max-width: calc(100vw -230px - 2rem);">
           <div class="border overflow-hidden rounded shadow-sm">
             <ngx-datatable
               class="material rounded"
-              [rows]="product$ | async"
+              [rows]="records"
               [columns]="columns"
               columnMode="force"
               [headerHeight]="50"
               [footerHeight]="50"
               [rowHeight]="50"
-              [loadingIndicator]="(loading$ | async)===true"
               [externalSorting]="true"
               [externalPaging]="true"
-              [count]="(metadata$ | async)?.count||0"
-              [offset]="(metadata$ | async)?.currentPage||0"
-              [limit]="(metadata$ | async)?.itemPerPage||0"
-              (page)="onPage($event)"
-              (sort)="onSort($event)"
+              [count]="50"
+              [offset]="1"
+              [limit]="10"
             >
+            <ngx-datatable-column name="S No.">
+              <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-row="row">
+                {{rowIndex+1}}
+              </ng-template>
+            </ngx-datatable-column>
+            <!-- [loadingIndicator]="(loading$ | async)===true" -->
             </ngx-datatable>
           </div>
         </div>
@@ -81,4 +81,6 @@
       <ng-template #colCreatedAt let-value="value">
         {{ value | date: "dd/MM/yyyy" }}
       </ng-template>
-       -->
+      <ng-template #colCreatedAt let-value="value">
+        {{ value | date: "dd/MM/yyyy" }}
+      </ng-template>
