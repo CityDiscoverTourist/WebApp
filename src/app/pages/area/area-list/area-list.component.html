@@ -2,7 +2,7 @@
   <div class="d-flex align-items-center justify-content-between mb-3 px-3">
     <div class="flex-fill"></div>
     <button type="button" class="btn btn-primary" style="min-width: 120px">
-      <i class="bi bi-plus"></i> Thêm vị trí
+      <i class="bi bi-plus"></i> Thêm khu vực
     </button>
   </div>
   <div class="bg-white m-3 p-3 rounded">
@@ -32,15 +32,14 @@
             class="me-3"
           ></ng-select> -->
           <ng-select
-            [items]="citytypes$ | async"
+            [items]="cityIds$ | async"
             bindValue="id"
             bindLabel="value"
             [closeOnSelect]="true"
-            [multiple]="true"
             style="min-width: 200px"
             placeholder="Thành phố"
             class="me-3"
-            formControlName="citytypes"
+            formControlName="cityIds"
           ></ng-select>
           <div class="btn-group">
             <button
@@ -67,6 +66,7 @@
         </div>
       </form>
       <!-- table -->
+     
       <div class="border overflow-hidden rouded shadow-sm">
         <ngx-datatable
           class="material rounded"
@@ -76,12 +76,24 @@
           [headerHeight]="50"
           [footerHeight]="50"
           [rowHeight]="50"
-          [count]="(metadata$ | async)?.count || 0"
-          [offset]="(metadata$ | async)?.currentPage || 0"
-          [limit]="(metadata$ | async)?.itemPerPage || 0"
+          [externalPaging]="true"
+          [externalSorting]="true"
+          [count]="((metadata$ | async)?.totalCount||0)"
+          [offset]="((metadata$ | async)?.currentPage||0)-1"
+          [limit]="10"
           (page)="onPage($event)"
           (sort)="onSort($event)"
         >
+        <!-- [count]="(metadata$ | async)?.totalCount||0"
+        [offset]="((metadata$ | async)?.currentPage||0)"
+        [limit]="(metadata$ | async)?.totalPages || 0" -->
+        <!-- (metadata$ | async)?.pageSize||0 -->
+          <!-- [count]="3"
+        [offset]="0"
+        [limit]="2" -->
+          <!-- [count]="(metadata$ | async)?.count || 0"
+          [offset]="(metadata$ | async)?.currentPage || 0"
+          [limit]="(metadata$ | async)?.itemPerPage || 0" -->
         </ngx-datatable>
       </div>
     </div>
@@ -89,4 +101,5 @@
       {{ value | date: "dd/MM/yyyy" }}
     </ng-template>
   </div>
+  <!-- //25 -->
 </div>
