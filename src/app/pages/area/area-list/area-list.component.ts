@@ -102,7 +102,8 @@ export class AreaListComponent implements OnInit {
     // );
 
     this.areaListState.connect(
-      this.search$.pipe(switchMap((s) => this.areaSerice.getAreas(s))),
+      this.search$.pipe(switchMap((s) => this.areaSerice.getAreas(s)),
+      tap(()=>this.areaListState.set({loading:false}))),
       (_, result) => ({
         // areas: result.records,
         areas: result.data.map(
@@ -116,6 +117,7 @@ export class AreaListComponent implements OnInit {
             } as AreaListItem)
         ),
         metadata: { ...result.pagination },
+        loading:false,
         // metadata: result.pagination,
         //connect chet do ko cung
       })
@@ -241,6 +243,10 @@ export class AreaListComponent implements OnInit {
     // .pipe(tap((m) => console.log(m)));
   }
   @ViewChild(DatatableComponent) table!: DatatableComponent;
+
+  get loading$(): Observable<boolean> {
+    return this.areaListState.select('loading');
+  }
 }
 
 declare type FromType = {

@@ -1,9 +1,12 @@
 <div class="pt-3 px-5">
   <div class="d-flex align-items-center justify-content-between mb-3 px-3">
     <div class="flex-fill"></div>
-    <button type="button" class="btn btn-primary" style="min-width: 120px">
+    <!-- <button type="button" class="btn btn-primary" style="min-width: 120px">
       <i class="bi bi-plus"></i> Thêm khu vực
-    </button>
+    </button> -->
+    <a routerLink="./edit" class="btn btn-primary" style="min-width: 120px">
+      <i class="bi bi-plus"></i> Thêm khu vực
+    </a>
   </div>
   <div class="bg-white m-3 p-3 rounded">
     <div class="rounded bg-white">
@@ -22,6 +25,7 @@
               aria-label="Tìm kiếm khu vực"
               aria-describedby="search-icon"
               formControlName="keyword"
+              (keyup.enter)="search$.next(searchForm.value)"
             />
           </div>
           <!-- <ng-select
@@ -71,6 +75,7 @@
         <ngx-datatable
           class="material rounded"
           [rows]="areas$ | async"
+          [loadingIndicator]="(loading$ |async)===true"
           [columns]="columns"
           columnMode="force"
           [headerHeight]="50"
