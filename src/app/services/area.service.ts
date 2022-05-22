@@ -102,7 +102,7 @@ export class AreaService {
     const query=stringify({
       name:search.keyword,
       cityid:search?.cityIds,
-      pageNume:isNaN(search?.currentPage!)? 1: (search?.currentPage!+1),
+      pageNumber:isNaN(search?.currentPage!)? 1: (search?.currentPage!+1),
       pagesize:10,
       orderby:`${sortBy} ${sortDir}`,
     })

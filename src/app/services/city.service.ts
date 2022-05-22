@@ -142,7 +142,7 @@ export class CityService extends BaseService {
     // var result =
     var result= this.http
       .get<Pagination<CityForTest>>(
-        'https://citytourist.azurewebsites.net/api/v1/citys',
+        'https://citytourist.azurewebsites.net/api/v1/cites',
         this.httpOptions
       )
       .pipe(
