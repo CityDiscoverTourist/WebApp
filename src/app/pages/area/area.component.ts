@@ -21,16 +21,6 @@ export class AreaComponent implements OnInit {
       }));
   }
   ngOnInit(): void {
-    // var a=1;
-    // var b=this.areaService.getAreas().subscribe(data=>{
-    //   console.log(data.data);
-    //   console.log(data.message);
-    //   console.log(data.pagination);
-    //   console.log(data.status);
-    // });
-  
-    // console.log(b);
-    
   }
 
 }
