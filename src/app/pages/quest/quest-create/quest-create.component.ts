@@ -1,6 +1,8 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { Subject } from 'rxjs';
+import { ChangeDetectionStrategy, Component, Inject, OnInit } from '@angular/core';
+import { Observable, Subject, tap } from 'rxjs';
 import { RxState } from '@rx-angular/state';
+import { QuestState, QUEST_STATE } from '../states/quest.state';
+import { IdValue } from 'src/app/models';
 
 interface QuestEditState {
   showQuestDescription: boolean;
@@ -16,6 +18,7 @@ interface QuestEditState {
 export class QuestCreateComponent implements OnInit {
 
   constructor(
+    @Inject(QUEST_STATE) private questState: RxState<QuestState>,
     private state: RxState<QuestEditState>,
   ) { 
     this.state.set({
@@ -30,5 +33,13 @@ export class QuestCreateComponent implements OnInit {
   }
 
   toggleDescription$ = new Subject<void>();
+
+  get questTypeIds():Observable<IdValue[]>{
+    return this.questState.select('questTypeIds').pipe(tap((m) => console.log(m)));
+  }
+
+  get areaIds():Observable<IdValue[]>{
+    return this.questState.select('areaIds').pipe(tap((m)=>console.log(m)));
+  }
 
 }

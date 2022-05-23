@@ -98,11 +98,19 @@
           <div class="card-body">
             <div class="form-group mb-3">
               <label for="questTypeId" class="form-label">Loại quest</label>
-              <ng-select [items]="[1, 2, 3, 4]"></ng-select>
+              <ng-select
+                [items]="questTypeIds | async"
+                bindValue="id"
+                bindLabel="value"
+              ></ng-select>
             </div>
             <div class="form-group mb-3">
               <label for="areaId" class="form-label">Chọn khu vực</label>
-              <ng-select [items]="[1, 2, 3, 4]"></ng-select>
+              <ng-select
+                [items]="areaIds | async"
+                bindValue="id"
+                bindLabel="value"
+              ></ng-select>
             </div>
             <!-- <div class="form-group">
                 <label for="tags" class="form-label">Tags</label>
