@@ -1,14 +1,15 @@
 <div class="d-flex master">
+
   <!-- <aside class="aside"> -->
-  <aside class="aside overflow-hidden" style="min-width: 225px;"> <!--#23-->
+  <aside class="aside overflow-hidden" style="width: 225px;"> <!--#23-->
       <h2 class="mb-0">
         <!-- <a [routerLink]="['/admin']" class="border-bottom border-secondary branding px-4">CTDT</a>       -->
-        <a  class="border-bottom border-secondary branding px-4 text-white">App</a>      
+        <a  class="border-bottom border-secondary branding px-4 text-white">Admin </a>      
       </h2>
     <!-- <nav class="h-100 menu"> -->
     <nav class="menu"><!--#23-->
-      <div class="divider">TỔNG QUAN</div>      
-      <div class="divider"><i class="bi bi-box-seam"></i>QUEST</div>      
+      <div class="divider">Tổng quan</div>      
+      <a routerLink="./quest" class="divider">Quest</a>
       <div class="divider"><i class="bi bi-plus"></i> THANH TOÁN</div>      
       <!-- <a [routerLink]="['./','products']">Products</a> -->
       <a>KHU VỰC</a>

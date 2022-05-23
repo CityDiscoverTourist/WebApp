@@ -1,3 +1,5 @@
+import { SearchInfo } from "./common.model";
+
 export interface Quest {
   id: number;
   title: string;
@@ -10,7 +12,8 @@ export interface Quest {
   updatedDate: Date;
 }
 
-export interface QuestCreate {
+
+export interface QuestListItem {
   id: number;
   title: string;
   description: string;
@@ -20,29 +23,29 @@ export interface QuestCreate {
   availableTime: Date;
   createdDate: Date;
   updatedDate: Date;
+  status:string;
   questTypeId: number;
-  areaId: number;
   questOwnerId: number;
-  questItems: [];
-  competitions: [];
-  qwnerPayments: [];
-  rewards: [];
+  areaId: number;
 }
 
-export interface QuestListItem {
+export interface QuestListSearch extends SearchInfo {
+  categories?: number[];
+}
+
+export interface QuestData {
   id: number;
   title: string;
   description: string;
   price: number;
   estimatedTime: string;
   estimatedDistance: string;
-}
-
-export interface QuestListSearch {
-  categories?: number[];
-}
-
-export interface QuestCreateResult{
-  id: number,
+  availableTime: Date;
+  createdDate: Date;
+  updatedDate: Date;
+  status:string;
+  questTypeId: number;
+  questOwnerId: number;
+  areaId: number;
 }
 
