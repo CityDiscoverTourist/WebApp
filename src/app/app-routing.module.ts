@@ -70,8 +70,8 @@ const routes: Routes = [
   {
     path: 'login',
     loadChildren: () =>
-      import('src/app/layouts/auth-layout/auth-layout.module').then(
-        (m) => m.AuthLayoutModule
+      import('src/app/layouts/login/login.module').then(
+        (m) => m.LoginModule
       ),
   },
   
