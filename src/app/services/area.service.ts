@@ -11,6 +11,7 @@ import {
   Pagination,
   Paging,
   PagingTest,
+  AreaData,
 } from '../models';
 
 @Injectable({
@@ -20,7 +21,7 @@ export class AreaService {
   constructor(private http: HttpClient) {}
 
   httpOptions = {
-    headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
+    headers: new HttpHeaders({ 'Content-Type': 'application/json','UserId':'1' }),
   };
 
   // getAreas(search: AreaListSearch) {
@@ -138,5 +139,14 @@ export class AreaService {
         //   )
       // );
     return result;
+  }
+  addArea(area:AreaData):Observable<Pagination<Area>>{
+    var areaCreate={
+      "id": 0,
+      "name": area.name,
+      "status": area.status,
+      "cityId": 2
+    }
+    return this.http.post<Pagination<Area>>(`https://citytourist.azurewebsites.net/api/v1/areas/`,areaCreate);
   }
 }

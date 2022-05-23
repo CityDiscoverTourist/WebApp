@@ -1,10 +1,19 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { HotToastService } from '@ngneat/hot-toast';
 import { RxState } from '@rx-angular/state';
-import { Observable, pipe, Subject, tap } from 'rxjs';
+import { BsModalService } from 'ngx-bootstrap/modal';
+import { catchError, Observable, partition, Subject, switchMap, tap } from 'rxjs';
+import { AreaData } from 'src/app/models';
+import { AreaService } from 'src/app/services/area.service';
+import { CityModalComponent } from '../../city/shared';
 
-interface ProductEditState {
-  showProductDescription: boolean;
+
+interface AreaEditState {
+  showAreaDescription: boolean;
   files: File[];
+  error?: string;
+  submitting: boolean;
 }
 
 @Component({
@@ -15,38 +24,23 @@ interface ProductEditState {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AreaEditComponent implements OnInit {
-  constructor(private state: RxState<ProductEditState>,private cd:ChangeDetectorRef) {
+  constructor(
+    private state: RxState<AreaEditState>,
+    private cd:ChangeDetectorRef,
+    private fb:FormBuilder, private toast:HotToastService,
+    private areaService:AreaService,
+    private modalService:BsModalService,
+    ) {
     this.state.set({
-      showProductDescription: false,
+      showAreaDescription: false,
       files: [],
     });
   }
 
   ngOnInit(): void {
     this.state.connect(this.toggleDescription$, (prev, curr) => ({
-      showProductDescription: !prev.showProductDescription,
+      showAreaDescription: !prev.showAreaDescription,
     }));
-    // this.state.connect(this.selectedFile$,(prev,files)=>({
-    //   files:[...prev.files,...files]
-    // }))
-
-    // this.state.connect(
-    //   this.selectedFile$.pipe(tap((x) => console.log(x))),
-    //   (prev, files) => ({
-    //     files: [...prev.files, ...files],
-    //   })
-    // );
-
-    // this.state.hold(
-    //   this.selectedFile$,
-    //     files=>{
-    //       this.state.set({
-    //         files:[...this.state.get("files"),...files]
-    //       });
-    //       setTimeout(()=>this.cd.detectChanges(),100);
-    //   }
-    // )
-
     this.state.connect(
       this.selectedFile$.pipe(tap(() => setTimeout(()=>this.cd.detectChanges(),100))),
       (prev, files) => ({
@@ -54,45 +48,85 @@ export class AreaEditComponent implements OnInit {
       })
     );
 
-    // this.state.connect(
-    //   this.removedFiles$.pipe(tap((x) => console.log(`remove file ,`, x))),
-    //   (prev, curr) => {
-    //     const files=prev.files.splice(prev.files.indexOf(curr), 1);
-    //     return {
-    //       // files: prev.files,
-    //       files: files
-    //     };
-    //   }
-    // );
-
     this.state.connect(
       this.removedFiles$.pipe(tap(()=>setTimeout(()=>this.cd.markForCheck(),100))),
       (prev, curr) => {
        prev.files.splice(prev.files.indexOf(curr), 1);
         return {
-          // files: prev.files,
           files: prev.files
         };
       }
     );
+      this.initForm();
 
+      this.state.connect(
+        this.formSubmit$.pipe(
+          switchMap((f) =>
+            this.areaService.addArea(f.value as AreaData)
+          )
+        ),
+        (prev, curr) => ({
+          error: undefined,
+        })
+      );
+
+      const [valid$, invalid$] = partition(
+        this.submit$,
+        ({ form }) => form.valid
+      );
+      this.state.connect(
+        valid$.pipe(
+          tap(() => this.state.set({ submitting: true })),
+          switchMap(({ form, redirect }) =>
+            this.areaService.addArea(form.value as AreaData)
+          ),
+        
+        ),
+        (prev, curr) => ({
+          // error: undefined,
+          // error: curr.statusCode,
+          submitting: false,
+        })
+      );
+  
+      // this.state.hold(invalid$.pipe(), (form) => {
+      this.state.hold(invalid$.pipe(), ({form}) => {
+        this.toast.error(`Invalid form. Please recheck and try again!`);
+      });
+    
   }
   toggleDescription$ = new Subject<void>();
-  get vm$(): Observable<ProductEditState> {
+  get vm$(): Observable<AreaEditState> {
     return this.state.select();
   }
 
-  // files: File[] = [];
-
-  // onSelect(event:any) {
-  // 	console.log(event);
-  // 	this.files.push(...event.addedFiles);
-  // }
-
-  onRemove(event: any) {
-    console.log(event);
-    // this.files.splice(this.files.indexOf(event), 1);
-  }
   selectedFile$ = new Subject<File[]>();
   removedFiles$ = new Subject<File>();
+
+  form!:FormGroup;
+
+  submitForm(){
+    const valid=this.form.valid;
+    console.log(`form valid state =${valid}`,this.form.value,this.form.errors);
+    
+    if(valid){
+      this.areaSaved$.next(this.form.value);
+    }else{
+      this.toast.error(`Invalid form`);
+    }
+  }
+  initForm(){
+    this.form=this.fb.group({
+      name:['',[Validators.required]],
+      status:[],
+      city:[],
+    });
+  }
+  areaSaved$=new Subject<AreaData>();
+
+  showAddCity(){
+    const bsModalRef = this.modalService.show(CityModalComponent);
+  }
+  formSubmit$ = new Subject<FormGroup>();
+  submit$ = new Subject<{ form: FormGroup; redirect: boolean }>();
 }

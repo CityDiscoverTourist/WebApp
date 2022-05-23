@@ -20,3 +20,10 @@ export interface Area{
 export interface AreaListSearch extends SearchInfo{
   cityIds?:number[]
 }
+
+export interface AreaData{
+  id:number;
+  name:string;
+  status:string;
+  cityId:number;
+}

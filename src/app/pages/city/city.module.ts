@@ -15,12 +15,14 @@ import { BsModalService, ModalModule } from 'ngx-bootstrap/modal';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ValidationMessageModule } from 'src/app/modules/validation-message/validation-message.module';
 import { NotificationService } from 'src/app/services';
+import { CityModalComponent } from './shared/city-modal/city-modal.component';
 
 
 
 @NgModule({
   declarations: [
-    CityComponent
+    CityComponent,
+    CityModalComponent
   ],
   imports: [
     CommonModule,

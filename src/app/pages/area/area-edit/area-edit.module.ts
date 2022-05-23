@@ -8,9 +8,11 @@ import { NgSelectModule } from '@ng-select/ng-select';
 import { QuillModule } from 'ngx-quill'
 import { LetModule } from '@rx-angular/template';
 import { NgxDropzoneModule } from 'ngx-dropzone';
+import { HotToastModule } from '@ngneat/hot-toast';
+import { ModalModule } from 'ngx-bootstrap/modal';
 
 const lib=[
-  NgSelectModule,LetModule,NgxDropzoneModule
+  NgSelectModule,LetModule,NgxDropzoneModule,HotToastModule,ModalModule.forRoot()
 ]
 
 @NgModule({

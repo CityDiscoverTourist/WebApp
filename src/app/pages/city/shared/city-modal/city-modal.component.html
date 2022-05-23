@@ -1,0 +1,22 @@
+<div class="modal-header">
+    <h4 class="modal-title pull-left">Thêm thành phố</h4>
+    <button type="button" class="btn-close close pull-right" aria-label="Close" (click)="bsModalRef.hide()">
+      <span aria-hidden="true" class="visually-hidden">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+   <form>
+       <div class="form-group">
+           <label for="cityName" class="form-label">Tên</label>
+           <input type="text" class="form-control"/>
+       </div>
+       <div class="form-group">
+           <label for="cityName" class="form-label">Trạng thái</label>
+           <input type="text" class="form-control"/>
+       </div>
+   </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-default" (click)="bsModalRef.hide()">Đóng</button>
+    <button type="button" class="btn btn-default" (click)="submit()">Thêm</button>
+  </div>
