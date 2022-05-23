@@ -12,6 +12,7 @@ import {
   Paging,
   PagingTest,
   AreaData,
+  IdValue,
 } from '../models';
 
 @Injectable({
@@ -148,5 +149,24 @@ export class AreaService {
       "cityId": 2
     }
     return this.http.post<Pagination<Area>>(`https://citytourist.azurewebsites.net/api/v1/areas/`,areaCreate);
+  }
+
+  getAreaType(): Observable<IdValue[]> {
+    return this.http
+      .get<Pagination<Area>>(
+        'https://citytourist.azurewebsites.net/api/v1/areas',
+        this.httpOptions
+      )
+      .pipe(
+        map((response: Pagination<Area>) =>
+          [...response.data].map(
+            (i) =>
+              ({
+                id: i.id,
+                value: `${i.name}`,
+              } as IdValue)
+          )
+        )
+      );
   }
 }
