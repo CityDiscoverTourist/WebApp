@@ -1,0 +1,31 @@
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+
+import { AreaEditRoutingModule } from './area-edit-routing.module';
+import { AreaEditComponent } from './area-edit.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { NgSelectModule } from '@ng-select/ng-select';
+import { QuillModule } from 'ngx-quill'
+import { LetModule } from '@rx-angular/template';
+import { NgxDropzoneModule } from 'ngx-dropzone';
+import { HotToastModule } from '@ngneat/hot-toast';
+import { ModalModule } from 'ngx-bootstrap/modal';
+
+const lib=[
+  NgSelectModule,LetModule,NgxDropzoneModule,HotToastModule,ModalModule.forRoot()
+]
+
+@NgModule({
+  declarations: [
+    AreaEditComponent
+  ],
+  imports: [
+    CommonModule,
+    AreaEditRoutingModule,
+    FormsModule,
+    ReactiveFormsModule,
+    ...lib,
+    QuillModule.forRoot()
+  ]
+})
+export class AreaEditModule { }
