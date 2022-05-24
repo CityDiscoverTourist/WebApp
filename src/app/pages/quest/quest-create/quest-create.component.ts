@@ -9,6 +9,7 @@ import { RxState } from '@rx-angular/state';
 import { QuestState, QUEST_STATE } from '../states/quest.state';
 import { IdValue } from 'src/app/models';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { HotToastService } from '@ngneat/hot-toast';
 
 interface QuestEditState {
   showQuestDescription: boolean;
@@ -25,7 +26,8 @@ export class QuestCreateComponent implements OnInit {
   constructor(
     @Inject(QUEST_STATE) private questState: RxState<QuestState>,
     private state: RxState<QuestEditState>,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private toast:HotToastService,
   ) {
     this.state.set({
       showQuestDescription: false,
@@ -72,5 +74,14 @@ export class QuestCreateComponent implements OnInit {
       areaId: [],
       status: [],
     });
+  }
+  submitForm(){
+    const valid=this.form.valid;
+    console.log(`form state =${valid}`,this.form.value,this.form.errors);
+    if(valid){
+     this.toast.success("Ok roi ne");
+    }else{
+      this.toast.error("Loi roi ne");
+    }
   }
 }

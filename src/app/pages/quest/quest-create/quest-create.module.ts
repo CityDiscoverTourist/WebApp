@@ -10,9 +10,10 @@ import { NgxDropzoneModule } from 'ngx-dropzone';
 import { HotToastModule } from '@ngneat/hot-toast';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ModalModule } from 'ngx-bootstrap/modal';
 
 const lib=[
-  NgSelectModule,QuillModule,LetModule,NgxDropzoneModule
+  NgSelectModule,LetModule,NgxDropzoneModule,HotToastModule,ModalModule.forRoot()
 ]
 @NgModule({
   declarations: [
@@ -25,6 +26,7 @@ const lib=[
     ReactiveFormsModule,
     HotToastModule.forRoot(),
     BsDropdownModule.forRoot(),
+    QuillModule.forRoot(),
     ...lib,
   ]
 })
