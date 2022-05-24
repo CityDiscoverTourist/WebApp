@@ -1,5 +1,6 @@
 import {
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   Inject,
   OnInit,
@@ -13,13 +14,14 @@ import { HotToastService } from '@ngneat/hot-toast';
 
 interface QuestEditState {
   showQuestDescription: boolean;
+  files: File[];
 }
 
 @Component({
   selector: 'app-quest-create',
   templateUrl: './quest-create.component.html',
   styleUrls: ['./quest-create.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  // changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [RxState],
 })
 export class QuestCreateComponent implements OnInit {
@@ -28,9 +30,11 @@ export class QuestCreateComponent implements OnInit {
     private state: RxState<QuestEditState>,
     private fb: FormBuilder,
     private toast:HotToastService,
+    private cd:ChangeDetectorRef,
   ) {
     this.state.set({
       showQuestDescription: false,
+      files: [],
     });
   }
 
@@ -38,6 +42,23 @@ export class QuestCreateComponent implements OnInit {
     this.state.connect(this.toggleDescription$, (prev,_) => ({
       showQuestDescription: !prev.showQuestDescription,
     }));
+
+    this.state.connect(
+      this.selectedFile$.pipe(tap(() => setTimeout(()=>this.cd.detectChanges(),100))),
+      (prev, files) => ({
+        files: [...prev.files, ...files],
+      })
+    );
+
+    this.state.connect(
+      this.removedFiles$.pipe(tap(()=>setTimeout(()=>this.cd.markForCheck(),100))),
+      (prev, curr) => {
+       prev.files.splice(prev.files.indexOf(curr), 1);
+        return {
+          files: prev.files
+        };
+      }
+    );
 
     this.initForm();
   }
@@ -63,9 +84,10 @@ export class QuestCreateComponent implements OnInit {
     this.form = this.fb.group({
       title: ['', [Validators.required, Validators.minLength(5)]],
       // sku: [null, [customProductSkuValidator()]],
-      description: [],
+      description: ['',[Validators.required, Validators.minLength(10)]],
       price: [],
       estimatedTime: [],
+      estimatedDistance:[],
       image:[],
       availableTime: [],
       questTypeId: [],
@@ -84,4 +106,6 @@ export class QuestCreateComponent implements OnInit {
       this.toast.error("Loi roi ne");
     }
   }
+  selectedFile$ = new Subject<File[]>();
+  removedFiles$ = new Subject<File>();
 }
