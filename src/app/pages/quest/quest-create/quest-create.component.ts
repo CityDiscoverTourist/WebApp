@@ -84,8 +84,9 @@ export class QuestCreateComponent implements OnInit {
     this.form = this.fb.group({
       title: ['', [Validators.required, Validators.minLength(5)]],
       // sku: [null, [customProductSkuValidator()]],
-      description: ['',[Validators.required, Validators.minLength(10)]],
-      price: [],
+      description: [],
+      // description: ['',[Validators.required, Validators.minLength(10)]],
+      price: [0,[Validators.required,Validators.min(10)]],
       estimatedTime: [],
       estimatedDistance:[],
       image:[],
@@ -104,8 +105,21 @@ export class QuestCreateComponent implements OnInit {
      this.toast.success("Ok roi ne");
     }else{
       this.toast.error("Loi roi ne");
+      // this.form.get('title')?.markAsTouched({onlySelf:true});
+      // this.form.get('price')?.markAsTouched({onlySelf:true});
+      for(let key in this.form.controls){
+        this.form.get(key)?.markAsTouched({onlySelf:true});
+      }
     }
   }
   selectedFile$ = new Subject<File[]>();
   removedFiles$ = new Subject<File>();
+
+  hasError(key:string):boolean{
+    const control=this.form.get(key);
+    if(!control){
+      return false;
+    }
+    return control.invalid && (control.dirty || control.touched);
+  }
 }
