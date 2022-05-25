@@ -11,6 +11,7 @@ import { QuestState, QUEST_STATE } from '../states/quest.state';
 import { IdValue } from 'src/app/models';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HotToastService } from '@ngneat/hot-toast';
+import { customQuestValidator } from 'src/app/common/validations';
 
 interface QuestEditState {
   showQuestDescription: boolean;
@@ -82,12 +83,12 @@ export class QuestCreateComponent implements OnInit {
 
   initForm() {
     this.form = this.fb.group({
-      title: ['', [Validators.required, Validators.minLength(5)]],
+      title: ['', [Validators.required, Validators.minLength(8)]],
       // sku: [null, [customProductSkuValidator()]],
       description: [],
       // description: ['',[Validators.required, Validators.minLength(10)]],
       price: [0,[Validators.required,Validators.min(10)]],
-      estimatedTime: [],
+      estimatedTime: ['',[customQuestValidator()]],
       estimatedDistance:[],
       image:[],
       availableTime: [],
@@ -107,19 +108,20 @@ export class QuestCreateComponent implements OnInit {
       this.toast.error("Loi roi ne");
       // this.form.get('title')?.markAsTouched({onlySelf:true});
       // this.form.get('price')?.markAsTouched({onlySelf:true});
-      for(let key in this.form.controls){
-        this.form.get(key)?.markAsTouched({onlySelf:true});
-      }
+      // for(let key in this.form.controls){
+      //   this.form.get(key)?.markAsTouched({onlySelf:true});
+      // }
+      this.form.revalidateControls([]);
     }
   }
   selectedFile$ = new Subject<File[]>();
   removedFiles$ = new Subject<File>();
 
-  hasError(key:string):boolean{
-    const control=this.form.get(key);
-    if(!control){
-      return false;
-    }
-    return control.invalid && (control.dirty || control.touched);
-  }
+  // hasError(key:string):boolean{
+  //   const control=this.form.get(key);
+  //   if(!control){
+  //     return false;
+  //   }
+  //   return control.invalid && (control.dirty || control.touched);
+  // }
 }

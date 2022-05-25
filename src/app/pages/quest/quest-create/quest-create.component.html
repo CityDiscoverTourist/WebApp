@@ -39,14 +39,26 @@
                 placeholder="Nhập tên quest"
                 id="title"
                 formControlName="title"
-                [ngClass]="{'is-invalid':hasError('title')}"
+                [ngClass]="{ 'is-invalid': form?.hasError('title') }"
               />
-              <!-- <div class="invalid-feedback" *ngIf="hasError('productName')"> -->
-              <!-- <div class="invalid-feedback" *ngIf="form?.errorOf('productName')"> -->
-              <div class="invalid-feedback">Tên quest bắt buộc</div>
-              <!-- <div class="invalid-feedback">
-                  Product name must be at least 10 characters
-                </div> -->
+              <!-- [ngClass]="{'is-invalid':hasError('title')}" -->
+              <!-- <div class="invalid-feedback" *ngIf="hasError('title')"> -->
+              <div
+                class="invalid-feedback"
+                *ngIf="form?.hasErrorOf('title', 'required')"
+              >
+                <!-- <div class="invalid-feedback">Tên quest bắt buộc</div> -->
+                <!-- <div class="invalid-feedback">
+                  Product name must be at least 10 characters-->
+                Tên quest bắt buộc
+              </div>
+              <div
+                class="invalid-feedback"
+                *ngIf="form?.hasErrorOf('title', 'minlength')"
+              >
+              <!-- *ngIf="form?.hasErrorOf('title', 'minLength')" -->
+                Độ dài tên ít nhất 8 kí tự
+              </div>
             </div>
             <div class="row mb-3">
               <div class="col">
@@ -57,11 +69,10 @@
                     class="form-control"
                     id="price"
                     formControlName="price"
-                    [ngClass]="{'is-invalid':hasError('price')}"
+                    [ngClass]="{ 'is-invalid': form?.hasError('price') }"
                   />
-                  <div class="invalid-feedback">
-                    Please provide a valid city.
-                  </div>
+                  <!-- [ngClass]="{ 'is-invalid': hasError('price') }" -->
+                  <div class="invalid-feedback">Giá lớn hơn 10</div>
                 </div>
               </div>
               <div class="col">
@@ -76,7 +87,17 @@
                       aria-label="estimatedTime"
                       id="estimatedTime"
                       formControlName="estimatedTime"
+                      [ngClass]="{
+                        'is-invalid': form?.hasError('estimatedTime')
+                      }"
                     />
+                    <div
+                      class="invalid-feedback"
+                      *ngIf="
+                        form?.hasErrorOf('estimatedTime', 'forbiddenPrefix')"
+                    >
+                      EstimatedTime ko dc bat dau bang test
+                    </div>
                   </div>
                 </div>
               </div>
