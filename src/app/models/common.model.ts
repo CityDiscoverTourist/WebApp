@@ -68,3 +68,12 @@ export interface SearchInfo{
     pagination: PagingMetadataTest;
     status:string;
   }
+
+  export interface Result<T>{
+    data?:T;
+    statusCode?:string;
+  }
+
+  // export interface BaseError{
+  //   statusCode:string |null;
+  // }

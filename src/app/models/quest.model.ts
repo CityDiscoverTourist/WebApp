@@ -29,6 +29,7 @@ export interface QuestListItem {
   areaId: number;
 }
 
+
 export interface QuestListSearch extends SearchInfo {
   categories?: number[];
 }
@@ -38,6 +39,8 @@ export interface QuestData {
   title: string;
   description: string;
   price: number;
+  image:File;
+  // image:string;
   estimatedTime: string;
   estimatedDistance: string;
   availableTime: Date;
@@ -47,5 +50,9 @@ export interface QuestData {
   questTypeId: number;
   questOwnerId: number;
   areaId: number;
+}
+
+export interface QuestCreateResult{
+  id:number;
 }
 
