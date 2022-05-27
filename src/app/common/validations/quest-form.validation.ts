@@ -7,3 +7,13 @@ export function customQuestValidator(): ValidatorFn {
       return invalidPrefix ? {forbiddenPrefix: true} : null;
     };
   }
+
+  export function customQuestAvailableTimeValidator(): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      const invalid=!control.value;
+
+      
+      return {forbiddenPrefix: true};
+      //  invalidPrefix ? {forbiddenPrefix: true} : null;
+    };
+  }

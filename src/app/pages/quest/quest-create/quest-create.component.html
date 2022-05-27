@@ -56,7 +56,7 @@
                 class="invalid-feedback"
                 *ngIf="form?.hasErrorOf('title', 'minlength')"
               >
-              <!-- *ngIf="form?.hasErrorOf('title', 'minLength')" -->
+                <!-- *ngIf="form?.hasErrorOf('title', 'minLength')" -->
                 Độ dài tên ít nhất 8 kí tự
               </div>
             </div>
@@ -94,7 +94,8 @@
                     <div
                       class="invalid-feedback"
                       *ngIf="
-                        form?.hasErrorOf('estimatedTime', 'forbiddenPrefix')"
+                        form?.hasErrorOf('estimatedTime', 'forbiddenPrefix')
+                      "
                     >
                       EstimatedTime ko dc bat dau bang test
                     </div>
@@ -113,7 +114,17 @@
                     class="form-control"
                     id="availableTime"
                     formControlName="availableTime"
+                    placeholder="7h AM/ 17h PM"
+                    [ngClass]="{
+                      'is-invalid': form?.hasError('availableTime')
+                    }"
                   />
+                  <!-- <div
+                    class="invalid-feedback"
+                    *ngIf="form?.hasErrorOf('availableTime', 'pattern')"
+                  >
+                  Thời gian hoạt động dạng 7h AM/ 17h PM
+                  </div> -->
                 </div>
               </div>
               <div class="col">
@@ -164,7 +175,7 @@
                 ngx-dropzone
                 [accept]="'image/*'"
                 (change)="selectedFile$.next($event.addedFiles)"
-                [multiple]="false" 
+                [multiple]="false"
               >
                 <ngx-dropzone-label>
                   <div>
@@ -185,7 +196,7 @@
                   (removed)="removedFiles$.next(f)"
                 >
                   <ngx-dropzone-label
-                  >{{ f.name }} ({{ f.type }})</ngx-dropzone-label
+                    >{{ f.name }} ({{ f.type }})</ngx-dropzone-label
                   >
                 </ngx-dropzone-image-preview>
               </div>
@@ -210,6 +221,14 @@
                 bindLabel="value"
                 formControlName="questTypeId"
               ></ng-select>
+              <ng-select [items]="[1, 2, 3, 4]" class="header-p-0">
+                <ng-template ng-header-tmp>
+                  <button class="btn btn-default btn-sm rounded-0 text-center w-100">
+                    <i class="bi bi-plus-circle"></i>
+                    Thêm loại quest
+                  </button>
+                </ng-template>
+              </ng-select>
             </div>
             <div class="form-group mb-3">
               <label for="areaId" class="form-label">Chọn khu vực</label>
@@ -242,6 +261,7 @@
                   type="checkbox"
                   role="switch"
                   id="status"
+                  formControlName="status"
                 />
                 <label class="form-check-label" for="status"></label>
               </div>

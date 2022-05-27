@@ -19,7 +19,7 @@ import { QuestState, QUEST_STATE } from '../states/quest.state';
 import { IdValue, QuestData } from 'src/app/models';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HotToastService } from '@ngneat/hot-toast';
-import { customQuestValidator } from 'src/app/common/validations';
+import { customQuestAvailableTimeValidator, customQuestValidator } from 'src/app/common/validations';
 import { QuestService } from 'src/app/services';
 
 interface QuestEditState {
@@ -151,7 +151,6 @@ export class QuestCreateComponent implements OnInit {
       id: [0],
       title: ['', [Validators.required, Validators.minLength(8)]],
       // title: [],
-      // sku: [null, [customProductSkuValidator()]],
       description: [],
       // description: ['',[Validators.required, Validators.minLength(10)]],
       price: [0, [Validators.required, Validators.min(10)]],
@@ -160,12 +159,12 @@ export class QuestCreateComponent implements OnInit {
       estimatedTime: [''],
       estimatedDistance: [],
       availableTime: [],
+      // availableTime: ['', [Validators.pattern("^(1[0123456789]|[1-9])(am|pm)\-(1[012]|[1-9])(am|pm)")]],
       questTypeId: [],
       image: [],
-      // salePrice: [0, [Validators.required, Validators.min(10)]],
       questOwnerId: [2],
       areaId: [],
-      status: ['true'],
+      status: [false],
     });
   }
   submitForm() {
