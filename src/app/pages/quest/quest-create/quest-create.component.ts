@@ -12,6 +12,7 @@ import {
   partition,
   Subject,
   switchMap,
+  take,
   tap,
 } from 'rxjs';
 import { RxState } from '@rx-angular/state';
@@ -19,8 +20,14 @@ import { QuestState, QUEST_STATE } from '../states/quest.state';
 import { IdValue, QuestData } from 'src/app/models';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HotToastService } from '@ngneat/hot-toast';
-import { customQuestAvailableTimeValidator, customQuestValidator } from 'src/app/common/validations';
+import {
+  customQuestAvailableTimeValidator,
+  customQuestValidator,
+} from 'src/app/common/validations';
 import { QuestService } from 'src/app/services';
+import { ActivatedRoute } from '@angular/router';
+import { BsModalService } from 'ngx-bootstrap/modal';
+import { QuestTypeModalComponent } from '../../share/quest-type-modal/quest-type-modal.component';
 
 interface QuestEditState {
   showQuestDescription: boolean;
@@ -43,7 +50,9 @@ export class QuestCreateComponent implements OnInit {
     private fb: FormBuilder,
     private toast: HotToastService,
     private cd: ChangeDetectorRef,
-    private questService: QuestService
+    private questService: QuestService,
+    private activatedRoute: ActivatedRoute,
+    private modalService: BsModalService
   ) {
     this.state.set({
       showQuestDescription: false,
@@ -62,9 +71,7 @@ export class QuestCreateComponent implements OnInit {
       this.selectedFile$
         .pipe(tap(() => setTimeout(() => this.cd.detectChanges(), 100)))
         //pick image event
-        .pipe(
-          tap((file) =>  this.form.patchValue({ image: file[0] }))
-        ),
+        .pipe(tap((file) => this.form.patchValue({ image: file[0] }))),
       (_prev, files) => ({
         // files: [...prev.files, ...files],
         files: [...files],
@@ -127,6 +134,10 @@ export class QuestCreateComponent implements OnInit {
     //     f.revalidateControls([]);
     //   }
     // )
+
+    this.questState.connect(this.questypeIds$, (prev, curr) => ({
+      questTypeIds: [...prev.questTypeIds, { id: curr.id, value: curr.name }],
+    }));
   }
 
   toggleDescription$ = new Subject<void>();
@@ -210,4 +221,21 @@ export class QuestCreateComponent implements OnInit {
   //   const file = input.files[0];
   //   this.form.patchValue({ image: file });
   // }
+  
+  showAddQuestType() {
+    const bsModalRef = this.modalService.show(QuestTypeModalComponent, {
+      initialState: {
+        simpleForm: true,
+      },
+    });
+
+    bsModalRef.onHide?.pipe(take(1)).subscribe({
+      next: (result) => {
+        const questypeIds = result as { id: number; name: string };
+        this.questypeIds$.next({ id: questypeIds.id, name: questypeIds.name });
+      },
+    });
+  }
+
+  questypeIds$ = new Subject<{ id: number; name: string }>();
 }

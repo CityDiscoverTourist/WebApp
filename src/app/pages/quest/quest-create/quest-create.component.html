@@ -219,16 +219,21 @@
                 [items]="questTypeIds | async"
                 bindValue="id"
                 bindLabel="value"
-                formControlName="questTypeId"
-              ></ng-select>
-              <ng-select [items]="[1, 2, 3, 4]" class="header-p-0">
+                formControlName="questTypeId" class="header-p-0">
+              <ng-template ng-header-tmp>
+                <button class="btn btn-default btn-sm rounded-0 text-center w-100" (click)="showAddQuestType()">
+                  <i class="bi bi-plus-circle"></i>
+                  Thêm loại quest
+                </button>
+              </ng-template></ng-select>
+              <!-- <ng-select [items]="[1, 2, 3, 4]" class="header-p-0">
                 <ng-template ng-header-tmp>
                   <button class="btn btn-default btn-sm rounded-0 text-center w-100">
                     <i class="bi bi-plus-circle"></i>
                     Thêm loại quest
                   </button>
                 </ng-template>
-              </ng-select>
+              </ng-select> -->
             </div>
             <div class="form-group mb-3">
               <label for="areaId" class="form-label">Chọn khu vực</label>

@@ -3,8 +3,9 @@ import { Injectable } from '@angular/core';
 import { id } from '@swimlane/ngx-datatable';
 import { catchError, map, Observable, of } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { IdValue, pagination, Pagination } from '../models';
+import { IdValue, pagination } from '../models';
 import { City, CityForTest } from '../models/city.model';
+import { Pagination } from '../models/pagination.model';
 import { BaseService } from './base.service ';
 
 @Injectable({

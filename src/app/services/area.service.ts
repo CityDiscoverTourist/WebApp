@@ -8,7 +8,6 @@ import {
   AreaListSearch,
   LocationListItem,
   LocationListSearch,
-  Pagination,
   Paging,
   PagingTest,
   AreaData,
@@ -141,32 +140,34 @@ export class AreaService {
       // );
     return result;
   }
-  addArea(area:AreaData):Observable<Pagination<Area>>{
+  addArea(area:AreaData):Observable<any>{
     var areaCreate={
       "id": 0,
       "name": area.name,
       "status": area.status,
       "cityId": 2
     }
-    return this.http.post<Pagination<Area>>(`https://citytourist.azurewebsites.net/api/v1/areas/`,areaCreate);
+    return this.http.post<any>(`https://citytourist.azurewebsites.net/api/v1/areas/`,areaCreate);
   }
 
   getAreaType(): Observable<IdValue[]> {
-    return this.http
-      .get<Pagination<Area>>(
-        'https://citytourist.azurewebsites.net/api/v1/areas',
-        this.httpOptions
-      )
-      .pipe(
-        map((response: Pagination<Area>) =>
-          [...response.data].map(
-            (i) =>
-              ({
-                id: i.id,
-                value: `${i.name}`,
-              } as IdValue)
-          )
-        )
-      );
+    // return this.http
+    //   .get<Pagination<Area>>(
+    //     'https://citytourist.azurewebsites.net/api/v1/areas',
+    //     this.httpOptions
+    //   )
+    //   .pipe(
+    //     map((response: Pagination<Area>) =>
+    //       [...response.data].map(
+    //         (i) =>
+    //           ({
+    //             id: i.id,
+    //             value: `${i.name}`,
+    //           } as IdValue)
+    //       )
+    //     )
+    //   );
+    return of(
+    )
   }
 }

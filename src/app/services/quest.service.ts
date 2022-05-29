@@ -2,7 +2,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 // import { IdValue, Quest } from '../models';
-import { Pagination, Quest, QuestCreateResult, QuestData } from '../models';
+import {Quest, QuestCreateResult, QuestData } from '../models';
 
 @Injectable({
   providedIn: 'root',

@@ -17,7 +17,7 @@ export class QuestComponent implements OnInit {
     @Inject(QUEST_STATE) private questState: RxState<QuestState>,
     private readonly areaService:AreaService
   ) {
-    questState.connect(questTypeService.getAreaType(),(_,curr)=>({
+    questState.connect(questTypeService.getQuestType(),(_,curr)=>({
       questTypeIds:curr
     }));
     questState.connect(areaService.getAreaType(),(_,curr)=>({
