@@ -1,7 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { RxState } from '@rx-angular/state';
-import { AreaService, CityService, QuestService, QuestTypeService } from 'src/app/services';
-import { QuestListPageState, QUEST_PAGE_STATE } from './quest-list/states';
+import { AreaService, QuestTypeService } from 'src/app/services';
 import { QuestState, QUEST_STATE } from './states/quest.state';
 
 @Component({

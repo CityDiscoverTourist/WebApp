@@ -17,8 +17,18 @@ import {
   switchMap,
   tap,
 } from 'rxjs';
-import { IdValue, Quest, QuestListItem, QuestListSearch } from 'src/app/models';
+import {
+  IdValue,
+  Paging,
+  PagingMetadata,
+  Quest,
+  QuestListItem,
+  QuestListSearch,
+} from 'src/app/models';
+import { QuestService } from 'src/app/services';
+import { PageInfo, SortInfo } from 'src/app/types';
 import { QuestState, QUEST_STATE } from '../states/quest.state';
+import { QuestListState } from '../states/questlist.state';
 
 declare type FormType = {
   keyword: string;
@@ -40,6 +50,8 @@ export class QuestListComponent implements OnInit {
 
   constructor(
     @Inject(QUEST_STATE) private questState: RxState<QuestState>,
+    private questService: QuestService,
+    private questListState: RxState<QuestListState>
   ) {}
 
   // onReset() {
@@ -48,26 +60,74 @@ export class QuestListComponent implements OnInit {
   // }
 
   ngOnInit(): void {
-    this.records = [...Array(50).keys()].map(
-      (i) =>
-        ({
-          index:++i,
-          id: i,
-          title: 'string',
-          description: 'string',
-          price: i,
-          estimatedTime: '120',
-          estimatedDistance: 'string',
-          availableTime: new Date(),
-          createdDate: new Date(),
-          updatedDate: new Date(),
-          status: 'string',
-          questTypeId: 1,
-          questOwnerId: 2,
-          areaId: 2,
-        } as QuestListItem)
-    );
+    // this.records = [...Array(50).keys()].map(
+    //   (i) =>
+    //     ({
+    //       index:++i,
+    //       id: i,
+    //       title: 'string',
+    //       description: 'string',
+    //       price: i,
+    //       estimatedTime: '120',
+    //       estimatedDistance: 'string',
+    //       availableTime: new Date(),
+    //       createdDate: new Date(),
+    //       updatedDate: new Date(),
+    //       status: 'string',
+    //       questTypeId: 1,
+    //       questOwnerId: 2,
+    //       areaId: 2,
+    //     } as QuestListItem)
+    // );
+
     this.initTable();
+
+    this.questListState.connect(
+      this.search$.pipe(
+        tap((_) => this.questListState.set({ loading: true })),
+        switchMap((s) => this.questService.getQuests(s))
+      ),
+      (_, result) => ({
+        quests: result.data.map(
+          (x, index) =>
+            ({
+              index: ++index,
+              id: x.id,
+              title: x.title,
+              description: x.description,
+              price: x.price,
+              estimatedTime: x.estimatedTime,
+              estimatedDistance: x.estimatedDistance,
+              availableTime: x.availableTime,
+              createdDate: x.createdDate,
+              updatedDate: x.updatedDate,
+              status: x.status,
+              questTypeId: x.questTypeId,
+              questOwnerId: x.questOwnerId,
+              areaId: x.areaId,
+            } as QuestListItem)
+        ),
+        metadata: { ...result.pagination },
+        loading: false,
+      })
+    );
+
+    //update search
+    this.questListState.hold(this.submitSearch$, (form) => {
+      //submit reset nhay ve page 0
+      this.search$.next({
+        ...this.search$.getValue(),
+        ...form,
+        currentPage: 0,
+      }),
+        (this.table.offset = 0);
+    });
+
+    this.questListState.hold(this.resetSearch$, () => {
+      this.searchForm.reset();
+      this.submitSearch$.next({});
+      this.table.offset = 0;
+    });
   }
 
   initTable() {
@@ -77,7 +137,7 @@ export class QuestListComponent implements OnInit {
         name: 'STT',
         sortable: true,
         canAutoResize: true,
-        maxWidth:75
+        maxWidth: 75,
       },
       {
         prop: 'title',
@@ -136,42 +196,59 @@ export class QuestListComponent implements OnInit {
         sortable: true,
       },
       // {
-      //   prop: 'questTypeId',
+      //   prop: 'questOwnerId',
       //   maxWidth: 350,
-      //   name: 'Loại',
+      //   name: 'Quest owner',
       //   sortable: true,
       // },
-      {
-        prop: 'questOwnerId',
-        maxWidth: 350,
-        name: 'Quest owner',
-        sortable: true,
-      },
       {
         prop: 'areaId',
         maxWidth: 350,
         name: 'Khu vực',
         sortable: true,
       },
-
     ];
   }
 
-  // onPage(paging: PagingInfo) {
-  //   console.log(paging);
-  //   this.search$.next({
-  //     ...this.search$.getValue(),
-  //     currentPage: paging.offset,
-  //   });
-  // }
-  // onSort(event: SortInfo) {
-  //   this.search$.next({
-  //     ...this.search$.getValue(),
-  //     sortBy: event.column.prop,
-  //     sortDir: event.newValue,
-  //   });
-  // }
-  get questTypeIds():Observable<IdValue[]>{
-    return this.questState.select('questTypeIds').pipe(tap((m) => console.log(m)));
+  onPage(paging: PageInfo) {
+    console.log(paging);
+    this.search$.next({
+      ...this.search$.getValue(),
+      currentPage: paging.offset,
+    });
   }
+  onSort(event: SortInfo) {
+    console.log(event);
+    this.table.offset - 1;
+    this.search$.next({
+      ...this.search$.getValue(),
+      sort: { sortBy: event.column.prop, dir: event.newValue },
+    });
+  }
+  get questTypeIds(): Observable<IdValue[]> {
+    return this.questState.select('questTypeIds');
+  }
+
+  searchForm = new FormGroup({
+    keyword: new FormControl(),
+    questTypeIds: new FormControl(),
+  });
+  search$ = new BehaviorSubject<QuestListSearch>({});
+
+  get areas$(): Observable<QuestListItem[]> {
+    return this.questListState.select('quests');
+  }
+  get metadata$(): Observable<PagingMetadata> {
+    return this.questListState.select('metadata');
+  }
+  get loading$(): Observable<boolean> {
+    return this.questListState.select('loading').pipe(tap((data)=>console.log(data)));
+  }
+  submitSearch$ = new Subject<Partial<FromType>>();
+  resetSearch$ = new Subject<void>();
 }
+
+declare type FromType = {
+  keyword: string;
+  questTypeIds: number[];
+};

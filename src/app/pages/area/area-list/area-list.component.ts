@@ -23,7 +23,6 @@ import {
   AreaListSearch,
   IdValue,
   PagingMetadata,
-  PagingMetadataTest,
 } from 'src/app/models';
 import { AreaService } from 'src/app/services/area.service';
 import { PageInfo, SortInfo } from 'src/app/types';
@@ -222,7 +221,7 @@ export class AreaListComponent implements OnInit {
 
   resetSearch$ = new Subject<void>();
 
-  get metadata$(): Observable<PagingMetadataTest> {
+  get metadata$(): Observable<PagingMetadata> {
     // console.log(`getting metadata`);
 
     return this.areaListState.select('metadata');

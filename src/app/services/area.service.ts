@@ -9,10 +9,10 @@ import {
   LocationListItem,
   LocationListSearch,
   Paging,
-  PagingTest,
   AreaData,
   IdValue,
 } from '../models';
+import { Pagination } from '../models/pagination.model';
 
 @Injectable({
   providedIn: 'root',
@@ -21,7 +21,7 @@ export class AreaService {
   constructor(private http: HttpClient) {}
 
   httpOptions = {
-    headers: new HttpHeaders({ 'Content-Type': 'application/json','UserId':'1' }),
+    headers: new HttpHeaders({ 'Content-Type': 'application/json'}),
   };
 
   // getAreas(search: AreaListSearch) {
@@ -95,7 +95,7 @@ export class AreaService {
 //     return result;
 //   }
 
-  getAreas(search:AreaListSearch) :Observable<PagingTest<Area>>{
+  getAreas(search:AreaListSearch) :Observable<Paging<Area>>{
   console.log('test '+search?.currentPage);
   
   var sortBy= `${search.sort?.sortBy}` ==='undefined'?'':search.sort?.sortBy;
@@ -110,7 +110,7 @@ export class AreaService {
     console.log("ddddddddd");
     console.log(query);
       var result = this.http
-      .get<PagingTest<Area>>(
+      .get<Paging<Area>>(
         'https://citytourist.azurewebsites.net/api/v1/areas?'+query,
         this.httpOptions
       )
@@ -151,23 +151,21 @@ export class AreaService {
   }
 
   getAreaType(): Observable<IdValue[]> {
-    // return this.http
-    //   .get<Pagination<Area>>(
-    //     'https://citytourist.azurewebsites.net/api/v1/areas',
-    //     this.httpOptions
-    //   )
-    //   .pipe(
-    //     map((response: Pagination<Area>) =>
-    //       [...response.data].map(
-    //         (i) =>
-    //           ({
-    //             id: i.id,
-    //             value: `${i.name}`,
-    //           } as IdValue)
-    //       )
-    //     )
-    //   );
-    return of(
-    )
+    return this.http
+      .get<Pagination<Area>>(
+        'https://citytourist.azurewebsites.net/api/v1/areas',
+        this.httpOptions
+      )
+      .pipe(
+        map((response: Pagination<Area>) =>
+          [...response.data].map(
+            (i) =>
+              ({
+                id: i.id,
+                value: `${i.name}`,
+              } as IdValue)
+          )
+        )
+      );
   }
 }

@@ -43,7 +43,7 @@ export class LocationListComponent implements OnInit {
         locations:result.records,
         // metadata:result.metadata
         //doi sau current page
-        metadata:{...result.metadata}
+        // metadata:{...result.metadata}
       })
     )
     //bam nut cap nhat lai cai search hold ko thay doi state
