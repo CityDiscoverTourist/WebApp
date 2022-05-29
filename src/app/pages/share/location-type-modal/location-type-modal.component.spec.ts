@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { CityModalComponent } from './city-modal.component';
+import { LocationTypeModalComponent } from './location-type-modal.component';
 
-describe('CityModalComponent', () => {
-  let component: CityModalComponent;
-  let fixture: ComponentFixture<CityModalComponent>;
+describe('LocationTypeModalComponent', () => {
+  let component: LocationTypeModalComponent;
+  let fixture: ComponentFixture<LocationTypeModalComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ CityModalComponent ]
+      declarations: [ LocationTypeModalComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(CityModalComponent);
+    fixture = TestBed.createComponent(LocationTypeModalComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

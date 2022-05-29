@@ -1,28 +1,76 @@
 <div class="d-flex master">
-
   <!-- <aside class="aside"> -->
-  <aside class="aside overflow-hidden" style="width: 225px;"> <!--#23-->
-      <h2 class="mb-0">
-        <!-- <a [routerLink]="['/admin']" class="border-bottom border-secondary branding px-4">CTDT</a>       -->
-        <a  class="border-bottom border-secondary branding px-4 text-white">Admin </a>      
-      </h2>
-    <!-- <nav class="h-100 menu"> -->
-    <nav class="menu"><!--#23-->
-      <div class="divider">Tổng quan</div>      
-      <a routerLink="./quest" class="divider">Quest</a>
-      <div class="divider">Thanh toán</div>      
-      <!-- <a [routerLink]="['./','products']">Products</a> -->
-      <a>KHU VỰC</a>
-      <a href="#">KHÁCH HÀNG</a>
-      <a href="#">THÀNH PHỐ</a>
-      <a href="#">CÀI ĐẶT</a>
+  <aside class="aside overflow-hidden" style="width: 225px">
+    <!--#23-->
+    <h2 class="mb-0">
+      <!-- <a [routerLink]="['/admin']" class="border-bottom border-secondary branding px-4">CTDT</a>       -->
+      <a class="border-bottom border-secondary branding px-4 text-white"
+        >Touristapp
+      </a>
+    </h2>
+    <nav class="menu">
+      <!-- <div class="divider">Tổng quan</div> -->
+      <a routerLink="./quest" class="divider">Quests</a>
+      <ul class="list-unstyled ms-4">
+        <li><a routerLink="./quest" class="divider">Quest</a></li>
+        <li><a routerLink="./quest" class="divider">QuestType</a></li>
+        <li><a routerLink="./quest" class="divider">Quest Item</a></li>
+        <li><a routerLink="./quest" class="divider">Suggestion</a></li>
+      </ul>
+      <div>
+        <a routerLink="./quest" class="divider">SPOT </a>
+      <ul class="list-unstyled ms-4">
+        <li><a routerLink="./quest" class="divider">City</a></li>
+        <li><a routerLink="./quest" class="divider">Area</a></li>
+        <li><a routerLink="./quest" class="divider">Location</a></li>
+        <li><a routerLink="./quest" class="divider">LocationType</a></li>
+      </ul>
+      </div>
+      <a routerLink="./quest" class="divider">ACCOUNT MANAGEMENT</a>
+      <ul class="list-unstyled ms-4">
+        <li><a routerLink="./quest" class="divider">Users</a></li>
+        <li><a routerLink="./quest" class="divider">QuestOwner</a></li>
+      </ul>
+      <a routerLink="./quest" class="divider">CONFIGURATION</a>
+      <ul class="list-unstyled ms-4">
+        <li><a routerLink="./quest" class="divider">Role</a></li>
+      </ul>
+
+      <!-- <div class="divider">Thanh toán</div> -->
+      <!-- <a
+        href="javascript:void(0)"
+        data-toggle="collapse"
+        aria-expanded="true"
+        [ngClass]="status == true ? 'dropdown-toggle show' : 'dropdown-toggle'"
+        (click)="AddFunction()"
+        >Home</a
+      >
+      <ul
+        [ngClass]="
+          status == true
+            ? 'list-unstyled fw-normal pb-1 small'
+            : 'list-unstyled collapse'
+        "
+        id="homeSubmenu"
+        class="ps-4"
+      >
+        <li>
+          <a href="javascript:void(0)">Home 1</a>
+        </li>
+        <li>
+          <a href="javascript:void(0)">Home 2</a>
+        </li>
+        <li>
+          <a href="javascript:void(0)">Home 3</a>
+        </li>
+      </ul> -->
     </nav>
   </aside>
   <!-- <main class="flex-fill "> -->
   <main class="flex-fill main-container">
     <header
       class="header"
-      style="height: 52px; top: 0; z-index: 10;"
+      style="height: 52px; top: 0; z-index: 10"
       class="bg-white shadow-sm position-sticky"
     ></header>
     <div class="main">

@@ -27,7 +27,7 @@ $master-bg: #f0f1f1;
         // border: 1px solid black;
         // padding: 10px 20px 10px 60px;
         padding: 10px;
-        padding-left: 60px;
+        // padding-left: 60px;
         &:hover{
             color: #fff;
             background-color: hsl(215deg 33% 24%);
@@ -35,7 +35,8 @@ $master-bg: #f0f1f1;
     }
     .divider{
         padding: 10px;
-        padding-left: 60px;
+        // padding-left: 60px;
+        padding-left: 20px;
         position: relative;
         .bi {
             /* border: 1px solid; */
@@ -52,5 +53,5 @@ $master-bg: #f0f1f1;
             top: 8px;
         }
     }
-
 }
+

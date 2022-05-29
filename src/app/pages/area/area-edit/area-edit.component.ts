@@ -6,7 +6,6 @@ import { BsModalService } from 'ngx-bootstrap/modal';
 import { catchError, Observable, partition, Subject, switchMap, tap } from 'rxjs';
 import { AreaData } from 'src/app/models';
 import { AreaService } from 'src/app/services/area.service';
-import { CityModalComponent } from '../../city/shared';
 
 
 interface AreaEditState {
@@ -125,7 +124,7 @@ export class AreaEditComponent implements OnInit {
   areaSaved$=new Subject<AreaData>();
 
   showAddCity(){
-    const bsModalRef = this.modalService.show(CityModalComponent);
+    
   }
   formSubmit$ = new Subject<FormGroup>();
   submit$ = new Subject<{ form: FormGroup; redirect: boolean }>();

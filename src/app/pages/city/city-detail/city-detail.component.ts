@@ -8,7 +8,7 @@ import {
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { Subscription } from 'rxjs';
 import { MessageConstants } from 'src/app/contants';
-import { City, Pagination } from 'src/app/models';
+import { City } from 'src/app/models';
 import { CityService, NotificationService } from 'src/app/services';
 
 @Component({
@@ -94,35 +94,35 @@ export class CityDetailComponent implements OnInit, OnDestroy {
       //     }, 1000);
       //   }
       // )
-      this.cityService.getDetail(id).subscribe({
-        next: (res: Pagination<City>) => {
-          var responses = res;
-          console.log('data ne ' + res);
-          var response = res.data;
-          console.log('Resssss' + response);
-          var abc = Object.keys(response);
-          var ddd = Object.values(response);
-          var abc1 = Object.values(response)[0];
-          var ddd1 = Object.values(response)[1];
-          var sddd = Object.keys(response)[0];
-          var sdddss = Object.keys(response)[1];
-          // var k=response["id"];
-          var mm = abc[0];
-          this.entityForm.setValue({
-            id: Object.values(response)[0],
-            name: Object.values(response)[1],
-            status:"6626"
-          });
-          setTimeout(() => {
-            this.blockedPanel = false;
-          }, 1000);
-        },
-        error: () =>
-          setTimeout(() => {
-            this.blockedPanel = false;
-          }, 1000),
-        complete: () => console.info('complete'),
-      })
+      // this.cityService.getDetail(id).subscribe({
+      //   next: (res: Pagination<City>) => {
+      //     var responses = res;
+      //     console.log('data ne ' + res);
+      //     var response = res.data;
+      //     console.log('Resssss' + response);
+      //     var abc = Object.keys(response);
+      //     var ddd = Object.values(response);
+      //     var abc1 = Object.values(response)[0];
+      //     var ddd1 = Object.values(response)[1];
+      //     var sddd = Object.keys(response)[0];
+      //     var sdddss = Object.keys(response)[1];
+      //     // var k=response["id"];
+      //     var mm = abc[0];
+      //     this.entityForm.setValue({
+      //       id: Object.values(response)[0],
+      //       name: Object.values(response)[1],
+      //       status:"6626"
+      //     });
+      //     setTimeout(() => {
+      //       this.blockedPanel = false;
+      //     }, 1000);
+      //   },
+      //   error: () =>
+      //     setTimeout(() => {
+      //       this.blockedPanel = false;
+      //     }, 1000),
+      //   complete: () => console.info('complete'),
+      // })
     );
   }
   public saveChange() {

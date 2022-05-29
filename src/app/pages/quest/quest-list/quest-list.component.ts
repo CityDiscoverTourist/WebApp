@@ -17,7 +17,8 @@ import {
   switchMap,
   tap,
 } from 'rxjs';
-import { Quest, QuestListItem, QuestListSearch } from 'src/app/models';
+import { IdValue, Quest, QuestListItem, QuestListSearch } from 'src/app/models';
+import { QuestState, QUEST_STATE } from '../states/quest.state';
 
 declare type FormType = {
   keyword: string;
@@ -37,7 +38,9 @@ export class QuestListComponent implements OnInit {
 
   @ViewChild(DatatableComponent) table!: DatatableComponent;
 
-  constructor() {}
+  constructor(
+    @Inject(QUEST_STATE) private questState: RxState<QuestState>,
+  ) {}
 
   // onReset() {
   //   this.searchForm.reset();
@@ -168,4 +171,7 @@ export class QuestListComponent implements OnInit {
   //     sortDir: event.newValue,
   //   });
   // }
+  get questTypeIds():Observable<IdValue[]>{
+    return this.questState.select('questTypeIds').pipe(tap((m) => console.log(m)));
+  }
 }

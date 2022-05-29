@@ -1,10 +1,9 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
 import { QuestRoutingModule } from './quest-routing.module';
 import { QuestComponent } from './quest.component';
-import { QuestListPageState, QUEST_PAGE_STATE } from './quest-list/states';
 import { RxState } from '@rx-angular/state';
+import { QuestState, QUEST_STATE } from './states/quest.state';
 
 
 
@@ -17,8 +16,8 @@ import { RxState } from '@rx-angular/state';
     QuestRoutingModule,
   ],
   providers:[{
-    provide:QUEST_PAGE_STATE,
-    useFactory:()=>new RxState<QuestListPageState>()
+    provide:QUEST_STATE,
+    useFactory:()=>new RxState<QuestState>()
   }]
 
 })

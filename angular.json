@@ -36,17 +36,15 @@
               "node_modules/alertifyjs/build/css/themes/default.css",
               "src/styles.scss"
             ],
-            "scripts": [
-              "node_modules/alertifyjs/build/alertify.js"
-            ]
+            "scripts": ["node_modules/alertifyjs/build/alertify.js"]
           },
           "configurations": {
             "production": {
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "500kb",
-                  "maximumError": "1mb"
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
                 },
                 {
                   "type": "anyComponentStyle",
