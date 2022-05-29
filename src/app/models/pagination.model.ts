@@ -1,8 +1,3 @@
-// export class Pagination<T> {
-//     items: T[] ;
-//     totalRecords: number;
-// }
-
 export interface Pagination<T> {
   message: string;
   data: T[];

@@ -14,6 +14,7 @@ export interface Quest {
 
 
 export interface QuestListItem {
+  index:number;
   id: number;
   title: string;
   description: string;
@@ -31,7 +32,7 @@ export interface QuestListItem {
 
 
 export interface QuestListSearch extends SearchInfo {
-  categories?: number[];
+  questypes?: number[];
 }
 
 export interface QuestData {
