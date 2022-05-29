@@ -2,8 +2,9 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { map, of } from 'rxjs';
 import { Observable } from 'rxjs/internal/Observable';
-import { IdValue, QuestType, Result } from '../models';
+import { IdValue, Result } from '../models';
 import { Pagination } from '../models/pagination.model';
+import { QuestType } from '../models/questtype.model';
 
 @Injectable({
   providedIn: 'root'

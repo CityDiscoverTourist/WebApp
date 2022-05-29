@@ -26,7 +26,7 @@
     "@rx-angular/state": "^1.6.0",
     "@rx-angular/template": "^1.0.0-beta.32",
     "@swimlane/ngx-datatable": "^20.0.0",
-    "@types/quill": "^2.0.9",
+    "@types/quill": "2.0.3",
     "alertifyjs": "^1.13.1",
     "boostrap": "^2.0.0",
     "bootstrap": "^5.1.3",

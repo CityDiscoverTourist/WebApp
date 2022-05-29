@@ -12,7 +12,7 @@ import {
   switchMap,
   tap,
 } from 'rxjs';
-import { QuestTypeService } from 'src/app/services';
+import { QuestTypeService } from 'src/app/services/quest-type.service';
 
 declare type ModalState = {
   hasError: boolean;
