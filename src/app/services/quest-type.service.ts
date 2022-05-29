@@ -1,8 +1,9 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { map } from 'rxjs';
+import { map, of } from 'rxjs';
 import { Observable } from 'rxjs/internal/Observable';
-import { IdValue, Pagination, QuestType } from '../models';
+import { IdValue, QuestType, Result } from '../models';
+import { Pagination } from '../models/pagination.model';
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +15,7 @@ export class QuestTypeService {
     headers: new HttpHeaders({ 'Content-Type': 'application/json'}),
   };
 
-  getAreaType(): Observable<IdValue[]> {
+  getQuestType(): Observable<IdValue[]> {
     return this.http
       .get<Pagination<QuestType>>(
         'https://citytourist.azurewebsites.net/api/v1/quest-types',
@@ -31,5 +32,17 @@ export class QuestTypeService {
           )
         )
       );
+  }
+  addQuestType(questType:Partial<QuestType>): Observable<Result<Partial<QuestType>>> {
+    // return of({
+    //   message:'',
+    //   data: questType,
+    //   status: 'data modified',
+    // });
+    return this.http.post<Result<Partial<QuestType>>>(
+      `https://citytourist.azurewebsites.net/api/v1/quest-types/`,
+      questType,
+      this.httpOptions
+    );
   }
 }
