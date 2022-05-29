@@ -4645,12 +4645,12 @@ ngx-dropzone@^3.1.0:
   dependencies:
     tslib "^2.0.0"
 
-ngx-quill@^16.2.0:
-  version "16.2.1"
-  resolved "https://registry.yarnpkg.com/ngx-quill/-/ngx-quill-16.2.1.tgz#85897a3f5f5d5093b12f13436d75658fda1df548"
-  integrity sha512-gEw9iE6rFmyNMVC+Q3xjbB+GQxfy7F8aqwPoWNPLsbl/UNb187XudlUwV7OjUZdN7rc78oSHZwCYzeEQGtYgrQ==
+ngx-quill@^7.3.0:
+  version "7.3.12"
+  resolved "https://registry.yarnpkg.com/ngx-quill/-/ngx-quill-7.3.12.tgz#3321f005f729507577dc9b130d9334ebddd67fdc"
+  integrity sha512-A49Q5KvBtzTRc+hmjzpvPkar1hOoaeGKEispeQ91yUaIB95fjzykx6SqWtcBmGFckNllCOIQV9iel9+RCnd+8Q==
   dependencies:
-    tslib "^2.3.0"
+    tslib "^1.9.0"
 
 nice-napi@^1.0.2:
   version "1.0.2"
