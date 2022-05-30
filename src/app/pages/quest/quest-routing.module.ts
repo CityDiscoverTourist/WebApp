@@ -41,9 +41,8 @@ const routes: Routes = [
       },
       {
         path: ':id',
-        // component: ProductCreateComponent,
         loadChildren:()=>
-        import('./quest-edit/quest-edit.module').then(m=>m.QuestEditModule)      },
+        import('./quest-detail/quest-detail.module').then(m=>m.QuestDetailModule)      },
     ],
   },
 ];

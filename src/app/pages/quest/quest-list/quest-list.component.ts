@@ -7,8 +7,14 @@ import {
   ViewChild,
 } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
 import { RxState } from '@rx-angular/state';
-import { DatatableComponent, TableColumn } from '@swimlane/ngx-datatable';
+import {
+  ColumnChangesService,
+  DatatableComponent,
+  SelectionType,
+  TableColumn,
+} from '@swimlane/ngx-datatable';
 import {
   BehaviorSubject,
   Observable,
@@ -47,11 +53,12 @@ export class QuestListComponent implements OnInit {
   columns: TableColumn[] = [];
 
   @ViewChild(DatatableComponent) table!: DatatableComponent;
-
   constructor(
     @Inject(QUEST_STATE) private questState: RxState<QuestState>,
     private questService: QuestService,
-    private questListState: RxState<QuestListState>
+    private questListState: RxState<QuestListState>,
+    private router: Router,
+    private activatedRoute: ActivatedRoute,
   ) {}
 
   // onReset() {
@@ -149,7 +156,7 @@ export class QuestListComponent implements OnInit {
         prop: 'description',
         name: 'Mô tả',
         sortable: true,
-        canAutoResize: true,
+        minWidth: 320,
       },
       {
         prop: 'price',
@@ -182,13 +189,13 @@ export class QuestListComponent implements OnInit {
         canAutoResize: true,
         cellTemplate: this.colCreatedAt,
       },
-      {
-        prop: 'updatedDate',
-        name: 'Ngày sửa',
-        sortable: true,
-        canAutoResize: true,
-        cellTemplate: this.colCreatedAt,
-      },
+      // {
+      //   prop: 'updatedDate',
+      //   name: 'Ngày sửa',
+      //   sortable: true,
+      //   canAutoResize: true,
+      //   cellTemplate: this.colCreatedAt,
+      // },
       {
         prop: 'status',
         maxWidth: 300,
@@ -206,19 +213,39 @@ export class QuestListComponent implements OnInit {
         maxWidth: 350,
         name: 'Khu vực',
         sortable: true,
+        // cellTemplate:this.edit,
       },
     ];
   }
 
+  // @ViewChild('edit', { static: true }) edit!: TemplateRef<any>;
+  // @ViewChild('deleteBtn', { static: true }) deleteBtn!: TemplateRef<any>;
+  // selected = [];
+
+  onActivate(event:any) {
+    // console.log('Activate Event', event);
+    if (event.type == 'click') {
+      console.log(event.row);
+      this.router.navigate(['./', event.row.id], {
+        relativeTo: this.activatedRoute,
+      });
+    }
+  }
+  // onSelect({ selected }: any) {
+  //   console.log('Select Event', selected, this.selected);
+  // }
+
+  // SelectionType = SelectionType;
+
   onPage(paging: PageInfo) {
-    console.log(paging);
+    // console.log(paging);
     this.search$.next({
       ...this.search$.getValue(),
       currentPage: paging.offset,
     });
   }
   onSort(event: SortInfo) {
-    console.log(event);
+    // console.log(event);
     this.table.offset - 1;
     this.search$.next({
       ...this.search$.getValue(),
@@ -242,7 +269,8 @@ export class QuestListComponent implements OnInit {
     return this.questListState.select('metadata');
   }
   get loading$(): Observable<boolean> {
-    return this.questListState.select('loading').pipe(tap((data)=>console.log(data)));
+    return this.questListState.select('loading');
+    // .pipe(tap((data)=>console.log(data)));
   }
   submitSearch$ = new Subject<Partial<FromType>>();
   resetSearch$ = new Subject<void>();

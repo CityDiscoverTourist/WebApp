@@ -38,12 +38,11 @@ export class AreaListComponent implements OnInit {
   @ViewChild('colCreatedAt', { static: true }) colCreatedAt!: TemplateRef<any>;
   // columns: any[] = [
   columns: TableColumn[];
-  citys=new Map<number,string>();
+  citys = new Map<number, string>();
   constructor(
     @Inject(AREA_PAGE_STATE) private areaPageState: RxState<AreaListPageState>,
     private areaSerice: AreaService,
-    private areaListState: RxState<AreaListState>,
-    
+    private areaListState: RxState<AreaListState>
   ) {
     console.log('xxxxxxxxxxxxxxx');
     this.search$.subscribe((x) => console.log(x));
@@ -66,8 +65,6 @@ export class AreaListComponent implements OnInit {
     });
   }
 
-
-
   ngOnInit(): void {
     // this.records = [...Array(50).keys()].map(
     //   (i) =>
@@ -79,15 +76,16 @@ export class AreaListComponent implements OnInit {
     //     } as AreaListItem)
     // );
     this.initTable();
-    this.cityIds$.subscribe((data)=>data.forEach(x=>{
-      // this.citys[x.id]=this.citys[x.value]
-      console.log('cccccccccc');
-      console.log(x.id+" "+x.value);
-      
-      
-      this.citys.set(x.id,x.value);
-      console.log('kkkkkk');
-    }))
+    this.cityIds$.subscribe((data) =>
+      data.forEach((x) => {
+        // this.citys[x.id]=this.citys[x.value]
+        console.log('cccccccccc');
+        console.log(x.id + ' ' + x.value);
+
+        this.citys.set(x.id, x.value);
+        console.log('kkkkkk');
+      })
+    );
 
     // this.areaListState.connect(
     //   this.search$.pipe(switchMap((s) => this.areaSerice.getAreas(s))),
@@ -101,22 +99,24 @@ export class AreaListComponent implements OnInit {
     // );
 
     this.areaListState.connect(
-      this.search$.pipe(switchMap((s) => this.areaSerice.getAreas(s)),
-      tap(()=>this.areaListState.set({loading:false}))),
+      this.search$.pipe(
+        tap(() => this.areaListState.set({ loading: false })),
+        switchMap((s) => this.areaSerice.getAreas(s))
+      ),
       (_, result) => ({
         // areas: result.records,
         areas: result.data.map(
-          (x,index) =>
+          (x, index) =>
             ({
-              index:++index,
+              index: ++index,
               id: x.id,
               name: x.name,
               status: x.status,
-              cityId:this.citys.get(x.cityId)
+              cityId: this.citys.get(x.cityId),
             } as AreaListItem)
         ),
         metadata: { ...result.pagination },
-        loading:false,
+        loading: false,
         // metadata: result.pagination,
         //connect chet do ko cung
       })
@@ -205,7 +205,9 @@ export class AreaListComponent implements OnInit {
     //   data.forEach(x=>console.log(x))
 
     // })
-    return this.areaPageState.select('cityIds').pipe(tap(x=>x.forEach(x=>this.citys.set(x.id,x.value))));
+    return this.areaPageState
+      .select('cityIds')
+      .pipe(tap((x) => x.forEach((x) => this.citys.set(x.id, x.value))));
   }
 
   get areas$(): Observable<AreaListItem[]> {
