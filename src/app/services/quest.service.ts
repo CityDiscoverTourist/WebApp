@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { stringify } from 'query-string';
-import { Observable, of } from 'rxjs';
+import { map, Observable, of } from 'rxjs';
 // import { IdValue, Quest } from '../models';
 import {
   Paging,
@@ -10,6 +10,7 @@ import {
   QuestData,
   QuestListItem,
   QuestListSearch,
+  Result,
 } from '../models';
 
 @Injectable({
@@ -108,4 +109,31 @@ export class QuestService {
   //     this.httpOptions
   //   );
   // }
+  getQuestById(id: string): Observable<QuestListItem> {
+    return this.http
+      .get<Result<QuestListItem>>(
+        `https://citytourist.azurewebsites.net/api/v1/quests/${id}`,
+        this.httpOptions
+      )
+      .pipe(
+        map(
+          (response: Result<QuestListItem>) =>
+            ({
+              id: response.data?.id,
+              title: response.data?.title,
+              description: response.data?.description,
+              price: response.data?.price,
+              estimatedTime: response.data?.estimatedTime,
+              estimatedDistance: response.data?.estimatedDistance,
+              availableTime: response.data?.availableTime,
+              createdDate: response.data?.createdDate,
+              updatedDate: response.data?.updatedDate,
+              status: response.data?.status,
+              questTypeId: response.data?.questTypeId,
+              questOwnerId: response.data?.questOwnerId,
+              areaId: response.data?.areaId,
+            } as QuestListItem)
+        )
+      );
+  }
 }

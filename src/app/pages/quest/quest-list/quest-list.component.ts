@@ -58,7 +58,7 @@ export class QuestListComponent implements OnInit {
     private questService: QuestService,
     private questListState: RxState<QuestListState>,
     private router: Router,
-    private activatedRoute: ActivatedRoute,
+    private activatedRoute: ActivatedRoute
   ) {}
 
   // onReset() {
@@ -222,7 +222,7 @@ export class QuestListComponent implements OnInit {
   // @ViewChild('deleteBtn', { static: true }) deleteBtn!: TemplateRef<any>;
   // selected = [];
 
-  onActivate(event:any) {
+  onActivate(event: any) {
     // console.log('Activate Event', event);
     if (event.type == 'click') {
       console.log(event.row);
