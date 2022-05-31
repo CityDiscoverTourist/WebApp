@@ -23,6 +23,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NotificationService } from './services';
 import { LocationTypeModalComponent } from './pages/share/location-type-modal/location-type-modal.component';
 import { QuestTypeModalComponent } from './pages/share/quest-type-modal/quest-type-modal.component';
+import { QuestDeleteModalComponent } from './pages/share/quest-delete-modal/quest-delete-modal.component';
 const lib=[
   QuillModule.forRoot()
 ]
@@ -35,6 +36,7 @@ const lib=[
     QuestOwnerLayoutComponent,
     LocationTypeModalComponent,
     QuestTypeModalComponent,
+    QuestDeleteModalComponent,
     // ValidationMessageComponent,
   ],
   imports: [BrowserModule, AppRoutingModule, HttpClientModule, BrowserAnimationsModule,
