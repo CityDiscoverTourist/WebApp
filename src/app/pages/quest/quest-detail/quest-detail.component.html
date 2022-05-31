@@ -1,8 +1,11 @@
 <div class="pt-3 px-5">
   <div class="d-flex align-items-center justify-content-between mb-3 px-3">
     <!-- <div>Tên của quest</div> -->
-    <div>{{questListItem?.title}}</div>
+    <div>{{ questListItem?.title }}</div>
     <div class="flex-fill"></div>
+    <button type="button" class="btn btn-outline-primary mt-3 me-3" (click)="showDeleteQuest()">Thoát</button>
+    <button type="button" class="btn btn-outline-danger mt-3 me-3" (click)="showDeleteQuest()">Xóa</button>
+    <button type="button" class="btn btn-primary mt-3" (click)="editQuest()">Sửa Quest</button>
   </div>
   <div class="row">
     <div class="card mb-3">
@@ -15,13 +18,26 @@
             <div class="row-2">Trạng thái</div>
             <div class="row-2">Thời gian ước lượng</div>
             <div class="row-2">Khoảng cách ước lượng</div>
+            <!-- <div class="row-2 btn btn-primary">Xem mô tả</div> -->
           </div>
           <div class="col-2 mb-3">
-            <div class="align-self-center row-2">{{questListItem?.id}}</div>
-            <div class="align-self-center row-2">{{questListItem?.price}}</div>
-            <div class="align-self-center row-2">{{questListItem?.status}}</div>
-            <div class="align-self-center row-2">{{questListItem?.estimatedTime}}</div>
-            <div class="align-self-center row-2">{{questListItem?.estimatedDistance}}</div>
+            <div class="align-self-center row-2">{{ questListItem?.id!=null?questListItem?.id:': ---' }}</div>
+            <div class="align-self-center row-2">
+              <!-- {{ questListItem?.price }} -->
+              {{questListItem?.price!=null?questListItem?.price:': ---' }}
+            </div>
+            <div class="align-self-center row-2">
+              <!-- {{ questListItem?.status }} -->
+              {{questListItem?.status!=null?questListItem?.status:': ---' }}
+            </div>
+            <div class="align-self-center row-2">
+              <!-- {{ questListItem?.estimatedTime }} -->
+              {{questListItem?.estimatedTime!=null?questListItem?.estimatedTime:': ---' }}
+            </div>
+            <div class="align-self-center row-2">
+              <!-- {{ questListItem?.estimatedDistance }} -->
+              {{questListItem?.estimatedDistance!=null?questListItem?.estimatedDistance:': ---' }}
+            </div>
           </div>
           <div class="col-2 mb-3">
             <div class="row-2">Khu vực</div>
@@ -31,11 +47,24 @@
             <div class="row-2">Ngày cập nhật cuối cùng</div>
           </div>
           <div class="col-2 mb-3">
-            <div class="align-self-center row-2">{{questListItem?.areaId}}</div>
-            <div class="align-self-center row-2">{{questListItem?.questTypeId}}</div>
-            <div class="align-self-center row-2">{{questListItem?.availableTime}}</div>
-            <div class="align-self-center row-2">{{questListItem?.createdDate}}</div>
-            <div class="align-self-center row-2">{{questListItem?.updatedDate}}</div>
+            <div class="align-self-center row-2">
+              {{ questListItem?.areaId }}
+            </div>
+            <div class="align-self-center row-2">
+              {{ questListItem?.questTypeId }}
+            </div>
+            <div class="align-self-center row-2">
+              <!-- {{ questListItem?.availableTime }} -->
+              {{questListItem?.availableTime!=null?questListItem?.availableTime:': ---' }}
+            </div>
+            <div class="align-self-center row-2">
+              <!-- {{ questListItem?.createdDate }} -->
+              {{questListItem?.createdDate!=null?questListItem?.createdDate:': ---' }}
+            </div>
+            <div class="align-self-center row-2">
+              <!-- {{ questListItem?.updatedDate }} -->
+              {{questListItem?.updatedDate!=null?questListItem?.updatedDate:': ---' }}
+            </div>
           </div>
           <div class="col-4 mb-3">
             <div style="display: block">
@@ -44,7 +73,8 @@
                   style="
                     width: 150px;
                     height: 150px;
-                    background: url('https://toponseek.com/blogs/wp-content/uploads/2019/06/toi-uu-hinh-anh-optimize-image.jpg');"
+                    background: url('https://toponseek.com/blogs/wp-content/uploads/2019/06/toi-uu-hinh-anh-optimize-image.jpg');
+                  "
                 ></div>
               </div>
             </div>
