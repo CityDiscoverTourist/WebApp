@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { stringify } from 'query-string';
-import { map, Observable, of } from 'rxjs';
+import { map, Observable, of, pipe, tap } from 'rxjs';
 // import { IdValue, Quest } from '../models';
 import {
   Paging,
@@ -135,5 +135,13 @@ export class QuestService {
             } as QuestListItem)
         )
       );
+  }
+  deleteQuestById(id: string): Observable<string|undefined> {
+    return this.http
+      .delete(
+        `https://citytourist.azurewebsites.net/api/v1/quests/${id}`,
+        this.httpOptions
+      )
+      .pipe(map((response: Result<QuestListItem>) => response.status));
   }
 }
