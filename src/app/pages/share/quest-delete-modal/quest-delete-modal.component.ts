@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { HotToastService } from '@ngneat/hot-toast';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { tap } from 'rxjs';
 import { QuestService } from 'src/app/services';
@@ -14,28 +15,20 @@ export class QuestDeleteModalComponent implements OnInit {
     public bsModalRef: BsModalRef,
     private questService: QuestService,
     private router: Router,
-    private activatedRoute: ActivatedRoute
+    private toast: HotToastService
   ) {}
 
   ngOnInit(): void {}
-  // submit$ = new Subject<void>();
-
   deleteQuest(id: string) {
-    console.log('tesssst');
-    console.log(id);
     this.bsModalRef.hide();
     this.questService.deleteQuestById(id).subscribe((data) => {
       this.bsModalRef.onHide?.emit({
         status: data,
       });
       this.bsModalRef.hide();
-      // this.router.navigate(['admin/quest'], {
-      //   relativeTo: this.activatedRoute,
-      // });
-      
+      this.toast.success('Xóa quest thành công');
       this.router.navigate(['admin/quest']);
     });
   }
-
   id = '';
 }
