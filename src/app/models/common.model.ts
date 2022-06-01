@@ -43,17 +43,17 @@ export interface IdValue {
   value: string;
 }
 
-export interface PagingMetadata {
-  currentPage: number;
-  count: number;
-  itemPerPage: number;
-}
+// export interface PagingMetadata {
+//   currentPage: number;
+//   count: number;
+//   itemPerPage: number;
+// }
 
 export interface Paging<T> {
   records: T[];
-  metadata: PagingMetadata;
+  // metadata: PagingMetadata;
 }
-export interface PagingMetadataTest {
+export interface PagingMetadata {
   totalCount: number;
   totalPages: number;
   pageSize: number;
@@ -62,10 +62,10 @@ export interface PagingMetadataTest {
   hasPrevious: boolean;
 }
 
-export interface PagingTest<T> {
+export interface Paging<T> {
   message: string;
   data: T[];
-  pagination: PagingMetadataTest;
+  pagination: PagingMetadata;
   status: string;
 }
 

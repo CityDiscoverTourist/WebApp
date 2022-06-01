@@ -1,10 +1,11 @@
 export interface City{
-    id:string;
+    id:number;
     name:string;
     status:string;
 }
 
-export interface CityForTest{
+export interface CityListItem{
+    index:number;
     id:number;
     name:string;
     status:string;

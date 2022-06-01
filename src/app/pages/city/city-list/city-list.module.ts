@@ -3,18 +3,10 @@ import { CommonModule } from '@angular/common';
 
 import { CityListRoutingModule } from './city-list-routing.module';
 import { CityListComponent } from './city-list.component';
-
-
-import {PanelModule} from 'primeng/panel';
-import {ButtonModule} from 'primeng/button';
-import {TableModule} from 'primeng/table';
-import {PaginatorModule} from 'primeng/paginator';
-import {BlockUIModule} from 'primeng/blockui';
-import {ProgressSpinnerModule} from 'primeng/progressspinner';
-import { BsModalService, ModalModule } from 'ngx-bootstrap/modal';
+import { NgSelectModule } from '@ng-select/ng-select';
+import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { ValidationMessageModule } from 'src/app/modules/validation-message/validation-message.module';
-import { NotificationService } from 'src/app/services';
+const lib = [NgSelectModule, NgxDatatableModule];
 @NgModule({
   declarations: [
     CityListComponent
@@ -22,18 +14,10 @@ import { NotificationService } from 'src/app/services';
   imports: [
     CommonModule,
     CityListRoutingModule,
-    PanelModule,
-    ButtonModule,
-    TableModule,
-    PaginatorModule,
-    BlockUIModule,
     FormsModule,
     ReactiveFormsModule,
-    ProgressSpinnerModule,
-    // ValidationMessageModule,
+    ...lib
   ],
-  providers:[
-    NotificationService
-  ]
+  
 })
 export class CityListModule { }

@@ -1,0 +1,150 @@
+<div class="pt-3 px-5" *rxLet="quest$ as vm">
+  <div class="d-flex align-items-center justify-content-between mb-3 px-3">
+    <!-- <div>Tên của quest</div> -->
+    <!-- <div>{{ questListItem?.title }}</div> -->
+    <div>Tên Quest: {{ vm.title }}</div>
+    <div class="flex-fill"></div>
+    <button
+      type="button"
+      class="btn btn-outline-primary mt-3 me-3"
+      (click)="showDeleteQuest()"
+    >
+      Thoát
+    </button>
+    <button
+      type="button"
+      class="btn btn-outline-danger mt-3 me-3"
+      (click)="showDeleteQuest()"
+    >
+      Xóa
+    </button>
+    <button type="button" class="btn btn-primary mt-3" (click)="editQuest()">
+      Sửa Quest
+    </button>
+  </div>
+  <div class="row">
+    <div class="card mb-3">
+      <div class="card-header bg-white">Thông tin quest</div>
+      <div class="card-body">
+        <div class="row">
+          <div class="col-2 mb-3">
+            <div class="row-2 align-self-center">Id</div>
+            <div class="row-2">Giá</div>
+            <div class="row-2">Trạng thái</div>
+            <div class="row-2">Thời gian ước lượng</div>
+            <div class="row-2">Khoảng cách ước lượng</div>
+            <!-- <div class="row-2 btn btn-primary">Xem mô tả</div> -->
+          </div>
+          <div class="col-2 mb-3">
+            <div class="align-self-center row-2">
+              <!-- {{ questListItem?.id != null ? questListItem?.id : ": ---" }} -->
+              {{ vm.id }}
+            </div>
+            <div class="align-self-center row-2">
+              <!-- {{ questListItem?.price }} -->
+              <!-- {{
+                questListItem?.price != null ? questListItem?.price : ": ---"
+              }} -->
+              {{ vm.price }}
+            </div>
+            <div class="align-self-center row-2">
+              <!-- {{ questListItem?.status }} -->
+              <!-- {{
+                questListItem?.status != null ? questListItem?.status : ": ---"
+              }} -->
+              {{ vm.status }}
+            </div>
+            <div class="align-self-center row-2">
+              <!-- {{ questListItem?.estimatedTime }} -->
+              <!-- {{
+                questListItem?.estimatedTime != null
+                  ? questListItem?.estimatedTime
+                  : ": ---"
+              }} -->
+              {{ vm.estimatedTime }}
+            </div>
+            <div class="align-self-center row-2">
+              <!-- {{ questListItem?.estimatedDistance }} -->
+              <!-- {{
+                questListItem?.estimatedDistance != null
+                  ? questListItem?.estimatedDistance
+                  : ": ---"
+              }} -->
+              {{ vm.estimatedDistance }}
+            </div>
+          </div>
+          <div class="col-3 mb-3">
+            <div class="row-2">Khu vực</div>
+            <div class="row-2">Loại quest</div>
+            <div class="row-2">Thời gian khả dụng</div>
+            <div class="row-2">Ngày tạo</div>
+            <div class="row-2">Ngày cập nhật cuối cùng</div>
+          </div>
+          <div class="col-2 mb-3">
+            <div class="align-self-center row-2">
+              <!-- {{ questListItem?.areaId }} -->
+              {{ vm.areaId }}
+            </div>
+            <div class="align-self-center row-2">
+              <!-- {{ questListItem?.questTypeId }} -->
+              {{ vm.questTypeId }}
+            </div>
+            <div class="align-self-center row-2">
+              <!-- {{ questListItem?.availableTime }} -->
+              <!-- {{
+                questListItem?.availableTime != null
+                  ? questListItem?.availableTime
+                  : ": ---"
+              }} -->
+              {{ vm.availableTime }}
+            </div>
+            <div class="align-self-center row-2">
+              <!-- {{ questListItem?.createdDate }} -->
+              <!-- {{
+                questListItem?.createdDate != null
+                  ? questListItem?.createdDate
+                  : ": ---"
+              }} -->
+              {{ vm.createdDate |  date: "dd/MM/yyyy" }}
+            </div>
+            <div class="align-self-center row-2">
+              <!-- {{ questListItem?.updatedDate }} -->
+              <!-- {{
+                questListItem?.updatedDate != null
+                  ? questListItem?.updatedDate
+                  : ": ---"
+              }} -->
+              {{ vm.updatedDate|  date: "dd/MM/yyyy" }}
+
+            </div>
+          </div>
+          <div class="col-3 mb-3">
+            <div style="display: block">
+              <div style="width: 100%; display: flex; justify-content: center">
+                <!-- <div
+                  style="
+                    width: 150px;
+                    height: 150px;
+                    background-image: url('{{ questListItem.imagePath }}');
+                  "
+                ></div> -->
+                <div>
+                  <img
+                    style="width: 150px; height: 150px"
+                    src="{{ vm?.imagePath }}"
+                    alt=""
+                  />
+                </div>
+                <!--  background: url('https://toponseek.com/blogs/wp-content/uploads/2019/06/toi-uu-hinh-anh-optimize-image.jpg'); -->
+                <!-- {{questListItem.imagePath}}
+                <img src="{{questListItem.imagePath}}" alt=""> -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+

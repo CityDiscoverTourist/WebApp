@@ -10,10 +10,16 @@ export interface Quest {
   availableTime: Date;
   createdDate: Date;
   updatedDate: Date;
+  status:string;
+  questTypeId: number;
+  questOwnerId: number;
+  areaId: number;
+  imagePath:string;
 }
 
 
 export interface QuestListItem {
+  index:number;
   id: number;
   title: string;
   description: string;
@@ -27,11 +33,12 @@ export interface QuestListItem {
   questTypeId: number;
   questOwnerId: number;
   areaId: number;
+  imagePath:string;
 }
 
 
 export interface QuestListSearch extends SearchInfo {
-  categories?: number[];
+  questypes?: number[];
 }
 
 export interface QuestData {

@@ -20,10 +20,6 @@ import { QuestState, QUEST_STATE } from '../states/quest.state';
 import { IdValue, QuestData } from 'src/app/models';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HotToastService } from '@ngneat/hot-toast';
-import {
-  customQuestAvailableTimeValidator,
-  customQuestValidator,
-} from 'src/app/common/validations';
 import { QuestService } from 'src/app/services';
 import { ActivatedRoute } from '@angular/router';
 import { BsModalService } from 'ngx-bootstrap/modal';
@@ -94,7 +90,11 @@ export class QuestCreateComponent implements OnInit {
     this.state.connect(
       this.formSubmit$.pipe(
         switchMap((f) => this.questService.addQuest(f.value as QuestData))
-      ),
+      ).pipe(tap((data)=>{
+        console.log(data);
+        console.log("có vao ko");
+        
+      })),
       (_prev, curr) => ({
         error: undefined,
       })
