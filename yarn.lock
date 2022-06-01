@@ -5395,18 +5395,6 @@ pretty-bytes@^5.3.0:
   resolved "https://registry.yarnpkg.com/pretty-bytes/-/pretty-bytes-5.6.0.tgz#356256f643804773c82f64723fe78c92c62beaeb"
   integrity sha512-FFw039TmrBqFK8ma/7OL3sDz/VytdtJr044/QUJtH0wK9lb9jLq9tJyIxUwtQJHwar2BqtiA4iCWSwo9JLkzFg==
 
-primeicons@^5.0.0:
-  version "5.0.0"
-  resolved "https://registry.yarnpkg.com/primeicons/-/primeicons-5.0.0.tgz#73a0b6028a77c58a9eeb331ad13aaf085e8451ee"
-  integrity sha512-heygWF0X5HFI1otlZE62pp6ye7sZ8om78J9au2BRkg8O7Y8AHTZ9qKMRzchZUHLe8zUAvdi6hZzzm9XxgwIExw==
-
-primeng@13.3.0:
-  version "13.3.0"
-  resolved "https://registry.yarnpkg.com/primeng/-/primeng-13.3.0.tgz#179866d797dd2e4b0fc8e0209b0dcece3fa483fa"
-  integrity sha512-EsbbsEG2s9X+jYcd4LcBr7ZjR8P1V72NtlcB3XXOT8Sr5SkDqURLoJMXXqr0VPESC/WgOIjU9YqLepOJh8GjNw==
-  dependencies:
-    tslib "^2.3.0"
-
 process-nextick-args@~2.0.0:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/process-nextick-args/-/process-nextick-args-2.0.1.tgz#7820d9b16120cc55ca9ae7792680ae7dba6d7fe2"
