@@ -109,15 +109,15 @@ export class QuestService {
   //     this.httpOptions
   //   );
   // }
-  getQuestById(id: string): Observable<QuestListItem> {
+  getQuestById(id: string): Observable<Quest> {
     return this.http
-      .get<Result<QuestListItem>>(
+      .get<Result<Quest>>(
         `https://citytourist.azurewebsites.net/api/v1/quests/${id}`,
         this.httpOptions
       )
       .pipe(
         map(
-          (response: Result<QuestListItem>) =>
+          (response: Result<Quest>) =>
             ({
               id: response.data?.id,
               title: response.data?.title,
@@ -132,7 +132,8 @@ export class QuestService {
               questTypeId: response.data?.questTypeId,
               questOwnerId: response.data?.questOwnerId,
               areaId: response.data?.areaId,
-            } as QuestListItem)
+              imagePath:response.data?.imagePath,
+            } as Quest)
         )
       );
   }
