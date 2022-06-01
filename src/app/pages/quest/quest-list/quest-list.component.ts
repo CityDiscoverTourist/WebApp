@@ -47,7 +47,7 @@ declare type FormType = {
   styleUrls: ['./quest-list.component.scss'],
 })
 export class QuestListComponent implements OnInit {
-  records: QuestListItem[] = [];
+  // records: QuestListItem[] = [];
 
   @ViewChild('colCreatedAt', { static: true }) colCreatedAt!: TemplateRef<any>;
   columns: TableColumn[] = [];
@@ -189,13 +189,13 @@ export class QuestListComponent implements OnInit {
         canAutoResize: true,
         cellTemplate: this.colCreatedAt,
       },
-      // {
-      //   prop: 'updatedDate',
-      //   name: 'Ngày sửa',
-      //   sortable: true,
-      //   canAutoResize: true,
-      //   cellTemplate: this.colCreatedAt,
-      // },
+      {
+        prop: 'updatedDate',
+        name: 'Ngày sửa',
+        sortable: true,
+        canAutoResize: true,
+        cellTemplate: this.colCreatedAt,
+      },
       {
         prop: 'status',
         maxWidth: 300,

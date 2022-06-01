@@ -1,149 +1,119 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
-import { Subscription } from 'rxjs';
-import { MessageConstants } from 'src/app/contants/messages.constant';
-import { City } from 'src/app/models';
-import { Pagination } from 'src/app/models/pagination.model';
-import { NotificationService } from 'src/app/services';
-import { CityService } from 'src/app/services/city.service';
-import { CityDetailComponent } from '../city-detail/city-detail.component';
-
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { FormControl, FormGroup } from '@angular/forms';
+import { RxState } from '@rx-angular/state';
+import { DatatableComponent, TableColumn } from '@swimlane/ngx-datatable';
+import { BehaviorSubject, Observable, Subject, switchMap, tap } from 'rxjs';
+import { City, CityListItem, PagingMetadata, SearchInfo } from 'src/app/models';
+import { CityService } from 'src/app/services';
+import { PageInfo, SortInfo } from 'src/app/types';
+import { CityListState } from '../states';
 @Component({
   selector: 'app-city-list',
   templateUrl: './city-list.component.html',
   styleUrls: ['./city-list.component.scss'],
+  providers:[RxState]
 })
-export class CityListComponent implements OnInit, OnDestroy {
-  private subscription = new Subscription();
-  // Default
-  public bsModalRef: BsModalRef;
-  public blockedPanel = false;
-  /**
-   * Paging
-   */
-   public pageIndex = 1;
-  public pageSize = 10;
-  public pageDisplay = 10;
-  public totalRecords: number;
-  public keyword = '';
-  // Role
-  public items: City[];
-  public selectedItems: City[];
+export class CityListComponent implements OnInit {
+  records: CityListItem[] = [];
+  @ViewChild(DatatableComponent) table!: DatatableComponent;
+  columns: TableColumn[] = [];
   constructor(
-    private cityService: CityService,
-    private notificationService: NotificationService,
-    private modalService: BsModalService
+    private cityListState: RxState<CityListState>,
+    private cityService: CityService
   ) {}
-
   ngOnInit(): void {
-    this.loadData();
-  }
+    // this.records = [...Array(50).keys()].map(
+    //   (i) =>
+    //     ({
+    //       index:++i,
+    //       id: i,
+    //       name: 'i',
+    //       status: 'i',
+    //     } as CityListItem)
+    // );
 
-  loadData(selectedId = null) {
-    this.blockedPanel = true;
-    this.subscription.add(
-    this.cityService.getAllPaging('', 1, 10, 'name').subscribe({
-      next: (response:  Pagination<City>) => {
-        this.processLoadData(selectedId, response);
-        setTimeout(() => {
-          this.blockedPanel = false;
-        }, 1000);
+    this.initTable();
+    this.cityListState.connect(
+      this.search$
+        .pipe(
+          tap(() => this.cityListState.set({ loading: true })),
+          switchMap((s) => this.cityService.getCities(s))
+        ),
+      (_, result) => ({
+        cities: result.data.map(
+          (x, i) =>
+            ({
+              index: ++i,
+              id: x.id,
+              name: x.name,
+              status: x.status,
+            } as CityListItem)
+        ),
+        metadata: { ...result.pagination },
+        loading: false,
+      })
+    );
+  }
+  
+  initTable() {
+    this.columns = [
+      {
+        prop: 'index',
+        name: 'STT',
+        sortable: true,
+        width: 50,
       },
-      error: () =>
-        setTimeout(() => {
-          this.blockedPanel = false;
-        }, 1000),
-      complete: () => console.info('complete'),
-    })
+      {
+        prop: 'name',
+        name: 'Tên thành phố',
+        sortable: true,
+        minWidth: 500,
+      },
+      {
+        prop: 'status',
+        minWidth: 350,
+        name: 'Trạng thái',
+        sortable: true,
+      },
+    ];
+  }
+
+  get cities$(): Observable<CityListItem[]> {
+    return this.cityListState.select('cities').pipe(
+      tap((data) => {
+        console.log('data');
+        console.log(data);
+      })
     );
   }
-
-  private processLoadData(selectedId = null, response: Pagination<City>) {
-    this.items = response.data;
-    this.pageIndex = this.pageIndex;
-    this.pageSize = this.pageSize;
-    // console.log("faaa ",response.paginations[0] +"ddddddddd" );
-    
-    this.totalRecords = 2;
-    if (this.selectedItems?.length === 0 && this.items.length > 0) {
-      this.selectedItems.push(this.items[0]);
-    }
-    if (selectedId != null && this.items.length > 0) {
-      this.selectedItems = this.items.filter((x) => x.id === selectedId);
-    }
+  get metadata$(): Observable<PagingMetadata> {
+    return this.cityListState.select('metadata');
   }
-  pageChanged(event: any): void {
-    this.pageIndex = event.page + 1;
-    this.pageSize = event.rows;
-    this.loadData();
+  get loading$(): Observable<boolean> {
+    return this.cityListState.select('loading');
   }
 
-  showAddModal() {
-    this.bsModalRef = this.modalService.show(CityDetailComponent, {
-      class: 'modal-lg',
-      backdrop: 'static',
-    });
-    this.bsModalRef.content.savedEvent.subscribe((response: any) => {
-      this.bsModalRef.hide();
-      this.loadData();
-      this.selectedItems = [];
+  onPage(paging: PageInfo) {
+    console.log(paging);
+    this.search$.next({
+      ...this.search$.getValue(),
+      currentPage: paging.offset,
     });
   }
-  showEditModal() {
-    if (this.selectedItems.length === 0) {
-      this.notificationService.showError(
-        MessageConstants.NOT_CHOOSE_ANY_RECORD
-      );
-      return;
-    }
-    const initialState = {
-      entityId: this.selectedItems[0].id,
-    };
-    this.bsModalRef = this.modalService.show(CityDetailComponent, {
-      initialState: initialState,
-      class: 'modal-lg',
-      backdrop: 'static',
+  onSort(event: SortInfo) {
+    console.log(event);
+    this.table.offset - 1;
+    this.search$.next({
+      ...this.search$.getValue(),
+      sort: { sortBy: event.column.prop, dir: event.newValue },
     });
-
-    this.subscription.add(
-      this.bsModalRef.content.savedEvent.subscribe(
-        (response: { id: null | undefined }) => {
-          this.bsModalRef.hide();
-          this.loadData(response.id);
-        }
-      )
-    );
   }
 
-  deleteItems() {
-    const id = this.selectedItems[0].id;
-    this.notificationService.showConfirmation(
-      MessageConstants.CONFIRM_DELETE_MSG,
-      () => this.deleteItemsConfirm(id)
-    );
-  }
-  deleteItemsConfirm(id: string) {
-    this.blockedPanel = true;
-    this.subscription.add(
-      this.cityService.delete(id).subscribe(
-        () => {
-          this.notificationService.showSuccess(MessageConstants.DELETED_OK_MSG);
-          this.loadData();
-          this.selectedItems = [];
-          setTimeout(() => {
-            this.blockedPanel = false;
-          }, 1000);
-        },
-        (error) => {
-          setTimeout(() => {
-            this.blockedPanel = false;
-          }, 1000);
-        }
-      )
-    );
-  }
+  search$ = new BehaviorSubject<SearchInfo>({});
+  searchForm = new FormGroup({
+    keyword: new FormControl(),
+  });
 
-  ngOnDestroy(): void {
-    this.subscription.unsubscribe();
-  }
+  submitSearch$ = new Subject<Partial<{ keyword: string }>>();
+  resetSearch$ = new Subject<void>();
 }

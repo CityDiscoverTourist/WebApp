@@ -10,23 +10,26 @@ import { HotToastModule } from '@ngneat/hot-toast';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { ModalModule } from 'ngx-bootstrap/modal';
 
-const lib=[
-  NgSelectModule,QuillModule,LetModule,NgxDropzoneModule
-]
+const lib = [
+  NgSelectModule,
+  LetModule,
+  NgxDropzoneModule,
+  HotToastModule,
+  ModalModule.forRoot(),
+];
 
 @NgModule({
-  declarations: [
-    QuestEditComponent
-  ],
+  declarations: [QuestEditComponent],
   imports: [
     CommonModule,
     QuestEditRoutingModule,
     FormsModule,
     ReactiveFormsModule,
     HotToastModule.forRoot(),
-    BsDropdownModule.forRoot(),
+    QuillModule.forRoot(),
     ...lib,
-  ]
+  ],
 })
-export class QuestEditModule { }
+export class QuestEditModule {}

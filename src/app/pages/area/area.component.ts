@@ -8,19 +8,17 @@ import { AreaListPageState, AREA_PAGE_STATE } from './area-list/states';
   selector: 'app-area',
   templateUrl: './area.component.html',
   styleUrls: ['./area.component.scss'],
-  providers:[RxState]
+  providers: [RxState],
 })
 export class AreaComponent implements OnInit {
-
-  constructor(private readonly cityService:CityService,
-    private readonly areaService:AreaService,
-    @Inject(AREA_PAGE_STATE) areaPageState:RxState<AreaListPageState>){
-      areaPageState.connect(cityService.getCityType(),
-      (_,curr)=>({
-        cityIds:curr
-      }));
+  constructor(
+    private readonly cityService: CityService,
+    private readonly areaService: AreaService,
+    @Inject(AREA_PAGE_STATE) areaPageState: RxState<AreaListPageState>
+  ) {
+    // areaPageState.connect(cityService.getCityType(), (_, curr) => ({
+    //   cityIds: curr,
+    // }));
   }
-  ngOnInit(): void {
-  }
-
+  ngOnInit(): void {}
 }
