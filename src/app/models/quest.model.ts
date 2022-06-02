@@ -38,19 +38,18 @@ export interface QuestListItem {
 
 
 export interface QuestListSearch extends SearchInfo {
-  questypes?: number[];
+  questTypeIds?: number[];
 }
 
-export interface QuestData {
+export interface QuestCreate {
   id: number;
   title: string;
   description: string;
   price: number;
-  image:File;
-  // image:string;
   estimatedTime: string;
   estimatedDistance: string;
-  availableTime: Date;
+  image:File;
+  availableTime: string;
   createdDate: Date;
   updatedDate: Date;
   status:string;
