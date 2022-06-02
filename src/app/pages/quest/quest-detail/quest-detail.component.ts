@@ -33,12 +33,6 @@ export class QuestDetailComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // // this.id = this.route.snapshot.paramMap.get('id');
-    // this.id = this.route.snapshot.params['id'];
-    // // console.log(this.id);
-    // this.questService.getQuestById(this.id).subscribe((data) => {
-    //  this.questListItem=data;
-    // });
     this.search$.next({ id: this.route.snapshot.params['id'] });
     this.questDetailState.connect(
       this.search$
@@ -60,23 +54,13 @@ export class QuestDetailComponent implements OnInit {
         id: this.id,
       },
     });
-
-    // bsModalRef.onHide?.pipe(take(1)).subscribe({
-    //   next: (result) => {
-    //     const questypeIds = result as { id: number; name: string };
-    //     this.questypeIds$.next({ id: questypeIds.id, name: questypeIds.name });
-    //   },
-    // });
   }
 
   editQuest() {
-    // this.router.navigate(['admin/quest/edit'],{queryParams:{id:this.id}});
-    this.router.navigate(
-      ['admin/quest/edit', this.id]
-      //  {
-      //   relativeTo: this.activatedRoute,
-      // }
-    );
+    // this.router.navigate(['admin/quest/edit']);
+    // this.router.navigate(['admin/quest/edit',{ id: this.id }]);
+    // this.router.navigate(['admin/quest/edit?',{ id: this.id }]);
+    this.router.navigate(['./edit']);
   }
 
   search$ = new BehaviorSubject<{ id: string }>({ id: '' });

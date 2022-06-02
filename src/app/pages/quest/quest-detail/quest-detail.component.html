@@ -4,13 +4,13 @@
     <!-- <div>{{ questListItem?.title }}</div> -->
     <div>Tên Quest: {{ vm.title }}</div>
     <div class="flex-fill"></div>
-    <button
+    <!-- <button
       type="button"
       class="btn btn-outline-primary mt-3 me-3"
-      (click)="showDeleteQuest()"
     >
       Thoát
-    </button>
+    </button> -->
+    <a routerLink="../" class="btn btn-outline-primary mt-3 me-3">Thoát</a>
     <button
       type="button"
       class="btn btn-outline-danger mt-3 me-3"
@@ -18,9 +18,10 @@
     >
       Xóa
     </button>
-    <button type="button" class="btn btn-primary mt-3" (click)="editQuest()">
+    <!-- <button type="button" class="btn btn-primary mt-3" (click)="editQuest()">
       Sửa Quest
-    </button>
+    </button> -->
+    <a href="#" class="btn btn-secondary" [routerLink]="['./edit']">Edit</a>
   </div>
   <div class="row">
     <div class="card mb-3">
@@ -105,7 +106,7 @@
                   ? questListItem?.createdDate
                   : ": ---"
               }} -->
-              {{ vm.createdDate |  date: "dd/MM/yyyy" }}
+              {{ vm.createdDate | date: "dd/MM/yyyy" }}
             </div>
             <div class="align-self-center row-2">
               <!-- {{ questListItem?.updatedDate }} -->
@@ -114,8 +115,7 @@
                   ? questListItem?.updatedDate
                   : ": ---"
               }} -->
-              {{ vm.updatedDate|  date: "dd/MM/yyyy" }}
-
+              {{ vm.updatedDate | date: "dd/MM/yyyy" }}
             </div>
           </div>
           <div class="col-3 mb-3">
@@ -146,5 +146,3 @@
     </div>
   </div>
 </div>
-
-
