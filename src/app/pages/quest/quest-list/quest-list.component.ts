@@ -61,11 +61,6 @@ export class QuestListComponent implements OnInit {
     private activatedRoute: ActivatedRoute
   ) {}
 
-  // onReset() {
-  //   this.searchForm.reset();
-  //   this.search$.next({}); //ve page 1
-  // }
-
   ngOnInit(): void {
     // this.records = [...Array(50).keys()].map(
     //   (i) =>
@@ -156,51 +151,51 @@ export class QuestListComponent implements OnInit {
         prop: 'description',
         name: 'Mô tả',
         sortable: true,
-        minWidth: 320,
+        minWidth: 600,
       },
       {
         prop: 'price',
         name: 'Giá',
         sortable: true,
-        canAutoResize: true,
+        maxWidth: 120,
       },
       {
         prop: 'estimatedTime',
         name: 'Ước lượng',
         sortable: true,
-        canAutoResize: true,
+        maxWidth: 120,
       },
-      {
-        prop: 'estimatedDistance',
-        name: 'Khoảng cách',
-        sortable: true,
-        canAutoResize: true,
-      },
-      {
-        prop: 'availableTime',
-        name: 'Khả dụng',
-        sortable: true,
-        canAutoResize: true,
-      },
-      {
-        prop: 'createdDate',
-        name: 'Ngày tạo',
-        sortable: true,
-        canAutoResize: true,
-        cellTemplate: this.colCreatedAt,
-      },
-      {
-        prop: 'updatedDate',
-        name: 'Ngày sửa',
-        sortable: true,
-        canAutoResize: true,
-        cellTemplate: this.colCreatedAt,
-      },
+      // {
+      //   prop: 'estimatedDistance',
+      //   name: 'Khoảng cách',
+      //   sortable: true,
+      //   canAutoResize: true,
+      // },
+      // {
+      //   prop: 'availableTime',
+      //   name: 'Khả dụng',
+      //   sortable: true,
+      //   canAutoResize: true,
+      // },
+      // {
+      //   prop: 'createdDate',
+      //   name: 'Ngày tạo',
+      //   sortable: true,
+      //   canAutoResize: true,
+      //   cellTemplate: this.colCreatedAt,
+      // },
+      // {
+      //   prop: 'updatedDate',
+      //   name: 'Ngày sửa',
+      //   sortable: true,
+      //   canAutoResize: true,
+      //   cellTemplate: this.colCreatedAt,
+      // },
       {
         prop: 'status',
-        maxWidth: 300,
         name: 'Trạng thái',
         sortable: true,
+        maxWidth: 100,
       },
       // {
       //   prop: 'questOwnerId',
@@ -210,7 +205,7 @@ export class QuestListComponent implements OnInit {
       // },
       {
         prop: 'areaId',
-        maxWidth: 350,
+        maxWidth: 120,
         name: 'Khu vực',
         sortable: true,
         // cellTemplate:this.edit,
