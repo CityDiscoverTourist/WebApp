@@ -1,16 +1,28 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  Inject,
+  OnInit,
+} from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { HotToastService } from '@ngneat/hot-toast';
 import { RxState } from '@rx-angular/state';
-import { BsModalService } from 'ngx-bootstrap/modal';
-import { Observable, Subject, take, tap } from 'rxjs';
-import { IdValue } from 'src/app/models';
+import {
+  BehaviorSubject,
+  Observable,
+  pipe,
+  Subject,
+  switchMap,
+  take,
+  tap,
+} from 'rxjs';
+import { IdValue, Quest, QuestListItem } from 'src/app/models';
 import { QuestService } from 'src/app/services';
-import { QuestTypeModalComponent } from '../../share/quest-type-modal/quest-type-modal.component';
-import { QuestState, QUEST_STATE } from '../states/quest.state';
+import { QuestDetailState, QuestState, QUEST_STATE } from '../states';
 
-interface QuestEditState {
+interface QuestUpdateState {
   showQuestDescription: boolean;
   files: File[];
   error?: string;
@@ -24,30 +36,50 @@ interface QuestEditState {
   providers: [RxState],
 })
 export class QuestEditComponent implements OnInit {
-
-  constructor( @Inject(QUEST_STATE) private questState: RxState<QuestState>,
-  private state: RxState<QuestEditState>,
-  private fb: FormBuilder,
-  private toast: HotToastService,
-  private cd: ChangeDetectorRef,
-  private questService: QuestService,
-  private activatedRoute: ActivatedRoute,
-  private modalService: BsModalService) { }
+  private id: string;
+  public questListItem: QuestListItem;
+  constructor(
+    @Inject(QUEST_STATE) private questState: RxState<QuestState>,
+    private fb: FormBuilder,
+    private toast: HotToastService,
+    private cd: ChangeDetectorRef,
+    private route: ActivatedRoute,
+    private questDetailState: RxState<QuestDetailState>,
+    private questService: QuestService,
+    private state: RxState<QuestUpdateState>
+  ) {}
 
   ngOnInit(): void {
+    var id = +this.route.snapshot.params['id'].toString();
     this.state.connect(this.toggleDescription$, (prev, _) => ({
       showQuestDescription: !prev.showQuestDescription,
     }));
 
     this.initForm();
+    this.search$.next({ id: id.toString() });
+    this.questDetailState.connect(
+      this.search$
+        .pipe(
+          tap((_) => this.questDetailState.set({ loading: true })),
+          switchMap((s) => this.questService.getQuestById(s.id))
+        )
+        .pipe(
+          tap((data) => {
+            this.id = data.id.toString();
+            this.form.patchValue(data);
+          })
+        ),
+      (_, result) => ({
+        quest: result,
+        loading: false,
+      })
+    );
 
     this.state.connect(
       this.selectedFile$
         .pipe(tap(() => setTimeout(() => this.cd.detectChanges(), 100)))
-        //pick image event
         .pipe(tap((file) => this.form.patchValue({ image: file[0] }))),
       (_prev, files) => ({
-        // files: [...prev.files, ...files],
         files: [...files],
       })
     );
@@ -63,12 +95,6 @@ export class QuestEditComponent implements OnInit {
         };
       }
     );
-
-    this.questState.connect(this.questypeIds$, (prev, curr) => ({
-      questTypeIds: [...prev.questTypeIds, { id: curr.id, value: curr.name }],
-    }));
-
-    
   }
 
   form!: FormGroup;
@@ -77,51 +103,39 @@ export class QuestEditComponent implements OnInit {
     this.form = this.fb.group({
       id: [0],
       title: ['', [Validators.required, Validators.minLength(8)]],
-      // title: [],
       description: [],
-      // description: ['',[Validators.required, Validators.minLength(10)]],
       price: [0, [Validators.required, Validators.min(10)]],
-      // price: [],
-      // estimatedTime: ['', [customQuestValidator()]],
       estimatedTime: [''],
       estimatedDistance: [],
       availableTime: [],
-      // availableTime: ['', [Validators.pattern("^(1[0123456789]|[1-9])(am|pm)\-(1[012]|[1-9])(am|pm)")]],
       questTypeId: [],
-      image: [],
+      imagePath: [],
       questOwnerId: [2],
       areaId: [],
-      status: [false],
+      status: [],
     });
   }
-  formSubmit$ = new Subject<FormGroup>();
-  submit$ = new Subject<FormGroup>();
+
+  search$ = new BehaviorSubject<{ id: string | undefined }>({ id: '' });
+  get quest$(): Observable<Quest> {
+    return this.questDetailState.select('quest');
+  }
   toggleDescription$ = new Subject<void>();
   selectedFile$ = new Subject<File[]>();
   removedFiles$ = new Subject<File>();
-  showAddQuestType() {
-    const bsModalRef = this.modalService.show(QuestTypeModalComponent, {
-      initialState: {
-        simpleForm: true,
-      },
-    });
-
-    bsModalRef.onHide?.pipe(take(1)).subscribe({
-      next: (result) => {
-        const questypeIds = result as { id: number; name: string };
-        this.questypeIds$.next({ id: questypeIds.id, name: questypeIds.name });
-      },
-    });
+  loadFile$ = new Subject<File>();
+  get vm$(): Observable<QuestUpdateState> {
+    return this.state.select();
   }
-  questypeIds$ = new Subject<{ id: number; name: string }>();
   get questTypeIds(): Observable<IdValue[]> {
-    return this.questState.select('questTypeIds').pipe(tap((data)=>console.log("dataa"+data)));
+    return this.questState.select('questTypeIds');
   }
 
   get areaIds(): Observable<IdValue[]> {
     return this.questState.select('areaIds');
   }
-  get vm$(): Observable<QuestEditState> {
-    return this.state.select();
+
+  get loading$(): Observable<boolean> {
+    return this.questDetailState.select('loading');
   }
 }

@@ -7,10 +7,6 @@ const routes: Routes = [
     path: '',
     component: QuestEditComponent,
   },
-  {
-    path: 'edit',
-    component: QuestEditComponent,
-  }
 ]
 
 
