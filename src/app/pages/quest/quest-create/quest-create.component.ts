@@ -6,9 +6,7 @@ import {
   OnInit,
 } from '@angular/core';
 import {
-  catchError,
   Observable,
-  of,
   partition,
   Subject,
   switchMap,
@@ -160,17 +158,17 @@ export class QuestCreateComponent implements OnInit {
       status: [false],
     });
   }
-  submitForm() {
-    const valid = this.form.valid;
-    this.formSubmit$.next(this.form);
-    console.log(`form state =${valid}`, this.form.value);
+  // submitForm() {
+  //   const valid = this.form.valid;
+  //   this.formSubmit$.next(this.form);
+  //   console.log(`form state =${valid}`, this.form.value);
 
-    if (valid) {
-      this.formSubmit$.next(this.form);
-    } else {
-      this.form.revalidateControls([]);
-    }
-  }
+  //   if (valid) {
+  //     this.formSubmit$.next(this.form);
+  //   } else {
+  //     this.form.revalidateControls([]);
+  //   }
+  // }
   selectedFile$ = new Subject<File[]>();
   removedFiles$ = new Subject<File>();
   formSubmit$ = new Subject<FormGroup>();

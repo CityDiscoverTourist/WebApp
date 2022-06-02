@@ -178,14 +178,14 @@
                 [multiple]="false"
               >
                 <ngx-dropzone-label>
+                  <!-- <span   class="ms-1" > upload from your computer</span> -->
+                  <!-- <a class="ms-1" href="#"> upload from your computer</a> -->
                   <div>
                     <i class="bi bi-plus"></i>
-                    <span>drap and drop images here or</span>
-                    <!-- <span class="ms-1 text-decoration-underline text-primary">
-                      upload from your computer</span
-                    > -->
-                    <!-- <span   class="ms-1" > upload from your computer</span> -->
-                    <!-- <a class="ms-1" href="#"> upload from your computer</a> -->
+                    <span>kéo và thả hình ảnh ở đây hoặc</span>
+                    <span class="ms-1 text-decoration-underline text-primary">
+                      tải lên từ máy tính của bạn</span
+                    >
                   </div>
                 </ngx-dropzone-label>
                 <ngx-dropzone-image-preview
@@ -195,16 +195,11 @@
                   [removable]="true"
                   (removed)="removedFiles$.next(f)"
                 >
-                  <ngx-dropzone-label
+                  <!-- <ngx-dropzone-label
                     >{{ f.name }} ({{ f.type }})</ngx-dropzone-label
-                  >
+                  > -->
                 </ngx-dropzone-image-preview>
               </div>
-              <!-- <div>
-            <i class="bi bi-plus"></i>
-            <span>drap and drop images here or</span>
-            <a class="ms-1" href="#"> upload from your computer</a>
-          </div> -->
             </div>
           </div>
         </div>
@@ -219,13 +214,19 @@
                 [items]="questTypeIds | async"
                 bindValue="id"
                 bindLabel="value"
-                formControlName="questTypeId" class="header-p-0">
-              <ng-template ng-header-tmp>
-                <button class="btn btn-default btn-sm rounded-0 text-center w-100" (click)="showAddQuestType()">
-                  <i class="bi bi-plus-circle"></i>
-                  Thêm loại quest
-                </button>
-              </ng-template></ng-select>
+                formControlName="questTypeId"
+                class="header-p-0"
+              >
+                <ng-template ng-header-tmp>
+                  <button
+                    class="btn btn-default btn-sm rounded-0 text-center w-100"
+                    (click)="showAddQuestType()"
+                  >
+                    <i class="bi bi-plus-circle"></i>
+                    Thêm loại quest
+                  </button>
+                </ng-template></ng-select
+              >
               <!-- <ng-select [items]="[1, 2, 3, 4]" class="header-p-0">
                 <ng-template ng-header-tmp>
                   <button class="btn btn-default btn-sm rounded-0 text-center w-100">
@@ -279,6 +280,7 @@
         >
           Thêm
         </button>
+        <a routerLink="../" class="btn btn-outline-primary mt-3 me-3">Thoát</a>
         <!-- <button
           type="button"
           class="btn btn-primary mt-3"
