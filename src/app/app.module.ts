@@ -28,7 +28,6 @@ const lib=[
     LocationTypeModalComponent,
     QuestTypeModalComponent,
     QuestDeleteModalComponent,
-    // ValidationMessageComponent,
   ],
   imports: [BrowserModule, AppRoutingModule, HttpClientModule, BrowserAnimationsModule,
     ...lib,

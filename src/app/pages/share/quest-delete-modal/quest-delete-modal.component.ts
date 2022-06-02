@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { HotToastService } from '@ngneat/hot-toast';
 import { BsModalRef } from 'ngx-bootstrap/modal';
-import { tap } from 'rxjs';
 import { QuestService } from 'src/app/services';
 
 @Component({
