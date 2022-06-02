@@ -125,7 +125,10 @@ export class QuestEditComponent implements OnInit {
     this.questState.connect(this.questypeIds$, (prev, curr) => ({
       questTypeIds: [...prev.questTypeIds, { id: curr.id, value: curr.name }],
     }));
+
   }
+
+  
 
   form!: FormGroup;
 

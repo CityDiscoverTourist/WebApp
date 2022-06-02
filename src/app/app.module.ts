@@ -15,6 +15,7 @@ import { NotificationService } from './services';
 import { LocationTypeModalComponent } from './pages/share/location-type-modal/location-type-modal.component';
 import { QuestTypeModalComponent } from './pages/share/quest-type-modal/quest-type-modal.component';
 import { QuestDeleteModalComponent } from './pages/share/quest-delete-modal/quest-delete-modal.component';
+import { NavbarComponent } from './components/navbar/navbar.component';
 const lib=[
   QuillModule.forRoot()
 ]
@@ -28,6 +29,7 @@ const lib=[
     LocationTypeModalComponent,
     QuestTypeModalComponent,
     QuestDeleteModalComponent,
+    NavbarComponent
   ],
   imports: [BrowserModule, AppRoutingModule, HttpClientModule, BrowserAnimationsModule,
     ...lib,
