@@ -27,29 +27,35 @@ const routes: Routes = [
             (m) => m.QuestListModule
           ),
       },
-      {
-        path: 'edit',
-        // component: ProductCreateComponent,
-        loadChildren:()=>
-        import('./quest-edit/quest-edit.module').then(m=>m.QuestEditModule)
-      },
+
       {
         path: 'create',
         // component: ProductCreateComponent,
-        loadChildren:()=>
-        import('./quest-create/quest-create.module').then(m=>m.QuestCreateModule)
+        loadChildren: () =>
+          import('./quest-create/quest-create.module').then(
+            (m) => m.QuestCreateModule
+          ),
       },
       {
         path: ':id',
-        loadChildren:()=>
-        import('./quest-detail/quest-detail.module').then(m=>m.QuestDetailModule)      },
+        loadChildren: () =>
+          import('./quest-detail/quest-detail.module').then(
+            (m) => m.QuestDetailModule
+          ),
+      },
+      {
+        path: ':id/edit',
+        loadChildren: () =>
+          import('./quest-edit/quest-edit.module').then(
+            (m) => m.QuestEditModule
+          ),
+      },
     ],
   },
 ];
 
-
 @NgModule({
   imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class QuestRoutingModule { }
+export class QuestRoutingModule {}
