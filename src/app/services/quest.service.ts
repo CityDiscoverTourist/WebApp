@@ -1,13 +1,12 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { stringify } from 'query-string';
-import { map, Observable, of, pipe, tap } from 'rxjs';
-// import { IdValue, Quest } from '../models';
+import { map, Observable } from 'rxjs';
 import {
   Paging,
   Quest,
+  QuestCreate,
   QuestCreateResult,
-  QuestData,
   QuestListItem,
   QuestListSearch,
   Result,
@@ -19,33 +18,10 @@ import {
 export class QuestService {
   constructor(private http: HttpClient) {}
 
-  // httpOptions = {
-  //   headers: new HttpHeaders({ 'Content-Type': 'application/json' }).
-  //   append('Content-Disposition', 'multipart/form-data'),
-  // };
-
   httpOptions = {
-    headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
+    // headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
+    headers: new HttpHeaders({ encrypt: 'multipart/form-data' }),
   };
-
-  // getQuests(): Observable<Quest[]> {
-  // return of(
-  //   [1, 2, 3, 4, 5, 6, 7, 8].map(
-  //     (i) =>
-  //       ({
-  //         id: i,
-  //         title: `Lorem ipsum ${i}`,
-  //         description: `Lorem ipsum dolor sit amet ${i}`,
-  //         price: (i + 2) * 10000,
-  //         estimatedTime: `Lorem ${i + 3}`,
-  //         estimatedDistance: `Lorem ${i + 3}`,
-  //         availableTime: new Date(),
-  //         createdDate: new Date(),
-  //         updatedDate: new Date(),
-  //       } as Quest)
-  //   )
-  // );
-  // }
 
   getQuests(search: QuestListSearch): Observable<Paging<QuestListItem>> {
     var sortBy =
@@ -54,7 +30,7 @@ export class QuestService {
       `${search?.sort?.dir}` === 'undefined' ? '' : search.sort?.dir;
     const query = stringify({
       name: search.keyword,
-      questtypeid: search?.questypes,
+      questTypeId: search?.questTypeIds,
       pageNumber: isNaN(search?.currentPage!) ? 1 : search?.currentPage! + 1,
       pagesize: 10,
       orderby: `${sortBy} ${sortDir}`,
@@ -66,50 +42,39 @@ export class QuestService {
     return result;
   }
 
-  addQuest(quest: QuestData) {
-    const payload = new FormData();
-    // payload.append('id',quest.id.toString());
+  addQuest(quest: QuestCreate): Observable<QuestCreateResult> {
+    let payload = new FormData();
     payload.append('id', '0');
+    payload.append('id', quest.id.toString());
     payload.append('title', quest.title);
     payload.append('description', quest.description);
     payload.append('price', quest.price.toString());
     payload.append('estimatedTime', quest.estimatedTime);
     payload.append('estimatedDistance', quest.estimatedDistance);
     payload.append('image', quest.image);
-    // payload.append('availableTime',quest.availableTime.toTimeString());
-    // payload.append('availableTime',new Date().toTimeString());
-    payload.append('availableTime', '');
-    // payload.append('createdDate',quest.createdDate.toTimeString());
-    payload.append('createdDate', '');
-    // payload.append('updatedDate',quest.updatedDate.toTimeString());
+    payload.append('availableTime', quest.availableTime);
+    payload.append('createdDate', new Date().toDateString());
     payload.append('updatedDate', '');
     payload.append('status', quest.status);
     payload.append('questTypeId', quest.questTypeId.toString());
     payload.append('questOwnerId', quest.questOwnerId.toString());
     payload.append('areaId', quest.areaId.toString());
-    // payload.append('questTypeId','1');
-    // payload.append('questOwnerId','2');
-    // payload.append('areaId','3');
 
-    var test = 0;
-
-    return this.http.post(
-      `https://citytourist.azurewebsites.net/api/v1/quests/`,
-      payload,
-      // this.httpOptions
-      this.httpOptions
-    );
+    return this.http
+      .post<Result<Quest>>(
+        `https://citytourist.azurewebsites.net/api/v1/quests/`,
+        payload,
+        this.httpOptions
+      )
+      .pipe(
+        map(
+          (response: Result<Quest>) =>
+            ({ id: response.data?.id } as QuestCreateResult)
+        )
+      );
   }
-  // addQuest(quest: QuestData): Observable<Pagination<Quest>> {
-  //   console.log("hdhdhdh");
 
-  //   return this.http.post<Pagination<Quest>>(
-  //     `https://citytourist.azurewebsites.net/api/v1/quests/`,
-  //     quest,
-  //     this.httpOptions
-  //   );
-  // }
-  getQuestById(id: string): Observable<Quest> {
+  getQuestById(id: string | undefined): Observable<Quest> {
     return this.http
       .get<Result<Quest>>(
         `https://citytourist.azurewebsites.net/api/v1/quests/${id}`,
@@ -132,12 +97,12 @@ export class QuestService {
               questTypeId: response.data?.questTypeId,
               questOwnerId: response.data?.questOwnerId,
               areaId: response.data?.areaId,
-              imagePath:response.data?.imagePath,
+              imagePath: response.data?.imagePath,
             } as Quest)
         )
       );
   }
-  deleteQuestById(id: string): Observable<string|undefined> {
+  deleteQuestById(id: string): Observable<string | undefined> {
     return this.http
       .delete(
         `https://citytourist.azurewebsites.net/api/v1/quests/${id}`,
