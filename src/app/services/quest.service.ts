@@ -110,4 +110,36 @@ export class QuestService {
       )
       .pipe(map((response: Result<QuestListItem>) => response.status));
   }
+
+  updateQuest(quest: QuestCreate): Observable<QuestCreateResult> {
+    let payload = new FormData();
+    payload.append('id', '0');
+    payload.append('id', quest.id.toString());
+    payload.append('title', quest.title);
+    payload.append('description', quest.description);
+    payload.append('price', quest.price.toString());
+    payload.append('estimatedTime', quest.estimatedTime);
+    payload.append('estimatedDistance', quest.estimatedDistance);
+    payload.append('image', quest.image);
+    payload.append('availableTime', quest.availableTime);
+    payload.append('createdDate', new Date().toDateString());
+    payload.append('updatedDate', '');
+    payload.append('status', quest.status);
+    payload.append('questTypeId', quest.questTypeId.toString());
+    payload.append('questOwnerId', quest.questOwnerId.toString());
+    payload.append('areaId', quest.areaId.toString());
+
+    return this.http
+      .put<Result<Quest>>(
+        `https://citytourist.azurewebsites.net/api/v1/quests/`,
+        payload,
+        this.httpOptions
+      )
+      .pipe(
+        map(
+          (response: Result<Quest>) =>
+            ({ id: response.data?.id } as QuestCreateResult)
+        )
+      );
+  }
 }

@@ -147,23 +147,23 @@ export class QuestListComponent implements OnInit {
         sortable: true,
         canAutoResize: true,
       },
-      {
-        prop: 'description',
-        name: 'Mô tả',
-        sortable: true,
-        minWidth: 600,
-      },
+      // {
+      //   prop: 'description',
+      //   name: 'Mô tả',
+      //   sortable: true,
+      //   minWidth: 600,
+      // },
       {
         prop: 'price',
         name: 'Giá',
         sortable: true,
-        maxWidth: 120,
+        maxWidth: 150,
       },
       {
         prop: 'estimatedTime',
         name: 'Ước lượng',
         sortable: true,
-        maxWidth: 120,
+        maxWidth: 150,
       },
       // {
       //   prop: 'estimatedDistance',
@@ -195,7 +195,7 @@ export class QuestListComponent implements OnInit {
         prop: 'status',
         name: 'Trạng thái',
         sortable: true,
-        maxWidth: 100,
+        maxWidth: 150,
       },
       // {
       //   prop: 'questOwnerId',
@@ -205,7 +205,7 @@ export class QuestListComponent implements OnInit {
       // },
       {
         prop: 'areaId',
-        maxWidth: 120,
+        maxWidth: 200,
         name: 'Khu vực',
         sortable: true,
         // cellTemplate:this.edit,

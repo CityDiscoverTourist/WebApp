@@ -12,13 +12,14 @@ import { RxState } from '@rx-angular/state';
 import {
   BehaviorSubject,
   Observable,
+  partition,
   pipe,
   Subject,
   switchMap,
   take,
   tap,
 } from 'rxjs';
-import { IdValue, Quest, QuestListItem } from 'src/app/models';
+import { IdValue, Quest, QuestCreate, QuestListItem } from 'src/app/models';
 import { QuestService } from 'src/app/services';
 import { QuestDetailState, QuestState, QUEST_STATE } from '../states';
 
@@ -95,6 +96,35 @@ export class QuestEditComponent implements OnInit {
         };
       }
     );
+
+    const [valid$, invalid$] = partition(this.submit$, (f) => f.valid);
+
+    this.state.connect(
+      valid$.pipe(
+        tap(() => this.state.set({ submitting: true })),
+        switchMap((f) => this.questService.updateQuest(f.value as QuestCreate)),
+        tap((result) => {
+          if (result.id) {
+            this.toast.success('Cập nhật quest thành công');
+          }
+        })
+      ),
+      (_prev, curr) => ({
+      
+        error: undefined,
+        submitting: false,
+      })
+    );
+    // hay
+    this.state.hold(invalid$.pipe(), (f) => {
+      this.toast.error('Giá trị bạn nhập không đúng');
+      // this.form.revalidateControls([]);
+      f.revalidateControls([]);
+    });
+
+    this.questState.connect(this.questypeIds$, (prev, curr) => ({
+      questTypeIds: [...prev.questTypeIds, { id: curr.id, value: curr.name }],
+    }));
   }
 
   form!: FormGroup;
@@ -138,4 +168,8 @@ export class QuestEditComponent implements OnInit {
   get loading$(): Observable<boolean> {
     return this.questDetailState.select('loading');
   }
+
+  formSubmit$ = new Subject<FormGroup>();
+  submit$ = new Subject<FormGroup>();
+  questypeIds$ = new Subject<{ id: number; name: string }>();
 }

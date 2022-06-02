@@ -1,7 +1,18 @@
-<div class="container py-5" *rxLet="vm$ as vm">
-  <div class="text-center  d-flex justify-content-center">
-    <div  *ngIf="(loading$ | async) === true" class="spinner-border text-primary text-center" role="status">
-    </div>
+<div class="container py-3" *rxLet="vm$ as vm">
+  <div
+    class="text-center d-flex justify-content-center"
+    style="
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+    "
+  >
+    <div
+      *ngIf="(loading$ | async) === true"
+      class="spinner-border text-primary text-center"
+      role="status"
+    ></div>
   </div>
   <form [formGroup]="form" *ngIf="(loading$ | async) === false">
     <div class="row">
@@ -110,7 +121,10 @@
                 <ngx-dropzone-label>
                   <div>
                     <i class="bi bi-plus"></i>
-                    <span>Kéo thả ảnh vào đây nhé</span>
+                    <span>kéo và thả hình ảnh ở đây hoặc</span>
+                    <span class="ms-1 text-decoration-underline text-primary">
+                      tải lên từ máy tính của bạn</span
+                    >
                   </div>
                 </ngx-dropzone-label>
                 <ngx-dropzone-image-preview
@@ -120,9 +134,8 @@
                   [removable]="true"
                   (removed)="removedFiles$.next(f)"
                 >
-                  <ngx-dropzone-label
-                    >{{ f.name }} ({{ f.type }})</ngx-dropzone-label
-                  >
+                  <!-- <ngx-dropzone-label
+                    >{{ f.name }} ({{ f.type }})</ngx-dropzone-label> -->
                 </ngx-dropzone-image-preview>
               </div>
             </div>
@@ -204,7 +217,13 @@
         </div>
       </div>
       <div>
-        <button type="button" class="btn btn-primary mt-3">Cập nhật</button>
+        <button
+          type="button"
+          class="btn btn-primary mt-3"
+          (click)="submit$.next(form)"
+        >
+          Cập nhật
+        </button>
         <a routerLink="../" class="btn btn-outline-primary mt-3 me-3">Thoát</a>
         <!-- <button
           type="button"

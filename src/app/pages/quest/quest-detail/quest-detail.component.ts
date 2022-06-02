@@ -56,12 +56,9 @@ export class QuestDetailComponent implements OnInit {
     });
   }
 
-  editQuest() {
-    // this.router.navigate(['admin/quest/edit']);
-    // this.router.navigate(['admin/quest/edit',{ id: this.id }]);
-    // this.router.navigate(['admin/quest/edit?',{ id: this.id }]);
-    this.router.navigate(['./edit']);
-  }
+  // editQuest() {
+  //   this.router.navigate(['./edit']);
+  // }
 
   search$ = new BehaviorSubject<{ id: string }>({ id: '' });
   get quest$(): Observable<Quest> {
