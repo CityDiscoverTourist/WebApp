@@ -19,7 +19,6 @@ export class QuestService {
   constructor(private http: HttpClient) {}
 
   httpOptions = {
-    // headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
     headers: new HttpHeaders({ encrypt: 'multipart/form-data' }),
   };
 
@@ -113,8 +112,7 @@ export class QuestService {
 
   updateQuest(quest: QuestCreate): Observable<QuestCreateResult> {
     let payload = new FormData();
-    payload.append('id', '0');
-    payload.append('id', quest.id.toString());
+    payload.append('id',quest.id.toString());
     payload.append('title', quest.title);
     payload.append('description', quest.description);
     payload.append('price', quest.price.toString());
