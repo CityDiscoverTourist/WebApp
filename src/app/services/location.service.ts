@@ -1,19 +1,24 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { map, Observable, of } from 'rxjs';
 import {
+  IdValue,
   LocationListItem,
   LocationListSearch,
   Paging,
   SearchInfo,
 } from '../models';
+import { Pagination } from '../models/pagination.model';
+import { Location } from '../models';
 
 @Injectable({
   providedIn: 'root',
 })
 export class LocationService {
-  constructor(private httoClient: HttpClient) {}
-
+  constructor(private http: HttpClient) {}
+  httpOptions = {
+    headers: new HttpHeaders({ encrypt: 'multipart/form-data' }),
+  };
   // getLocations(search:LocationListSearch):Observable<Location[]>{
   //   // return of([]);
   //   console.log('Text');
@@ -55,5 +60,28 @@ export class LocationService {
 
     //   } as Paging<LocationListItem>);
     return of();
+  }
+
+  getLocationIds(): Observable<IdValue[]> {
+    var result= this.http
+      .get<Pagination<Location>>(
+        'https://citytourist.azurewebsites.net/api/v1/locations',
+        this.httpOptions
+      )
+      .pipe(
+        map((response: Pagination<Location>) =>
+          [...response.data].map(
+            (i) =>
+              ({
+                id: +i.id,
+                value: `${i.name}`,
+              } as IdValue)
+          )
+        )
+      );
+      var data=result.subscribe((data)=>{
+        console.log(data);
+      })
+      return result;
   }
 }

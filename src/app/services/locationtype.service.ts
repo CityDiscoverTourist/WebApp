@@ -8,6 +8,7 @@ import { IdValue } from '../models';
 export class LocationtypeService {
 
   constructor() { }
+  
   getLocationType():Observable<IdValue[]>{
     return of([...Array(6).keys()].map(
       (i) =>
