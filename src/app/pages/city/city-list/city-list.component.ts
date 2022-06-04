@@ -53,6 +53,27 @@ export class CityListComponent implements OnInit {
         loading: false,
       })
     );
+
+    this.cityListState.hold(this.submitSearch$,(form)=>{
+      this.search$.next({
+        ...this.search$.getValue(),
+        ...form,
+        currentPage:0
+      }),
+      (this.table.offset = 0);
+    })
+
+    this.cityListState.connect(this.resetSearch$, (prev, _) => ({
+      metadata: { ...prev.metadata, currentPage: 0 },
+    }));
+
+    this.cityListState.hold(this.resetSearch$, () => {
+      this.searchForm.reset();
+      // this.submitSearch$.next({keyword:''});
+      this.search$.next({currentPage:0});
+      this.table.offset = 0;
+    });
+
   }
   
   initTable() {
@@ -67,7 +88,7 @@ export class CityListComponent implements OnInit {
         prop: 'name',
         name: 'Tên thành phố',
         sortable: true,
-        minWidth: 500,
+        minWidth: 300,
       },
       {
         prop: 'status',
@@ -79,12 +100,7 @@ export class CityListComponent implements OnInit {
   }
 
   get cities$(): Observable<CityListItem[]> {
-    return this.cityListState.select('cities').pipe(
-      tap((data) => {
-        console.log('data');
-        console.log(data);
-      })
-    );
+    return this.cityListState.select('cities');
   }
   get metadata$(): Observable<PagingMetadata> {
     return this.cityListState.select('metadata');
@@ -94,15 +110,14 @@ export class CityListComponent implements OnInit {
   }
 
   onPage(paging: PageInfo) {
-    console.log(paging);
+ 
     this.search$.next({
       ...this.search$.getValue(),
       currentPage: paging.offset,
     });
   }
   onSort(event: SortInfo) {
-    console.log(event);
-    this.table.offset - 1;
+    this.table.offset-1;
     this.search$.next({
       ...this.search$.getValue(),
       sort: { sortBy: event.column.prop, dir: event.newValue },
