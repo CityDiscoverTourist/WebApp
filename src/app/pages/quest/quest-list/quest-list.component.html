@@ -82,6 +82,7 @@
           [rowHeight]="50"
           [externalPaging]="true"
           [externalSorting]="true"
+          [messages]="{emptyMessage: 'Không có quest để hiển thị!', totalMessage: 'quest'}"
           [count]="(metadata$ | async)?.totalCount || 0"
           [offset]="((metadata$ | async)?.currentPage || 0) - 1"
           [limit]="10"
