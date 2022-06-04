@@ -97,13 +97,13 @@ export class QuestEditComponent implements OnInit {
       }
     );
 
-    const [valid$, invalid$] = partition(this.submit$, (f) => f.valid);
+    const [valid$, invalid$] = partition(this.submit$, (f) => f.value);
 
     this.state.connect(
       valid$.pipe(
         tap(() => this.state.set({ submitting: true })),
         switchMap((f) => this.questService.updateQuest(f.value as QuestCreate)),
-        tap((result) => {
+        tap((result) => {          
           if (result.id) {
             this.toast.success('Cập nhật quest thành công');
           }
@@ -125,7 +125,10 @@ export class QuestEditComponent implements OnInit {
     this.questState.connect(this.questypeIds$, (prev, curr) => ({
       questTypeIds: [...prev.questTypeIds, { id: curr.id, value: curr.name }],
     }));
+
   }
+
+  
 
   form!: FormGroup;
 
@@ -142,7 +145,7 @@ export class QuestEditComponent implements OnInit {
       imagePath: [],
       questOwnerId: [2],
       areaId: [],
-      status: [],
+      status: [false],
     });
   }
 
