@@ -43,13 +43,13 @@ const routes: Routes = [
             (m) => m.QuestDetailModule
           ),
       },
-      {
-        path: ':id/edit',
-        loadChildren: () =>
-          import('./quest-edit/quest-edit.module').then(
-            (m) => m.QuestEditModule
-          ),
-      },
+      // {
+      //   path: ':id/edit',
+      //   loadChildren: () =>
+      //     import('./quest-edit/quest-edit.module').then(
+      //       (m) => m.QuestEditModule
+      //     ),
+      // },
     ],
   },
 ];

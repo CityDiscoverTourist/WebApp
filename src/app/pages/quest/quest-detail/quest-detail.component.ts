@@ -1,6 +1,7 @@
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RxState } from '@rx-angular/state';
+import { DatatableComponent, TableColumn } from '@swimlane/ngx-datatable';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import {
   BehaviorSubject,
@@ -10,9 +11,11 @@ import {
   switchMap,
   tap,
 } from 'rxjs';
-import { Quest, QuestListItem } from 'src/app/models';
-import { QuestService } from 'src/app/services';
+import { PagingMetadata, Quest, QuestItemListItem, QuestListItem, SearchInfo } from 'src/app/models';
+import { QuestItemService, QuestService } from 'src/app/services';
+import { PageInfo, SortInfo } from 'src/app/types';
 import { QuestDeleteModalComponent } from '../../share/quest-delete-modal/quest-delete-modal.component';
+import { QuestItemListState } from '../states';
 import { QuestDetailState } from '../states/questdetail.state';
 
 @Component({
@@ -27,12 +30,14 @@ export class QuestDetailComponent implements OnInit {
     private route: ActivatedRoute,
     private questService: QuestService,
     private modalService: BsModalService,
-    private router: Router,
-    private activatedRoute: ActivatedRoute,
-    private questDetailState: RxState<QuestDetailState>
+    private questDetailState: RxState<QuestDetailState>,
+    //QuestItem
+    private questItemService: QuestItemService,
+    private questItemListState: RxState<QuestItemListState>
   ) {}
 
   ngOnInit(): void {
+    //Quest
     this.search$.next({ id: this.route.snapshot.params['id'] });
     this.questDetailState.connect(
       this.search$
@@ -46,6 +51,37 @@ export class QuestDetailComponent implements OnInit {
         loading: false,
       })
     );
+    //QuestItem
+    this.questItemListState.connect(
+      this.search$
+        .pipe(switchMap((_) => this.questItemService.getQuestItems())),
+      (_, result) => ({
+        questitems: result.data.map(
+          (x, index) =>
+            ({
+              index: ++index,
+              id: x.id,
+              content: x.content,
+              description: x.description,
+              duration: x.duration,
+              createdDate: x.createdDate,
+              updatedDate: x.updatedDate,
+              qrCode: x.qrCode,
+              triggerMode: x.triggerMode,
+              rightAnswer: x.rightAnswer,
+              answerImageUrl: x.answerImageUrl,
+              status: x.status,
+              questItemTypeId: x.questItemTypeId,
+              locationId: x.locationId,
+              questId: x.questId,
+              itemId: x.itemId,
+            } as QuestItemListItem)
+        ),
+        metadata: { ...result.pagination },
+        loading: false,
+      })
+    );
+    this.initTable();
   }
 
   showDeleteQuest() {
@@ -56,14 +92,79 @@ export class QuestDetailComponent implements OnInit {
     });
   }
 
-  // editQuest() {
-  //   this.router.navigate(['./edit']);
-  // }
-
   search$ = new BehaviorSubject<{ id: string }>({ id: '' });
   get quest$(): Observable<Quest> {
     return this.questDetailState.select('quest');
   }
 
   @ViewChild('colCreatedAt', { static: true }) colCreatedAt!: TemplateRef<any>;
+//QuestItem
+
+initTable() {
+  this.columns = [
+    {
+      prop: 'index',
+      name: 'STT',
+      sortable: true,
+      canAutoResize: true,
+      maxWidth: 75,
+    },
+    {
+      prop: 'content',
+      name: 'Nội dung câu hỏi',
+      sortable: true,
+      canAutoResize: true,
+    },
+    {
+      prop: 'duration',
+      name: 'Thời lượng',
+      sortable: true,
+      maxWidth: 150,
+    },
+    {
+      prop: 'createdDate',
+      name: 'Ngày tạo',
+      sortable: true,
+      cellTemplate:this.colCreatedAt,
+      maxWidth: 150,
+    },
+    {
+      prop: 'status',
+      name: 'Trạng thái',
+      sortable: true,
+      maxWidth: 150,
+    },
+  ];
+}
+
+  get questItems$(): Observable<QuestItemListItem[]> {
+    return this.questItemListState.select('questitems');
+  }
+
+  get metadata$(): Observable<PagingMetadata> {
+    return this.questItemListState.select('metadata');
+  }
+  get loading$(): Observable<boolean> {
+    return this.questItemListState.select('loading');
+  }
+  columns: TableColumn[] = [];
+
+  @ViewChild(DatatableComponent) table!: DatatableComponent;
+
+  onPage(paging: PageInfo) {
+    // console.log(paging);
+    this.searchQuestItem$.next({
+      ...this.searchQuestItem$.getValue(),
+      currentPage: paging.offset,
+    });
+  }
+  onSort(event: SortInfo) {
+    // console.log(event);
+    this.table.offset - 1;
+    this.searchQuestItem$.next({
+      ...this.searchQuestItem$.getValue(),
+      sort: { sortBy: event.column.prop, dir: event.newValue },
+    });
+  }
+  searchQuestItem$ = new BehaviorSubject<SearchInfo>({});
 }

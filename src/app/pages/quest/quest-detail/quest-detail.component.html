@@ -1,15 +1,7 @@
-<div class="pt-3 px-5" *rxLet="quest$ as vm">
-  <div class="d-flex align-items-center justify-content-between mb-3 px-3">
-    <!-- <div>Tên của quest</div> -->
-    <!-- <div>{{ questListItem?.title }}</div> -->
+<div class="px-5" *rxLet="quest$ as vm">
+    <div class="d-flex align-items-center justify-content-between mb-1 px-3">
     <div>Tên Quest: {{ vm.title }}</div>
     <div class="flex-fill"></div>
-    <!-- <button
-      type="button"
-      class="btn btn-outline-primary mt-3 me-3"
-    >
-      Thoát
-    </button> -->
     <a routerLink="../" class="btn btn-outline-primary mt-3 me-3">Thoát</a>
     <button
       type="button"
@@ -18,123 +10,75 @@
     >
       Xóa
     </button>
-    <a  class="btn btn-primary mt-3" [routerLink]="['./edit']">Sửa quest</a>
+    <a class="btn btn-primary mt-3" [routerLink]="['./edit']">Sửa quest</a>
   </div>
   <div class="row">
-    <div class="card mb-3">
+    <div class="card mb-1">
       <div class="card-header bg-white">Thông tin quest</div>
-      <div class="card-body">
+      <div class="card-body" style="font-size: 0.8rem">
         <div class="row">
-          <div class="col-2 mb-3">
-            <div class="row-2 align-self-center">Id</div>
-            <div class="row-2">Giá</div>
-            <div class="row-2">Trạng thái</div>
-            <div class="row-2">Thời gian ước lượng</div>
-            <div class="row-2">Khoảng cách ước lượng</div>
-            <!-- <div class="row-2 btn btn-primary">Xem mô tả</div> -->
+          <div class="col-2 mb-1">
+            <div class="row-2 nowrap align-self-center">Id</div>
+            <div class="row-2 nowrap ">Giá</div>
+            <div class="row-2 nowrap ">Trạng thái</div>
+            <div class="row-2 nowrap ">Thời gian ước lượng</div>
+            <div
+              class="row-2 nowrap"
+            >
+              Khoảng cách ước lượng
+            </div>
           </div>
-          <div class="col-2 mb-3">
-            <div class="align-self-center row-2">
-              <!-- {{ questListItem?.id != null ? questListItem?.id : ": ---" }} -->
+          <div class="col-2 mb-1">
+            <div class="align-self-center row-2 nowrap">
               {{ vm.id }}
             </div>
-            <div class="align-self-center row-2">
-              <!-- {{ questListItem?.price }} -->
-              <!-- {{
-                questListItem?.price != null ? questListItem?.price : ": ---"
-              }} -->
+            <div class="align-self-center row-2 nowrap">
               {{ vm.price }}
             </div>
-            <div class="align-self-center row-2">
-              <!-- {{ questListItem?.status }} -->
-              <!-- {{
-                questListItem?.status != null ? questListItem?.status : ": ---"
-              }} -->
+            <div class="align-self-center row-2 nowrap">
               {{ vm.status }}
             </div>
-            <div class="align-self-center row-2">
-              <!-- {{ questListItem?.estimatedTime }} -->
-              <!-- {{
-                questListItem?.estimatedTime != null
-                  ? questListItem?.estimatedTime
-                  : ": ---"
-              }} -->
+            <div class="align-self-center row-2 nowrap">
               {{ vm.estimatedTime }}
             </div>
-            <div class="align-self-center row-2">
-              <!-- {{ questListItem?.estimatedDistance }} -->
-              <!-- {{
-                questListItem?.estimatedDistance != null
-                  ? questListItem?.estimatedDistance
-                  : ": ---"
-              }} -->
+            <div class="align-self-center row-2 nowrap">
               {{ vm.estimatedDistance }}
             </div>
           </div>
-          <div class="col-3 mb-3">
-            <div class="row-2">Khu vực</div>
-            <div class="row-2">Loại quest</div>
-            <div class="row-2">Thời gian khả dụng</div>
-            <div class="row-2">Ngày tạo</div>
-            <div class="row-2">Ngày cập nhật cuối cùng</div>
+          <div class="col-3 mb-1">
+            <div class="row-2 nowrap">Khu vực</div>
+            <div class="row-2 nowrap">Loại quest</div>
+            <div class="row-2 nowrap">Thời gian khả dụng</div>
+            <div class="row-2 nowrap">Ngày tạo</div>
+            <div class="row-2 nowrap">Ngày cập nhật cuối cùng</div>
           </div>
-          <div class="col-2 mb-3">
-            <div class="align-self-center row-2">
-              <!-- {{ questListItem?.areaId }} -->
+          <div class="col-2 mb-1">
+            <div class="align-self-center row-2 nowrap">
               {{ vm.areaId }}
             </div>
-            <div class="align-self-center row-2">
-              <!-- {{ questListItem?.questTypeId }} -->
+            <div class="align-self-center row-2 nowrap">
               {{ vm.questTypeId }}
             </div>
-            <div class="align-self-center row-2">
-              <!-- {{ questListItem?.availableTime }} -->
-              <!-- {{
-                questListItem?.availableTime != null
-                  ? questListItem?.availableTime
-                  : ": ---"
-              }} -->
+            <div class="align-self-center row-2 nowrap">
               {{ vm.availableTime }}
             </div>
-            <div class="align-self-center row-2">
-              <!-- {{ questListItem?.createdDate }} -->
-              <!-- {{
-                questListItem?.createdDate != null
-                  ? questListItem?.createdDate
-                  : ": ---"
-              }} -->
+            <div class="align-self-center row-2 nowrap">
               {{ vm.createdDate | date: "dd/MM/yyyy" }}
             </div>
-            <div class="align-self-center row-2">
-              <!-- {{ questListItem?.updatedDate }} -->
-              <!-- {{
-                questListItem?.updatedDate != null
-                  ? questListItem?.updatedDate
-                  : ": ---"
-              }} -->
+            <div class="align-self-center row-2 nowrap">
               {{ vm.updatedDate | date: "dd/MM/yyyy" }}
             </div>
           </div>
-          <div class="col-3 mb-3">
+          <div class="col-3 mb-1">
             <div style="display: block">
               <div style="width: 100%; display: flex; justify-content: center">
-                <!-- <div
-                  style="
-                    width: 150px;
-                    height: 150px;
-                    background-image: url('{{ questListItem.imagePath }}');
-                  "
-                ></div> -->
                 <div>
                   <img
-                    style="width: 150px; height: 150px"
+                    style="width: 120px; height: 120px"
                     src="{{ vm?.imagePath }}"
                     alt=""
                   />
                 </div>
-                <!--  background: url('https://toponseek.com/blogs/wp-content/uploads/2019/06/toi-uu-hinh-anh-optimize-image.jpg'); -->
-                <!-- {{questListItem.imagePath}}
-                <img src="{{questListItem.imagePath}}" alt=""> -->
               </div>
             </div>
           </div>
@@ -143,3 +87,102 @@
     </div>
   </div>
 </div>
+<div>
+  <div class="d-flex align-items-center justify-content-between px-3">
+    <div class="flex-fill"></div>
+    <a routerLink="./quest-item/create" class="btn btn-primary" style="min-width: 120px">
+      <i class="bi bi-plus"></i> Thêm QuestItem
+    </a>
+  </div>
+  <div class="bg-white m-3 p-3  rounded">
+    <div class="rounded bg-white">
+      <form class="mb-4">
+        <div class="d-flex">
+          <div class="input-group me-3">
+            <span
+              class="input-group-text bg-white border-end-0"
+              id="search-icon"
+              ><i class="bi bi-search"></i
+            ></span>
+            <input
+              type="text"
+              class="border-start-0 form-control outline-none"
+              placeholder="Tìm kiếm"
+              aria-label="Tìm kiếm"
+              aria-describedby="search-icon"
+              formControlName="keyword"
+            />
+          </div>
+          <!-- <ng-select
+            [items]="questTypeIds | async"
+            bindValue="id"
+            bindLabel="value"
+            placeholder="Chọn loại quest"
+            [clearable]="false"
+            [closeOnSelect]="true"
+            style="min-width: 200px"
+            class="me-3"
+            formControlName="questTypeIds"
+          ></ng-select> -->
+          <!-- <ng-select
+            [items]="cityIds$ | async"
+            bindValue="id"
+            bindLabel="value"
+            [closeOnSelect]="true"
+            style="min-width: 200px"
+            placeholder="Thành phố"
+            class="me-3"
+            formControlName="cityIds"
+          ></ng-select> -->
+          <div class="btn-group">
+            <button
+              type="button"
+              class="btn btn-primary"
+              style="min-width: 120px"
+            >
+              <i class="bi bi-search"></i>
+              Tìm kiếm 
+            </button>
+            <button
+              type="button"
+              class="btn btn-default"
+              style="min-width: 100px"
+            >
+              <i class="bi bi-x-lg"></i>
+              Reset
+            </button>
+          </div>
+        </div>
+      </form>
+      <!-- table -->
+
+      <div class="border overflow-hidden rouded shadow-sm">
+        <ngx-datatable
+          class="material rounded"
+          [rows]="questItems$ | async"
+          [columns]="columns"
+          columnMode="force"
+          [headerHeight]="50"
+          [loadingIndicator]="(loading$ | async) === true"
+          [footerHeight]="50"
+          [rowHeight]="50"
+          [externalPaging]="true"
+          [externalSorting]="true"
+          [messages]="{emptyMessage: 'Không có quest để hiển thị!', totalMessage: 'quest'}"
+          [count]="(metadata$ | async)?.totalCount || 0"
+          [offset]="((metadata$ | async)?.currentPage || 0) - 1"
+          [limit]="10"
+          (page)="onPage($event)"
+          (sort)="onSort($event)"
+        >
+        </ngx-datatable>
+      </div>
+    </div>
+    <ng-template #colCreatedAt let-value="value">
+      {{ value | date: "dd/MM/yyyy" }}
+    </ng-template>
+  </div>
+</div>
+
+
+<router-outlet></router-outlet>
