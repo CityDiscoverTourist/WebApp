@@ -46,7 +46,7 @@ export class CityService {
       this.httpOptions
     );
   }
-  
+
   deleteCityById(id: string): Observable<string | undefined> {
     return this.http
       .delete(
@@ -54,5 +54,37 @@ export class CityService {
         this.httpOptions
       )
       .pipe(map((response: Result<CityListItem>) => response.status));
+  }
+  getCityById(id: string | undefined): Observable<City> {
+    return this.http
+      .get<Result<City>>(
+        `https://citytourist.azurewebsites.net/api/v1/cites/${id}`,
+        this.httpOptions
+      )
+      .pipe(
+        map(
+          (response: Result<City>) =>
+            ({
+              id: response.data?.id,
+              name: response.data?.name,
+              status: response.data?.status,
+            } as City)
+        )
+      );
+  }
+
+  updateCity(payload: CityCreate): Observable<CityCreateResult> {
+    return this.http
+      .put<Result<City>>(
+        `https://citytourist.azurewebsites.net/api/v1/cites/`,
+        payload,
+        this.httpOptions
+      )
+      .pipe(
+        map(
+          (response: Result<City>) =>
+            ({ id: response.data?.id } as CityCreateResult)
+        )
+      );
   }
 }
