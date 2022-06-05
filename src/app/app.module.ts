@@ -18,6 +18,7 @@ import { QuestDeleteModalComponent } from './pages/share/quest-delete-modal/ques
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { CityModalComponent } from './pages/share/city-modal/city-modal.component';
 import { DeleteModalComponent } from './pages/share/delete-modal/delete-modal.component';
+import { CityModalUpdateComponent } from './pages/share/city-modal-update/city-modal-update.component';
 const lib=[
   QuillModule.forRoot()
 ]
@@ -33,7 +34,8 @@ const lib=[
     QuestDeleteModalComponent,
     NavbarComponent,
     CityModalComponent,
-    DeleteModalComponent
+    DeleteModalComponent,
+    CityModalUpdateComponent
   ],
   imports: [BrowserModule, AppRoutingModule, HttpClientModule, BrowserAnimationsModule,
     ...lib,
