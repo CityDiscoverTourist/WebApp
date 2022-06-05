@@ -46,4 +46,13 @@ export class CityService {
       this.httpOptions
     );
   }
+  
+  deleteCityById(id: string): Observable<string | undefined> {
+    return this.http
+      .delete(
+        `https://citytourist.azurewebsites.net/api/v1/cites/${id}`,
+        this.httpOptions
+      )
+      .pipe(map((response: Result<CityListItem>) => response.status));
+  }
 }

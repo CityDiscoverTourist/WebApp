@@ -35,7 +35,7 @@ export class QuestService {
       orderby: `${sortBy} ${sortDir}`,
     });
     var result = this.http.get<Paging<QuestListItem>>(
-      'https://citytourist.azurewebsites.net/api/v1/quests?' + query,
+      `https://citytourist.azurewebsites.net/api/v1/quests?` + query,
       this.httpOptions
     );
     return result;
