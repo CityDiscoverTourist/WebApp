@@ -12,42 +12,36 @@ import {
   switchMap,
   tap,
 } from 'rxjs';
-import { QuestTypeService } from 'src/app/services/quest-type.service';
+import { CityService } from 'src/app/services';
 
 declare type ModalState = {
   hasError: boolean;
 };
+
 @Component({
-  selector: 'app-quest-type-modal',
-  templateUrl: './quest-type-modal.component.html',
-  styleUrls: ['./quest-type-modal.component.scss'],
+  selector: 'app-city-modal',
+  templateUrl: './city-modal.component.html',
+  styleUrls: ['./city-modal.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [RxState],
 })
-export class QuestTypeModalComponent implements OnInit {
+export class CityModalComponent implements OnInit {
   constructor(
     public bsModalRef: BsModalRef,
     private fb: FormBuilder,
     private state: RxState<ModalState>,
-    private questTypeService: QuestTypeService
+    private cityService: CityService
   ) {}
 
   ngOnInit(): void {
     this.initForm();
     const [$valid, $invalid] = partition(this.submit$, (f) => f.valid);
     this.state.connect(
-      $invalid.pipe(tap(() => this.form.revalidateControls([]))),
-      () => ({
-        hasError: true,
-      })
-    );
-    this.state.connect(
       $valid
         .pipe(
           switchMap((form) =>
-            this.questTypeService
-              .addQuestType(form.value)
-              // .pipe(catchError(() => of({ isOk: false,data:null })))
+            this.cityService
+              .addCity(form.value)
               .pipe(
                 catchError(() =>
                   of({ status: 'data not modified', data: null })
@@ -66,8 +60,13 @@ export class QuestTypeModalComponent implements OnInit {
           })
         ),
       (_prev, curr) => ({
-        // hasError: false,
         hasError: curr.status == 'data modified' ? false : true,
+      })
+    );
+    this.state.connect(
+      $invalid.pipe(tap(() => this.form.revalidateControls([]))),
+      () => ({
+        hasError: true,
       })
     );
   }
@@ -78,12 +77,12 @@ export class QuestTypeModalComponent implements OnInit {
   initForm() {
     this.form = this.fb.group({
       name: [null, [Validators.required]],
-      durationMode: [null],
-      status: [],
-      distanceMode: [],
+      status: ['Không hiển thị'],
     });
   }
+
   submit$ = new Subject<FormGroup>();
+
   public get hasError$(): Observable<boolean> {
     return this.state.select('hasError');
   }
