@@ -29,7 +29,7 @@ export class QuestService {
       `${search?.sort?.dir}` === 'undefined' ? '' : search.sort?.dir;
     const query = stringify({
       name: search.keyword,
-      questTypeId: search?.questTypeIds,
+      questTypeId: search?.questTypeIds == null ? 0 : search?.questTypeIds,
       pageNumber: isNaN(search?.currentPage!) ? 1 : search?.currentPage! + 1,
       pagesize: 10,
       orderby: `${sortBy} ${sortDir}`,
@@ -112,7 +112,7 @@ export class QuestService {
 
   updateQuest(quest: QuestCreate): Observable<QuestCreateResult> {
     let payload = new FormData();
-    payload.append('id',quest.id.toString());
+    payload.append('id', quest.id.toString());
     payload.append('title', quest.title);
     payload.append('description', quest.description);
     payload.append('price', quest.price.toString());

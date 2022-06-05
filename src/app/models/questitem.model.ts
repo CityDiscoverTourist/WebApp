@@ -1,3 +1,5 @@
+import { SearchInfo } from "./common.model";
+
 export interface QuestItem {
   id: number;
   content: string;
@@ -32,6 +34,10 @@ export interface QuestItemCreate{
   locationId: number;
   questId: number;
   itemId: number;
+}
+
+export interface QuestItemListSearch extends SearchInfo {
+  questItemTypeIds?: number[];
 }
 
 export interface QuestItemListItem {

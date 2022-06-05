@@ -208,12 +208,12 @@ export class QuestListComponent implements OnInit {
         maxWidth: 200,
         name: 'Khu vực',
         sortable: true,
-        // cellTemplate:this.edit,
+        cellTemplate:this.edit,
       },
     ];
   }
 
-  // @ViewChild('edit', { static: true }) edit!: TemplateRef<any>;
+  @ViewChild('edit', { static: true }) edit!: TemplateRef<any>;
   // @ViewChild('deleteBtn', { static: true }) deleteBtn!: TemplateRef<any>;
   // selected = [];
 

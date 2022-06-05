@@ -1,13 +1,13 @@
 <div class="pt-3 px-5 mx-5">
   <div class="d-flex align-items-center justify-content-between mx-5">
     <div class="flex-fill"></div>
-    <a routerLink="./edit" class="btn btn-primary" style="min-width: 120px">
+    <a class="btn btn-primary" style="min-width: 120px"  (click)="showAddCity()">
       <i class="bi bi-plus"></i> Thêm thành phố
     </a>
   </div>
   <div class="bg-white my-3 p-3 rounded mx-5">
     <div class="rounded bg-white">
-      <form class="mb-4"  [formGroup]="searchForm">
+      <form class="mb-4" [formGroup]="searchForm">
         <div class="d-flex">
           <div class="input-group me-3">
             <span
@@ -15,33 +15,16 @@
               id="search-icon"
               ><i class="bi bi-search"></i
             ></span>
-
             <input
               type="text"
               class="border-start-0 form-control outline-none"
-              placeholder="Tìm kiếm khu vực"
-              aria-label="Tìm kiếm khu vực"
+              placeholder="Tìm kiếm thành phố"
+              aria-label="Tìm kiếm thành phố"
               aria-describedby="search-icon"
               formControlName="keyword"
               (keyup.enter)="search$.next(searchForm.value)"
             />
           </div>
-          <!-- <ng-select
-              [items]="[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]"
-              [clearable]="false"
-              [closeOnSelect]="true"
-              style="min-width: 200px"
-              class="me-3"
-            ></ng-select> -->
-          <!-- <div class="btn-group">
-            <button
-              type="button"
-              class="btn btn-primary"
-              style="min-width: 150px"
-            >
-              <i class="bi bi-search"></i>
-              Tìm kiếm
-            </button> -->
           <button
             type="button"
             class="btn btn-primary"
@@ -66,7 +49,7 @@
       <div class="border overflow-hidden rouded shadow-sm">
         <ngx-datatable
           class="material rounded"
-          [rows]="cities$|async"
+          [rows]="cities$ | async"
           [loadingIndicator]="(loading$ | async) === true"
           [columns]="columns"
           columnMode="force"
@@ -75,12 +58,41 @@
           [rowHeight]="50"
           [externalPaging]="true"
           [externalSorting]="true"
+          [messages]="{emptyMessage: 'Không có thành phố để hiển thị!', totalMessage: 'thành phố'}"
           [count]="(metadata$ | async)?.totalCount || 0"
           [offset]="((metadata$ | async)?.currentPage || 0) - 1"
           [limit]="10"
           (page)="onPage($event)"
           (sort)="onSort($event)"
         >
+          <ng-template
+            #actionTemplate
+            let-row="row"
+            let-value="value"
+            let-expanded="expanded"
+            ngx-datatable-cell-template
+          >
+            <button
+              class="btn btn-success btn-sm rounded-0"
+              type="button"
+              data-toggle="tooltip"
+              data-placement="top"
+              title="Edit"
+              (click)="onSelect(row)"
+            >
+            <i class="bi bi-pencil"></i>
+            </button>
+            <button
+              class="btn btn-danger btn-sm rounded-0"
+              type="button"
+              data-toggle="tooltip"
+              data-placement="top"
+              title="Delete"
+              (click)="onSelect(row)"
+            >
+              <i class="bi bi-trash3"></i>
+            </button>
+          </ng-template>
         </ngx-datatable>
       </div>
     </div>

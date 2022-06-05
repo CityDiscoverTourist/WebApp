@@ -57,7 +57,6 @@ export class QuestTypeModalComponent implements OnInit {
         )
         .pipe(
           filter((result) => (result.status == 'data modified' ? true : false)),
-
           tap((result) => {
             this.bsModalRef.onHide?.emit({
               id: result?.data?.id,
@@ -68,7 +67,7 @@ export class QuestTypeModalComponent implements OnInit {
         ),
       (_prev, curr) => ({
         // hasError: false,
-        hasError: curr.status == 'data modified' ? true : false,
+        hasError: curr.status == 'data modified' ? false : true,
       })
     );
   }

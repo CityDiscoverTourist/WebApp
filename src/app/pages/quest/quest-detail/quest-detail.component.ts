@@ -1,7 +1,12 @@
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RxState } from '@rx-angular/state';
-import { DatatableComponent, TableColumn } from '@swimlane/ngx-datatable';
+import {
+  DatatableComponent,
+  SelectionType,
+  TableColumn,
+} from '@swimlane/ngx-datatable';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import {
   BehaviorSubject,
@@ -11,7 +16,14 @@ import {
   switchMap,
   tap,
 } from 'rxjs';
-import { PagingMetadata, Quest, QuestItemListItem, QuestListItem, SearchInfo } from 'src/app/models';
+import {
+  PagingMetadata,
+  Quest,
+  QuestItemListItem,
+  QuestItemListSearch,
+  QuestListItem,
+  SearchInfo,
+} from 'src/app/models';
 import { QuestItemService, QuestService } from 'src/app/services';
 import { PageInfo, SortInfo } from 'src/app/types';
 import { QuestDeleteModalComponent } from '../../share/quest-delete-modal/quest-delete-modal.component';
@@ -53,8 +65,9 @@ export class QuestDetailComponent implements OnInit {
     );
     //QuestItem
     this.questItemListState.connect(
-      this.search$
-        .pipe(switchMap((_) => this.questItemService.getQuestItems())),
+      this.search$.pipe(
+        switchMap((s) => this.questItemService.getQuestItemsByQuestId(s.id))
+      ),
       (_, result) => ({
         questitems: result.data.map(
           (x, index) =>
@@ -81,7 +94,51 @@ export class QuestDetailComponent implements OnInit {
         loading: false,
       })
     );
+    // this.questItemListState.connect(
+    //   this.searchQuestItem$.pipe(
+    //     switchMap((s) => this.questItemService.getQuestItems(s))
+    //   ),
+    //   (_, result) => ({
+    //     questitems: result.data.map(
+    //       (x, index) =>
+    //         ({
+    //           index: ++index,
+    //           id: x.id,
+    //           content: x.content,
+    //           description: x.description,
+    //           duration: x.duration,
+    //           createdDate: x.createdDate,
+    //           updatedDate: x.updatedDate,
+    //           qrCode: x.qrCode,
+    //           triggerMode: x.triggerMode,
+    //           rightAnswer: x.rightAnswer,
+    //           answerImageUrl: x.answerImageUrl,
+    //           status: x.status,
+    //           questItemTypeId: x.questItemTypeId,
+    //           locationId: x.locationId,
+    //           questId: x.questId,
+    //           itemId: x.itemId,
+    //         } as QuestItemListItem)
+    //     ),
+    //     metadata: { ...result.pagination },
+    //     loading: false,
+    //   })
+    // );
     this.initTable();
+
+    this.questItemListState.hold(this.submitSearch$, (form) => {
+      this.searchQuestItem$.next({
+        ...this.searchQuestItem$.getValue(),
+        ...form,
+        currentPage: 0,
+      }),
+        (this.table.offset = 0);
+    });
+    this.questItemListState.hold(this.resetSearch$, () => {
+      this.searchForm.reset();
+      this.submitSearch$.next({});
+      this.table.offset = 0;
+    });
   }
 
   showDeleteQuest() {
@@ -98,44 +155,45 @@ export class QuestDetailComponent implements OnInit {
   }
 
   @ViewChild('colCreatedAt', { static: true }) colCreatedAt!: TemplateRef<any>;
-//QuestItem
+  //QuestItem
 
-initTable() {
-  this.columns = [
-    {
-      prop: 'index',
-      name: 'STT',
-      sortable: true,
-      canAutoResize: true,
-      maxWidth: 75,
-    },
-    {
-      prop: 'content',
-      name: 'Nội dung câu hỏi',
-      sortable: true,
-      canAutoResize: true,
-    },
-    {
-      prop: 'duration',
-      name: 'Thời lượng',
-      sortable: true,
-      maxWidth: 150,
-    },
-    {
-      prop: 'createdDate',
-      name: 'Ngày tạo',
-      sortable: true,
-      cellTemplate:this.colCreatedAt,
-      maxWidth: 150,
-    },
-    {
-      prop: 'status',
-      name: 'Trạng thái',
-      sortable: true,
-      maxWidth: 150,
-    },
-  ];
-}
+  initTable() {
+    this.columns = [
+      {
+        prop: 'index',
+        // name: 'STT',
+        sortable: false,
+        canAutoResize: true,
+        maxWidth: 75,
+        checkboxable: true,
+      },
+      {
+        prop: 'content',
+        name: 'Nội dung câu hỏi',
+        sortable: true,
+        canAutoResize: true,
+      },
+      {
+        prop: 'duration',
+        name: 'Thời lượng',
+        sortable: true,
+        maxWidth: 150,
+      },
+      {
+        prop: 'createdDate',
+        name: 'Ngày tạo',
+        sortable: true,
+        cellTemplate: this.colCreatedAt,
+        maxWidth: 150,
+      },
+      {
+        prop: 'status',
+        name: 'Trạng thái',
+        sortable: true,
+        maxWidth: 150,
+      },
+    ];
+  }
 
   get questItems$(): Observable<QuestItemListItem[]> {
     return this.questItemListState.select('questitems');
@@ -166,5 +224,13 @@ initTable() {
       sort: { sortBy: event.column.prop, dir: event.newValue },
     });
   }
-  searchQuestItem$ = new BehaviorSubject<SearchInfo>({});
+  searchQuestItem$ = new BehaviorSubject<QuestItemListSearch>({});
+
+  searchForm = new FormGroup({
+    keyword: new FormControl(),
+    // questItemTypeIds: new FormControl(),
+  });
+
+  submitSearch$ = new Subject<Partial<{ keyword: string }>>();
+  resetSearch$ = new Subject<void>();
 }
