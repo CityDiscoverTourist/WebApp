@@ -1,7 +1,7 @@
 <div class="pt-3 px-5 mx-5">
   <div class="d-flex align-items-center justify-content-between mx-5">
     <div class="flex-fill"></div>
-    <a class="btn btn-primary" style="min-width: 120px"  (click)="showAddCity()">
+    <a class="btn btn-primary" style="min-width: 120px" (click)="showAddCity()">
       <i class="bi bi-plus"></i> Thêm thành phố
     </a>
   </div>
@@ -58,7 +58,10 @@
           [rowHeight]="50"
           [externalPaging]="true"
           [externalSorting]="true"
-          [messages]="{emptyMessage: 'Không có thành phố để hiển thị!', totalMessage: 'thành phố'}"
+          [messages]="{
+            emptyMessage: 'Không có thành phố để hiển thị!',
+            totalMessage: 'thành phố'
+          }"
           [count]="(metadata$ | async)?.totalCount || 0"
           [offset]="((metadata$ | async)?.currentPage || 0) - 1"
           [limit]="10"
@@ -78,9 +81,9 @@
               data-toggle="tooltip"
               data-placement="top"
               title="Edit"
-              (click)="onSelect(row)"
+              (click)="onUpdate(row.id)"
             >
-            <i class="bi bi-pencil"></i>
+              <i class="bi bi-pencil"></i>
             </button>
             <button
               class="btn btn-danger btn-sm rounded-0"
@@ -88,7 +91,7 @@
               data-toggle="tooltip"
               data-placement="top"
               title="Delete"
-              (click)="onSelect(row.id)"
+              (click)="onDelete(row.id)"
             >
               <i class="bi bi-trash3"></i>
             </button>

@@ -15,6 +15,7 @@ import {
 import { City, CityListItem, PagingMetadata, SearchInfo } from 'src/app/models';
 import { CityService } from 'src/app/services';
 import { PageInfo, SortInfo } from 'src/app/types';
+import { CityModalUpdateComponent } from '../../share/city-modal-update/city-modal-update.component';
 import { CityModalComponent } from '../../share/city-modal/city-modal.component';
 import { DeleteModalComponent } from '../../share/delete-modal/delete-modal.component';
 import { CityListState } from '../states';
@@ -189,8 +190,23 @@ export class CityListComponent implements OnInit {
       },
     });
   }
-  onSelect(id: string) {
+  onDelete(id: string) {
     const bsModalRef = this.modalService.show(DeleteModalComponent, {
+      initialState: {
+        id: id,
+      },
+    });
+    bsModalRef.onHide?.pipe(take(1)).subscribe({
+      next: (result) => {
+        this.search$.next({
+          ...this.search$.getValue(),
+        });
+      },
+    });
+  }
+
+  onUpdate(id: string) {
+    const bsModalRef = this.modalService.show(CityModalUpdateComponent, {
       initialState: {
         id: id,
       },

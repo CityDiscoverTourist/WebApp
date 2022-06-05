@@ -13,7 +13,6 @@ export class DeleteModalComponent implements OnInit {
   constructor(
     public bsModalRef: BsModalRef,
     private cityService: CityService,
-    private router: Router,
     private toast: HotToastService
   ) {}
 
