@@ -2,7 +2,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { stringify } from 'query-string';
 import { map, Observable } from 'rxjs';
-import { IdValue, Paging, QuestItemType, QuestItemTypeListItem, SearchInfo } from '../models';
+import { IdValue, Paging, QuestItemType, QuestItemTypeCreate, QuestItemTypeListItem, Result, SearchInfo } from '../models';
 import { Pagination } from '../models/pagination.model';
 
 @Injectable({
@@ -11,10 +11,6 @@ import { Pagination } from '../models/pagination.model';
 export class QuestItemTypeService {
 
   constructor(private http: HttpClient) {}
-
-  // httpOptions = {
-  //   headers: new HttpHeaders({ encrypt: 'multipart/form-data' }),
-  // };
   httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
   };
@@ -54,5 +50,13 @@ export class QuestItemTypeService {
       this.httpOptions
     );
     return result;
+  }
+
+  addQuestItemType(questItemTypeCreate: Partial<QuestItemTypeCreate>): Observable<Result<Partial<QuestItemType>>> {
+    return this.http.post<Result<Partial<QuestItemType>>>(
+      `https://citytourist.azurewebsites.net/api/v1/quest-item-types/`,
+      questItemTypeCreate,
+      this.httpOptions
+    );
   }
 }
