@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { RxState } from '@rx-angular/state';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import {
+  BehaviorSubject,
   catchError,
   filter,
   Observable,
@@ -13,6 +14,7 @@ import {
   tap,
 } from 'rxjs';
 import { QuestItemTypeService } from 'src/app/services';
+import { QuestItemTypeDetailState } from '../states';
 
 declare type ModalState = {
   hasError: boolean;
@@ -26,28 +28,64 @@ declare type ModalState = {
   providers: [RxState],
 })
 export class QuestItemTypeModalComponent implements OnInit {
+  id: string = '';
+  title: string = '';
+  type: string = '';
   constructor(
     public bsModalRef: BsModalRef,
     private fb: FormBuilder,
     private state: RxState<ModalState>,
-    private questItemTypeService: QuestItemTypeService
+    private questItemTypeService: QuestItemTypeService,
+    private questItemTypeDetailState: RxState<QuestItemTypeDetailState>
   ) {}
 
   ngOnInit(): void {
     this.initForm();
+    this.search$.next({ id: this.id });
+    this.questItemTypeDetailState.connect(
+      this.search$
+        .pipe(
+          tap((_) => this.questItemTypeDetailState.set({ loading: true })),
+          switchMap((s) => this.questItemTypeService.getQuestItemTypeById(s.id))
+        )
+        .pipe(
+          tap((data) => {
+            this.form.patchValue({
+              id: data.id,
+              name: data.name,
+              status: data.status,
+            });
+          })
+        ),
+      (_, result) => ({
+        quest: result,
+        loading: false,
+      })
+    );
     const [$valid, $invalid] = partition(this.submit$, (f) => f.valid);
     this.state.connect(
       $valid
         .pipe(
-          switchMap((form) =>
-            this.questItemTypeService
-              .addQuestItemType(form.value)
-              .pipe(
-                catchError(() =>
-                  of({ status: 'data not modified', data: null })
-                )
-              )
-          )
+          switchMap((form) => {
+            if (+this.id > 0) {
+              return this.questItemTypeService
+                .updateQuestItemTypeById(form.value)
+                .pipe(
+                  catchError(() =>
+                    of({ status: 'data not modified', data: null })
+                  )
+                );
+            } 
+            else {
+              return this.questItemTypeService
+                .addQuestItemType(form.value)
+                .pipe(
+                  catchError(() =>
+                    of({ status: 'data not modified', data: null })
+                  )
+                );
+            }
+          })
         )
         .pipe(
           filter((result) => (result.status == 'data modified' ? true : false)),
@@ -76,8 +114,9 @@ export class QuestItemTypeModalComponent implements OnInit {
 
   initForm() {
     this.form = this.fb.group({
+      id:[],
       name: [null, [Validators.required]],
-      status: ['Không hiển thị'],
+      status: [],
     });
   }
 
@@ -86,4 +125,5 @@ export class QuestItemTypeModalComponent implements OnInit {
   public get hasError$(): Observable<boolean> {
     return this.state.select('hasError');
   }
+  search$ = new BehaviorSubject<{ id: string }>({ id: '' });
 }

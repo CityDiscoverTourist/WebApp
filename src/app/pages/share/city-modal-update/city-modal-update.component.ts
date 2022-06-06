@@ -94,7 +94,7 @@ export class CityModalUpdateComponent implements OnInit {
   form!: FormGroup;
   initForm() {
     this.form = this.fb.group({
-      id: [null],
+      id: [],
       name: [null, [Validators.required]],
       status: ['', [Validators.required]],
     });

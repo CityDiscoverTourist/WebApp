@@ -1,5 +1,5 @@
 <div class="modal-header">
-  <h5 class="modal-title pull-left">Thêm loại Quest Item</h5>
+  <h5 class="modal-title pull-left">{{ type }} {{ title }}</h5>
   <button
     type="button"
     class="btn-close close pull-right"
@@ -11,8 +11,8 @@
 </div>
 <div class="modal-body">
   <form [formGroup]="form">
-    <!-- <div [ngClass]="{ 'd-flex  gap-3 mb-3': !simpleForm }"> -->
     <div class="form-group" [ngClass]="{ col: !simpleForm }">
+      <input id="id" type="hidden" formControlName="id" />
       <label for="name" class="form-label">Tên loại Quest Item</label>
       <input
         id="name"
@@ -38,7 +38,6 @@
         formControlName="status"
       />
     </div>
-    <!-- </div> -->
     <div *ngIf="hasError$ | async" class="alert alert-danger">
       Form không hợp lệ! Hãy kiểm tra lại
     </div>
@@ -53,6 +52,6 @@
     Thoát
   </button>
   <button type="button" class="btn btn-primary" (click)="submit$.next(form)">
-    Thêm loại Quest Item
+    {{ type }} {{ title }}
   </button>
 </div>

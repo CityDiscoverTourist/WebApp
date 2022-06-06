@@ -7,6 +7,7 @@ import {
   Paging,
   QuestItemType,
   QuestItemTypeCreate,
+  QuestItemTypeCreateResult,
   QuestItemTypeListItem,
   Result,
   SearchInfo,
@@ -62,11 +63,11 @@ export class QuestItemTypeService {
   }
 
   addQuestItemType(
-    questItemTypeCreate: Partial<QuestItemTypeCreate>
+    payload: Partial<QuestItemTypeCreate>
   ): Observable<Result<Partial<QuestItemType>>> {
     return this.http.post<Result<Partial<QuestItemType>>>(
       `https://citytourist.azurewebsites.net/api/v1/quest-item-types/`,
-      questItemTypeCreate,
+      payload,
       this.httpOptions
     );
   }
@@ -77,5 +78,32 @@ export class QuestItemTypeService {
         this.httpOptions
       )
       .pipe(map((response: Result<QuestItemTypeListItem>) => response.status));
+  }
+
+  getQuestItemTypeById(id: string | undefined): Observable<QuestItemType> {
+    return this.http
+      .get<Result<QuestItemType>>(
+        `https://citytourist.azurewebsites.net/api/v1/quest-item-types/${id}`,
+        this.httpOptions
+      )
+      .pipe(
+        map(
+          (response: Result<QuestItemType>) =>
+            ({
+              id: response.data?.id,
+              name: response.data?.name,
+              status: response.data?.status,
+            } as QuestItemType)
+        )
+      );
+  }
+  updateQuestItemTypeById(
+    payload: Partial<QuestItemTypeCreate>
+  ): Observable<Result<Partial<QuestItemType>>> {
+    return this.http.put<Result<Partial<QuestItemType>>>(
+      `https://citytourist.azurewebsites.net/api/v1/quest-item-types/`,
+      payload,
+      this.httpOptions
+    );
   }
 }

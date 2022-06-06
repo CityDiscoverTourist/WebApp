@@ -152,6 +152,8 @@ export class QuestItemTypeListComponent implements OnInit {
     const bsModalRef = this.modalService.show(QuestItemTypeModalComponent, {
       initialState: {
         simpleForm: false,
+        title: 'loại Quest Item',
+        type: 'Thêm',
       },
     });
     bsModalRef.onHide?.pipe(take(1)).subscribe({
@@ -196,17 +198,36 @@ export class QuestItemTypeListComponent implements OnInit {
   }
 
   onUpdate(id: string) {
-    // const bsModalRef = this.modalService.show(CityModalUpdateComponent, {
-    //   initialState: {
-    //     id: id,
-    //   },
-    // });
-    // bsModalRef.onHide?.pipe(take(1)).subscribe({
-    //   next: (result) => {
-    //     this.search$.next({
-    //       ...this.search$.getValue(),
-    //     });
-    //   },
-    // });
+    const bsModalRef = this.modalService.show(QuestItemTypeModalComponent, {
+      initialState: {
+        id: id,
+        title: 'loại Quest Item',
+        type: 'Cập nhật',
+      },
+    });
+    bsModalRef.onHide?.pipe(take(1)).subscribe({
+      next: (result) => {
+        const data = result as { id: number; name: string };
+        if (data.id > 0 && data.name.length > 0) {
+          this.toast.success('Cập nhật Quest Item thành công!', {
+            position: 'top-center',
+            duration: 5000,
+            style: {
+              border: '1px solid #0a0',
+              padding: '16px',
+            },
+            iconTheme: {
+              primary: '#0a0',
+              secondary: '#fff',
+            },
+            role: 'status',
+            ariaLive: 'polite',
+          });
+        }
+        this.search$.next({
+          ...this.search$.getValue(),
+        });
+      },
+    });
   }
 }

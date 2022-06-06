@@ -20,4 +20,5 @@ export interface QuestItemTypeListItem{
 
 export interface QuestItemTypeCreateResult{
     id:number;
+    name?:string;
 }
