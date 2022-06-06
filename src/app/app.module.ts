@@ -19,9 +19,8 @@ import { NavbarComponent } from './components/navbar/navbar.component';
 import { CityModalComponent } from './pages/share/city-modal/city-modal.component';
 import { DeleteModalComponent } from './pages/share/delete-modal/delete-modal.component';
 import { CityModalUpdateComponent } from './pages/share/city-modal-update/city-modal-update.component';
-const lib=[
-  QuillModule.forRoot()
-]
+import { QuestItemTypeModalComponent } from './pages/share/quest-item-type-modal/quest-item-type-modal.component';
+const lib = [QuillModule.forRoot()];
 
 @NgModule({
   declarations: [
@@ -35,16 +34,19 @@ const lib=[
     NavbarComponent,
     CityModalComponent,
     DeleteModalComponent,
-    CityModalUpdateComponent
+    CityModalUpdateComponent,
+    QuestItemTypeModalComponent,
   ],
-  imports: [BrowserModule, AppRoutingModule, HttpClientModule, BrowserAnimationsModule,
+  imports: [
+    BrowserModule,
+    AppRoutingModule,
+    HttpClientModule,
+    BrowserAnimationsModule,
     ...lib,
     FormsModule,
     ReactiveFormsModule,
   ],
-  providers:[
-    NotificationService
-  ],
-  bootstrap: [AppComponent]
+  providers: [NotificationService],
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

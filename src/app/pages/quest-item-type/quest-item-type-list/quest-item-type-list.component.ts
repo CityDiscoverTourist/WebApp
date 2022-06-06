@@ -4,10 +4,22 @@ import { HotToastService } from '@ngneat/hot-toast';
 import { RxState } from '@rx-angular/state';
 import { DatatableComponent, TableColumn } from '@swimlane/ngx-datatable';
 import { BsModalService } from 'ngx-bootstrap/modal';
-import { BehaviorSubject, Observable, Subject, switchMap, take, tap } from 'rxjs';
-import { PagingMetadata, QuestItemTypeListItem, SearchInfo } from 'src/app/models';
+import {
+  BehaviorSubject,
+  Observable,
+  Subject,
+  switchMap,
+  take,
+  tap,
+} from 'rxjs';
+import {
+  PagingMetadata,
+  QuestItemTypeListItem,
+  SearchInfo,
+} from 'src/app/models';
 import { QuestItemTypeService } from 'src/app/services';
 import { PageInfo, SortInfo } from 'src/app/types';
+import { QuestItemTypeModalComponent } from '../../share/quest-item-type-modal/quest-item-type-modal.component';
 import { QuestItemTypeListState } from '../states';
 
 @Component({
@@ -17,7 +29,6 @@ import { QuestItemTypeListState } from '../states';
   providers: [RxState],
 })
 export class QuestItemTypeListComponent implements OnInit {
-
   @ViewChild(DatatableComponent) table!: DatatableComponent;
   columns: TableColumn[] = [];
   constructor(
@@ -27,7 +38,6 @@ export class QuestItemTypeListComponent implements OnInit {
     private toast: HotToastService
   ) {}
   ngOnInit(): void {
-
     this.initTable();
     this.questItemTypeListState.connect(
       this.search$.pipe(
@@ -75,7 +85,7 @@ export class QuestItemTypeListComponent implements OnInit {
       {
         prop: 'index',
         name: 'STT',
-        sortable:false,
+        sortable: false,
         width: 50,
       },
       {
@@ -96,11 +106,11 @@ export class QuestItemTypeListComponent implements OnInit {
         prop: 'action',
         minWidth: 180,
         name: 'Hành động',
-        sortable:false,
+        sortable: false,
         maxWidth: 200,
         canAutoResize: true,
         cellTemplate: this.actionTemplate,
-        cellClass:"align-items-center d-flex"
+        cellClass: 'align-items-center d-flex',
       },
     ];
   }
@@ -138,39 +148,35 @@ export class QuestItemTypeListComponent implements OnInit {
   resetSearch$ = new Subject<void>();
 
   showAddQuestItemType() {
-    //   const bsModalRef = this.modalService.show(CityModalComponent, {
-    //   initialState: {
-    //     simpleForm: false,
-    //   },
-    // }
-    // );
-    // bsModalRef.onHide?.pipe(take(1)).subscribe({
-    //   next: (result) => {
-    //     const data = result as { id: number; name: string };
-    //     if (data.id > 0 && data.name.length > 0) {
-    //       this.toast.success('Tạo thành phố thành công!', {
-    //         duration: 5000,
-    //         dismissible: true,
-    //         style: {
-    //           // border: '1px solid #0DB473',
-    //           // padding: '16px',
-    //           padding: '16px',
-    //           // color: '#0DB473',
-    //           // background:'#0DB473',
-    //           width: '600px',
-    //           height: '62px',
-    //         },
-    //         // iconTheme: {
-    //         //   primary: '#fff',
-    //         //   secondary: '#fff',
-    //         // },
-    //       });
-    //     }
-    //     this.search$.next({
-    //       ...this.search$.getValue(),
-    //     });
-    //   },
-    // });
+    const bsModalRef = this.modalService.show(QuestItemTypeModalComponent, {
+      initialState: {
+        simpleForm: false,
+      },
+    });
+    bsModalRef.onHide?.pipe(take(1)).subscribe({
+      next: (result) => {
+        const data = result as { id: number; name: string };
+        if (data.id > 0 && data.name.length > 0) {
+          this.toast.success('Tạo loại Quest Item thành công!', {
+            position: 'top-center',
+            duration: 5000,
+            style: {
+              border: '1px solid #0a0',
+              padding: '16px',
+            },
+            iconTheme: {
+              primary: '#0a0',
+              secondary: '#fff',
+            },
+            role: 'status',
+            ariaLive: 'polite',
+          });
+        }
+        this.search$.next({
+          ...this.search$.getValue(),
+        });
+      },
+    });
   }
   onDelete(id: string) {
     // const bsModalRef = this.modalService.show(DeleteModalComponent, {
@@ -201,5 +207,4 @@ export class QuestItemTypeListComponent implements OnInit {
     //   },
     // });
   }
-
 }
