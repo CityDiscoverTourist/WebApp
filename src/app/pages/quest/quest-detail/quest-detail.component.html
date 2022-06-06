@@ -194,7 +194,7 @@
           }"
           [count]="(metadata$ | async)?.totalCount || 0"
           [offset]="((metadata$ | async)?.currentPage || 0) - 1"
-          [limit]="7"
+          [limit]="5"
           (page)="onPage($event)"
           (sort)="onSort($event)"
         >

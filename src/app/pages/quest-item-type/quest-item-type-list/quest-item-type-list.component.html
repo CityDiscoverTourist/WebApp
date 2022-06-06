@@ -1,0 +1,117 @@
+<div class="pt-3 px-5">
+  <div class="d-flex align-items-center justify-content-between">
+    <div class="flex-fill"></div>
+    <a
+      class="btn btn-primary"
+      style="min-width: 120px"
+      (click)="showAddQuestItemType()"
+    >
+      <i class="bi bi-plus"></i> Thêm loại Quest Item
+    </a>
+  </div>
+  <div class="bg-white my-3 p-3 rounded">
+    <div class="rounded bg-white">
+      <form class="mb-4" [formGroup]="searchForm">
+        <div class="d-flex">
+          <div class="input-group me-3">
+            <span
+              class="input-group-text bg-white border-end-0"
+              id="search-icon"
+              ><i class="bi bi-search"></i
+            ></span>
+            <input
+              type="text"
+              class="border-start-0 form-control outline-none"
+              placeholder="Tìm kiếm loại Quest Item"
+              aria-label="Tìm kiếm loại Quest Item"
+              aria-describedby="search-icon"
+              formControlName="keyword"
+              (keyup.enter)="search$.next(searchForm.value)"
+            />
+          </div>
+          <button
+            type="button"
+            class="btn btn-primary"
+            style="min-width: 120px"
+            (click)="submitSearch$.next(searchForm.value)"
+          >
+            <i class="bi bi-search"></i>
+            Tìm kiếm
+          </button>
+          <button
+            type="button"
+            class="btn btn-default"
+            style="min-width: 100px"
+            (click)="resetSearch$.next()"
+          >
+            <i class="bi bi-x-lg"></i>
+            Reset
+          </button>
+        </div>
+      </form>
+      <!-- table -->
+      <div class="border overflow-hidden rouded shadow-sm">
+        <ngx-datatable
+          class="material rounded"
+          [rows]="questitemtypes$ | async"
+          [loadingIndicator]="(loading$ | async) === true"
+          [columns]="columns"
+          columnMode="force"
+          [headerHeight]="50"
+          [footerHeight]="50"
+          [rowHeight]="50"
+          [externalPaging]="true"
+          [externalSorting]="true"
+          [messages]="{
+            emptyMessage: 'Không có loại Quest Item để hiển thị!',
+            totalMessage: 'Quest Item'
+          }"
+          [count]="(metadata$ | async)?.totalCount || 0"
+          [offset]="((metadata$ | async)?.currentPage || 0) - 1"
+          [limit]="10"
+          (page)="onPage($event)"
+          (sort)="onSort($event)"
+        >
+          <ng-template
+            #actionTemplate
+            let-row="row"
+            let-value="value"
+            let-expanded="expanded"
+            ngx-datatable-cell-template
+          >
+            <button
+              class="btn btn-sm me-2"
+              style="
+                color: #fff;
+                background-color: #4caf50;
+                border-color: #4caf50;
+              "
+              type="button"
+              data-toggle="tooltip"
+              data-placement="top"
+              title="Edit"
+              (click)="onUpdate(row.id)"
+            >
+              <i class="bi bi-pencil"></i>
+            </button>
+            <button
+              class="btn btn-sm me-2"
+              type="button"
+              style="
+                color: #fff;
+                background-color: #f44335;
+                border-color: #f44335;
+              "
+              data-toggle="tooltip"
+              data-placement="top"
+              title="Delete"
+              (click)="onDelete(row.id)"
+            >
+              <i class="bi bi-trash3"></i>
+            </button>
+          </ng-template>
+        </ngx-datatable>
+      </div>
+    </div>
+  </div>
+</div>

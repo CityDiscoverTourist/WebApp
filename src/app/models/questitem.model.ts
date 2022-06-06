@@ -38,6 +38,7 @@ export interface QuestItemCreate{
 
 export interface QuestItemListSearch extends SearchInfo {
   questItemTypeIds?: number[];
+  questId?:number;
 }
 
 export interface QuestItemListItem {
