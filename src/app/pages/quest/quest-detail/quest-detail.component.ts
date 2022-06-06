@@ -64,9 +64,10 @@ export class QuestDetailComponent implements OnInit {
       })
     );
     //QuestItem
+    this.searchQuestItem$.next({questId:this.route.snapshot.params['id']})
     this.questItemListState.connect(
-      this.search$.pipe(
-        switchMap((s) => this.questItemService.getQuestItemsByQuestId(s.id))
+      this.searchQuestItem$.pipe(
+        switchMap((s) => this.questItemService.getQuestItemsByQuestId(s))
       ),
       (_, result) => ({
         questitems: result.data.map(
@@ -165,7 +166,7 @@ export class QuestDetailComponent implements OnInit {
         sortable: false,
         canAutoResize: true,
         maxWidth: 75,
-        checkboxable: true,
+        // checkboxable: true,
       },
       {
         prop: 'content',
