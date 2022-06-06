@@ -19,6 +19,7 @@ import {
 } from 'src/app/models';
 import { QuestItemTypeService } from 'src/app/services';
 import { PageInfo, SortInfo } from 'src/app/types';
+import { DeleteModalComponent } from '../../share/delete-modal/delete-modal.component';
 import { QuestItemTypeModalComponent } from '../../share/quest-item-type-modal/quest-item-type-modal.component';
 import { QuestItemTypeListState } from '../states';
 
@@ -179,18 +180,19 @@ export class QuestItemTypeListComponent implements OnInit {
     });
   }
   onDelete(id: string) {
-    // const bsModalRef = this.modalService.show(DeleteModalComponent, {
-    //   initialState: {
-    //     id: id,
-    //   },
-    // });
-    // bsModalRef.onHide?.pipe(take(1)).subscribe({
-    //   next: (result) => {
-    //     this.search$.next({
-    //       ...this.search$.getValue(),
-    //     });
-    //   },
-    // });
+    const bsModalRef = this.modalService.show(DeleteModalComponent, {
+      initialState: {
+        id: id,
+        title: 'loại Quest Item',
+      },
+    });
+    bsModalRef.onHide?.pipe(take(1)).subscribe({
+      next: (result) => {
+        this.search$.next({
+          ...this.search$.getValue(),
+        });
+      },
+    });
   }
 
   onUpdate(id: string) {
