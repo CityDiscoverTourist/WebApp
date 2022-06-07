@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { RxState } from '@rx-angular/state';
 import { BsModalRef } from 'ngx-bootstrap/modal';
@@ -35,7 +35,8 @@ export class QuestTypeModalComponent implements OnInit {
     private fb: FormBuilder,
     private state: RxState<ModalState>,
     private questTypeService: QuestTypeService,
-    private questTypeDetailState: RxState<QuestTypeDetailState>
+    private questTypeDetailState: RxState<QuestTypeDetailState>,
+    private cd: ChangeDetectorRef,
   ) {}
 
   ngOnInit(): void {
@@ -61,6 +62,28 @@ export class QuestTypeModalComponent implements OnInit {
         loading: false,
       })
     );
+
+    this.questTypeDetailState.connect(
+      this.selectedFile$
+        .pipe(tap(() => setTimeout(() => this.cd.detectChanges(), 100)))
+        .pipe(tap((file) => this.form.patchValue({ image: file[0] }))),
+      (_prev, files) => ({
+        files: [...files],
+      })
+    );
+
+    this.questTypeDetailState.connect(
+      this.removedFiles$.pipe(
+        tap(() => setTimeout(() => this.cd.markForCheck(), 100))
+      ),
+      (prev, curr) => {
+        prev.files.splice(prev.files.indexOf(curr), 1);
+        return {
+          files: prev.files,
+        };
+      }
+    );
+
     const [$valid, $invalid] = partition(this.submit$, (f) => f.valid);
     this.state.connect(
       $valid
@@ -115,6 +138,7 @@ export class QuestTypeModalComponent implements OnInit {
       id: [],
       name: [null, [Validators.required]],
       status: [],
+      image:[],
     });
   }
 
@@ -124,4 +148,10 @@ export class QuestTypeModalComponent implements OnInit {
     return this.state.select('hasError');
   }
   search$ = new BehaviorSubject<{ id: string }>({ id: '' });
+
+  selectedFile$ = new Subject<File[]>();
+  removedFiles$ = new Subject<File>();
+  get vm$(): Observable<QuestTypeDetailState> {
+    return this.questTypeDetailState.select();
+  }
 }

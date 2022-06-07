@@ -13,10 +13,10 @@ import { QuestType, QuestTypeCreate, QuestTypeListItem } from '../models/questty
 export class QuestTypeService {
 
   constructor(private http: HttpClient) {}
-  httpOptions = {
-    headers: new HttpHeaders({ 'Content-Type': 'application/json'}),
-  };
 
+  httpOptions = {
+    headers: new HttpHeaders({ encrypt: 'multipart/form-data' }),
+  };
   getQuestType(): Observable<IdValue[]> {
     return this.http
       .get<Pagination<QuestType>>(
@@ -92,8 +92,13 @@ export class QuestTypeService {
       );
   }
   updateQuestTypeById(
-    payload: Partial<QuestTypeCreate>
+    questTypeCreate: QuestTypeCreate
   ): Observable<Result<Partial<QuestType>>> {
+    let payload = new FormData();
+    payload.append('id', questTypeCreate.id.toString());
+    payload.append('name', questTypeCreate.name.toString());
+    payload.append('status', questTypeCreate.status);
+    payload.append('image', questTypeCreate.image);
     return this.http.put<Result<Partial<QuestType>>>(
       `https://citytourist.azurewebsites.net/api/v1/quest-types/`,
       payload,

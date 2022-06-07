@@ -9,7 +9,7 @@
     <span aria-hidden="true" class="visually-hidden">&times;</span>
   </button>
 </div>
-<div class="modal-body">
+<div class="modal-body" *rxLet="vm$ as vm">
   <form [formGroup]="form">
     <div class="form-group" [ngClass]="{ col: !simpleForm }">
       <input id="id" type="hidden" formControlName="id" />
@@ -37,6 +37,45 @@
         class="form-control"
         formControlName="status"
       />
+    </div>
+    <div class="card mb-3 mt-3">
+      <div class="card-body">
+        <div class="bg-white border-bottom-0 card-header mb-3 p-0 px-0">
+          Ảnh loại quest 
+        </div>
+        <div
+          class="border rounded text-center"
+        >
+          <div
+            class="custom-dropzone"
+            style="border: none;"
+            ngx-dropzone
+            [accept]="'image/*'"
+            [multiple]="false"
+            (change)="selectedFile$.next($event.addedFiles)"
+          >
+            <ngx-dropzone-label>
+              <div>
+                <i class="bi bi-plus"></i>
+                <span>kéo và thả hình ảnh ở đây hoặc</span>
+                <span class="ms-1 text-decoration-underline text-primary">
+                  tải lên từ máy tính của bạn</span
+                >
+              </div>
+            </ngx-dropzone-label>
+            <ngx-dropzone-image-preview
+              ngProjectAs="ngx-dropzone-preview"
+              *ngFor="let f of vm.files"
+              [file]="f"
+              [removable]="true"
+              (removed)="removedFiles$.next(f)"
+            >
+              <!-- <ngx-dropzone-label
+                >{{ f.name }} ({{ f.type }})</ngx-dropzone-label> -->
+            </ngx-dropzone-image-preview>
+          </div>
+        </div>
+      </div>
     </div>
     <div *ngIf="hasError$ | async" class="alert alert-danger">
       Form không hợp lệ! Hãy kiểm tra lại
