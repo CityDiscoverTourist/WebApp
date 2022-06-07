@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { HotToastService } from '@ngneat/hot-toast';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import {
+  AreaService,
   CityService,
   LocationtypeService,
   QuestItemTypeService,
@@ -22,7 +23,8 @@ export class DeleteModalComponent implements OnInit {
     private toast: HotToastService,
     private cityService: CityService,
     private questItemTypeService: QuestItemTypeService,
-    private locationTypeService: LocationtypeService
+    private locationTypeService: LocationtypeService,
+    private areaService:AreaService,
   ) {}
 
   ngOnInit(): void {}
@@ -65,18 +67,19 @@ export class DeleteModalComponent implements OnInit {
             });
         }
         break;
-      // case 3:
-      //     console.log("It is a Wednesday.");
-      //     break;
-      // case 4:
-      //     console.log("It is a Thursday.");
-      //     break;
-      // case 5:
-      //     console.log("It is a Friday.");
-      //     break;
-      // case 6:
-      //     console.log("It is a Saturday.");
-      //     break;
+      case 'khu vực':
+        {
+          this.areaService
+            .deleteAreaById(id)
+            .subscribe((data) => {
+              this.bsModalRef.onHide?.emit({
+                status: data,
+              });
+              this.bsModalRef.hide();
+              this.toast.success(`Xóa ${this.title} thành công`);
+            });
+        }
+        break;
       default:
         console.log('No such day exists!');
         break;

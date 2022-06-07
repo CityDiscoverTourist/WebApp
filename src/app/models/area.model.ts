@@ -5,7 +5,6 @@ export interface AreaListItem {
   id:number;
   name: string;
   status: string;
-  // cityId: number;
   cityId: string;
 }
 
@@ -21,7 +20,7 @@ export interface AreaListSearch extends SearchInfo{
   cityIds?:number[]
 }
 
-export interface AreaData{
+export interface AreaCreate{
   id:number;
   name:string;
   status:string;

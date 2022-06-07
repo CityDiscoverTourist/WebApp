@@ -14,11 +14,11 @@ export class AreaComponent implements OnInit {
   constructor(
     private readonly cityService: CityService,
     private readonly areaService: AreaService,
-    @Inject(AREA_PAGE_STATE) areaPageState: RxState<AreaListPageState>
+    @Inject(AREA_PAGE_STATE) areaListPageState: RxState<AreaListPageState>
   ) {
-    // areaPageState.connect(cityService.getCityType(), (_, curr) => ({
-    //   cityIds: curr,
-    // }));
+    areaListPageState.connect(cityService.getCityIdValue(), (_, curr) => ({
+      cityIds: curr,
+    }));
   }
   ngOnInit(): void {}
 }

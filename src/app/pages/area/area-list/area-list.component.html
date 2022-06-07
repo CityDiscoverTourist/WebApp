@@ -1,14 +1,11 @@
 <div class="pt-3 px-5">
-  <div class="d-flex align-items-center justify-content-between mb-3 px-3">
+  <div class="d-flex align-items-center justify-content-between">
     <div class="flex-fill"></div>
-    <!-- <button type="button" class="btn btn-primary" style="min-width: 120px">
-      <i class="bi bi-plus"></i> Thêm khu vực
-    </button> -->
-    <a routerLink="./edit" class="btn btn-primary" style="min-width: 120px">
+    <a class="btn btn-primary" style="min-width: 120px" (click)="showAddArea()">
       <i class="bi bi-plus"></i> Thêm khu vực
     </a>
   </div>
-  <div class="bg-white m-3 p-3 rounded">
+  <div class="bg-white my-3 p-3 rounded">
     <div class="rounded bg-white">
       <form class="mb-4" [formGroup]="searchForm">
         <div class="d-flex">
@@ -28,13 +25,6 @@
               (keyup.enter)="search$.next(searchForm.value)"
             />
           </div>
-          <!-- <ng-select
-            [items]="[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]"
-            [clearable]="false"
-            [closeOnSelect]="true"
-            style="min-width: 200px"
-            class="me-3"
-          ></ng-select> -->
           <ng-select
             [items]="cityIds$ | async"
             bindValue="id"
@@ -45,37 +35,33 @@
             class="me-3"
             formControlName="cityIds"
           ></ng-select>
-          <div class="btn-group">
-            <button
-              type="button"
-              class="btn btn-primary"
-              style="min-width: 120px"
-              (click)="submitSearch$.next(searchForm.value)"
-            >
-              <!-- (click)="submitSearch$.next(searchForm)" -->
-              <i class="bi bi-search"></i>
-              Tìm kiếm
-            </button>
-            <button
-              type="button"
-              class="btn btn-default"
-              style="min-width: 100px"
-              (click)="resetSearch$.next()"
-            >
-              <!-- (click)="submitSearch$.next(null)" -->
-              <i class="bi bi-x-lg"></i>
-              Reset
-            </button>
-          </div>
+
+          <button
+            type="button"
+            class="btn btn-primary"
+            style="min-width: 120px"
+            (click)="submitSearch$.next(searchForm.value)"
+          >
+            <i class="bi bi-search"></i>
+            Tìm kiếm
+          </button>
+          <button
+            type="button"
+            class="btn btn-default"
+            style="min-width: 100px"
+            (click)="resetSearch$.next()"
+          >
+            <i class="bi bi-x-lg"></i>
+            Reset
+          </button>
         </div>
       </form>
       <!-- table -->
-     
       <div class="border overflow-hidden rouded shadow-sm">
         <ngx-datatable
           class="material rounded"
           [rows]="areas$ | async"
-          [loadingIndicator]="(loading$ |async)===true"
+          [loadingIndicator]="(loading$ | async) === true"
           [columns]="columns"
           columnMode="force"
           [headerHeight]="50"
@@ -83,28 +69,56 @@
           [rowHeight]="50"
           [externalPaging]="true"
           [externalSorting]="true"
-          [count]="((metadata$ | async)?.totalCount||0)"
-          [offset]="((metadata$ | async)?.currentPage||0)-1"
+          [messages]="{
+            emptyMessage: 'Không có khu vực để hiển thị!',
+            totalMessage: 'khu vực'
+          }"
+          [count]="(metadata$ | async)?.totalCount || 0"
+          [offset]="((metadata$ | async)?.currentPage || 0) - 1"
           [limit]="10"
           (page)="onPage($event)"
           (sort)="onSort($event)"
         >
-        <!-- [count]="(metadata$ | async)?.totalCount||0"
-        [offset]="((metadata$ | async)?.currentPage||0)"
-        [limit]="(metadata$ | async)?.totalPages || 0" -->
-        <!-- (metadata$ | async)?.pageSize||0 -->
-          <!-- [count]="3"
-        [offset]="0"
-        [limit]="2" -->
-          <!-- [count]="(metadata$ | async)?.count || 0"
-          [offset]="(metadata$ | async)?.currentPage || 0"
-          [limit]="(metadata$ | async)?.itemPerPage || 0" -->
+          <ng-template
+            #actionTemplate
+            let-row="row"
+            let-value="value"
+            let-expanded="expanded"
+            ngx-datatable-cell-template
+          >
+            <button
+              class="btn btn-sm me-2"
+              style="
+                color: #fff;
+                background-color: #4caf50;
+                border-color: #4caf50;
+              "
+              type="button"
+              data-toggle="tooltip"
+              data-placement="top"
+              title="Edit"
+              (click)="onUpdate(row.id)"
+            >
+              <i class="bi bi-pencil"></i>
+            </button>
+            <button
+              class="btn btn-sm me-2"
+              type="button"
+              style="
+                color: #fff;
+                background-color: #f44335;
+                border-color: #f44335;
+              "
+              data-toggle="tooltip"
+              data-placement="top"
+              title="Delete"
+              (click)="onDelete(row.id)"
+            >
+              <i class="bi bi-trash3"></i>
+            </button>
+          </ng-template>
         </ngx-datatable>
       </div>
     </div>
-    <ng-template #colCreatedAt let-value="value">
-      {{ value | date: "dd/MM/yyyy" }}
-    </ng-template>
   </div>
-  <!-- //25 -->
 </div>

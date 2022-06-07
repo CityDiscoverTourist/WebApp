@@ -20,6 +20,8 @@ import { CityModalComponent } from './pages/share/city-modal/city-modal.componen
 import { DeleteModalComponent } from './pages/share/delete-modal/delete-modal.component';
 import { CityModalUpdateComponent } from './pages/share/city-modal-update/city-modal-update.component';
 import { QuestItemTypeModalComponent } from './pages/share/quest-item-type-modal/quest-item-type-modal.component';
+import { AreaModalComponent } from './pages/share/area-modal/area-modal.component';
+import { NgSelectModule } from '@ng-select/ng-select';
 const lib = [QuillModule.forRoot()];
 
 @NgModule({
@@ -36,6 +38,7 @@ const lib = [QuillModule.forRoot()];
     DeleteModalComponent,
     CityModalUpdateComponent,
     QuestItemTypeModalComponent,
+    AreaModalComponent,
   ],
   imports: [
     BrowserModule,
@@ -45,6 +48,7 @@ const lib = [QuillModule.forRoot()];
     ...lib,
     FormsModule,
     ReactiveFormsModule,
+    NgSelectModule
   ],
   providers: [NotificationService],
   bootstrap: [AppComponent],

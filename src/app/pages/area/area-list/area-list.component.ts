@@ -6,18 +6,19 @@ import {
   ViewChild,
 } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
+import { HotToastService } from '@ngneat/hot-toast';
 import { RxState } from '@rx-angular/state';
 import { DatatableComponent, TableColumn } from '@swimlane/ngx-datatable';
+import { BsModalService } from 'ngx-bootstrap/modal';
 import {
   BehaviorSubject,
-  map,
-  mergeMap,
   Observable,
-  of,
   Subject,
   switchMap,
+  take,
   tap,
 } from 'rxjs';
+
 import {
   AreaListItem,
   AreaListSearch,
@@ -26,6 +27,7 @@ import {
 } from 'src/app/models';
 import { AreaService } from 'src/app/services/area.service';
 import { PageInfo, SortInfo } from 'src/app/types';
+import { AreaModalComponent, DeleteModalComponent } from '../../share';
 import { AreaListPageState, AreaListState, AREA_PAGE_STATE } from './states';
 
 @Component({
@@ -34,97 +36,41 @@ import { AreaListPageState, AreaListState, AREA_PAGE_STATE } from './states';
   styleUrls: ['./area-list.component.scss'],
 })
 export class AreaListComponent implements OnInit {
-  records: AreaListItem[] = [];
-  @ViewChild('colCreatedAt', { static: true }) colCreatedAt!: TemplateRef<any>;
-  // columns: any[] = [
-  columns: TableColumn[];
+  @ViewChild(DatatableComponent) table!: DatatableComponent;
+  columns: TableColumn[] = [];
   citys = new Map<number, string>();
   constructor(
     @Inject(AREA_PAGE_STATE) private areaPageState: RxState<AreaListPageState>,
     private areaSerice: AreaService,
-    private areaListState: RxState<AreaListState>
-  ) {
-    console.log('xxxxxxxxxxxxxxx');
-    this.search$.subscribe((x) => console.log(x));
-    console.log('xxxxxxxxxxxxxxxy');
-    this.submitSearch$.subscribe((x) => {
-      console.log(x);
-      console.log('sss');
-      this.metadata$.subscribe((data) => {
-        console.log('aaaaa', data?.totalCount);
-        console.log('aaaaa', data?.totalPages);
-        console.log('aaaaa', data?.pageSize);
-        console.log('aaaaa', data?.currentPage);
-      });
-    });
-    this.metadata$.subscribe((data) => {
-      console.log('aaaaa', data?.totalCount);
-      console.log('aaaaa', data?.totalPages);
-      console.log('aaaaa', data?.pageSize);
-      console.log('aaaaa', data?.currentPage);
-    });
-  }
-
+    private areaListState: RxState<AreaListState>,
+    private modalService: BsModalService,
+    private toast: HotToastService
+  ) {}
   ngOnInit(): void {
-    // this.records = [...Array(50).keys()].map(
-    //   (i) =>
-    //     ({
-    //       id: i,
-    //       name: 'ssss',
-    //       status: 'sss',
-    //       cityId: i * 3,
-    //     } as AreaListItem)
-    // );
     this.initTable();
-    this.cityIds$.subscribe((data) =>
-      data.forEach((x) => {
-        // this.citys[x.id]=this.citys[x.value]
-        console.log('cccccccccc');
-        console.log(x.id + ' ' + x.value);
-
-        this.citys.set(x.id, x.value);
-        console.log('kkkkkk');
-      })
-    );
-
-    // this.areaListState.connect(
-    //   this.search$.pipe(switchMap((s) => this.areaSerice.getAreas(s))),
-    //   (_, result) => ({
-    //     // areas: result.records,
-    //     areas: result.data,
-    //     metadata: { ...result.pagination},
-    //     // metadata: result.pagination,
-    //     //connect chet do ko cung
-    //   })
-    // );
-
     this.areaListState.connect(
       this.search$.pipe(
-        tap(() => this.areaListState.set({ loading: false })),
+        tap(() => this.areaListState.set({ loading: true })),
         switchMap((s) => this.areaSerice.getAreas(s))
       ),
       (_, result) => ({
-        // areas: result.records,
         areas: result.data.map(
-          (x, index) =>
+          (x, i) =>
             ({
-              index: ++index,
+              index: ++i,
               id: x.id,
               name: x.name,
               status: x.status,
+              // cityId: x.cityId,
               cityId: this.citys.get(x.cityId),
             } as AreaListItem)
         ),
         metadata: { ...result.pagination },
         loading: false,
-        // metadata: result.pagination,
-        //connect chet do ko cung
       })
     );
 
-    //bam nut cap nhat lai cai search hold ko thay doi state
     this.areaListState.hold(this.submitSearch$, (form) => {
-      //submit reset nhay ve page 0
       this.search$.next({
         ...this.search$.getValue(),
         ...form,
@@ -133,23 +79,18 @@ export class AreaListComponent implements OnInit {
         (this.table.offset = 0);
     });
 
-    // nhay ve page 1
-    //them hold ko can update metadata
-    // this.locationListState.connect(
-    //   this.resetSearch$,
-    //   (prev,_)=>({
-    //     metadata:{...prev.metadata, currentPage:0}
-    //   })
-    // )
+    this.areaListState.connect(this.resetSearch$, (prev, _) => ({
+      metadata: { ...prev.metadata, currentPage: 0 },
+    }));
 
     this.areaListState.hold(this.resetSearch$, () => {
       this.searchForm.reset();
-      //reset ve trang 1
-      this.submitSearch$.next({});
+      this.search$.next({ currentPage: 0 });
       this.table.offset = 0;
-      // this.search$.next({})
     });
   }
+  @ViewChild('actionTemplate', { static: true })
+  public actionTemplate: TemplateRef<any>;
   initTable() {
     this.columns = [
       {
@@ -176,42 +117,49 @@ export class AreaListComponent implements OnInit {
         prop: 'cityId',
         maxWidth: 350,
         name: 'Thành phố',
-        sortable: true,
+        sortable: false,
+      },
+
+      {
+        prop: 'action',
+        minWidth: 180,
+        name: 'Hành động',
+        sortable: false,
+        maxWidth: 200,
+        canAutoResize: true,
+        cellTemplate: this.actionTemplate,
+        cellClass: 'align-items-center d-flex',
       },
     ];
   }
 
+  get areas$(): Observable<AreaListItem[]> {
+    return this.areaListState.select('areas');
+  }
+  get metadata$(): Observable<PagingMetadata> {
+    return this.areaListState.select('metadata');
+  }
+  get loading$(): Observable<boolean> {
+    return this.areaListState.select('loading');
+  }
+  get cityIds$(): Observable<IdValue[]> {
+    return this.areaPageState
+      .select('cityIds')
+      .pipe(tap((x) => x.forEach((x) => this.citys.set(x.id, x.value))));
+  }
+
   onPage(paging: PageInfo) {
-    console.log(paging);
     this.search$.next({
       ...this.search$.getValue(),
       currentPage: paging.offset,
     });
   }
   onSort(event: SortInfo) {
-    console.log(event);
     this.table.offset - 1;
     this.search$.next({
       ...this.search$.getValue(),
       sort: { sortBy: event.column.prop, dir: event.newValue },
     });
-  }
-
-  get cityIds$(): Observable<IdValue[]> {
-    // var test = this.areaPageState.select('cityIds');
-    // console.log("daah");
-
-    // test.subscribe(data=>{
-    //   data.forEach(x=>console.log(x))
-
-    // })
-    return this.areaPageState
-      .select('cityIds')
-      .pipe(tap((x) => x.forEach((x) => this.citys.set(x.id, x.value))));
-  }
-
-  get areas$(): Observable<AreaListItem[]> {
-    return this.areaListState.select('areas').pipe(tap((m) => console.log(m)));
   }
 
   searchForm = new FormGroup({
@@ -220,33 +168,89 @@ export class AreaListComponent implements OnInit {
   });
   submitSearch$ = new Subject<Partial<FromType>>();
   search$ = new BehaviorSubject<AreaListSearch>({});
-
   resetSearch$ = new Subject<void>();
 
-  get metadata$(): Observable<PagingMetadata> {
-    // console.log(`getting metadata`);
-
-    return this.areaListState.select('metadata');
-    // .pipe(
-    // map((x:PagingMetadataTest)=>({
-    //   totalCount:x.totalCount,
-    //   totalPages:x.totalPages,
-    //   pageSize:x.pageSize,
-    //   currentPage:x.currentPage,
-    //   hasNext:x.hasNext,
-    //   hasPrevious:x.hasPrevious
-    // }) as PagingMetadataTest)
-    // )
-    // .pipe(tap((m) => {
-    //   console.log("hhhh");
-    //   console.log(m)
-    // }))
-    // .pipe(tap((m) => console.log(m)));
+  showAddArea() {
+    const bsModalRef = this.modalService.show(AreaModalComponent, {
+      initialState: {
+        simpleForm: false,
+        title: 'khu vực',
+        type: 'Thêm',
+      },
+    });
+    bsModalRef.onHide?.pipe(take(1)).subscribe({
+      next: (result) => {
+        const data = result as { id: number; name: string };
+        if (data.id > 0 && data.name.length > 0) {
+          this.toast.success('Tạo khu vực thành công!', {
+            position: 'top-center',
+            duration: 5000,
+            style: {
+              border: '1px solid #0a0',
+              padding: '16px',
+            },
+            iconTheme: {
+              primary: '#0a0',
+              secondary: '#fff',
+            },
+            role: 'status',
+            ariaLive: 'polite',
+          });
+        }
+        this.search$.next({
+          ...this.search$.getValue(),
+        });
+      },
+    });
   }
-  @ViewChild(DatatableComponent) table!: DatatableComponent;
+  onDelete(id: string) {
+    const bsModalRef = this.modalService.show(DeleteModalComponent, {
+      initialState: {
+        id: id,
+        title: 'khu vực',
+      },
+    });
+    bsModalRef.onHide?.pipe(take(1)).subscribe({
+      next: (result) => {
+        this.search$.next({
+          ...this.search$.getValue(),
+        });
+      },
+    });
+  }
 
-  get loading$(): Observable<boolean> {
-    return this.areaListState.select('loading');
+  onUpdate(id: string) {
+    const bsModalRef = this.modalService.show(AreaModalComponent, {
+      initialState: {
+        id: id,
+        title: 'khu vực',
+        type: 'Cập nhật',
+      },
+    });
+    bsModalRef.onHide?.pipe(take(1)).subscribe({
+      next: (result) => {
+        const data = result as { id: number; name: string };
+        if (data.id > 0 && data.name !== undefined) {
+          this.toast.success('Cập nhật khu vực thành công!', {
+            position: 'top-center',
+            duration: 2000,
+            style: {
+              border: '1px solid #0a0',
+              padding: '16px',
+            },
+            iconTheme: {
+              primary: '#0a0',
+              secondary: '#fff',
+            },
+            role: 'status',
+            ariaLive: 'polite',
+          });
+          this.search$.next({
+            ...this.search$.getValue(),
+          });
+        }
+      },
+    });
   }
 }
 
