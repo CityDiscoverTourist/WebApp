@@ -2,7 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { HotToastService } from '@ngneat/hot-toast';
 import { BsModalRef } from 'ngx-bootstrap/modal';
-import { CityService, QuestItemTypeService } from 'src/app/services';
+import {
+  CityService,
+  LocationtypeService,
+  QuestItemTypeService,
+} from 'src/app/services';
 
 @Component({
   selector: 'app-delete-modal',
@@ -15,9 +19,10 @@ export class DeleteModalComponent implements OnInit {
 
   constructor(
     public bsModalRef: BsModalRef,
+    private toast: HotToastService,
     private cityService: CityService,
     private questItemTypeService: QuestItemTypeService,
-    private toast: HotToastService
+    private locationTypeService: LocationtypeService
   ) {}
 
   ngOnInit(): void {}
@@ -47,9 +52,19 @@ export class DeleteModalComponent implements OnInit {
           });
         }
         break;
-      // case 2:
-      //     console.log("It is a Tuesday.");
-      //     break;
+      case 'loại vị trí':
+        {
+          this.locationTypeService
+            .deleteLocationTypeById(id)
+            .subscribe((data) => {
+              this.bsModalRef.onHide?.emit({
+                status: data,
+              });
+              this.bsModalRef.hide();
+              this.toast.success(`Xóa ${this.title} thành công`);
+            });
+        }
+        break;
       // case 3:
       //     console.log("It is a Wednesday.");
       //     break;
