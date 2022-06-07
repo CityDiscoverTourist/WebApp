@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { RxState } from '@rx-angular/state';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import {
+  BehaviorSubject,
   catchError,
   filter,
   Observable,
@@ -13,6 +14,7 @@ import {
   tap,
 } from 'rxjs';
 import { QuestTypeService } from 'src/app/services/quest-type.service';
+import { QuestTypeDetailState } from '../states';
 
 declare type ModalState = {
   hasError: boolean;
@@ -25,35 +27,63 @@ declare type ModalState = {
   providers: [RxState],
 })
 export class QuestTypeModalComponent implements OnInit {
+  id: string = '';
+  title: string = '';
+  type: string = '';
   constructor(
     public bsModalRef: BsModalRef,
     private fb: FormBuilder,
     private state: RxState<ModalState>,
-    private questTypeService: QuestTypeService
+    private questTypeService: QuestTypeService,
+    private questTypeDetailState: RxState<QuestTypeDetailState>
   ) {}
 
   ngOnInit(): void {
     this.initForm();
-    const [$valid, $invalid] = partition(this.submit$, (f) => f.valid);
-    this.state.connect(
-      $invalid.pipe(tap(() => this.form.revalidateControls([]))),
-      () => ({
-        hasError: true,
+    this.search$.next({ id: this.id });
+    this.questTypeDetailState.connect(
+      this.search$
+        .pipe(
+          tap((_) => this.questTypeDetailState.set({ loading: true })),
+          switchMap((s) => this.questTypeService.getQuestTypeById(s.id))
+        )
+        .pipe(
+          tap((data) => {
+            this.form.patchValue({
+              id: data.id,
+              name: data.name,
+              status: data.status,
+            });
+          })
+        ),
+      (_, result) => ({
+        quest: result,
+        loading: false,
       })
     );
+    const [$valid, $invalid] = partition(this.submit$, (f) => f.valid);
     this.state.connect(
       $valid
         .pipe(
-          switchMap((form) =>
-            this.questTypeService
-              .addQuestType(form.value)
-              // .pipe(catchError(() => of({ isOk: false,data:null })))
-              .pipe(
-                catchError(() =>
-                  of({ status: 'data not modified', data: null })
-                )
-              )
-          )
+          switchMap((form) => {
+            if (+this.id > 0) {
+              return this.questTypeService
+                .updateQuestTypeById(form.value)
+                .pipe(
+                  catchError(() =>
+                    of({ status: 'data not modified', data: null })
+                  )
+                );
+            } else {
+              return this.questTypeService
+                .addQuestType(form.value)
+                .pipe(
+                  catchError(() =>
+                    of({ status: 'data not modified', data: null })
+                  )
+                );
+            }
+          })
         )
         .pipe(
           filter((result) => (result.status == 'data modified' ? true : false)),
@@ -66,8 +96,13 @@ export class QuestTypeModalComponent implements OnInit {
           })
         ),
       (_prev, curr) => ({
-        // hasError: false,
         hasError: curr.status == 'data modified' ? false : true,
+      })
+    );
+    this.state.connect(
+      $invalid.pipe(tap(() => this.form.revalidateControls([]))),
+      () => ({
+        hasError: true,
       })
     );
   }
@@ -77,14 +112,16 @@ export class QuestTypeModalComponent implements OnInit {
 
   initForm() {
     this.form = this.fb.group({
+      id: [],
       name: [null, [Validators.required]],
-      durationMode: [null],
       status: [],
-      distanceMode: [],
     });
   }
+
   submit$ = new Subject<FormGroup>();
+
   public get hasError$(): Observable<boolean> {
     return this.state.select('hasError');
   }
+  search$ = new BehaviorSubject<{ id: string }>({ id: '' });
 }
