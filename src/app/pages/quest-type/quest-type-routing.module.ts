@@ -19,31 +19,13 @@ const routes: Routes = [
             (m) => m.QuestTypeListModule
           ),
       },
-      // {
-      //   path: ':id',
-      //   component: ProductDetailComponent,
-      // },
       {
-        path: 'edit',
-        // component: ProductCreateComponent,
-        loadChildren:()=>
-        import('./quest-type-edit/quest-type-edit.module').then(m=>m.QuestTypeEditModule)
-      },
-      {
-        path: 'create',
-        // component: ProductCreateComponent,
-        loadChildren:()=>
-        import('./quest-type-create/quest-type-create.module').then(m=>m.QuestTypeCreateModule)
-      },
-      {
-        path: ':id',
-        // component: ProductCreateComponent,
-        loadChildren:()=>
-        import('./quest-type-edit/quest-type-edit.module').then(m=>m.QuestTypeEditModule)      },
-      // {
-      //   path: ':id/edit',
-      //   component: ProductEditComponent,
-      // },
+        path: 'list',
+        loadChildren: () =>
+          import('./quest-type-list/quest-type-list.module').then(
+            (m) => m.QuestTypeListModule
+          ),
+      },    
     ],
   },
 ];
