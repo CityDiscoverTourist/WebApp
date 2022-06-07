@@ -45,6 +45,13 @@ const routes: Routes = [
           ),
       },
       {
+        path: 'location-type',
+        loadChildren: () =>
+          import('src/app/pages/location-type/location-type.module').then(
+            (m) => m.LocationTypeModule
+          ),
+      },
+      {
         path: 'quest-item-type',
         loadChildren: () =>
           import('src/app/pages/quest-item-type/quest-item-type.module').then(
