@@ -3,11 +3,6 @@ import { RouterModule, Routes } from '@angular/router';
 import { LocationComponent } from './location.component';
 
 const routes: Routes = [
-  // {
-  //   path: '',
-  //   component: ProductListComponent,
-  // },
-
   {
     path: '',
     component: LocationComponent,
@@ -21,20 +16,24 @@ const routes: Routes = [
       },
       {
         path: 'list',
-        // component: ProductCreateComponent,
         loadChildren: () =>
-        import('./location-list/location-list.module').then(
-          (m) => m.LocationListModule
-        ),
+          import('./location-list/location-list.module').then(
+            (m) => m.LocationListModule
+          ),
       },
-     
+      {
+        path: 'create',
+        loadChildren: () =>
+          import('./location-create/location-create.module').then(
+            (m) => m.LocationCreateModule
+          ),
+      },
     ],
   },
 ];
 
-
 @NgModule({
   imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class LocationRoutingModule { }
+export class LocationRoutingModule {}
