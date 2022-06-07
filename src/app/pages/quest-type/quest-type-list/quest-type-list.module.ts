@@ -4,17 +4,20 @@ import { CommonModule } from '@angular/common';
 import { QuestTypeListRoutingModule } from './quest-type-list-routing.module';
 import { QuestTypeListComponent } from './quest-type-list.component';
 
-import { NgSelectModule } from '@ng-select/ng-select';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
+import { HotToastModule } from '@ngneat/hot-toast';
+import { ModalModule } from 'ngx-bootstrap/modal';
 
-const lib = [NgSelectModule, NgxDatatableModule];
+const lib = [
+  NgxDatatableModule,
+  ModalModule.forRoot(),
+  HotToastModule.forRoot(),
+];
 
 @NgModule({
-  declarations: [
-    QuestTypeListComponent
-  ],
+  declarations: [QuestTypeListComponent],
   imports: [
     CommonModule,
     QuestTypeListRoutingModule,
@@ -22,6 +25,6 @@ const lib = [NgSelectModule, NgxDatatableModule];
     ReactiveFormsModule,
     HttpClientModule,
     ...lib,
-  ]
+  ],
 })
-export class QuestTypeListModule { }
+export class QuestTypeListModule {}

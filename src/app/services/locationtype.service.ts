@@ -11,7 +11,7 @@ import {
   Result,
   SearchInfo,
 } from '../models';
-import { Pagination } from '../models/pagination.model';
+
 
 @Injectable({
   providedIn: 'root',

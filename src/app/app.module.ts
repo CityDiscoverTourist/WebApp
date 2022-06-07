@@ -22,7 +22,10 @@ import { CityModalUpdateComponent } from './pages/share/city-modal-update/city-m
 import { QuestItemTypeModalComponent } from './pages/share/quest-item-type-modal/quest-item-type-modal.component';
 import { AreaModalComponent } from './pages/share/area-modal/area-modal.component';
 import { NgSelectModule } from '@ng-select/ng-select';
-const lib = [QuillModule.forRoot()];
+import { NgxDropzoneModule } from 'ngx-dropzone';
+import { LetModule } from '@rx-angular/template';
+
+const lib = [QuillModule.forRoot(), NgSelectModule, NgxDropzoneModule,LetModule];
 
 @NgModule({
   declarations: [
@@ -48,7 +51,6 @@ const lib = [QuillModule.forRoot()];
     ...lib,
     FormsModule,
     ReactiveFormsModule,
-    NgSelectModule
   ],
   providers: [NotificationService],
   bootstrap: [AppComponent],
