@@ -5,3 +5,4 @@ export * from "./area.service";
 export * from "./quest-type.service";
 export * from "./quest-item.service";
 export * from "./quest-item-type.service";
+export * from "./locationtype.service";
