@@ -5,13 +5,16 @@ import { map, of } from 'rxjs';
 import { Observable } from 'rxjs/internal/Observable';
 import { IdValue, Paging, Result, SearchInfo } from '../models';
 import { Pagination } from '../models/pagination.model';
-import { QuestType, QuestTypeCreate, QuestTypeListItem } from '../models/questtype.model';
+import {
+  QuestType,
+  QuestTypeCreate,
+  QuestTypeListItem,
+} from '../models/questtype.model';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class QuestTypeService {
-
   constructor(private http: HttpClient) {}
 
   httpOptions = {
@@ -35,10 +38,8 @@ export class QuestTypeService {
         )
       );
   }
-  
-  getQuestTypes(
-    search: SearchInfo
-  ): Observable<Paging<QuestTypeListItem>> {
+
+  getQuestTypes(search: SearchInfo): Observable<Paging<QuestTypeListItem>> {
     var sortBy =
       `${search.sort?.sortBy}` === 'undefined' ? '' : search.sort?.sortBy;
     var sortDir =
@@ -57,8 +58,13 @@ export class QuestTypeService {
   }
 
   addQuestType(
-    payload: Partial<QuestTypeCreate>
+    questTypeCreate: QuestTypeCreate
   ): Observable<Result<Partial<QuestType>>> {
+    let payload = new FormData();
+    payload.append('id', '0');
+    payload.append('name', questTypeCreate.name.toString());
+    payload.append('status', questTypeCreate.status);
+    payload.append('image', questTypeCreate.image);
     return this.http.post<Result<Partial<QuestType>>>(
       `https://citytourist.azurewebsites.net/api/v1/quest-types/`,
       payload,
@@ -105,6 +111,4 @@ export class QuestTypeService {
       this.httpOptions
     );
   }
-
 }
-

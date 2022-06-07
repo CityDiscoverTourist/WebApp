@@ -135,7 +135,7 @@ export class QuestTypeModalComponent implements OnInit {
 
   initForm() {
     this.form = this.fb.group({
-      id: [],
+      id: [0],
       name: [null, [Validators.required]],
       status: [],
       image:[],
