@@ -22,13 +22,6 @@ const routes: Routes = [
           (m) => m.AreaListModule
         ),
       },
-      {
-        path: 'edit',
-        loadChildren: () =>
-        import('./area-edit/area-edit.module').then(
-          (m) => m.AreaEditModule
-        ),
-      },
     ],
   },
 ];

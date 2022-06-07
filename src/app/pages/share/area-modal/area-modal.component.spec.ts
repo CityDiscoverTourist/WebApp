@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AreaEditComponent } from './area-edit.component';
+import { AreaModalComponent } from './area-modal.component';
 
-describe('AreaEditComponent', () => {
-  let component: AreaEditComponent;
-  let fixture: ComponentFixture<AreaEditComponent>;
+describe('AreaModalComponent', () => {
+  let component: AreaModalComponent;
+  let fixture: ComponentFixture<AreaModalComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ AreaEditComponent ]
+      declarations: [ AreaModalComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(AreaEditComponent);
+    fixture = TestBed.createComponent(AreaModalComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -7,11 +7,12 @@ import {
   CityCreate,
   CityCreateResult,
   CityListItem,
+  IdValue,
   Paging,
-  QuestItemCreateResult,
   Result,
   SearchInfo,
 } from '../models';
+import { Pagination } from '../models/pagination.model';
 
 @Injectable({
   providedIn: 'root',
@@ -21,6 +22,25 @@ export class CityService {
   httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
   };
+
+  getCityIdValue(): Observable<IdValue[]> {
+    return this.http
+      .get<Pagination<City>>(
+        'https://citytourist.azurewebsites.net/api/v1/cites',
+        this.httpOptions
+      )
+      .pipe(
+        map((response: Pagination<City>) =>
+          [...response.data].map(
+            (i) =>
+              ({
+                id: i.id,
+                value: `${i.name}`,
+              } as IdValue)
+          )
+        )
+      );
+  }
   getCities(search: SearchInfo): Observable<Paging<CityListItem>> {
     var sortBy =
       `${search.sort?.sortBy}` === 'undefined' ? '' : search.sort?.sortBy;
