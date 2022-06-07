@@ -62,9 +62,9 @@ ngOnInit(): void {
 
 constructor(private readonly locationTypeService:LocationtypeService,
   @Inject(LOCATION_PAGE_STATE) locationPageState:RxState<LocationListPageState>){
-    locationPageState.connect(locationTypeService.getLocationType(),
-    (_,curr)=>({
-      locationtypes:curr
-    }));
+    // locationPageState.connect(locationTypeService.getLocationTypes(),
+    // (_,curr)=>({
+    //   locationtypes:curr
+    // }));
 }
 }

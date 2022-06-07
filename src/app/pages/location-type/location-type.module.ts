@@ -3,8 +3,7 @@ import { CommonModule } from '@angular/common';
 
 import { LocationTypeRoutingModule } from './location-type-routing.module';
 import { LocationTypeComponent } from './location-type.component';
-import { NgxDatatableModule } from '@swimlane/ngx-datatable';
-const lib = [NgxDatatableModule];
+
 
 @NgModule({
   declarations: [
@@ -12,8 +11,7 @@ const lib = [NgxDatatableModule];
   ],
   imports: [
     CommonModule,
-    LocationTypeRoutingModule,
-    ...lib
+    LocationTypeRoutingModule
   ]
 })
 export class LocationTypeModule { }

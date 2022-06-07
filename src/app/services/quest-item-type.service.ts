@@ -7,7 +7,6 @@ import {
   Paging,
   QuestItemType,
   QuestItemTypeCreate,
-  QuestItemTypeCreateResult,
   QuestItemTypeListItem,
   Result,
   SearchInfo,

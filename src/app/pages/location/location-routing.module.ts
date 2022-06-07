@@ -27,14 +27,6 @@ const routes: Routes = [
           (m) => m.LocationListModule
         ),
       },
-      {
-        path: 'location-type',
-        // component: ProductCreateComponent,
-        loadChildren: () =>
-        import('./location-type/location-type.module').then(
-          (m) => m.LocationTypeModule
-        ),
-      },
      
     ],
   },
