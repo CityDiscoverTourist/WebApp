@@ -1,0 +1,73 @@
+<div class="modal-header">
+  <h5 class="modal-title pull-left">{{ type }} {{ title }}</h5>
+  <button
+    type="button"
+    class="btn-close close pull-right"
+    aria-label="Close"
+    (click)="bsModalRef.hide()"
+  >
+    <span aria-hidden="true" class="visually-hidden">&times;</span>
+  </button>
+</div>
+<div class="modal-body">
+  <form [formGroup]="form">
+    <div class="form-group" [ngClass]="{ col: !simpleForm }">
+      <input id="id" type="hidden" formControlName="id" />
+      <label for="name" class="form-label">Tên {{ title }} </label>
+      <input
+        id="name"
+        type="text"
+        class="form-control"
+        formControlName="name"
+        [ngClass]="{ 'is-invalid': form?.hasError('name') }"
+      />
+      <div class="invalid-feedback" *ngIf="form.hasErrorOf('name', 'required')">
+        Tên của {{ title }} không được để trống
+      </div>
+    </div>
+    <div
+      class="form-group "
+      [ngClass]="{ col: !simpleForm }"
+      *ngIf="!simpleForm"
+    >
+      <label for="status" class="form-label">Trạng thái</label>
+      <input
+        type="text"
+        id="status"
+        class="form-control"
+        formControlName="status"
+      />
+    </div>
+    <div
+      class="form-group mt-2  mb-2"
+      [ngClass]="{ col: !simpleForm }"
+      *ngIf="!simpleForm"
+    >
+      Chọn thành phố
+      <ng-select
+        [items]="cityIds$ | async"
+        bindValue="id"
+        bindLabel="value"
+        style="min-width: 200px"
+        placeholder="Thành phố"
+        class="me-3"
+        formControlName="cityId"
+      ></ng-select>
+    </div>
+    <div *ngIf="hasError$ | async" class="alert alert-danger">
+      Form không hợp lệ! Hãy kiểm tra lại
+    </div>
+  </form>
+</div>
+<div class="modal-footer">
+  <button
+    type="button"
+    class="btn btn-outline-primary"
+    (click)="bsModalRef.hide()"
+  >
+    Thoát
+  </button>
+  <button type="button" class="btn btn-primary" (click)="submit$.next(form)">
+    {{ type }} {{ title }}
+  </button>
+</div>
