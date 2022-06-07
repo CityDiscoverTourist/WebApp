@@ -11,12 +11,16 @@ const lib = [
   NgxDatatableModule,
   ModalModule.forRoot(),
   HotToastModule.forRoot(),
- 
 ];
 
 @NgModule({
   declarations: [QuestItemTypeListComponent],
-  imports: [CommonModule, QuestItemTypeListRoutingModule ,FormsModule,
-    ReactiveFormsModule, ...lib],
+  imports: [
+    CommonModule,
+    QuestItemTypeListRoutingModule,
+    FormsModule,
+    ReactiveFormsModule,
+    ...lib,
+  ],
 })
 export class QuestItemTypeListModule {}
