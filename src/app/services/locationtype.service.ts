@@ -11,7 +11,7 @@ import {
   Result,
   SearchInfo,
 } from '../models';
-
+import { Pagination } from '../models/pagination.model';
 
 @Injectable({
   providedIn: 'root',
@@ -87,11 +87,21 @@ export class LocationtypeService {
   }
 
   getLocationType(): Observable<IdValue[]> {
-    return of(
-      [...Array(6).keys()].map((i) => ({
-        id: i,
-        value: `${i} id`,
-      }))
-    );
+    return this.http
+      .get<Pagination<LocationType>>(
+        'https://citytourist.azurewebsites.net/api/v1/location-types',
+        this.httpOptions
+      )
+      .pipe(
+        map((response: Pagination<LocationType>) =>
+          [...response.data].map(
+            (i) =>
+              ({
+                id: i.id,
+                value: `${i.name}`,
+              } as IdValue)
+          )
+        )
+      );
   }
 }
