@@ -1,39 +1,15 @@
-<!-- <div class="container py-5" *rxLet="vm$ as vm"> -->
-<div class="container py-3">
-  <!-- <form [formGroup]="form"> -->
+<!-- <div class="container py-3">
   <form>
     <div class="row">
       <div class="col-8">
         <div class="card mb-3">
           <div class="card-header bg-white py-3">Thông tin chung</div>
           <div class="card-body">
-            <!-- <div class="form-group mb-3">
-              <label class="form-label" for="title">Tên vị trí</label>
-              <input
-                type="text"
-                class="form-control"
-                placeholder="Nhập tên vị trí"
-                id="title"
-              /> -->
-            <!-- <div
-                class="invalid-feedback"
-                *ngIf="form?.hasErrorOf('title', 'required')"
-              >
-                Tên quest bắt buộc
-              </div> -->
-            <!-- <div
-                class="invalid-feedback"
-                *ngIf="form?.hasErrorOf('title', 'minlength')"
-              >
-                Độ dài tên ít nhất 8 kí tự
-              </div> -->
-            <!-- </div> -->
             <div class="row mb-1">
               <div class="col-4">
                 <div class="form-group">
                   <label class="form-label" for="name">Tên vị trí</label>
                   <input type="text" class="form-control" id="name" />
-                  <!-- <div class="invalid-feedback">Giá lớn hơn 10</div> -->
                 </div>
               </div>
               <div class="col-8">
@@ -46,14 +22,6 @@
                       aria-label="address"
                       id="address"
                     />
-                    <!-- <div
-                        class="invalid-feedback"
-                        *ngIf="
-                          form?.hasErrorOf('latitude', 'forbiddenPrefix')
-                        "
-                      >
-                        EstimatedTime ko dc bat dau bang test
-                      </div> -->
                   </div>
                 </div>
               </div>
@@ -63,7 +31,6 @@
                 <div class="form-group">
                   <label class="form-label" for="longitude">Kinh độ</label>
                   <input type="number" class="form-control" id="longitude" />
-                  <!-- <div class="invalid-feedback">Giá lớn hơn 10</div> -->
                 </div>
               </div>
               <div class="col">
@@ -76,70 +43,13 @@
                       aria-label="latitude"
                       id="latitude"
                     />
-                    <!-- <div
-                      class="invalid-feedback"
-                      *ngIf="
-                        form?.hasErrorOf('latitude', 'forbiddenPrefix')
-                      "
-                    >
-                      EstimatedTime ko dc bat dau bang test
-                    </div> -->
                   </div>
                 </div>
               </div>
-            </div>
-           <button
-              type="button"
-              class="btn btn-sm btn-primary"
-             
-            >
+            </div>          
+            <button type="button" class="btn btn-sm btn-primary">
               Mô tả quest
-            </button> <!-- 
-            <div class="mt-3" *ngIf="vm.showQuestDescription"> -->
-            <!-- <div class="mt-3">
-              <quill-editor
-                [styles]="{ height: '200px' }"
-                formControlName="description"
-              ></quill-editor>
-            </div> -->
-            <!-- </div> -->
-          </div>
-        </div>
-        <div class="card mb-3">
-          <div class="card-body">
-            <div class="bg-white border-bottom-0 card-header mb-3 p-0 px-0">
-              Ảnh quest
-            </div>
-            <!-- <div
-              class="border rounded text-center"
-              style="border-style: dashed !important"
-            >
-              <div
-                class="custom-dropzone"
-                ngx-dropzone
-                [accept]="'image/*'"
-                (change)="selectedFile$.next($event.addedFiles)"
-                [multiple]="false"
-              >
-                <ngx-dropzone-label>
-                  <div>
-                    <i class="bi bi-plus"></i>
-                    <span>Kéo và thả hình ảnh ở đây hoặc</span>
-                    <span class="ms-1 text-decoration-underline text-primary">
-                      tải lên từ máy tính của bạn</span
-                    >
-                  </div>
-                </ngx-dropzone-label>
-                <ngx-dropzone-image-preview
-                  ngProjectAs="ngx-dropzone-preview"
-                  *ngFor="let f of vm.files"
-                  [file]="f"
-                  [removable]="true"
-                  (removed)="removedFiles$.next(f)"
-                >
-                </ngx-dropzone-image-preview>
-              </div>
-            </div> -->
+            </button>
           </div>
         </div>
       </div>
@@ -196,10 +106,7 @@
             </div>
           </div>
         </div>
-        <!-- <div class="form-group">
-            <label for="file">File:</label>
-            <input id="file" class="form-control" (change)="onFileSelect($event)" type="file" />
-          </div> -->
+
       </div>
       <div>
         <button type="button" class="btn btn-primary mt-3">Thêm</button>
@@ -207,4 +114,59 @@
       </div>
     </div>
   </form>
+</div> -->
+
+<div>
+  <div id="map"></div>
+  <div class="panel panel-top">
+    <div class="list-btn">
+      <button class="btn btn-blue">
+        <i class="fas fa-map-marker-alt"></i> Kiểm tra địa chỉ
+      </button>
+      <button class="btn btn-light">
+        <i class="fas fa-phone"></i> Kiểm tra SĐT
+      </button>
+    </div>
+
+    <div class="search-bar">
+      <button class="btn btn-icon btn-light">
+        <i class="fas fa-bars"></i>
+      </button>
+      <input type="text" name="" id="" />
+      <button class="btn btn-icon btn-light">
+        <i class="fas fa-info-circle"></i>
+      </button>
+      <img
+        class="flag"
+        src="https://cdn.countryflags.com/thumbs/vietnam/flag-400.png"
+        alt=""
+      />
+    </div>
+
+    <div class="list-btn">
+      <button class="btn btn-red">
+        <span class="data-num">XXX</span> CẦN NHẬN
+      </button>
+      <button class="btn btn-yellow">
+        <span class="data-num">XXX</span> CẦN CHO
+      </button>
+      <button class="btn btn-green">
+        <span class="data-num">XXX</span> ĐÃ NHẬN
+      </button>
+    </div>
+  </div>
+
+  <div class="panel panel-bottom">
+    <div class="list-btn">
+      <button class="btn btn-light">
+        <i class="fas fa-plus"></i> MUỐN CHO
+      </button>
+      <button class="btn btn-light">
+        <i class="fas fa-minus"></i> MUỐN NHẬN
+      </button>
+      <button class="btn btn-light text-red">
+        <i class="fas fa-shopping-cart"></i> ĐI CHỢ
+      </button>
+    </div>
+  </div>
 </div>
