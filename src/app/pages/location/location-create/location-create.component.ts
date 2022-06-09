@@ -24,7 +24,7 @@ export class LocationCreateComponent implements OnInit, AfterViewChecked {
       container: 'map',
       style: 'https://tiles.goong.io/assets/goong_map_web.json', // stylesheet location
       center: [106.81028, 10.84086], // starting position [lng, lat]
-      zoom: 10,
+      zoom: 7,
     });
     var marker = new goongjs.Marker()
       .setLngLat([106.81028, 10.84086]) // position add marker [lng, lat]
