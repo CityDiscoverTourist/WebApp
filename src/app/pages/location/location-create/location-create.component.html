@@ -41,7 +41,7 @@
                         >Loại vị trí</label
                       >
                       <ng-select
-                        [items]="['Địa điểm Văn Hóa', 'Địa điêm lịch sử']"
+                        [items]="locationTypeIds$ |async"
                         bindValue="id"
                         bindLabel="value"
                         class="header-p-0"
@@ -62,7 +62,7 @@
                         >Chọn khu vực</label
                       >
                       <ng-select
-                        [items]="['Quận 1', 'Quận 5', 'TP Thủ Đức']"
+                        [items]="areaIds$ |async"
                         bindValue="id"
                         bindLabel="value"
                         formControlName="areaId"

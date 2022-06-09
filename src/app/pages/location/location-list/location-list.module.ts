@@ -5,26 +5,26 @@ import { LocationListRoutingModule } from './location-list-routing.module';
 import { LocationListComponent } from './location-list.component';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { NgSelectModule } from '@ng-select/ng-select';
-import { LocationListPageState, LOCATION_PAGE_STATE } from './states/locationListPage.state';
+import { LocationState, LOCATION_STATE } from '../states/location.state';
 import { RxState } from '@rx-angular/state';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 const lib = [NgSelectModule, NgxDatatableModule];
 
 @NgModule({
-  declarations: [
-    LocationListComponent
-  ],
+  declarations: [LocationListComponent],
   imports: [
     CommonModule,
     LocationListRoutingModule,
     FormsModule,
     ReactiveFormsModule,
-    ...lib
+    ...lib,
   ],
-  // providers:[{
-  //   provide:LOCATION_PAGE_STATE,
-  //   useFactory:()=>new RxState<LocationListPageState>()
-  // }]
+  providers: [
+    {
+      provide: LOCATION_STATE,
+      useFactory: () => new RxState<LocationState>(),
+    },
+  ],
 })
-export class LocationListModule { }
+export class LocationListModule {}

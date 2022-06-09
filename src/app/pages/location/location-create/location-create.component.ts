@@ -1,7 +1,17 @@
-import { AfterViewChecked, Component, ElementRef, OnInit } from '@angular/core';
+import {
+  AfterViewChecked,
+  Component,
+  ElementRef,
+  Inject,
+  OnInit,
+} from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { RxState } from '@rx-angular/state';
+import { Observable } from 'rxjs';
+import { IdValue } from 'src/app/models';
 import * as goongjs from 'src/assets/goong-js';
 import * as GoongGeocoder from 'src/assets/goonggeo';
+import { LocationState, LOCATION_STATE } from '../states/location.state';
 @Component({
   selector: 'app-location-create',
   templateUrl: './location-create.component.html',
@@ -10,14 +20,21 @@ import * as GoongGeocoder from 'src/assets/goonggeo';
 export class LocationCreateComponent implements OnInit, AfterViewChecked {
   geoCoder: any;
   map: any;
-  constructor(private fb: FormBuilder) {}
+  constructor(
+    @Inject(LOCATION_STATE) private locationState: RxState<LocationState>,
+    private fb: FormBuilder
+  ) {}
 
   ngAfterViewChecked() {
     // console.log(this.geoCoder);
     // //get latlong
     console.log(this.geoCoder?._map?._easeOptions?.center);
-    this.form.controls['longitude'].setValue(this.geoCoder?._map?._easeOptions?.center[0]);
-    this.form.controls['latitude'].setValue(this.geoCoder?._map?._easeOptions?.center[1]);
+    this.form.controls['longitude'].setValue(
+      this.geoCoder?._map?._easeOptions?.center[0]
+    );
+    this.form.controls['latitude'].setValue(
+      this.geoCoder?._map?._easeOptions?.center[1]
+    );
     // //get place id
     // console.log(this.geoCoder?._typeahead?.selected?.place_id);
   }
@@ -76,7 +93,13 @@ export class LocationCreateComponent implements OnInit, AfterViewChecked {
     });
   }
 
-   submitForm() {
+  get locationTypeIds$(): Observable<IdValue[]> {
+    return this.locationState.select('locationTypeIds');
+  }
+  get areaIds$(): Observable<IdValue[]> {
+    return this.locationState.select('areaIds');
+  }
+  submitForm() {
     const valid = this.form.valid;
     // this.formSubmit$.next(this.form);
     console.log(`form state =${valid}`, this.form.value);

@@ -6,8 +6,10 @@ import { BehaviorSubject, mergeMap, Observable, of, retry, Subject, switchMap, t
 import { IdValue, LocationListItem, PagingMetadata, SearchInfo } from 'src/app/models';
 import { LocationService } from 'src/app/services/location.service';
 import { PageInfo, SortInfo } from 'src/app/types';
-import { LocationListPageState, LocationListState, LOCATION_PAGE_STATE } from './states';
+
 import { LocationListSearch } from 'src/app/models';
+import { LocationState, LOCATION_STATE } from '../states/location.state';
+import { LocationListState } from '../states/locationlist.state';
 
 @Component({
   selector: 'app-location-list',
@@ -22,7 +24,7 @@ export class LocationListComponent implements OnInit {
   // columns: any[] = [
   columns: TableColumn[];
   constructor(
-    @Inject(LOCATION_PAGE_STATE)private locationPageState:RxState<LocationListPageState>,
+    @Inject(LOCATION_STATE)private locationPageState:RxState<LocationState>,
     private locationSerice:LocationService,
     private locationListState:RxState<LocationListState>,
   ) {
@@ -173,7 +175,7 @@ export class LocationListComponent implements OnInit {
 
   search$=new BehaviorSubject<LocationListSearch>({});
   get locationtypes$():Observable<IdValue[]>{
-    return this.locationPageState.select('locationtypes');
+    return this.locationPageState.select('locationTypeIds');
   }
   connect(){
     
