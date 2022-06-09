@@ -13,13 +13,16 @@ export class LocationCreateComponent implements OnInit, AfterViewChecked {
   constructor(private fb: FormBuilder) {}
 
   ngAfterViewChecked() {
-    console.log(this.geoCoder);
-    //get latlong
+    // console.log(this.geoCoder);
+    // //get latlong
     console.log(this.geoCoder?._map?._easeOptions?.center);
-    //get place id
-    console.log(this.geoCoder?._typeahead?.selected?.place_id);
+    this.form.controls['longitude'].setValue(this.geoCoder?._map?._easeOptions?.center[0]);
+    this.form.controls['latitude'].setValue(this.geoCoder?._map?._easeOptions?.center[1]);
+    // //get place id
+    // console.log(this.geoCoder?._typeahead?.selected?.place_id);
   }
   ngOnInit(): void {
+    this.initForm();
     goongjs.accessToken = 'LnOytBI19Yitg3XO9SXpl998VuETKd1dvW33CLH6';
     this.map = new goongjs.Map({
       container: 'map',
@@ -71,5 +74,17 @@ export class LocationCreateComponent implements OnInit, AfterViewChecked {
       areaId: [],
       locationTypeId: [],
     });
+  }
+
+   submitForm() {
+    const valid = this.form.valid;
+    // this.formSubmit$.next(this.form);
+    console.log(`form state =${valid}`, this.form.value);
+
+    if (valid) {
+      // this.formSubmit$.next(this.form);
+    } else {
+      this.form.revalidateControls([]);
+    }
   }
 }
