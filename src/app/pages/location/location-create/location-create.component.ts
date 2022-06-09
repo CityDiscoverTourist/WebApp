@@ -1,4 +1,5 @@
 import { AfterViewChecked, Component, ElementRef, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import * as goongjs from 'src/assets/goong-js';
 import * as GoongGeocoder from 'src/assets/goonggeo';
 @Component({
@@ -9,7 +10,7 @@ import * as GoongGeocoder from 'src/assets/goonggeo';
 export class LocationCreateComponent implements OnInit, AfterViewChecked {
   geoCoder: any;
   map: any;
-  constructor() {}
+  constructor(private fb: FormBuilder) {}
 
   ngAfterViewChecked() {
     console.log(this.geoCoder);
@@ -53,5 +54,22 @@ export class LocationCreateComponent implements OnInit, AfterViewChecked {
 
     // Add the control to the map.
     this.map.addControl(this.geoCoder);
+  }
+
+  form!: FormGroup;
+  simpleForm = false;
+
+  initForm() {
+    this.form = this.fb.group({
+      id: [0],
+      name: [null, [Validators.required]],
+      description: [],
+      longitude: [],
+      latitude: [],
+      address: [],
+      status: [],
+      areaId: [],
+      locationTypeId: [],
+    });
   }
 }
