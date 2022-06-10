@@ -10,7 +10,6 @@ export interface LocationListItem{
     status:string;
     areaId:number;
     locationTypeId:number;
-    // createdAt:Date;
 }
 
 export interface Location{
@@ -23,9 +22,23 @@ export interface Location{
     status:string;
     areaId:number;
     locationTypeId:number;
-    // createdAt:Date;
+}
+export interface LocationCreate{
+    id:string;
+    name:string;
+    description:string;
+    longitude:string;
+    latitude:string;
+    address:string;
+    status:string;
+    areaId:number;
+    locationTypeId:number;
 }
 
 export interface LocationListSearch extends SearchInfo{
     locationtypeIds?:number[]
 }
+
+export interface LocationCreateResult{
+    id:number;
+  }
