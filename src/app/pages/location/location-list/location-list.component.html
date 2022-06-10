@@ -5,10 +5,16 @@
     <!-- <button type="button" class="btn btn-primary" style="min-width:120px;">
       <i class="bi bi-plus"></i> Thêm vị trí
     </button> -->
-    <a [routerLink]="['./create']" class="btn btn-primary" style="min-width:120px;">Thêm vị trí</a>
+    <a
+      [routerLink]="['./create']"
+      class="btn btn-primary"
+      style="min-width: 120px"
+    >
+      <i class="bi bi-plus"></i> Thêm vị trí
+    </a>
   </div>
 
-  <div class="p-3 rounded bg-white ">
+  <div class="p-3 rounded bg-white">
     <form [formGroup]="searchForm" class="mb-4">
       <div class="d-flex">
         <div class="input-group me-3">
@@ -28,23 +34,23 @@
           [items]="locationTypeIds$ | async"
           bindValue="id"
           bindLabel="value"
-          [closeOnSelect]="true"
-          [multiple]="true"
-          style="min-width: 150px"
           placeholder="Loại vị trí"
+          [clearable]="false"
+          [closeOnSelect]="true"
+          style="min-width: 150px"
           class="me-3"
-          formControlName="locationTypeId"
+          formControlName="locationTypeIds"
         ></ng-select>
         <ng-select
           [items]="areaIds$ | async"
           bindValue="id"
           bindLabel="value"
           [closeOnSelect]="true"
-          [multiple]="true"
+          [multiple]="false"
           style="min-width: 150px"
           placeholder="Chọn khu vực"
           class="me-3"
-          formControlName="areaId"
+          formControlName="areaIds"
         ></ng-select>
         <div class="btn-group">
           <button
@@ -53,7 +59,6 @@
             style="min-width: 120px"
             (click)="submitSearch$.next(searchForm.value)"
           >
-            <!-- (click)="submitSearch$.next(searchForm)" -->
             <i class="bi bi-search"></i>
             Tìm kiếm
           </button>
@@ -63,7 +68,6 @@
             style="min-width: 100px"
             (click)="resetSearch$.next()"
           >
-            <!-- (click)="submitSearch$.next(null)" -->
             <i class="bi bi-x-lg"></i>
             Reset
           </button>
@@ -71,7 +75,6 @@
       </div>
     </form>
     <!-- table -->
-    <!-- https://github.com/swimlane/ngx-datatable/blob/master/src/app/basic/virtual.component.ts -->
     <div class="border overflow-hidden rouded shadow-sm">
       <ngx-datatable
         class="material rounded"
@@ -79,25 +82,22 @@
         [columns]="columns"
         columnMode="force"
         [headerHeight]="50"
+        [loadingIndicator]="(loading$ | async) === true"
         [footerHeight]="50"
         [rowHeight]="50"
-        (page)="onPage($event)"
         [externalPaging]="true"
         [externalSorting]="true"
+        [messages]="{
+          emptyMessage: 'Không có vị trí để hiển thị!',
+          totalMessage: 'vị trí'
+        }"
+        [count]="(metadata$ | async)?.totalCount || 0"
+        [offset]="((metadata$ | async)?.currentPage || 0) - 1"
+        [limit]="10"
+        (page)="onPage($event)"
         (sort)="onSort($event)"
       >
-        <!-- [count]="(metadata$|async)?.count||0"
-      [offset]="(metadata$|async)?.currentPage||0"
-      [limit]="(metadata$|async)?.itemPerPage||0" -->
       </ngx-datatable>
-      <!-- [count]="20"
-        [offset]="0"
-        [limit]="10" -->
     </div>
   </div>
-  <!-- </div> -->
-
-  <ng-template #colCreatedAt let-value="value">
-    {{ value | date: "dd/MM/yyyy" }}
-  </ng-template>
 </div>

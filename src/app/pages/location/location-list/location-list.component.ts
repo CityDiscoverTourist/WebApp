@@ -41,32 +41,60 @@ import { LocationListState } from '../states/locationlist.state';
   providers: [RxState],
 })
 export class LocationListComponent implements OnInit {
-  // records: LocationListItem[] = [];
-  @ViewChild('colCreatedAt', { static: true }) colCreatedAt!: TemplateRef<any>;
   columns: TableColumn[];
   constructor(
-    @Inject(LOCATION_STATE) private locationPageState: RxState<LocationState>,
+    @Inject(LOCATION_STATE) private locationState: RxState<LocationState>,
     private locationSerice: LocationService,
     private locationListState: RxState<LocationListState>
   ) {}
 
   ngOnInit(): void {
-    // this.records = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(
-    // this.records = [...Array(50).keys()].map(
-    //   (i) =>
-    //     ({
-    //       id: `${i} id`,
-    //       name: `${i} name`,
-    //       description: `${i} description`,
-    //       longitude: `${i} longitude `,
-    //       latitude: `${i} latitude`,
-    //       address: `${i} address`,
-    //       status: `${i} status`,
-    //       areaId: i * 2,
-    //       locationTypeId: i * 3,
-    //     } as LocationListItem)
-    // );
     this.initTable();
+
+    this.locationListState.connect(
+      this.search$.pipe(
+        tap((_) => this.locationListState.set({ loading: true })),
+        switchMap((s) => this.locationSerice.getLocations(s))
+      ),
+      (_, result) => ({
+        locations: result.data.map(
+          (x, index) =>
+            ({
+              index: ++index,
+              id: x.id,
+              name: x.name,
+              description: x.description,
+              longitude: x.longitude,
+              latitude: x.latitude,
+              address: x.address,
+              status: x.status,
+              areaId: x.areaId,
+              locationTypeId: x.locationTypeId,
+            } as LocationListItem)
+        ),
+        metadata: { ...result.pagination },
+        loading: false,
+      })
+    );
+
+    this.locationListState.hold(this.submitSearch$, (form) => {
+      this.search$.next({
+        ...this.search$.getValue(),
+        ...form,
+        currentPage: 0,
+      }),
+        (this.table.offset = 0);
+    });
+
+    this.locationListState.connect(this.resetSearch$, (prev, _) => ({
+      metadata: { ...prev.metadata, currentPage: 0 },
+    }));
+
+    this.locationListState.hold(this.resetSearch$, () => {
+      this.searchForm.reset();
+      this.search$.next({ currentPage: 0 });
+      this.table.offset = 0;
+    });
   }
   initTable() {
     this.columns = [
@@ -76,32 +104,34 @@ export class LocationListComponent implements OnInit {
         name: 'Tên khu vực',
         sortable: true,
       },
-      {
-        prop: 'description',
-        canAutoResize: true,
-        name: 'Mô tả',
-      },
-      {
-        prop: 'longitude',
-        maxWidth: 120,
-        name: 'Kinh độ',
-        sortable: false,
-      },
-      {
-        prop: 'latitude',
-        maxWidth: 120,
-        name: 'Vĩ độ',
-        sortable: false,
-      },
+      // {
+      //   prop: 'description',
+      //   canAutoResize: true,
+      //   name: 'Mô tả',
+      // },
+      // {
+      //   prop: 'longitude',
+      //   maxWidth: 120,
+      //   name: 'Kinh độ',
+      //   sortable: false,
+      // },
+      // {
+      //   prop: 'latitude',
+      //   maxWidth: 120,
+      //   name: 'Vĩ độ',
+      //   sortable: false,
+      // },
       {
         prop: 'address',
         canAutoResize: true,
         name: 'Địa chỉ',
         sortable: true,
+        cellClass: 'text-overflow: ellipsis;',
       },
       {
         prop: 'status',
         maxWidth: 100,
+        minWidth: 150,
         name: 'Trạng thái',
         sortable: true,
       },
@@ -120,35 +150,46 @@ export class LocationListComponent implements OnInit {
     ];
   }
 
-  onPage(paging: PageInfo) {}
-  onSort(event: SortInfo) {}
+  onPage(paging: PageInfo) {
+    this.search$.next({
+      ...this.search$.getValue(),
+      currentPage: paging.offset,
+    });
+  }
+  onSort(event: SortInfo) {
+    this.table.offset - 1;
+    this.search$.next({
+      ...this.search$.getValue(),
+      sort: { sortBy: event.column.prop, dir: event.newValue },
+    });
+  }
 
+  submitSearch$ = new Subject<Partial<FromType>>();
   search$ = new BehaviorSubject<LocationListSearch>({});
+  resetSearch$ = new Subject<void>();
+
   get locationTypeIds$(): Observable<IdValue[]> {
-    // return this.locationState.select('locationTypeIds');
-    return of();
+    return this.locationState.select('locationTypeIds');
   }
   get areaIds$(): Observable<IdValue[]> {
-    // return this.locationState.select('areaIds');
-    return of();
+    return this.locationState.select('areaIds');
   }
 
   searchForm = new FormGroup({
     keyword: new FormControl(),
-    locationtypes: new FormControl(),
+    locationTypeIds: new FormControl(),
+    areaIds: new FormControl(),
   });
-
-  submitSearch$ = new Subject<Partial<FromType>>();
 
   get locations$(): Observable<LocationListItem[]> {
     return this.locationListState.select('locations');
   }
+  get loading$(): Observable<boolean> {
+    return this.locationListState.select('loading');
+  }
 
-  resetSearch$ = new Subject<void>();
   get metadata$(): Observable<PagingMetadata> {
-    return this.locationListState
-      .select('metadata')
-      .pipe(tap((m) => console.log(m)));
+    return this.locationListState.select('metadata');
   }
 
   @ViewChild(DatatableComponent) table!: DatatableComponent;
@@ -156,5 +197,6 @@ export class LocationListComponent implements OnInit {
 
 declare type FromType = {
   keyword: string;
-  locationtypes: number[];
+  locationTypeIds: number[];
+  areaIds: number[];
 };

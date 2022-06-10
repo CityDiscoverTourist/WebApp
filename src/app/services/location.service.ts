@@ -21,7 +21,7 @@ import { stringify } from 'query-string';
 export class LocationService {
   constructor(private http: HttpClient) {}
   httpOptions = {
-    headers: new HttpHeaders({ encrypt: 'multipart/form-data' }),
+    headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
   };
 
   getLocationIds(): Observable<IdValue[]> {
@@ -53,8 +53,9 @@ export class LocationService {
       `${search?.sort?.dir}` === 'undefined' ? '' : search.sort?.dir;
     const query = stringify({
       name: search.keyword,
-      areaId: search.areaIds,
-      locationTypeId: search.locationTypeIds,
+      areaId: search.areaIds == undefined ? 0 : search.areaIds,
+      locationTypeId:
+        search.locationTypeIds == undefined ? 0 : search.locationTypeIds,
       pageNumber: isNaN(search?.currentPage!) ? 1 : search?.currentPage! + 1,
       pagesize: 10,
       orderby: `${sortBy} ${sortDir}`,

@@ -20,11 +20,5 @@ const lib = [NgSelectModule, NgxDatatableModule];
     ReactiveFormsModule,
     ...lib,
   ],
-  providers: [
-    {
-      provide: LOCATION_STATE,
-      useFactory: () => new RxState<LocationState>(),
-    },
-  ],
 })
 export class LocationListModule {}

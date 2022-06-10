@@ -17,7 +17,7 @@ import { LocationState, LOCATION_STATE } from '../states/location.state';
 
 interface LocationCreateState {
   showLocationDescription: boolean;
-  submitting:boolean;
+  submitting: boolean;
 }
 
 @Component({
@@ -34,8 +34,8 @@ export class LocationCreateComponent implements OnInit, AfterViewChecked {
     @Inject(LOCATION_STATE) private locationState: RxState<LocationState>,
     private fb: FormBuilder,
     private state: RxState<LocationCreateState>,
-    private locationService:LocationService,
-    private toast:HotToastService
+    private locationService: LocationService,
+    private toast: HotToastService
   ) {
     this.state.set({
       showLocationDescription: false,
@@ -43,17 +43,28 @@ export class LocationCreateComponent implements OnInit, AfterViewChecked {
   }
 
   ngAfterViewChecked() {
-    // console.log(this.geoCoder);
+    console.log('jjssj');
+
+    console.log(this.geoCoder);
     // //get latlong
-    console.log(this.geoCoder?._map?._easeOptions?.center);
+    // console.log(this.geoCoder?._map?._easeOptions?.center);
     this.form.controls['longitude'].setValue(
-      this.geoCoder?._map?._easeOptions?.center[0]
+      `${this.geoCoder?._map?._easeOptions?.center[1]}`
     );
+    // this.form.controls['longitude'].setValue(
+    //   this.geoCoder?._map?._easeOptions?.center[1]
+    // );
+    // this.form.controls['latitude'].setValue(
+    //   this.geoCoder?._map?._easeOptions?.center[0]
+    // );
     this.form.controls['latitude'].setValue(
-      this.geoCoder?._map?._easeOptions?.center[1]
+      `${this.geoCoder?._map?._easeOptions?.center[0]}`
     );
     // //get place id
     // console.log(this.geoCoder?._typeahead?.selected?.place_id);
+    console.log(this.geoCoder?.lastSelected);
+    var object1 = JSON.stringify(this.geoCoder?.lastSelected);
+    this.form.controls['address'].setValue(this.geoCoder?._map);
   }
   ngOnInit(): void {
     this.state.connect(this.toggleDescription$, (prev, _) => ({
@@ -100,7 +111,9 @@ export class LocationCreateComponent implements OnInit, AfterViewChecked {
     this.state.connect(
       valid$.pipe(
         tap(() => this.state.set({ submitting: true })),
-        switchMap((f) => this.locationService.addLocation(f.value as LocationCreate)),
+        switchMap((f) =>
+          this.locationService.addLocation(f.value as LocationCreate)
+        ),
         tap((result) => {
           if (result.id) {
             this.toast.success('Tạo quest thành công');
@@ -127,11 +140,11 @@ export class LocationCreateComponent implements OnInit, AfterViewChecked {
     this.form = this.fb.group({
       id: [0],
       name: [null, [Validators.required]],
-      description: [],
-      longitude: [],
-      latitude: [],
-      address: [],
-      status: [],
+      description: [''],
+      longitude: [''],
+      latitude: [''],
+      address: [''],
+      status: [''],
       areaId: [],
       locationTypeId: [],
     });
