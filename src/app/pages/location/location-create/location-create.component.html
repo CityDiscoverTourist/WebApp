@@ -3,13 +3,18 @@
     <div class="row">
       <div class="col-12">
         <div class="card mb-2">
-          <div class="card-header bg-white ">Thông tin chung</div>
+          <div class="card-header bg-white">Thông tin chung</div>
           <div class="card-body pb-0">
             <div class="row mb-1">
               <div class="col-4">
                 <div class="form-group">
                   <label class="form-label" for="name">Tên vị trí</label>
-                  <input type="text" class="form-control" id="name" formControlName="name" />
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="name"
+                    formControlName="name"
+                  />
                 </div>
               </div>
               <div class="col-8">
@@ -30,7 +35,7 @@
           </div>
           <div class="card-body pb-0">Chọn vị trí</div>
           <div class="card-body">
-            <div class="row mb-2">
+            <div class="row mb-4">
               <div id="map" class="col-8" style="height: 400px"></div>
               <div class="col-4">
                 <div class="card mb-3">
@@ -41,7 +46,7 @@
                         >Loại vị trí</label
                       >
                       <ng-select
-                        [items]="locationTypeIds$ |async"
+                        [items]="locationTypeIds$ | async"
                         bindValue="id"
                         bindLabel="value"
                         class="header-p-0"
@@ -62,7 +67,7 @@
                         >Chọn khu vực</label
                       >
                       <ng-select
-                        [items]="areaIds$ |async"
+                        [items]="areaIds$ | async"
                         bindValue="id"
                         bindLabel="value"
                         formControlName="areaId"
@@ -93,14 +98,20 @@
               </div>
             </div>
             <div>
-              <button type="button" class="btn btn-sm btn-primary">
+              <button
+                type="button"
+                class="btn btn-sm btn-primary"
+                (click)="toggleDescription$.next()"
+              >
                 Mô tả vị trí
               </button>
-              <div class="mt-3" >
-                <quill-editor
-                  [styles]="{ height: '200px' }"
-                  formControlName="description"
-                ></quill-editor>
+              <div *rxLet="vm$ as vm" class="mt-3">
+                <div *ngIf="vm.showLocationDescription">
+                  <quill-editor
+                    [styles]="{ height: '200px' }"
+                    formControlName="description"
+                  ></quill-editor>
+                </div>
               </div>
             </div>
           </div>
@@ -109,7 +120,7 @@
       <div>
         <a routerLink="../" class="btn btn-outline-primary mt-3 me-2">Thoát</a>
         <button type="button" class="btn btn-primary mt-3">Thêm</button>
-          <button
+        <button
           type="button"
           class="btn btn-primary mt-3"
           (click)="submitForm()"

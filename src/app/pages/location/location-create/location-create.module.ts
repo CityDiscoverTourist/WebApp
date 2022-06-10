@@ -6,12 +6,14 @@ import { LocationCreateComponent } from './location-create.component';
 import { QuillModule } from 'ngx-quill';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { LetModule } from '@rx-angular/template';
 
 const lib = [
   QuillModule.forRoot(),
   NgSelectModule,
   FormsModule,
   ReactiveFormsModule,
+  LetModule
 ];
 @NgModule({
   declarations: [LocationCreateComponent],

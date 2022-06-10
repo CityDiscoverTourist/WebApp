@@ -1,29 +1,41 @@
 import {
   AfterViewChecked,
+  ChangeDetectionStrategy,
   Component,
-  ElementRef,
   Inject,
   OnInit,
 } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { RxState } from '@rx-angular/state';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { IdValue } from 'src/app/models';
 import * as goongjs from 'src/assets/goong-js';
 import * as GoongGeocoder from 'src/assets/goonggeo';
 import { LocationState, LOCATION_STATE } from '../states/location.state';
+
+interface LocationCreateState {
+  showLocationDescription: boolean;
+}
+
 @Component({
   selector: 'app-location-create',
   templateUrl: './location-create.component.html',
   styleUrls: ['./location-create.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [RxState],
 })
 export class LocationCreateComponent implements OnInit, AfterViewChecked {
   geoCoder: any;
   map: any;
   constructor(
     @Inject(LOCATION_STATE) private locationState: RxState<LocationState>,
-    private fb: FormBuilder
-  ) {}
+    private fb: FormBuilder,
+    private state: RxState<LocationCreateState>
+  ) {
+    this.state.set({
+      showLocationDescription: false,
+    });
+  }
 
   ngAfterViewChecked() {
     // console.log(this.geoCoder);
@@ -39,6 +51,9 @@ export class LocationCreateComponent implements OnInit, AfterViewChecked {
     // console.log(this.geoCoder?._typeahead?.selected?.place_id);
   }
   ngOnInit(): void {
+    this.state.connect(this.toggleDescription$, (prev, _) => ({
+      showLocationDescription: !prev.showLocationDescription,
+    }));
     this.initForm();
     goongjs.accessToken = 'LnOytBI19Yitg3XO9SXpl998VuETKd1dvW33CLH6';
     this.map = new goongjs.Map({
@@ -99,6 +114,12 @@ export class LocationCreateComponent implements OnInit, AfterViewChecked {
   get areaIds$(): Observable<IdValue[]> {
     return this.locationState.select('areaIds');
   }
+
+  toggleDescription$ = new Subject<void>();
+  get vm$(): Observable<LocationCreateState> {
+    return this.state.select();
+  }
+
   submitForm() {
     const valid = this.form.valid;
     // this.formSubmit$.next(this.form);
