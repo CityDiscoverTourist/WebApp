@@ -37,17 +37,17 @@ export class LocationListComponent implements OnInit {
     this.submitSearch$.subscribe(x=>console.log(x));
     
     //khi submit load data
-    this.locationListState.connect(
-      this.search$.pipe(switchMap(s=>this.locationSerice.
-        getLocations(s)),
-      ),
-      (_,result)=>({
-        locations:result.records,
-        // metadata:result.metadata
-        //doi sau current page
-        // metadata:{...result.metadata}
-      })
-    )
+    // this.locationListState.connect(
+    //   this.search$.pipe(switchMap(s=>this.locationSerice.
+    //     getLocations(s)),
+    //   ),
+    //   (_,result)=>({
+    //     locations:result.records,
+    //     // metadata:result.metadata
+    //     //doi sau current page
+    //     // metadata:{...result.metadata}
+    //   })
+    // )
     //bam nut cap nhat lai cai search hold ko thay doi state
     this.locationListState.hold(
       this.submitSearch$,

@@ -6,15 +6,18 @@ import {
   OnInit,
 } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { HotToastService } from '@ngneat/hot-toast';
 import { RxState } from '@rx-angular/state';
-import { Observable, Subject } from 'rxjs';
-import { IdValue } from 'src/app/models';
+import { Observable, partition, Subject, switchMap, tap } from 'rxjs';
+import { IdValue, LocationCreate } from 'src/app/models';
+import { LocationService } from 'src/app/services';
 import * as goongjs from 'src/assets/goong-js';
 import * as GoongGeocoder from 'src/assets/goonggeo';
 import { LocationState, LOCATION_STATE } from '../states/location.state';
 
 interface LocationCreateState {
   showLocationDescription: boolean;
+  submitting:boolean;
 }
 
 @Component({
@@ -30,7 +33,9 @@ export class LocationCreateComponent implements OnInit, AfterViewChecked {
   constructor(
     @Inject(LOCATION_STATE) private locationState: RxState<LocationState>,
     private fb: FormBuilder,
-    private state: RxState<LocationCreateState>
+    private state: RxState<LocationCreateState>,
+    private locationService:LocationService,
+    private toast:HotToastService
   ) {
     this.state.set({
       showLocationDescription: false,
@@ -89,6 +94,30 @@ export class LocationCreateComponent implements OnInit, AfterViewChecked {
 
     // Add the control to the map.
     this.map.addControl(this.geoCoder);
+
+    const [valid$, invalid$] = partition(this.submit$, (f) => f.valid);
+
+    this.state.connect(
+      valid$.pipe(
+        tap(() => this.state.set({ submitting: true })),
+        switchMap((f) => this.locationService.addLocation(f.value as LocationCreate)),
+        tap((result) => {
+          if (result.id) {
+            this.toast.success('Tạo quest thành công');
+          }
+        })
+      ),
+      (_prev, curr) => ({
+        error: undefined,
+        submitting: false,
+      })
+    );
+    // hay
+    this.state.hold(invalid$.pipe(), (f) => {
+      this.toast.error('Giá trị bạn nhập không đúng');
+      // this.form.revalidateControls([]);
+      f.revalidateControls([]);
+    });
   }
 
   form!: FormGroup;
@@ -119,6 +148,9 @@ export class LocationCreateComponent implements OnInit, AfterViewChecked {
   get vm$(): Observable<LocationCreateState> {
     return this.state.select();
   }
+
+  formSubmit$ = new Subject<FormGroup>();
+  submit$ = new Subject<FormGroup>();
 
   submitForm() {
     const valid = this.form.valid;

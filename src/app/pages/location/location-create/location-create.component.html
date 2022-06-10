@@ -119,7 +119,13 @@
       </div>
       <div>
         <a routerLink="../" class="btn btn-outline-primary mt-3 me-2">Thoát</a>
-        <button type="button" class="btn btn-primary mt-3">Thêm</button>
+        <button
+          type="button"
+          class="btn btn-primary mt-3"
+          (click)="submit$.next(form)"
+        >
+          Thêm
+        </button>
         <button
           type="button"
           class="btn btn-primary mt-3"
