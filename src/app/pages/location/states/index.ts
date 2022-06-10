@@ -1,3 +1,2 @@
-// export * from './locationList.state';
-// export * from './location.state';
+export * from './locationdetail.state';
 
