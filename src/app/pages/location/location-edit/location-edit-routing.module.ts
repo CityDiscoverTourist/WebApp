@@ -8,13 +8,13 @@ const routes: Routes = [
     component: LocationEditComponent,
   },
   {
-    path: 'list',
+    path: 'edit',
     component: LocationEditComponent,
   },
-]
+];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class LocationEditRoutingModule { }
+export class LocationEditRoutingModule {}

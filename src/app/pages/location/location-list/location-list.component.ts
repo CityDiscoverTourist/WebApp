@@ -36,6 +36,7 @@ import { LocationListState } from '../states/locationlist.state';
 import { DeleteModalComponent } from '../../share';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { HotToastService } from '@ngneat/hot-toast';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-location-list',
@@ -51,7 +52,9 @@ export class LocationListComponent implements OnInit {
     private locationSerice: LocationService,
     private locationListState: RxState<LocationListState>,
     private modalService: BsModalService,
-    private toast: HotToastService
+    private toast: HotToastService,
+    private router: Router,
+    private activatedRoute: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
@@ -229,37 +232,9 @@ export class LocationListComponent implements OnInit {
   }
 
   onUpdate(id: string) {
-    // const bsModalRef = this.modalService.show(LocationTypeModalComponent, {
-    //   initialState: {
-    //     id: id,
-    //     title: 'loại vị trí',
-    //     type: 'Cập nhật',
-    //   },
-    // });
-    // bsModalRef.onHide?.pipe(take(1)).subscribe({
-    //   next: (result) => {
-    //     const data = result as { id: number; name: string };
-    //     if (data.id > 0 && data.name !== undefined) {
-    //       this.toast.success('Cập nhật loại vị trí thành công!', {
-    //         position: 'top-center',
-    //         duration: 2000,
-    //         style: {
-    //           border: '1px solid #0a0',
-    //           padding: '16px',
-    //         },
-    //         iconTheme: {
-    //           primary: '#0a0',
-    //           secondary: '#fff',
-    //         },
-    //         role: 'status',
-    //         ariaLive: 'polite',
-    //       });
-    //       this.search$.next({
-    //         ...this.search$.getValue(),
-    //       });
-    //     }
-    //   },
-    // });
+    this.router.navigate([`./${id}/edit`], {
+      relativeTo: this.activatedRoute,
+    });
   }
 }
 

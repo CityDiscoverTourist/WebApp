@@ -82,4 +82,28 @@ export class LocationService {
       )
       .pipe(map((response: Result<LocationListItem>) => response.status));
   }
+
+  getLocationById(id: string | undefined): Observable<Location> {
+    return this.http
+      .get<Result<Location>>(
+        `https://citytourist.azurewebsites.net/api/v1/locations/${id}`,
+        this.httpOptions
+      )
+      .pipe(
+        map(
+          (response: Result<Location>) =>
+            ({
+              id: response.data?.id,
+              name: response.data?.name,
+              description: response.data?.description,
+              longitude: response.data?.longitude,
+              latitude: response.data?.latitude,
+              address: response.data?.address,
+              status: response.data?.status,
+              areaId: response.data?.areaId,
+              locationTypeId: response.data?.locationTypeId,
+            } as Location)
+        )
+      );
+  }
 }
