@@ -18,6 +18,7 @@ import {
   retry,
   Subject,
   switchMap,
+  take,
   tap,
 } from 'rxjs';
 import {
@@ -32,6 +33,9 @@ import { PageInfo, SortInfo } from 'src/app/types';
 import { LocationListSearch } from 'src/app/models';
 import { LocationState, LOCATION_STATE } from '../states/location.state';
 import { LocationListState } from '../states/locationlist.state';
+import { DeleteModalComponent } from '../../share';
+import { BsModalService } from 'ngx-bootstrap/modal';
+import { HotToastService } from '@ngneat/hot-toast';
 
 @Component({
   selector: 'app-location-list',
@@ -45,7 +49,9 @@ export class LocationListComponent implements OnInit {
   constructor(
     @Inject(LOCATION_STATE) private locationState: RxState<LocationState>,
     private locationSerice: LocationService,
-    private locationListState: RxState<LocationListState>
+    private locationListState: RxState<LocationListState>,
+    private modalService: BsModalService,
+    private toast: HotToastService
   ) {}
 
   ngOnInit(): void {
@@ -96,6 +102,8 @@ export class LocationListComponent implements OnInit {
       this.table.offset = 0;
     });
   }
+  @ViewChild('actionTemplate', { static: true })
+  public actionTemplate: TemplateRef<any>;
   initTable() {
     this.columns = [
       {
@@ -147,6 +155,16 @@ export class LocationListComponent implements OnInit {
       //   name: 'Loại vị trí',
       //   sortable: true,
       // },
+      {
+        prop: 'action',
+        minWidth: 180,
+        name: 'Hành động',
+        sortable: false,
+        maxWidth: 200,
+        canAutoResize: true,
+        cellTemplate: this.actionTemplate,
+        cellClass: 'align-items-center d-flex',
+      },
     ];
   }
 
@@ -193,6 +211,56 @@ export class LocationListComponent implements OnInit {
   }
 
   @ViewChild(DatatableComponent) table!: DatatableComponent;
+
+  onDelete(id: string) {
+    const bsModalRef = this.modalService.show(DeleteModalComponent, {
+      initialState: {
+        id: id,
+        title: 'vị trí',
+      },
+    });
+    bsModalRef.onHide?.pipe(take(1)).subscribe({
+      next: (result) => {
+        this.search$.next({
+          ...this.search$.getValue(),
+        });
+      },
+    });
+  }
+
+  onUpdate(id: string) {
+    // const bsModalRef = this.modalService.show(LocationTypeModalComponent, {
+    //   initialState: {
+    //     id: id,
+    //     title: 'loại vị trí',
+    //     type: 'Cập nhật',
+    //   },
+    // });
+    // bsModalRef.onHide?.pipe(take(1)).subscribe({
+    //   next: (result) => {
+    //     const data = result as { id: number; name: string };
+    //     if (data.id > 0 && data.name !== undefined) {
+    //       this.toast.success('Cập nhật loại vị trí thành công!', {
+    //         position: 'top-center',
+    //         duration: 2000,
+    //         style: {
+    //           border: '1px solid #0a0',
+    //           padding: '16px',
+    //         },
+    //         iconTheme: {
+    //           primary: '#0a0',
+    //           secondary: '#fff',
+    //         },
+    //         role: 'status',
+    //         ariaLive: 'polite',
+    //       });
+    //       this.search$.next({
+    //         ...this.search$.getValue(),
+    //       });
+    //     }
+    //   },
+    // });
+  }
 }
 
 declare type FromType = {

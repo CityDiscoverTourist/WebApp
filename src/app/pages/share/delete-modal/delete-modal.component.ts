@@ -5,6 +5,7 @@ import { BsModalRef } from 'ngx-bootstrap/modal';
 import {
   AreaService,
   CityService,
+  LocationService,
   LocationtypeService,
   QuestItemTypeService,
   QuestTypeService,
@@ -26,7 +27,8 @@ export class DeleteModalComponent implements OnInit {
     private questItemTypeService: QuestItemTypeService,
     private locationTypeService: LocationtypeService,
     private areaService:AreaService,
-    private questTypeService:QuestTypeService
+    private questTypeService:QuestTypeService,
+    private locationService:LocationService,
   ) {}
 
   ngOnInit(): void {}
@@ -69,6 +71,19 @@ export class DeleteModalComponent implements OnInit {
             });
         }
         break;
+      case 'vị trí':
+        {
+          this.locationService
+            .deleteLocationById(id)
+            .subscribe((data) => {
+              this.bsModalRef.onHide?.emit({
+                status: data,
+              });
+              this.bsModalRef.hide();
+              this.toast.success(`Xóa ${this.title} thành công`);
+            });
+        }
+        break;
       case 'khu vực':
         {
           this.areaService
@@ -84,8 +99,8 @@ export class DeleteModalComponent implements OnInit {
         break;
       case 'loại Quest':
         {
-          this.questTypeService
-            .deleteQuestTypeById(id)
+          this.locationService
+            .deleteLocationById(id)
             .subscribe((data) => {
               this.bsModalRef.onHide?.emit({
                 status: data,
