@@ -19,25 +19,6 @@ export class QuestItemService {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
   };
 
-  // getQuestItems(search: QuestItemListSearch): Observable<Paging<QuestItemListItem>> {
-  //   var sortBy =
-  //     `${search.sort?.sortBy}` === 'undefined' ? '' : search.sort?.sortBy;
-  //   var sortDir =
-  //     `${search?.sort?.dir}` === 'undefined' ? '' : search.sort?.dir;
-  //   const query = stringify({
-  //     name: search.keyword,
-  //     // questItemTypeId: search?.questItemTypeIds,
-  //     pageNumber: isNaN(search?.currentPage!) ? 1 : search?.currentPage! + 1,
-  //     pagesize: 10,
-  //     orderby: `${sortBy} ${sortDir}`,
-  //   });
-  //   var result = this.http.get<Paging<QuestItemListItem>>(
-  //     'https://citytourist.azurewebsites.net/api/v1/quest-items?' + query,
-  //     this.httpOptions
-  //   );
-  //   return result;
-  // }
-
   getQuestItemsByQuestId(
     search: QuestItemListSearch
   ): Observable<Paging<QuestItemListItem>> {
