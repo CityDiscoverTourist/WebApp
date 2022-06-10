@@ -28,6 +28,13 @@ const routes: Routes = [
             (m) => m.LocationCreateModule
           ),
       },
+      {
+        path: 'edit',
+        loadChildren: () =>
+          import('./location-edit/location-edit.module').then(
+            (m) => m.LocationEditModule
+          ),
+      },
     ],
   },
 ];
