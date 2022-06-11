@@ -106,4 +106,20 @@ export class LocationService {
         )
       );
   }
+  updateLocationById(
+    payload: Partial<LocationCreate>
+  ): Observable<LocationCreateResult> {
+    return this.http
+      .put<Result<Location>>(
+        `https://citytourist.azurewebsites.net/api/v1/locations/`,
+        payload,
+        this.httpOptions
+      )
+      .pipe(
+        map(
+          (response: Result<Location>) =>
+            ({ id: response.data?.id } as LocationCreateResult)
+        )
+      );
+  }
 }
