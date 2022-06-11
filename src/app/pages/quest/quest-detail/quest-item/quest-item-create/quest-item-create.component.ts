@@ -1,14 +1,17 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
 import { HotToastService } from '@ngneat/hot-toast';
 import { RxState } from '@rx-angular/state';
 import { Observable, partition, Subject, switchMap, tap } from 'rxjs';
+import { QuestItemType } from 'src/app/common/enums';
 import { IdValue, QuestItemCreate } from 'src/app/models';
 import { QuestItemService } from 'src/app/services';
 import { QuestItemState, QUEST_ITEM_STATE } from '../states';
 
 interface QuestItemCreateState {
   showQuestDescription: boolean;
+  files: File[];
   error?: string;
   submitting: boolean;
 }
@@ -19,15 +22,22 @@ interface QuestItemCreateState {
   styleUrls: ['./quest-item-create.component.scss'],
 })
 export class QuestItemCreateComponent implements OnInit {
+  private id: string;
+  public href: string = "";
   constructor(
     @Inject(QUEST_ITEM_STATE) private questItemState: RxState<QuestItemState>,
     private fb: FormBuilder,
     private state: RxState<QuestItemCreateState>,
     private questItemService: QuestItemService,
-    private toast: HotToastService
+    private toast: HotToastService,
+    private cd: ChangeDetectorRef,
+    private route: ActivatedRoute,
+    private router: Router,
+    
   ) {
     this.state.set({
       showQuestDescription: false,
+      files: [],
     });
   }
 
@@ -35,7 +45,12 @@ export class QuestItemCreateComponent implements OnInit {
     this.state.connect(this.toggleDescription$, (prev, curr) => ({
       showQuestDescription: !prev.showQuestDescription,
     }));
-    this.initForm();
+    this.initForm();   
+    // this.id = this.route.snapshot.params['id'];
+    // this.href = this.router.url;    
+    var questId=this.href?.match(/([\d]+)/g)?.[0];
+    this.form.controls['questId'].setValue(questId);
+
     // this.state.connect(
     //   this.formSubmit$
     //     .pipe(switchMap((f) => this.questItemService.addQuestItem(f.value as QuestItemCreate)))
@@ -67,6 +82,24 @@ export class QuestItemCreateComponent implements OnInit {
       this.toast.error('Giá trị bạn nhập không đúng');
       f.revalidateControls([]);
     });
+    this.state.connect(
+      this.selectedFile$
+        .pipe(tap(() => setTimeout(() => this.cd.detectChanges(), 100)))
+        .pipe(tap((file) => this.form.patchValue({ image: file[0] }))),
+      (_prev, files) => ({ files: [...files] })
+    );
+
+    this.state.connect(
+      this.removedFiles$.pipe(
+        tap(() => setTimeout(() => this.cd.markForCheck(), 100))
+      ),
+      (prev, curr) => {
+        prev.files.splice(prev.files.indexOf(curr), 1);
+        return {
+          files: prev.files,
+        };
+      }
+    );
   }
 
   get locationIds(): Observable<IdValue[]> {
@@ -83,16 +116,16 @@ export class QuestItemCreateComponent implements OnInit {
       content: [''],
       description: [''],
       duration: [0],
-      // createdDate:[],
-      // updatedDate:[],
+      createdDate: [],
+      updatedDate: [],
       qrCode: [''],
       triggerMode: [0],
       rightAnswer: [''],
       answerImageUrl: [],
       status: [],
-      questItemTypeId: [''],
+      questItemTypeId: [QuestItemType.QuestionandAnswer],
       locationId: [],
-      questId: [9],
+      questId: [],
       itemId: [null],
     });
   }
@@ -103,17 +136,20 @@ export class QuestItemCreateComponent implements OnInit {
   formSubmit$ = new Subject<FormGroup>();
   submit$ = new Subject<FormGroup>();
 
-  // submitForm() {
-  //   const valid = this.form.valid;
-  //   console.log('value', valid);
+  selectedFile$ = new Subject<File[]>();
+  removedFiles$ = new Subject<File>();
 
-  //   this.formSubmit$.next(this.form);
-  //   console.log(`form state =${valid}`, this.form.value);
+  submitForm() {
+    const valid = this.form.valid;
+    console.log('value', valid);
 
-  //   if (valid) {
-  //     this.formSubmit$.next(this.form);
-  //   } else {
-  //     this.form.revalidateControls([]);
-  //   }
-  // }
+    this.formSubmit$.next(this.form);
+    console.log(`form state =${valid}`, this.form.value);
+
+    if (valid) {
+      this.formSubmit$.next(this.form);
+    } else {
+      this.form.revalidateControls([]);
+    }
+  }
 }

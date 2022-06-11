@@ -17,6 +17,7 @@ export class QuestItemService {
 
   httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
+    // headers: new HttpHeaders({ encrypt: 'multipart/form-data' }),
   };
 
   getQuestItemsByQuestId(

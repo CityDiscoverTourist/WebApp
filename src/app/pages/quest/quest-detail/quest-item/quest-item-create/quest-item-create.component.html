@@ -3,6 +3,50 @@
     <div class="row">
       <div class="col-8">
         <div class="card mb-3">
+          <div class="bg-white card-header d-flex justify-content-between py-3">
+            <span>Chọn loại QuestItem</span>
+          </div>
+          <div class="card-body">
+            <div class="d-flex">
+              <div class="form-check me-5">
+                <input
+                  class="form-check-input"
+                  type="radio"
+                  name="questItemTypeId"
+                  id="qa"
+                  formControlName="questItemTypeId"
+                  [value]="1"
+                />
+                <label class="form-check-label" for="qa">
+                  Question and Answer
+                </label>
+              </div>
+              <div class="form-check me-5">
+                <input
+                  class="form-check-input"
+                  type="radio"
+                  name="questItemTypeId"
+                  id="qr"
+                  [value]="8"
+                  formControlName="questItemTypeId"
+                />
+                <label class="form-check-label" for="qr"> Qr game </label>
+              </div>
+              <div class="form-check">
+                <input
+                  class="form-check-input"
+                  type="radio"
+                  name="questItemTypeId"
+                  id="sa"
+                  [value]="2"
+                  formControlName="questItemTypeId"
+                />
+                <label class="form-check-label" for="sa"> Sort Answer </label>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card mb-3">
           <div class="card-header bg-white py-3">Thông tin chung</div>
           <div class="card-body">
             <div class="form-group mb-3">
@@ -24,32 +68,13 @@
             </button>
             <div class="mt-3" *ngIf="vm.showQuestDescription">
               <div class="mt-3">
-                <quill-editor [styles]="{ height: '200px' }" formControlName="description"></quill-editor>
+                <quill-editor
+                  [styles]="{ height: '200px' }"
+                  formControlName="description"
+                ></quill-editor>
               </div>
             </div>
             <div class="row mb-3 mt-3">
-              <div class="col">
-                <div class="form-group">
-                  <label class="form-label" for="duration">Thời lượng</label>
-                  <input type="number" class="form-control" id="duration" formControlName="duration"/>
-                </div>
-              </div>
-              <div class="col">
-                <div class="form-group">
-                  <label class="form-label" for="qrCode">QrCode</label>
-                  <div class="input-group mb-3">
-                    <input
-                      type="text"
-                      class="form-control"
-                      aria-label="qrCode"
-                      id="qrCode"
-                      formControlName="qrCode"
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="row mb-3">
               <div class="col">
                 <div class="form-group">
                   <label class="form-label" for="rightAnswer"
@@ -63,15 +88,51 @@
                   ></textarea>
                 </div>
               </div>
-              <div class="col">
+              <!-- <div class="col">
                 <div class="form-group">
                   <label class="form-label" for="answerImageUrl"
                     >URL ảnh câu trả lời</label
                   >
-                  <input type="text" class="form-control" id="answerImageUrl" formControlName="answerImageUrl" />
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="answerImageUrl"
+                    formControlName="answerImageUrl"
+                  />
+                </div>
+              </div> -->
+            </div>
+            <!-- <div class="form-group mb-3">
+              <label class="form-label" for="content">Ảnh Quest Item</label>
+              <div class="border rounded text-center">
+                <div
+                  class="custom-dropzone"
+                  style="border: none"
+                  ngx-dropzone
+                  [accept]="'image/*'"
+                  [multiple]="false"
+                  (change)="selectedFile$.next($event.addedFiles)"
+                >
+                  <ngx-dropzone-label>
+                    <div>
+                      <i class="bi bi-plus"></i>
+                      <span>kéo và thả hình ảnh ở đây hoặc</span>
+                      <span class="ms-1 text-decoration-underline text-primary">
+                        tải lên từ máy tính của bạn</span
+                      >
+                    </div>
+                  </ngx-dropzone-label>
+                  <ngx-dropzone-image-preview
+                    ngProjectAs="ngx-dropzone-preview"
+                    *ngFor="let f of vm.files"
+                    [file]="f"
+                    [removable]="true"
+                    (removed)="removedFiles$.next(f)"
+                  >
+                  </ngx-dropzone-image-preview>
                 </div>
               </div>
-            </div>
+            </div> -->
           </div>
         </div>
       </div>
@@ -79,28 +140,6 @@
         <div class="card mb-3">
           <div class="card-header bg-white py-3">Thông tin thêm</div>
           <div class="card-body">
-            <div class="form-group mb-3">
-              <label for="questItemTypeId" class="form-label"
-                >Chọn loại Quest Item</label
-              >
-              <ng-select
-                [items]="questItemTypeIds | async"
-                bindValue="id"
-                bindLabel="value"
-                formControlName="questItemTypeId"
-                class="header-p-0"
-              >
-                <!-- <ng-template ng-header-tmp>
-                  <button
-                    class="btn btn-default btn-sm rounded-0 text-center w-100"
-                    (click)="showAddQuestType()"
-                  >
-                    <i class="bi bi-plus-circle"></i>
-                    Thêm loại quest
-                  </button>
-                </ng-template> -->
-              </ng-select>
-            </div>
             <div class="form-group mb-3">
               <label for="locationId" class="form-label">Chọn đia điểm</label>
               <ng-select
@@ -132,10 +171,13 @@
             </div>
             <hr />
             <div class="form-group mb-3">
-              <label for="itemId" class="form-label"
-                >Chọn Quest Item</label
-              >
-              <input type="text" class="form-control" id="itemId" formControlName="itemId" />
+              <label for="itemId" class="form-label">Chọn Quest Item</label>
+              <input
+                type="text"
+                class="form-control"
+                id="itemId"
+                formControlName="itemId"
+              />
               <!-- <ng-select
                 [items]="questItemTypeIds | async"
                 bindValue="id"
@@ -149,7 +191,13 @@
         </div>
       </div>
       <div>
-        <button type="button" class="btn btn-primary mt-3 me-2" (click)="this.submit$.next(form)">Thêm</button>
+        <button
+          type="button"
+          class="btn btn-primary mt-3 me-2"
+          (click)="this.submit$.next(form)"
+        >
+          Thêm
+        </button>
         <a routerLink="../../" class="btn btn-outline-primary mt-3">Thoát</a>
         <!-- <button
           type="button"

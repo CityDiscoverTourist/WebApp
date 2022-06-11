@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { QuestItemCreateComponent } from './quest-item-create/quest-item-create.component';
 import { QuestItemComponent } from './quest-item.component';
 
 const routes: Routes = [

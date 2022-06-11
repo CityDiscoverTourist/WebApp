@@ -7,10 +7,11 @@ import { NgSelectModule } from '@ng-select/ng-select';
 import { LetModule } from '@rx-angular/template';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HotToastModule } from '@ngneat/hot-toast';
+import { NgxDropzoneModule } from 'ngx-dropzone';
 
 const lib = [
   QuillModule.forRoot(),
-  QuillModule.forRoot(),
+  NgxDropzoneModule,
   NgSelectModule,
   LetModule,
   FormsModule,

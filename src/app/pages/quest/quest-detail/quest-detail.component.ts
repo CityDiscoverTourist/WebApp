@@ -156,13 +156,15 @@ export class QuestDetailComponent implements OnInit {
   }
 
   @ViewChild('colCreatedAt', { static: true }) colCreatedAt!: TemplateRef<any>;
+  @ViewChild('actionTemplate', { static: true })
+  public actionTemplate: TemplateRef<any>;
   //QuestItem
 
   initTable() {
     this.columns = [
       {
         prop: 'index',
-        // name: 'STT',
+        name: 'STT',
         sortable: false,
         canAutoResize: true,
         maxWidth: 75,
@@ -173,12 +175,6 @@ export class QuestDetailComponent implements OnInit {
         name: 'Nội dung câu hỏi',
         sortable: true,
         canAutoResize: true,
-      },
-      {
-        prop: 'duration',
-        name: 'Thời lượng',
-        sortable: true,
-        maxWidth: 150,
       },
       {
         prop: 'createdDate',
@@ -193,7 +189,25 @@ export class QuestDetailComponent implements OnInit {
         sortable: true,
         maxWidth: 150,
       },
+      {
+        prop: 'action',
+        minWidth: 180,
+        name: 'Hành động',
+        sortable: false,
+        maxWidth: 200,
+        canAutoResize: true,
+        cellTemplate: this.actionTemplate,
+        cellClass: 'align-items-center d-flex',
+      },
     ];
+  }
+
+  onDelete(id: string) {
+    
+  }
+
+  onUpdate(id: string) {
+
   }
 
   get questItems$(): Observable<QuestItemListItem[]> {
