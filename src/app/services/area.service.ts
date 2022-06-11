@@ -23,6 +23,25 @@ export class AreaService {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
   };
 
+  getArea(): Observable<IdValue[]> {
+    return this.http
+      .get<Pagination<Area>>(
+        'https://citytourist.azurewebsites.net/api/v1/areas',
+        this.httpOptions
+      )
+      .pipe(
+        map((response: Pagination<Area>) =>
+          [...response.data].map(
+            (i) =>
+              ({
+                id: i.id,
+                value: `${i.name}`,
+              } as IdValue)
+          )
+        )
+      );
+  }
+
   getAreas(search: AreaListSearch): Observable<Paging<Area>> {
     var sortBy =
       `${search.sort?.sortBy}` === 'undefined' ? '' : search.sort?.sortBy;

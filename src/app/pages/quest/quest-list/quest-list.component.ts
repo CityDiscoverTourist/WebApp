@@ -265,7 +265,6 @@ export class QuestListComponent implements OnInit {
   }
   get loading$(): Observable<boolean> {
     return this.questListState.select('loading');
-    // .pipe(tap((data)=>console.log(data)));
   }
   submitSearch$ = new Subject<Partial<FromType>>();
   resetSearch$ = new Subject<void>();

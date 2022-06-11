@@ -1,73 +1,80 @@
 <router-outlet></router-outlet>
 <div class="bg-white m-3 p-3 rounded">
   <div class="d-flex align-items-center justify-content-between mb-3">
-    <!-- <div class="btn-group">
-          <button type="button" class="btn btn-default">
-            <i class="bi bi-download"></i> Export
-          </button>
-          <button type="button" class="btn btn-default">
-            <i class="bi bi-upload"></i> Import
-          </button>
-        </div> -->
-    <a [routerLink]="['./', 'location-type']" class="text-style">Loại vị trí</a>
     <div class="flex-fill"></div>
-    <button type="button" class="btn btn-primary" style="min-width:120px;">
+    <!-- <button type="button" class="btn btn-primary" style="min-width:120px;">
       <i class="bi bi-plus"></i> Thêm vị trí
-    </button>
+    </button> -->
+    <a
+      [routerLink]="['./create']"
+      class="btn btn-primary"
+      style="min-width: 120px"
+    >
+      <i class="bi bi-plus"></i> Thêm vị trí
+    </a>
   </div>
 
   <div class="p-3 rounded bg-white">
-    <form [formGroup]="searchForm">
-    <div class="d-flex ">
-      <div class="input-group me-3">
-        <span class="input-group-text bg-white border-end-0" id="search-icon"
-          ><i class="bi bi-search"></i
-        ></span>
-        <input
-          type="text"
-          class="border-start-0 form-control outline-none"
-          placeholder="Tìm kiếm vị trí"
-          aria-label="Tìm kiếm vị trí"
-          aria-describedby="search-icon"
-          formControlName="keyword"
-        />
+    <form [formGroup]="searchForm" class="mb-4">
+      <div class="d-flex">
+        <div class="input-group me-3">
+          <span class="input-group-text bg-white border-end-0" id="search-icon"
+            ><i class="bi bi-search"></i
+          ></span>
+          <input
+            type="text"
+            class="border-start-0 form-control outline-none"
+            placeholder="Tìm kiếm vị trí"
+            aria-label="Tìm kiếm vị trí"
+            aria-describedby="search-icon"
+            formControlName="keyword"
+          />
+        </div>
+        <ng-select
+          [items]="locationTypeIds$ | async"
+          bindValue="id"
+          bindLabel="value"
+          placeholder="Loại vị trí"
+          [clearable]="false"
+          [closeOnSelect]="true"
+          style="min-width: 150px"
+          class="me-3"
+          formControlName="locationTypeIds"
+        ></ng-select>
+        <ng-select
+          [items]="areaIds$ | async"
+          bindValue="id"
+          bindLabel="value"
+          [closeOnSelect]="true"
+          [multiple]="false"
+          style="min-width: 150px"
+          placeholder="Chọn khu vực"
+          class="me-3"
+          formControlName="areaIds"
+        ></ng-select>
+        <div class="btn-group">
+          <button
+            type="button"
+            class="btn btn-primary"
+            style="min-width: 120px"
+            (click)="submitSearch$.next(searchForm.value)"
+          >
+            <i class="bi bi-search"></i>
+            Tìm kiếm
+          </button>
+          <button
+            type="button"
+            class="btn btn-default"
+            style="min-width: 100px"
+            (click)="resetSearch$.next()"
+          >
+            <i class="bi bi-x-lg"></i>
+            Reset
+          </button>
+        </div>
       </div>
-      <ng-select [items]="locationtypes$ | async"
-      bindValue="id"
-      bindLabel="value"
-      [closeOnSelect]="true"
-      [multiple]="true"
-      style="min-width:200px;"
-      placeholder="Loại vị trí"
-      class="me-3"
-      formControlName="locationtypes"
-      ></ng-select>
-      <!-- <ng-select [items]="[1,2,3,4,5,6,7,8,9,10]"
-      [clearable]="false"
-      [closeOnSelect]="true"
-      style="min-width:200px;"
-      class="me-3"
-      ></ng-select> -->
-      <div class="btn-group">
-        <button type="button" class="btn btn-primary" style="min-width: 120px"
-        (click)="submitSearch$.next(searchForm.value)"
-        >
-        <!-- (click)="submitSearch$.next(searchForm)" -->
-          <i class="bi bi-search"></i>
-          Tìm kiếm
-        </button>
-        <button type="button" class="btn btn-default" style="min-width: 100px"
-        (click)="resetSearch$.next()"
-        >
-        <!-- (click)="submitSearch$.next(null)" -->
-          <i class="bi bi-x-lg"></i>
-          Reset
-        </button>
-      </div>
-    </div>
-  </form>
+    </form>
     <!-- table -->
-    <!-- https://github.com/swimlane/ngx-datatable/blob/master/src/app/basic/virtual.component.ts -->
     <div class="border overflow-hidden rouded shadow-sm">
       <ngx-datatable
         class="material rounded"
@@ -75,30 +82,60 @@
         [columns]="columns"
         columnMode="force"
         [headerHeight]="50"
+        [loadingIndicator]="(loading$ | async) === true"
         [footerHeight]="50"
         [rowHeight]="50"
-        (page)="onPage($event)"
         [externalPaging]="true"
         [externalSorting]="true"
-     
+        [messages]="{
+          emptyMessage: 'Không có vị trí để hiển thị!',
+          totalMessage: 'vị trí'
+        }"
+        [count]="(metadata$ | async)?.totalCount || 0"
+        [offset]="((metadata$ | async)?.currentPage || 0) - 1"
+        [limit]="10"
+        (page)="onPage($event)"
         (sort)="onSort($event)"
       >
-      <!-- [count]="(metadata$|async)?.count||0"
-      [offset]="(metadata$|async)?.currentPage||0"
-      [limit]="(metadata$|async)?.itemPerPage||0" -->
+        <ng-template
+          #actionTemplate
+          let-row="row"
+          let-value="value"
+          let-expanded="expanded"
+          ngx-datatable-cell-template
+        >
+          <button
+            class="btn btn-sm me-2"
+            style="
+              color: #fff;
+              background-color: #4caf50;
+              border-color: #4caf50;
+            "
+            type="button"
+            data-toggle="tooltip"
+            data-placement="top"
+            title="Edit"
+            (click)="onUpdate(row.id)"
+          >
+            <i class="bi bi-pencil"></i>
+          </button>
+          <button
+            class="btn btn-sm me-2"
+            type="button"
+            style="
+              color: #fff;
+              background-color: #f44335;
+              border-color: #f44335;
+            "
+            data-toggle="tooltip"
+            data-placement="top"
+            title="Delete"
+            (click)="onDelete(row.id)"
+          >
+            <i class="bi bi-trash3"></i>
+          </button>
+        </ng-template>
       </ngx-datatable>
-      <!-- [count]="20"
-        [offset]="0"
-        [limit]="10" -->
-      
     </div>
   </div>
-  <!-- </div> -->
-
-  <ng-template #colCreatedAt let-value="value">
-    {{ value | date: "dd/MM/yyyy" }}
-  </ng-template>
 </div>
-
-
-

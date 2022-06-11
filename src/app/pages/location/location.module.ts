@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { LocationRoutingModule } from './location-routing.module';
 import { LocationComponent } from './location.component';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
-import { LocationListPageState, LOCATION_PAGE_STATE } from './location-list/states/locationListPage.state';
+import { LocationState, LOCATION_STATE } from './states/location.state';
 import { RxState } from '@rx-angular/state';
 
 const lib = [NgxDatatableModule];
@@ -20,8 +20,8 @@ const lib = [NgxDatatableModule];
     ...lib
   ],
   providers:[{
-    provide:LOCATION_PAGE_STATE,
-    useFactory:()=>new RxState<LocationListPageState>()
+    provide:LOCATION_STATE,
+    useFactory:()=>new RxState<LocationState>()
   }]
 })
 export class LocationModule { }
