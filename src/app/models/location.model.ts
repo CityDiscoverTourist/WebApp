@@ -1,7 +1,7 @@
 import { SearchInfo } from './common.model';
 
 export interface LocationListItem {
-  id: string;
+  id: number;
   name: string;
   description: string;
   longitude: string;
@@ -13,7 +13,7 @@ export interface LocationListItem {
 }
 
 export interface Location {
-  id: string;
+  id: number;
   name: string;
   description: string;
   longitude: string;
@@ -24,7 +24,7 @@ export interface Location {
   locationTypeId: number;
 }
 export interface LocationCreate {
-  id: string;
+  id: number;
   name: string;
   description: string;
   longitude: string;
