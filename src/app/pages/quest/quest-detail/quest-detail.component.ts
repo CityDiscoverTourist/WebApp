@@ -1,4 +1,10 @@
-import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import {
+  Component,
+  Inject,
+  OnInit,
+  TemplateRef,
+  ViewChild,
+} from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RxState } from '@rx-angular/state';
@@ -10,13 +16,14 @@ import {
 import { BsModalService } from 'ngx-bootstrap/modal';
 import {
   BehaviorSubject,
-  map,
+  take,
   Observable,
   Subject,
   switchMap,
   tap,
 } from 'rxjs';
 import {
+  IdValue,
   PagingMetadata,
   Quest,
   QuestItemListItem,
@@ -24,31 +31,47 @@ import {
   QuestListItem,
   SearchInfo,
 } from 'src/app/models';
-import { QuestItemService, QuestService } from 'src/app/services';
+import {
+  QuestItemService,
+  QuestItemTypeService,
+  QuestService,
+} from 'src/app/services';
 import { PageInfo, SortInfo } from 'src/app/types';
+import { DeleteModalComponent } from '../../share';
 import { QuestDeleteModalComponent } from '../../share/quest-delete-modal/quest-delete-modal.component';
 import { QuestItemListState } from '../states';
 import { QuestDetailState } from '../states/questdetail.state';
+import { QuestItemState, QUEST_ITEM_STATE } from './quest-item/states';
 
 @Component({
   selector: 'app-quest-detail',
   templateUrl: './quest-detail.component.html',
   styleUrls: ['./quest-detail.component.scss'],
+  providers: [RxState],
 })
 export class QuestDetailComponent implements OnInit {
   private id: string;
   public questListItem: QuestListItem;
   constructor(
-    private route: ActivatedRoute,
+    @Inject(QUEST_ITEM_STATE) private questItemState: RxState<QuestItemState>,
+    private readonly questItemTypeService: QuestItemTypeService,
     private questService: QuestService,
     private modalService: BsModalService,
     private questDetailState: RxState<QuestDetailState>,
     //QuestItem
     private questItemService: QuestItemService,
-    private questItemListState: RxState<QuestItemListState>
+    private questItemListState: RxState<QuestItemListState>,
+    private router: Router,
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
+    this.questItemState.connect(
+      this.questItemTypeService.getQuestItemTypeIds(),
+      (_, curr) => ({
+        questItemTypeIds: curr,
+      })
+    );
     //Quest
     this.search$.next({ id: this.route.snapshot.params['id'] });
     this.questDetailState.connect(
@@ -64,7 +87,7 @@ export class QuestDetailComponent implements OnInit {
       })
     );
     //QuestItem
-    this.searchQuestItem$.next({questId:this.route.snapshot.params['id']})
+    this.searchQuestItem$.next({ questId: this.route.snapshot.params['id'] });
     this.questItemListState.connect(
       this.searchQuestItem$.pipe(
         switchMap((s) => this.questItemService.getQuestItemsByQuestId(s))
@@ -95,36 +118,7 @@ export class QuestDetailComponent implements OnInit {
         loading: false,
       })
     );
-    // this.questItemListState.connect(
-    //   this.searchQuestItem$.pipe(
-    //     switchMap((s) => this.questItemService.getQuestItems(s))
-    //   ),
-    //   (_, result) => ({
-    //     questitems: result.data.map(
-    //       (x, index) =>
-    //         ({
-    //           index: ++index,
-    //           id: x.id,
-    //           content: x.content,
-    //           description: x.description,
-    //           duration: x.duration,
-    //           createdDate: x.createdDate,
-    //           updatedDate: x.updatedDate,
-    //           qrCode: x.qrCode,
-    //           triggerMode: x.triggerMode,
-    //           rightAnswer: x.rightAnswer,
-    //           answerImageUrl: x.answerImageUrl,
-    //           status: x.status,
-    //           questItemTypeId: x.questItemTypeId,
-    //           locationId: x.locationId,
-    //           questId: x.questId,
-    //           itemId: x.itemId,
-    //         } as QuestItemListItem)
-    //     ),
-    //     metadata: { ...result.pagination },
-    //     loading: false,
-    //   })
-    // );
+
     this.initTable();
 
     this.questItemListState.hold(this.submitSearch$, (form) => {
@@ -137,7 +131,7 @@ export class QuestDetailComponent implements OnInit {
     });
     this.questItemListState.hold(this.resetSearch$, () => {
       this.searchForm.reset();
-      this.submitSearch$.next({});
+      this.searchQuestItem$.next({ currentPage: 0 });
       this.table.offset = 0;
     });
   }
@@ -156,13 +150,15 @@ export class QuestDetailComponent implements OnInit {
   }
 
   @ViewChild('colCreatedAt', { static: true }) colCreatedAt!: TemplateRef<any>;
+  @ViewChild('actionTemplate', { static: true })
+  public actionTemplate: TemplateRef<any>;
   //QuestItem
 
   initTable() {
     this.columns = [
       {
         prop: 'index',
-        // name: 'STT',
+        name: 'STT',
         sortable: false,
         canAutoResize: true,
         maxWidth: 75,
@@ -173,12 +169,6 @@ export class QuestDetailComponent implements OnInit {
         name: 'Nội dung câu hỏi',
         sortable: true,
         canAutoResize: true,
-      },
-      {
-        prop: 'duration',
-        name: 'Thời lượng',
-        sortable: true,
-        maxWidth: 150,
       },
       {
         prop: 'createdDate',
@@ -193,9 +183,44 @@ export class QuestDetailComponent implements OnInit {
         sortable: true,
         maxWidth: 150,
       },
+      {
+        prop: 'action',
+        minWidth: 180,
+        name: 'Hành động',
+        sortable: false,
+        maxWidth: 200,
+        canAutoResize: true,
+        cellTemplate: this.actionTemplate,
+        cellClass: 'align-items-center d-flex',
+      },
     ];
   }
 
+  onDelete(id: string) {
+    const bsModalRef = this.modalService.show(DeleteModalComponent, {
+      initialState: {
+        id: id,
+        title: 'Quest Item',
+      },
+    });
+    bsModalRef.onHide?.pipe(take(1)).subscribe({
+      next: (result) => {
+        this.searchQuestItem$.next({
+          ...this.searchQuestItem$.getValue(),
+        });
+      },
+    });
+  }
+
+  onUpdate(id: string) {
+    this.router.navigate([`quest-item/${id}/edit`], {
+      relativeTo: this.route,
+    });
+  }
+
+  get questItemTypeIds(): Observable<IdValue[]> {
+    return this.questItemState.select('questItemTypeIds');
+  }
   get questItems$(): Observable<QuestItemListItem[]> {
     return this.questItemListState.select('questitems');
   }
@@ -229,7 +254,7 @@ export class QuestDetailComponent implements OnInit {
 
   searchForm = new FormGroup({
     keyword: new FormControl(),
-    // questItemTypeIds: new FormControl(),
+    questItemTypeIds: new FormControl(),
   });
 
   submitSearch$ = new Subject<Partial<{ keyword: string }>>();

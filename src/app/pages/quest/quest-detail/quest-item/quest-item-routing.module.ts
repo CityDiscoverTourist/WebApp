@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { QuestItemCreateComponent } from './quest-item-create/quest-item-create.component';
 import { QuestItemComponent } from './quest-item.component';
 
 const routes: Routes = [
@@ -13,6 +12,13 @@ const routes: Routes = [
         loadChildren: () =>
           import('./quest-item-create/quest-item-create.module').then(
             (m) => m.QuestItemCreateModule
+          ),
+      },
+      {
+        path: ':id/edit',
+        loadChildren: () =>
+          import('./quest-item-edit/quest-item-edit.module').then(
+            (m) => m.QuestItemEditModule
           ),
       },
     ],

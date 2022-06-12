@@ -7,6 +7,7 @@ import {
   CityService,
   LocationService,
   LocationtypeService,
+  QuestItemService,
   QuestItemTypeService,
   QuestTypeService,
 } from 'src/app/services';
@@ -29,6 +30,8 @@ export class DeleteModalComponent implements OnInit {
     private areaService:AreaService,
     private questTypeService:QuestTypeService,
     private locationService:LocationService,
+    private questItemService:QuestItemService,
+    
   ) {}
 
   ngOnInit(): void {}
@@ -101,6 +104,19 @@ export class DeleteModalComponent implements OnInit {
         {
           this.locationService
             .deleteLocationById(id)
+            .subscribe((data) => {
+              this.bsModalRef.onHide?.emit({
+                status: data,
+              });
+              this.bsModalRef.hide();
+              this.toast.success(`Xóa ${this.title} thành công`);
+            });
+        }
+        break;
+      case 'Quest Item':
+        {
+          this.questItemService
+            .deleteQuestItemById(id)
             .subscribe((data) => {
               this.bsModalRef.onHide?.emit({
                 status: data,
