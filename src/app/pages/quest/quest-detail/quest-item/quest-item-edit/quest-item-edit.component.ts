@@ -3,10 +3,10 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HotToastService } from '@ngneat/hot-toast';
 import { RxState } from '@rx-angular/state';
-import { Observable, partition, Subject, switchMap, tap } from 'rxjs';
+import { BehaviorSubject, Observable, partition, Subject, switchMap, tap } from 'rxjs';
 import { IdValue, QuestItemCreate } from 'src/app/models';
 import { QuestItemService } from 'src/app/services';
-import { QuestItemState, QUEST_ITEM_STATE } from '../states';
+import { QuestItemDetailState, QuestItemState, QUEST_ITEM_STATE } from '../states';
 
 interface QuestItemEditState {
   showQuestDescription: boolean;
@@ -21,13 +21,16 @@ interface QuestItemEditState {
   styleUrls: ['./quest-item-edit.component.scss'],
 })
 export class QuestItemEditComponent implements OnInit {
+  id:string ='';
   constructor(
     @Inject(QUEST_ITEM_STATE) private questItemState: RxState<QuestItemState>,
     private fb: FormBuilder,
     private state: RxState<QuestItemEditState>,
     private questItemService: QuestItemService,
-    private toast: HotToastService, // private cd: ChangeDetectorRef, // private route: ActivatedRoute,
+    private toast: HotToastService,
     private route: ActivatedRoute,
+    private questItemDetailState: RxState<QuestItemDetailState>,
+
   ) 
   {
     this.state.set({
@@ -37,9 +40,25 @@ export class QuestItemEditComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    var data=this.route.snapshot.params['id'];
-    console.log("dhdhd");
-    console.log(data);
+    this.search$.next({ id: this.route.snapshot.params['id'] });
+    this.questItemDetailState.connect(
+      this.search$
+        .pipe(
+          tap((_) => this.questItemDetailState.set({ loading: true })),
+          switchMap((s) => this.questItemService.getQuestItemById(s.id))
+        )
+        .pipe(
+          tap((data) => {
+            console.log(data);
+            this.id = data.id.toString();
+            this.form.patchValue(data);
+          })
+        ),
+      (_, result) => ({
+        location: result,
+        loading: false,
+      })
+    );
 
     this.initForm();
     this.state.connect(this.toggleDescription$, (prev, curr) => ({
@@ -51,11 +70,11 @@ export class QuestItemEditComponent implements OnInit {
       valid$.pipe(
         tap(() => this.state.set({ submitting: true })),
         switchMap((f) =>
-          this.questItemService.addQuestItem(f.value as QuestItemCreate)
+          this.questItemService.updateQuestItemById(f.value as QuestItemCreate)
         ),
         tap((result) => {
           if (result.id) {
-            this.toast.success('Tạo quest thành công');
+            this.toast.success('Cập nhật quest item thành công');
           }
         })
       ),
@@ -72,6 +91,8 @@ export class QuestItemEditComponent implements OnInit {
   }
 
   form!: FormGroup;
+  search$ = new BehaviorSubject<{ id: string }>({ id: '' });
+
 
   initForm() {
     this.form = this.fb.group({
@@ -83,7 +104,7 @@ export class QuestItemEditComponent implements OnInit {
       updatedDate: [],
       qrCode: [''],
       triggerMode: [0],
-      rightAnswer: [''],
+      rightAnswer: [],
       answerImageUrl: [],
       status: [],
       questItemTypeId: [1],
