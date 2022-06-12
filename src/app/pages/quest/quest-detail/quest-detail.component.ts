@@ -55,13 +55,14 @@ export class QuestDetailComponent implements OnInit {
   constructor(
     @Inject(QUEST_ITEM_STATE) private questItemState: RxState<QuestItemState>,
     private readonly questItemTypeService: QuestItemTypeService,
-    private route: ActivatedRoute,
     private questService: QuestService,
     private modalService: BsModalService,
     private questDetailState: RxState<QuestDetailState>,
     //QuestItem
     private questItemService: QuestItemService,
-    private questItemListState: RxState<QuestItemListState>
+    private questItemListState: RxState<QuestItemListState>,
+    private router: Router,
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
@@ -117,7 +118,7 @@ export class QuestDetailComponent implements OnInit {
         loading: false,
       })
     );
-    
+
     this.initTable();
 
     this.questItemListState.hold(this.submitSearch$, (form) => {
@@ -204,14 +205,18 @@ export class QuestDetailComponent implements OnInit {
     });
     bsModalRef.onHide?.pipe(take(1)).subscribe({
       next: (result) => {
-        this.search$.next({
-          ...this.search$.getValue(),
+        this.searchQuestItem$.next({
+          ...this.searchQuestItem$.getValue(),
         });
       },
     });
   }
 
-  onUpdate(id: string) {}
+  onUpdate(id: string) {
+    this.router.navigate([`quest-item/${id}/edit`], {
+      relativeTo: this.route,
+    });
+  }
 
   get questItemTypeIds(): Observable<IdValue[]> {
     return this.questItemState.select('questItemTypeIds');

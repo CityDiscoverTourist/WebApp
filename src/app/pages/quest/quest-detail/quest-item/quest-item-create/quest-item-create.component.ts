@@ -137,17 +137,17 @@ export class QuestItemCreateComponent implements OnInit {
   selectedFile$ = new Subject<File[]>();
   removedFiles$ = new Subject<File>();
 
-  submitForm() {
-    const valid = this.form.valid;
-    console.log('value', valid);
+  // submitForm() {
+  //   const valid = this.form.valid;
+  //   console.log('value', valid);
 
-    this.formSubmit$.next(this.form);
-    console.log(`form state =${valid}`, this.form.value);
+  //   this.formSubmit$.next(this.form);
+  //   console.log(`form state =${valid}`, this.form.value);
 
-    if (valid) {
-      this.formSubmit$.next(this.form);
-    } else {
-      this.form.revalidateControls([]);
-    }
-  }
+  //   if (valid) {
+  //     this.formSubmit$.next(this.form);
+  //   } else {
+  //     this.form.revalidateControls([]);
+  //   }
+  // }
 }

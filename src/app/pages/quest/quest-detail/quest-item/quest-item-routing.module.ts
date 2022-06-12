@@ -14,6 +14,13 @@ const routes: Routes = [
             (m) => m.QuestItemCreateModule
           ),
       },
+      {
+        path: ':id/edit',
+        loadChildren: () =>
+          import('./quest-item-edit/quest-item-edit.module').then(
+            (m) => m.QuestItemEditModule
+          ),
+      },
     ],
   },
 ];
