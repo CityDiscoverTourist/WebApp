@@ -142,18 +142,17 @@
               (keyup.enter)="searchQuestItem$.next(searchForm.value)"
             />
           </div>
-          <!-- <ng-select
-            [items]="questTypeIds | async"
+          <ng-select
+          [items]="questItemTypeIds | async"
             bindValue="id"
             bindLabel="value"
-            placeholder="Chọn loại quest"
+            placeholder="Chọn loại quest item"
             [clearable]="false"
             [closeOnSelect]="true"
             style="min-width: 200px"
             class="me-3"
-            formControlName="questTypeIds"
-          ></ng-select> -->
-          <div class="btn-group">
+            formControlName="questItemTypeIds"
+          ></ng-select><div class="btn-group">
             <button
               type="button"
               class="btn btn-primary"
@@ -189,7 +188,7 @@
           [externalPaging]="true"
           [externalSorting]="true"
           [messages]="{
-            emptyMessage: 'Không có quest để hiển thị!',
+            emptyMessage: 'Không có quest item để hiển thị!',
             totalMessage: 'quest item'
           }"
           [count]="(metadata$ | async)?.totalCount || 0"

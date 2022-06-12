@@ -30,6 +30,7 @@ export class QuestItemService {
     const query = stringify({
       name: search.keyword,
       questId: search.questId,
+      questItemTypeId:search?.questItemTypeIds,
       pageNumber: isNaN(search?.currentPage!) ? 1 : search?.currentPage! + 1,
       pagesize: 5,
       orderby: `${sortBy} ${sortDir}`,
