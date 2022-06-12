@@ -57,4 +57,13 @@ export class QuestItemService {
         )
       );
   }
+
+  deleteQuestItemById(id: string): Observable<string | undefined> {
+    return this.http
+      .delete(
+        `https://citytourist.azurewebsites.net/api/v1/quest-items/${id}`,
+        this.httpOptions
+      )
+      .pipe(map((response: Result<QuestItemListItem>) => response.status));
+  }
 }

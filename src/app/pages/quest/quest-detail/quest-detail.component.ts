@@ -10,7 +10,7 @@ import {
 import { BsModalService } from 'ngx-bootstrap/modal';
 import {
   BehaviorSubject,
-  map,
+  take,
   Observable,
   Subject,
   switchMap,
@@ -26,6 +26,7 @@ import {
 } from 'src/app/models';
 import { QuestItemService, QuestService } from 'src/app/services';
 import { PageInfo, SortInfo } from 'src/app/types';
+import { DeleteModalComponent } from '../../share';
 import { QuestDeleteModalComponent } from '../../share/quest-delete-modal/quest-delete-modal.component';
 import { QuestItemListState } from '../states';
 import { QuestDetailState } from '../states/questdetail.state';
@@ -203,7 +204,19 @@ export class QuestDetailComponent implements OnInit {
   }
 
   onDelete(id: string) {
-    
+    const bsModalRef = this.modalService.show(DeleteModalComponent, {
+      initialState: {
+        id: id,
+        title: 'Quest Item',
+      },
+    });
+    bsModalRef.onHide?.pipe(take(1)).subscribe({
+      next: (result) => {
+        this.search$.next({
+          ...this.search$.getValue(),
+        });
+      },
+    });
   }
 
   onUpdate(id: string) {

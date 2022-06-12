@@ -23,7 +23,7 @@ interface QuestItemCreateState {
 })
 export class QuestItemCreateComponent implements OnInit {
   private id: string;
-  public href: string = "";
+  public href: string = '';
   constructor(
     @Inject(QUEST_ITEM_STATE) private questItemState: RxState<QuestItemState>,
     private fb: FormBuilder,
@@ -32,8 +32,7 @@ export class QuestItemCreateComponent implements OnInit {
     private toast: HotToastService,
     private cd: ChangeDetectorRef,
     private route: ActivatedRoute,
-    private router: Router,
-    
+    private router: Router
   ) {
     this.state.set({
       showQuestDescription: false,
@@ -45,10 +44,9 @@ export class QuestItemCreateComponent implements OnInit {
     this.state.connect(this.toggleDescription$, (prev, curr) => ({
       showQuestDescription: !prev.showQuestDescription,
     }));
-    this.initForm();   
-    // this.id = this.route.snapshot.params['id'];
-    // this.href = this.router.url;    
-    var questId=this.href?.match(/([\d]+)/g)?.[0];
+    this.initForm();
+    this.href = this.router.url;
+    var questId = this.href.match(/([\d]+)/g)?.[0];
     this.form.controls['questId'].setValue(questId);
 
     // this.state.connect(
@@ -116,7 +114,7 @@ export class QuestItemCreateComponent implements OnInit {
       content: [''],
       description: [''],
       duration: [0],
-      createdDate: [],
+      createdDate: [new Date()],
       updatedDate: [],
       qrCode: [''],
       triggerMode: [0],

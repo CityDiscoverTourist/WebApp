@@ -27,7 +27,7 @@
                   type="radio"
                   name="questItemTypeId"
                   id="qr"
-                  [value]="8"
+                  [value]="2"
                   formControlName="questItemTypeId"
                 />
                 <label class="form-check-label" for="qr"> Qr game </label>
@@ -37,11 +37,11 @@
                   class="form-check-input"
                   type="radio"
                   name="questItemTypeId"
-                  id="sa"
-                  [value]="2"
+                  id="rq"
+                  [value]="3"
                   formControlName="questItemTypeId"
                 />
-                <label class="form-check-label" for="sa"> Sort Answer </label>
+                <label class="form-check-label" for="rq"> Reverse Question </label>
               </div>
             </div>
           </div>
@@ -170,14 +170,14 @@
               </div>
             </div>
             <hr />
-            <div class="form-group mb-3">
+            <!-- <div class="form-group mb-3">
               <label for="itemId" class="form-label">Chọn Quest Item</label>
               <input
                 type="text"
                 class="form-control"
                 id="itemId"
                 formControlName="itemId"
-              />
+              /> -->
               <!-- <ng-select
                 [items]="questItemTypeIds | async"
                 bindValue="id"
@@ -186,7 +186,7 @@
                 class="header-p-0"
               >
               </ng-select> -->
-            </div>
+            <!-- </div> -->
           </div>
         </div>
       </div>
@@ -199,13 +199,13 @@
           Thêm
         </button>
         <a routerLink="../../" class="btn btn-outline-primary mt-3">Thoát</a>
-        <!-- <button
+        <button
           type="button"
           class="btn btn-primary mt-3"
           (click)="submitForm()"
         >
           Thêm
-        </button> -->
+        </button>
       </div>
     </div>
   </form>
