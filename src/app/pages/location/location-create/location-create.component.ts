@@ -43,28 +43,16 @@ export class LocationCreateComponent implements OnInit, AfterViewChecked {
   }
 
   ngAfterViewChecked() {
-    console.log('jjssj');
-
-    console.log(this.geoCoder);
-    // //get latlong
-    // console.log(this.geoCoder?._map?._easeOptions?.center);
     this.form.controls['longitude'].setValue(
       `${this.geoCoder?._map?._easeOptions?.center[1]}`
     );
-    // this.form.controls['longitude'].setValue(
-    //   this.geoCoder?._map?._easeOptions?.center[1]
-    // );
-    // this.form.controls['latitude'].setValue(
-    //   this.geoCoder?._map?._easeOptions?.center[0]
-    // );
     this.form.controls['latitude'].setValue(
       `${this.geoCoder?._map?._easeOptions?.center[0]}`
     );
     // //get place id
-    // console.log(this.geoCoder?._typeahead?.selected?.place_id);
-    console.log(this.geoCoder?.lastSelected);
-    var object1 = JSON.stringify(this.geoCoder?.lastSelected);
-    this.form.controls['address'].setValue(this.geoCoder?._map);
+    var s: keyof typeof this.geoCoder.lastSelected = 'description';
+    var data = JSON.parse(this.geoCoder?.lastSelected);
+    this.form.controls['address'].setValue(Object(data)['description']);
   }
   ngOnInit(): void {
     this.state.connect(this.toggleDescription$, (prev, _) => ({
