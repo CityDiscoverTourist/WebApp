@@ -7,27 +7,32 @@ import {
   CityCreate,
   CityCreateResult,
   CityListItem,
+  CityListSearch,
   IdValue,
   Paging,
   Result,
   SearchInfo,
 } from '../models';
 import { Pagination } from '../models/pagination.model';
+import { BaseService } from './base.service';
 
 @Injectable({
   providedIn: 'root',
 })
-export class CityService {
-  constructor(private http: HttpClient) {}
-  httpOptions = {
-    headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
-  };
-
+export class CityService extends BaseService {
+  private _sharedHeaders = new HttpHeaders();
+  constructor(private http: HttpClient) {
+    super();
+    this._sharedHeaders = this._sharedHeaders.set(
+      'Content-Type',
+      'application/json'
+    );
+  }
   getCityIdValue(): Observable<IdValue[]> {
     return this.http
       .get<Pagination<City>>(
         'https://citytourist.azurewebsites.net/api/v1/cites',
-        this.httpOptions
+        { headers: this._sharedHeaders }
       )
       .pipe(
         map((response: Pagination<City>) =>
@@ -41,7 +46,7 @@ export class CityService {
         )
       );
   }
-  getCities(search: SearchInfo): Observable<Paging<CityListItem>> {
+  getCities(search: CityListSearch): Observable<Paging<CityListItem>> {
     var sortBy =
       `${search.sort?.sortBy}` === 'undefined' ? '' : search.sort?.sortBy;
     var sortDir =
@@ -51,35 +56,36 @@ export class CityService {
       pageNumber: isNaN(search?.currentPage!) ? 1 : search?.currentPage! + 1,
       pagesize: 10,
       orderby: `${sortBy} ${sortDir}`,
+      status: search?.status,
     });
     var result = this.http.get<Paging<CityListItem>>(
       'https://citytourist.azurewebsites.net/api/v1/cites?' + query,
-      this.httpOptions
+      { headers: this._sharedHeaders }
     );
     return result;
   }
 
   addCity(cityCreate: Partial<CityCreate>): Observable<Result<Partial<City>>> {
+    if (cityCreate.id == undefined) cityCreate.id = 0;
     return this.http.post<Result<Partial<City>>>(
       `https://citytourist.azurewebsites.net/api/v1/cites/`,
       cityCreate,
-      this.httpOptions
+      { headers: this._sharedHeaders }
     );
   }
 
   deleteCityById(id: string): Observable<string | undefined> {
     return this.http
-      .delete(
-        `https://citytourist.azurewebsites.net/api/v1/cites/${id}`,
-        this.httpOptions
-      )
+      .delete(`https://citytourist.azurewebsites.net/api/v1/cites/${id}`, {
+        headers: this._sharedHeaders,
+      })
       .pipe(map((response: Result<CityListItem>) => response.status));
   }
   getCityById(id: string | undefined): Observable<City> {
     return this.http
       .get<Result<City>>(
         `https://citytourist.azurewebsites.net/api/v1/cites/${id}`,
-        this.httpOptions
+        { headers: this._sharedHeaders }
       )
       .pipe(
         map(
@@ -93,18 +99,11 @@ export class CityService {
       );
   }
 
-  updateCity(payload: CityCreate): Observable<CityCreateResult> {
-    return this.http
-      .put<Result<City>>(
-        `https://citytourist.azurewebsites.net/api/v1/cites/`,
-        payload,
-        this.httpOptions
-      )
-      .pipe(
-        map(
-          (response: Result<City>) =>
-            ({ id: response.data?.id } as CityCreateResult)
-        )
-      );
+  updateCity(payload: Partial<CityCreate>): Observable<Result<Partial<City>>> {
+    return this.http.put<Result<Partial<City>>>(
+      `https://citytourist.azurewebsites.net/api/v1/cites/`,
+      payload,
+      { headers: this._sharedHeaders }
+    );
   }
 }

@@ -12,10 +12,9 @@ import {
   take,
   tap,
 } from 'rxjs';
-import { City, CityListItem, PagingMetadata, SearchInfo } from 'src/app/models';
+import { CityListItem, PagingMetadata, SearchInfo } from 'src/app/models';
 import { CityService } from 'src/app/services';
 import { PageInfo, SortInfo } from 'src/app/types';
-import { CityModalUpdateComponent } from '../../share/city-modal-update/city-modal-update.component';
 import { CityModalComponent } from '../../share/city-modal/city-modal.component';
 import { DeleteModalComponent } from '../../share/delete-modal/delete-modal.component';
 import { CityListState } from '../states';
@@ -29,6 +28,8 @@ export class CityListComponent implements OnInit {
   records: CityListItem[] = [];
   @ViewChild(DatatableComponent) table!: DatatableComponent;
   columns: TableColumn[] = [];
+  status: { id: number; name: string }[] = [];
+
   constructor(
     private cityListState: RxState<CityListState>,
     private cityService: CityService,
@@ -36,16 +37,6 @@ export class CityListComponent implements OnInit {
     private toast: HotToastService
   ) {}
   ngOnInit(): void {
-    // this.records = [...Array(50).keys()].map(
-    //   (i) =>
-    //     ({
-    //       index:++i,
-    //       id: i,
-    //       name: 'i',
-    //       status: 'i',
-    //     } as CityListItem)
-    // );
-
     this.initTable();
     this.cityListState.connect(
       this.search$.pipe(
@@ -66,6 +57,8 @@ export class CityListComponent implements OnInit {
         loading: false,
       })
     );
+
+    this.status = this.cityService.status;
 
     this.cityListState.hold(this.submitSearch$, (form) => {
       this.search$.next({
@@ -149,17 +142,18 @@ export class CityListComponent implements OnInit {
   search$ = new BehaviorSubject<SearchInfo>({});
   searchForm = new FormGroup({
     keyword: new FormControl(),
+    status: new FormControl(),
   });
 
-  submitSearch$ = new Subject<Partial<{ keyword: string }>>();
+  submitSearch$ = new Subject<Partial<{ keyword: string; status: string }>>();
   resetSearch$ = new Subject<void>();
 
   showAddCity() {
-    console.log('alo');
-
     const bsModalRef = this.modalService.show(CityModalComponent, {
       initialState: {
         simpleForm: false,
+        title: 'thành phố',
+        type: 'Thêm',
       },
     });
     bsModalRef.onHide?.pipe(take(1)).subscribe({
@@ -170,18 +164,10 @@ export class CityListComponent implements OnInit {
             duration: 5000,
             dismissible: true,
             style: {
-              // border: '1px solid #0DB473',
-              // padding: '16px',
               padding: '16px',
-              // color: '#0DB473',
-              // background:'#0DB473',
               width: '600px',
               height: '62px',
             },
-            // iconTheme: {
-            //   primary: '#fff',
-            //   secondary: '#fff',
-            // },
           });
         }
         this.search$.next({
@@ -194,6 +180,7 @@ export class CityListComponent implements OnInit {
     const bsModalRef = this.modalService.show(DeleteModalComponent, {
       initialState: {
         id: id,
+        title: 'thành phố',
       },
     });
     bsModalRef.onHide?.pipe(take(1)).subscribe({
@@ -206,9 +193,11 @@ export class CityListComponent implements OnInit {
   }
 
   onUpdate(id: string) {
-    const bsModalRef = this.modalService.show(CityModalUpdateComponent, {
+    const bsModalRef = this.modalService.show(CityModalComponent, {
       initialState: {
         id: id,
+        title: 'thành phố',
+        type: 'Cập nhật',
       },
     });
     bsModalRef.onHide?.pipe(take(1)).subscribe({
