@@ -1,10 +1,6 @@
-export interface LocationType {
-  id: number;
-  name: string;
-  status: string;
-}
+import { SearchInfo } from "./common.model";
 
-export interface LocationTypeCreate {
+export interface LocationType {
   id: number;
   name: string;
   status: string;
@@ -16,3 +12,14 @@ export interface LocationTypeListItem {
   name: string;
   status: string;
 }
+
+export interface LocationTypeListSearch extends SearchInfo{
+  status?:number[]
+}
+
+export interface LocationTypeCreate {
+  id: number;
+  name: string;
+  status: string;
+}
+

@@ -49,6 +49,7 @@ export class QuestTypeService {
       pageNumber: isNaN(search?.currentPage!) ? 1 : search?.currentPage! + 1,
       pagesize: 10,
       orderby: `${sortBy} ${sortDir}`,
+      status: 'active'
     });
     var result = this.http.get<Paging<QuestTypeListItem>>(
       'https://citytourist.azurewebsites.net/api/v1/quest-types?' + query,

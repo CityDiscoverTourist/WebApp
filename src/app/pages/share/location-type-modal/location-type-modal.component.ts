@@ -29,6 +29,7 @@ export class LocationTypeModalComponent implements OnInit {
   id: string = '';
   title: string = '';
   type: string = '';
+  status: { id: number; name: string }[] = [];
   constructor(
     public bsModalRef: BsModalRef,
     private fb: FormBuilder,
@@ -39,6 +40,7 @@ export class LocationTypeModalComponent implements OnInit {
 
   ngOnInit(): void {
     this.initForm();
+    this.status=this.locationTypeService.status;
     this.search$.next({ id: this.id });
     this.locationTypeDetailState.connect(
       this.search$
@@ -113,7 +115,7 @@ export class LocationTypeModalComponent implements OnInit {
     this.form = this.fb.group({
       id: [],
       name: [null, [Validators.required]],
-      status: [],
+      status: ['',[Validators.required]],
     });
   }
 
@@ -123,4 +125,16 @@ export class LocationTypeModalComponent implements OnInit {
     return this.state.select('hasError');
   }
   search$ = new BehaviorSubject<{ id: string }>({ id: '' });
+
+  // get statusIds(): Observable<IdValue[]> {
+  //   var arr: string[] = [];
+  //   for (let item in Status) {
+  //     if (isNaN(Number(item))) {
+  //       arr.push(item);
+  //     }
+  //   }
+  //   var mapData= arr.map((curr, index) => ({ id: index, value: `${curr}` } as IdValue));
+  //   return of(
+  //   );
+  // }
 }
