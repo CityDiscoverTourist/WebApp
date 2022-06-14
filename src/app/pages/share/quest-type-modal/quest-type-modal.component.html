@@ -30,13 +30,22 @@
       [ngClass]="{ col: !simpleForm }"
       *ngIf="!simpleForm"
     >
-      <label for="status" class="form-label">Trạng thái</label>
-      <input
-        type="text"
-        id="status"
-        class="form-control"
-        formControlName="status"
-      />
+    <label for="status" class="form-label">Trạng thái</label>
+    <ng-select
+      [items]="status"
+      bindValue="name"
+      bindLabel="name"
+      placeholder="Chọn trạng thái"
+      [clearable]="false"
+      formControlName="status"
+      [ngClass]="{ 'is-invalid': form?.hasError('status') }"
+    ></ng-select>
+    <div
+      class="invalid-feedback"
+      *ngIf="form.hasErrorOf('status', 'required')"
+    >
+      Vui lòng chọn trạng thái
+    </div>
     </div>
     <div class="card mb-3 mt-3">
       <div class="card-body">

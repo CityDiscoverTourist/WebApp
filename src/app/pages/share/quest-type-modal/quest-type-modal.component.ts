@@ -36,6 +36,7 @@ export class QuestTypeModalComponent implements OnInit {
   title: string = '';
   type: string = '';
   public img: string = '';
+  status: { id: number; name: string }[] = [];
   constructor(
     public bsModalRef: BsModalRef,
     private fb: FormBuilder,
@@ -47,6 +48,7 @@ export class QuestTypeModalComponent implements OnInit {
 
   ngOnInit(): void {
     this.initForm();
+    this.status=this.questTypeService.status;
     this.search$.next({ id: this.id });
     this.questTypeDetailState.connect(
       this.search$
@@ -149,7 +151,7 @@ export class QuestTypeModalComponent implements OnInit {
     this.form = this.fb.group({
       id: [0],
       name: [null, [Validators.required]],
-      status: [],
+      status: ['',[Validators.required]],
       image: [],
     });
   }

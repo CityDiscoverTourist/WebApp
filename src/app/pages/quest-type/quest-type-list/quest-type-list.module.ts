@@ -9,11 +9,13 @@ import { HttpClientModule } from '@angular/common/http';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { HotToastModule } from '@ngneat/hot-toast';
 import { ModalModule } from 'ngx-bootstrap/modal';
+import { NgSelectModule } from '@ng-select/ng-select';
 
 const lib = [
   NgxDatatableModule,
   ModalModule.forRoot(),
   HotToastModule.forRoot(),
+  NgSelectModule,
 ];
 
 @NgModule({
