@@ -10,7 +10,6 @@ import {
   LocationTypeListSearch,
   Paging,
   Result,
-  SearchInfo,
 } from '../models';
 import { Pagination } from '../models/pagination.model';
 import { BaseService } from './base.service';

@@ -26,34 +26,43 @@
       </div>
     </div>
     <div
-      class="form-group "
+      class="form-group"
       [ngClass]="{ col: !simpleForm }"
       *ngIf="!simpleForm"
     >
       <label for="status" class="form-label">Trạng thái</label>
-      <input
-        type="text"
-        id="status"
-        class="form-control"
-        formControlName="status"
-      />
-    </div>
-    <div
-      class="form-group mt-2  mb-2"
-      [ngClass]="{ col: !simpleForm }"
-      *ngIf="!simpleForm"
-    >
-      Chọn thành phố
       <ng-select
-        [items]="cityIds$ | async"
-        bindValue="id"
-        bindLabel="value"
-        style="min-width: 200px"
-        placeholder="Thành phố"
-        class="me-3"
-        formControlName="cityId"
+        [items]="status"
+        bindValue="name"
+        bindLabel="name"
+        placeholder="Chọn trạng thái"
+        [clearable]="false"
+        formControlName="status"
+        [ngClass]="{ 'is-invalid': form?.hasError('status') }"
       ></ng-select>
+      <div
+        class="invalid-feedback"
+        *ngIf="form.hasErrorOf('status', 'required')"
+      >
+        Vui lòng chọn trạng thái
+      </div>
+      <div
+        class="form-group mt-2 mb-2"
+        [ngClass]="{ col: !simpleForm }"
+        *ngIf="!simpleForm"
+      >
+        Chọn thành phố
+        <ng-select
+          [items]="cityIds$ | async"
+          bindValue="id"
+          bindLabel="value"
+          style="min-width: 200px"
+          placeholder="Thành phố"
+          formControlName="cityId"
+        ></ng-select>
+      </div>
     </div>
+
     <div *ngIf="hasError$ | async" class="alert alert-danger">
       Form không hợp lệ! Hãy kiểm tra lại
     </div>

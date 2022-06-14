@@ -30,6 +30,8 @@ export class AreaModalComponent implements OnInit {
   id: string = '';
   title: string = '';
   type: string = '';
+  status: { id: number; name: string }[] = [];
+
   constructor(
     public bsModalRef: BsModalRef,
     private fb: FormBuilder,
@@ -41,6 +43,7 @@ export class AreaModalComponent implements OnInit {
 
   ngOnInit(): void {
     this.initForm();
+    this.status=this.areaSerice.status;
     this.search$.next({ id: this.id });
     this.areaDetailState.connect(
       this.search$

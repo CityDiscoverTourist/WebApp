@@ -12,22 +12,26 @@ import {
   Result,
 } from '../models';
 import { Pagination } from '../models/pagination.model';
+import { BaseService } from './base.service';
 
 @Injectable({
   providedIn: 'root',
 })
-export class AreaService {
-  constructor(private http: HttpClient) {}
-
-  httpOptions = {
-    headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
-  };
+export class AreaService extends BaseService {
+  private _sharedHeaders = new HttpHeaders();
+  constructor(private http: HttpClient) {
+    super();
+    this._sharedHeaders = this._sharedHeaders.set(
+      'Content-Type',
+      'application/json'
+    );
+  }
 
   getArea(): Observable<IdValue[]> {
     return this.http
       .get<Pagination<Area>>(
         'https://citytourist.azurewebsites.net/api/v1/areas',
-        this.httpOptions
+         { headers: this._sharedHeaders }
       )
       .pipe(
         map((response: Pagination<Area>) =>
@@ -57,7 +61,7 @@ export class AreaService {
 
     var result = this.http.get<Paging<Area>>(
       'https://citytourist.azurewebsites.net/api/v1/areas?' + query,
-      this.httpOptions
+       { headers: this._sharedHeaders }
     );
     return result;
   }
@@ -66,7 +70,7 @@ export class AreaService {
     return this.http
       .get<Pagination<Area>>(
         'https://citytourist.azurewebsites.net/api/v1/areas',
-        this.httpOptions
+         { headers: this._sharedHeaders }
       )
       .pipe(
         map((response: Pagination<Area>) =>
@@ -84,14 +88,14 @@ export class AreaService {
     return this.http.post<Result<Partial<Area>>>(
       `https://citytourist.azurewebsites.net/api/v1/areas/`,
       payload,
-      this.httpOptions
+       { headers: this._sharedHeaders }
     );
   }
   deleteAreaById(id: string): Observable<string | undefined> {
     return this.http
       .delete(
         `https://citytourist.azurewebsites.net/api/v1/areas/${id}`,
-        this.httpOptions
+         { headers: this._sharedHeaders }
       )
       .pipe(map((response: Result<AreaListItem>) => response.status));
   }
@@ -100,7 +104,7 @@ export class AreaService {
     return this.http
       .get<Result<Area>>(
         `https://citytourist.azurewebsites.net/api/v1/areas/${id}`,
-        this.httpOptions
+         { headers: this._sharedHeaders }
       )
       .pipe(
         map(
@@ -120,7 +124,7 @@ export class AreaService {
     return this.http.put<Result<Partial<Area>>>(
       `https://citytourist.azurewebsites.net/api/v1/areas/`,
       payload,
-      this.httpOptions
+       { headers: this._sharedHeaders }
     );
   }
 }
