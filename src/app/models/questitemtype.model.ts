@@ -1,3 +1,5 @@
+import { SearchInfo } from "./common.model";
+
 export interface QuestItemType{
     id:number;
     name:string;
@@ -18,7 +20,6 @@ export interface QuestItemTypeListItem{
 }
 
 
-export interface QuestItemTypeCreateResult{
-    id:number;
-    name?:string;
-}
+export interface QuestItemTypeListSearch extends SearchInfo{
+    status?:number[]
+  }

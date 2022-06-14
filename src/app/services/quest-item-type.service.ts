@@ -8,24 +8,29 @@ import {
   QuestItemType,
   QuestItemTypeCreate,
   QuestItemTypeListItem,
+  QuestItemTypeListSearch,
   Result,
-  SearchInfo,
 } from '../models';
 import { Pagination } from '../models/pagination.model';
+import { BaseService } from './base.service';
 
 @Injectable({
   providedIn: 'root',
 })
-export class QuestItemTypeService {
-  constructor(private http: HttpClient) {}
-  httpOptions = {
-    headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
-  };
+export class QuestItemTypeService extends BaseService{
+  private _sharedHeaders = new HttpHeaders();
+  constructor(private http: HttpClient) {
+    super();
+    this._sharedHeaders = this._sharedHeaders.set(
+      'Content-Type',
+      'application/json'
+    );
+  }
   getQuestItemTypeIds(): Observable<IdValue[]> {
     var result = this.http
       .get<Pagination<QuestItemType>>(
         'https://citytourist.azurewebsites.net/api/v1/quest-item-types',
-        this.httpOptions
+         { headers: this._sharedHeaders }
       )
       .pipe(
         map((response: Pagination<QuestItemType>) =>
@@ -42,7 +47,7 @@ export class QuestItemTypeService {
   }
 
   getQuestItemTypes(
-    search: SearchInfo
+    search: QuestItemTypeListSearch
   ): Observable<Paging<QuestItemTypeListItem>> {
     var sortBy =
       `${search.sort?.sortBy}` === 'undefined' ? '' : search.sort?.sortBy;
@@ -53,10 +58,11 @@ export class QuestItemTypeService {
       pageNumber: isNaN(search?.currentPage!) ? 1 : search?.currentPage! + 1,
       pagesize: 10,
       orderby: `${sortBy} ${sortDir}`,
+      status: search?.status,
     });
     var result = this.http.get<Paging<QuestItemTypeListItem>>(
       'https://citytourist.azurewebsites.net/api/v1/quest-item-types?' + query,
-      this.httpOptions
+       { headers: this._sharedHeaders }
     );
     return result;
   }
@@ -67,14 +73,14 @@ export class QuestItemTypeService {
     return this.http.post<Result<Partial<QuestItemType>>>(
       `https://citytourist.azurewebsites.net/api/v1/quest-item-types/`,
       payload,
-      this.httpOptions
+       { headers: this._sharedHeaders }
     );
   }
   deleteQuestItemTypeById(id: string): Observable<string | undefined> {
     return this.http
       .delete(
         `https://citytourist.azurewebsites.net/api/v1/quest-item-types/${id}`,
-        this.httpOptions
+         { headers: this._sharedHeaders }
       )
       .pipe(map((response: Result<QuestItemTypeListItem>) => response.status));
   }
@@ -83,7 +89,7 @@ export class QuestItemTypeService {
     return this.http
       .get<Result<QuestItemType>>(
         `https://citytourist.azurewebsites.net/api/v1/quest-item-types/${id}`,
-        this.httpOptions
+         { headers: this._sharedHeaders }
       )
       .pipe(
         map(
@@ -102,7 +108,7 @@ export class QuestItemTypeService {
     return this.http.put<Result<Partial<QuestItemType>>>(
       `https://citytourist.azurewebsites.net/api/v1/quest-item-types/`,
       payload,
-      this.httpOptions
+       { headers: this._sharedHeaders }
     );
   }
 }
