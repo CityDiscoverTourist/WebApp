@@ -224,6 +224,7 @@ export class QuestTypeListComponent implements OnInit {
             role: 'status',
             ariaLive: 'polite',
           });
+          window.location.reload();
           this.search$.next({
             ...this.search$.getValue(),
           });

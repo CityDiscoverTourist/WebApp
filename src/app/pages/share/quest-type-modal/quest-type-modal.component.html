@@ -13,7 +13,7 @@
   <form [formGroup]="form">
     <div class="form-group" [ngClass]="{ col: !simpleForm }">
       <input id="id" type="hidden" formControlName="id" />
-      <label for="name" class="form-label">Tên loại {{title}} </label>
+      <label for="name" class="form-label">Tên loại {{ title }} </label>
       <input
         id="name"
         type="text"
@@ -41,20 +41,30 @@
     <div class="card mb-3 mt-3">
       <div class="card-body">
         <div class="bg-white border-bottom-0 card-header mb-3 p-0 px-0">
-          Ảnh loại quest 
+          Ảnh loại quest
         </div>
-        <div
-          class="border rounded text-center"
-        >
+        <div class="border rounded text-center">
           <div
             class="custom-dropzone"
-            style="border: none;"
+            style="border: none"
             ngx-dropzone
             [accept]="'image/*'"
             [multiple]="false"
             (change)="selectedFile$.next($event.addedFiles)"
           >
-            <ngx-dropzone-label>
+            <div
+              *ngIf="img"
+              style="
+                display: flex;
+                justify-content: center;
+                color: #333;
+                cursor: pointer;
+              "
+            >
+              <img style="width: 140px; height: 140px" [src]="img" />
+              <!-- <span><i class="bi bi-x-circle-fill"></i></span> -->
+            </div>
+            <ngx-dropzone-label *ngIf="!img">
               <div>
                 <i class="bi bi-plus"></i>
                 <span>kéo và thả hình ảnh ở đây hoặc</span>

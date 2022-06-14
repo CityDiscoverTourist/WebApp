@@ -93,6 +93,7 @@ export class QuestTypeService {
               id: response.data?.id,
               name: response.data?.name,
               status: response.data?.status,
+              imagePath:response.data?.imagePath,
             } as QuestType)
         )
       );
