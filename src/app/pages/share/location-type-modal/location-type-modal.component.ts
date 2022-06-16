@@ -39,7 +39,6 @@ export class LocationTypeModalComponent implements OnInit {
     private state: RxState<ModalState>,
     private locationTypeService: LocationtypeService,
     private locationTypeDetailState: RxState<LocationTypeDetailState>,
-    @Inject(AREA_STATE) private areaState: RxState<AreaState>,
   ) {}
 
   ngOnInit(): void {
@@ -130,11 +129,4 @@ export class LocationTypeModalComponent implements OnInit {
     return this.state.select('hasError');
   }
   search$ = new BehaviorSubject<{ id: string }>({ id: '' });
-
-  get cityIds$(): Observable<IdValue[]> {
-    return this.areaState
-      .select('cityIds')
-      // .pipe(tap((x) => x.forEach((x) => this.citys.set(x.id, x.value))));
-  }
-
 }
