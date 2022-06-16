@@ -9,7 +9,15 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HotToastService } from '@ngneat/hot-toast';
 import { RxState } from '@rx-angular/state';
 import { BsModalService } from 'ngx-bootstrap/modal';
-import { Observable, partition, Subject, switchMap, tap, take } from 'rxjs';
+import {
+  Observable,
+  partition,
+  Subject,
+  switchMap,
+  tap,
+  take,
+  filter,
+} from 'rxjs';
 import { IdValue, LocationCreate } from 'src/app/models';
 import { LocationService } from 'src/app/services';
 import * as goongjs from 'src/assets/goong-js';
@@ -117,7 +125,7 @@ export class LocationCreateComponent implements OnInit, AfterViewChecked {
         submitting: false,
       })
     );
-    
+
     this.state.hold(invalid$.pipe(), (f) => {
       this.toast.error('Giá trị bạn nhập không đúng');
       f.revalidateControls([]);
@@ -125,14 +133,16 @@ export class LocationCreateComponent implements OnInit, AfterViewChecked {
 
     //add locationTypeAdded
     this.locationState.connect(
-      this.locationTypeAdded$
-        .pipe(
-          tap((locationType) => {
-            this.form.get('locationTypeId')?.setValue(locationType.id);
-          })
-        ),
+      this.locationTypeAdded$.pipe(
+        tap((locationType) => {
+          this.form.get('locationTypeId')?.setValue(locationType.id);
+        })
+      ),
       (prev, curr) => ({
-        locationTypeIds: [...prev.locationTypeIds, { id: curr.id, value: curr.name }],
+        locationTypeIds: [
+          ...prev.locationTypeIds,
+          { id: curr.id, value: curr.name },
+        ],
       })
     );
   }
@@ -177,19 +187,24 @@ export class LocationCreateComponent implements OnInit, AfterViewChecked {
         type: 'Thêm',
       },
     });
-    bsModalRef.onHide?.pipe(take(1)).subscribe({
-      next: (result) => {
-        const data = result as { id: number; name: string };
-        const locationTypeAdded = result as { id: number; name: string };
+    bsModalRef.onHide
+      ?.pipe(
+        take(1),
+        filter((s) => (s as any).success)
+      )
+      .subscribe({
+        next: (result) => {
+          const data = result as { id: number; name: string };
+          const locationTypeAdded = result as { id: number; name: string };
           this.locationTypeAdded$.next({
             id: locationTypeAdded.id,
             name: locationTypeAdded.name,
           });
-        if (data.id > 0 && data.name.length > 0) {
-          this.toast.success('Tạo loại vị trí thành công!');
-        }
-      },
-    });
+          if (data.id > 0 && data.name.length > 0) {
+            this.toast.success('Tạo loại vị trí thành công!');
+          }
+        },
+      });
   }
 
   locationTypeAdded$ = new Subject<{ id: number; name: string }>();

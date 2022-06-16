@@ -92,6 +92,7 @@ export class LocationTypeModalComponent implements OnInit {
             this.bsModalRef.onHide?.emit({
               id: result?.data?.id,
               name: result?.data?.name,
+              success:true,
             });
             this.bsModalRef.hide();
           })
