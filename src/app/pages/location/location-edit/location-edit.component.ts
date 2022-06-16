@@ -1,8 +1,24 @@
-import { AfterViewChecked, Component, DoCheck, Inject, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import {
+  AfterContentInit,
+  AfterViewChecked,
+  Component,
+  DoCheck,
+  Inject,
+  OnChanges,
+  OnInit,
+  SimpleChanges,
+} from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RxState } from '@rx-angular/state';
-import { BehaviorSubject, Observable, partition, Subject, switchMap, tap } from 'rxjs';
+import {
+  BehaviorSubject,
+  Observable,
+  partition,
+  Subject,
+  switchMap,
+  tap,
+} from 'rxjs';
 import { IdValue, LocationCreate } from 'src/app/models';
 import { LocationService } from 'src/app/services';
 import { LocationDetailState } from '../states';
@@ -21,7 +37,9 @@ interface LocationEditState {
   templateUrl: './location-edit.component.html',
   styleUrls: ['./location-edit.component.scss'],
 })
-export class LocationEditComponent implements OnInit, AfterViewChecked {
+export class LocationEditComponent
+  implements OnInit, AfterViewChecked, AfterContentInit
+{
   geoCoder: any;
   map: any;
   id = '';
@@ -33,22 +51,29 @@ export class LocationEditComponent implements OnInit, AfterViewChecked {
     private fb: FormBuilder,
     @Inject(LOCATION_STATE) private locationState: RxState<LocationState>,
     private state: RxState<LocationEditState>,
-    private toast:HotToastService,
+    private toast: HotToastService
   ) {
     this.state.set({
       showLocationDescription: false,
     });
   }
-
+  ngAfterContentInit() {
+    // let myRow = document.getElementsByClassName('mapboxgl-ctrl-geocoder--input');
+    // if(myRow!=null){
+    //   (myRow.querySelector('.mapboxgl-ctrl-geocoder--input') as HTMLInputElement).value = "2 Công Xã Paris, Quận 1, Hồ Chí Minh";
+    // }
+  }
   ngAfterViewChecked(): void {
     if (
       this.geoCoder?._map?._easeOptions?.center[0] !== '' &&
-      this.geoCoder?._map?._easeOptions?.center[0] != undefined 
+      this.geoCoder?._map?._easeOptions?.center[0] != undefined
     ) {
       // console.log(this.geoCoder);
       // console.log(this.geoCoder?._typeahead?.selected?.description);
       this.form.controls['address'].setValue(
-        `${this.geoCoder?._typeahead?.selected?.description}`
+        `${this.geoCoder?._typeahead?.selected?.description}` == 'undefined'
+          ? ''
+          : `${this.geoCoder?._typeahead?.selected?.description}`
       );
     }
   }
@@ -117,15 +142,16 @@ export class LocationEditComponent implements OnInit, AfterViewChecked {
     this.state.connect(
       valid$.pipe(
         tap(() => this.state.set({ submitting: true })),
-        switchMap((f) => this.locationService.updateLocationById(f.value as LocationCreate)),
-        tap((result) => {          
+        switchMap((f) =>
+          this.locationService.updateLocationById(f.value as LocationCreate)
+        ),
+        tap((result) => {
           if (result.id) {
             this.toast.success('Cập nhật vị trí thành công');
           }
         })
       ),
       (_prev, curr) => ({
-      
         error: undefined,
         submitting: false,
       })

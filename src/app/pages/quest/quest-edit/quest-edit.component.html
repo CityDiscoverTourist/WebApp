@@ -104,8 +104,18 @@
         </div>
         <div class="card mb-3">
           <div class="card-body">
-            <div class="bg-white border-bottom-0 card-header mb-3 p-0 px-0">
-              Ảnh quest
+            <div
+              class="d-flex bg-white border-bottom-0 card-header mb-3 p-0 px-0"
+            >
+              <div>Ảnh quest</div>
+              <div class="flex-fill"></div>
+              <!-- <div class="me-3" style="color: #0d6efd">
+                <p
+                  (click)="deleteImage()"
+                >
+                  Xóa ảnh
+                </p>
+              </div> -->
             </div>
             <div
               class="border rounded text-center"
@@ -113,12 +123,25 @@
             >
               <div
                 class="custom-dropzone"
+                style="border: none; height: 150px"
                 ngx-dropzone
                 [accept]="'image/*'"
                 [multiple]="false"
                 (change)="selectedFile$.next($event.addedFiles)"
               >
-                <ngx-dropzone-label>
+                <div
+                  *ngIf="img"
+                  style="
+                    display: flex;
+                    justify-content: center;
+                    color: #333;
+                    cursor: pointer;
+                  "
+                >
+                  <img style="width: 140px; height: 140px" [src]="img" />
+                  <!-- <span><i class="bi bi-x-circle-fill"></i></span> -->
+                </div>
+                <ngx-dropzone-label *ngIf="!img">
                   <div>
                     <i class="bi bi-plus"></i>
                     <span>kéo và thả hình ảnh ở đây hoặc</span>
@@ -134,8 +157,6 @@
                   [removable]="true"
                   (removed)="removedFiles$.next(f)"
                 >
-                  <!-- <ngx-dropzone-label
-                    >{{ f.name }} ({{ f.type }})</ngx-dropzone-label> -->
                 </ngx-dropzone-image-preview>
               </div>
             </div>

@@ -102,8 +102,8 @@ export class DeleteModalComponent implements OnInit {
         break;
       case 'loại Quest':
         {
-          this.locationService
-            .deleteLocationById(id)
+          this.questTypeService
+            .deleteQuestTypeById(id)
             .subscribe((data) => {
               this.bsModalRef.onHide?.emit({
                 status: data,

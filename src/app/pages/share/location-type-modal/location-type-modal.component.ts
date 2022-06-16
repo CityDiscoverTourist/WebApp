@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { RxState } from '@rx-angular/state';
 import { BsModalRef } from 'ngx-bootstrap/modal';
@@ -13,7 +13,10 @@ import {
   switchMap,
   tap,
 } from 'rxjs';
+import { IdValue } from 'src/app/models';
 import { LocationtypeService } from 'src/app/services';
+import { AreaState, AREA_STATE } from '../../area/states/area.state';
+
 import { LocationTypeDetailState } from '../states';
 declare type ModalState = {
   hasError: boolean;
@@ -29,16 +32,19 @@ export class LocationTypeModalComponent implements OnInit {
   id: string = '';
   title: string = '';
   type: string = '';
+  status: { id: number; name: string }[] = [];
   constructor(
     public bsModalRef: BsModalRef,
     private fb: FormBuilder,
     private state: RxState<ModalState>,
     private locationTypeService: LocationtypeService,
-    private locationTypeDetailState: RxState<LocationTypeDetailState>
+    private locationTypeDetailState: RxState<LocationTypeDetailState>,
+    @Inject(AREA_STATE) private areaState: RxState<AreaState>,
   ) {}
 
   ngOnInit(): void {
     this.initForm();
+    this.status=this.locationTypeService.status;
     this.search$.next({ id: this.id });
     this.locationTypeDetailState.connect(
       this.search$
@@ -90,6 +96,7 @@ export class LocationTypeModalComponent implements OnInit {
             this.bsModalRef.onHide?.emit({
               id: result?.data?.id,
               name: result?.data?.name,
+              success:true,
             });
             this.bsModalRef.hide();
           })
@@ -113,7 +120,7 @@ export class LocationTypeModalComponent implements OnInit {
     this.form = this.fb.group({
       id: [],
       name: [null, [Validators.required]],
-      status: [],
+      status: ['',[Validators.required]],
     });
   }
 
@@ -123,4 +130,11 @@ export class LocationTypeModalComponent implements OnInit {
     return this.state.select('hasError');
   }
   search$ = new BehaviorSubject<{ id: string }>({ id: '' });
+
+  get cityIds$(): Observable<IdValue[]> {
+    return this.areaState
+      .select('cityIds')
+      // .pipe(tap((x) => x.forEach((x) => this.citys.set(x.id, x.value))));
+  }
+
 }

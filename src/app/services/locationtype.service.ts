@@ -7,22 +7,28 @@ import {
   LocationType,
   LocationTypeCreate,
   LocationTypeListItem,
+  LocationTypeListSearch,
   Paging,
   Result,
-  SearchInfo,
 } from '../models';
 import { Pagination } from '../models/pagination.model';
+import { BaseService } from './base.service';
 
 @Injectable({
   providedIn: 'root',
 })
-export class LocationtypeService {
-  constructor(private http: HttpClient) {}
-  httpOptions = {
-    headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
-  };
+export class LocationtypeService extends BaseService {
+  private _sharedHeaders = new HttpHeaders();
+  constructor(private http: HttpClient) {
+    super();
+    this._sharedHeaders = this._sharedHeaders.set(
+      'Content-Type',
+      'application/json'
+    );
+  }
+
   getLocationTypes(
-    search: SearchInfo
+    search: LocationTypeListSearch
   ): Observable<Paging<LocationTypeListItem>> {
     var sortBy =
       `${search.sort?.sortBy}` === 'undefined' ? '' : search.sort?.sortBy;
@@ -33,10 +39,11 @@ export class LocationtypeService {
       pageNumber: isNaN(search?.currentPage!) ? 1 : search?.currentPage! + 1,
       pagesize: 10,
       orderby: `${sortBy} ${sortDir}`,
+      status: search?.status,
     });
     var result = this.http.get<Paging<LocationTypeListItem>>(
       'https://citytourist.azurewebsites.net/api/v1/location-types?' + query,
-      this.httpOptions
+      { headers: this._sharedHeaders }
     );
     return result;
   }
@@ -47,14 +54,14 @@ export class LocationtypeService {
     return this.http.post<Result<Partial<LocationType>>>(
       `https://citytourist.azurewebsites.net/api/v1/location-types/`,
       payload,
-      this.httpOptions
+      { headers: this._sharedHeaders }
     );
   }
   deleteLocationTypeById(id: string): Observable<string | undefined> {
     return this.http
       .delete(
         `https://citytourist.azurewebsites.net/api/v1/location-types/${id}`,
-        this.httpOptions
+        { headers: this._sharedHeaders }
       )
       .pipe(map((response: Result<LocationTypeListItem>) => response.status));
   }
@@ -63,7 +70,7 @@ export class LocationtypeService {
     return this.http
       .get<Result<LocationType>>(
         `https://citytourist.azurewebsites.net/api/v1/location-types/${id}`,
-        this.httpOptions
+        { headers: this._sharedHeaders }
       )
       .pipe(
         map(
@@ -82,7 +89,7 @@ export class LocationtypeService {
     return this.http.put<Result<Partial<LocationType>>>(
       `https://citytourist.azurewebsites.net/api/v1/location-types/`,
       payload,
-      this.httpOptions
+      { headers: this._sharedHeaders }
     );
   }
 
@@ -90,7 +97,7 @@ export class LocationtypeService {
     return this.http
       .get<Pagination<LocationType>>(
         'https://citytourist.azurewebsites.net/api/v1/location-types',
-        this.httpOptions
+        { headers: this._sharedHeaders }
       )
       .pipe(
         map((response: Pagination<LocationType>) =>

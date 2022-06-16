@@ -22,6 +22,7 @@ import { QuestService } from 'src/app/services';
 import { ActivatedRoute } from '@angular/router';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { QuestTypeModalComponent } from '../../share/quest-type-modal/quest-type-modal.component';
+import { LocationTypeModalComponent } from '../../share/location-type-modal/location-type-modal.component';
 
 interface QuestEditState {
   showQuestDescription: boolean;
@@ -175,9 +176,11 @@ export class QuestCreateComponent implements OnInit {
   submit$ = new Subject<FormGroup>();
 
   showAddQuestType() {
-    const bsModalRef = this.modalService.show(QuestTypeModalComponent, {
+    const bsModalRef = this.modalService.show(LocationTypeModalComponent, {
       initialState: {
-        simpleForm: true,
+        simpleForm: false,
+        title: 'loại quest',
+        type: 'Thêm',
       },
     });
     bsModalRef.onHide?.pipe(take(1)).subscribe({

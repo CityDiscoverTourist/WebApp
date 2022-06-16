@@ -15,7 +15,7 @@ import {
 } from 'rxjs';
 import { IdValue } from 'src/app/models';
 import { AreaService } from 'src/app/services';
-import { AreaListPageState, AREA_PAGE_STATE } from '../../area/area-list/states';
+import { AreaState, AREA_STATE } from '../../area/states/area.state';
 import { AreaDetailState } from '../states';
 declare type ModalState = {
   hasError: boolean;
@@ -30,17 +30,20 @@ export class AreaModalComponent implements OnInit {
   id: string = '';
   title: string = '';
   type: string = '';
+  status: { id: number; name: string }[] = [];
+
   constructor(
     public bsModalRef: BsModalRef,
     private fb: FormBuilder,
     private state: RxState<ModalState>,
     private areaSerice: AreaService,
     private areaDetailState: RxState<AreaDetailState>,
-    @Inject(AREA_PAGE_STATE) private areaPageState: RxState<AreaListPageState>,
+    @Inject(AREA_STATE) private areaState: RxState<AreaState>,
   ) {}
 
   ngOnInit(): void {
     this.initForm();
+    this.status=this.areaSerice.status;
     this.search$.next({ id: this.id });
     this.areaDetailState.connect(
       this.search$
@@ -93,6 +96,7 @@ export class AreaModalComponent implements OnInit {
             this.bsModalRef.onHide?.emit({
               id: result?.data?.id,
               name: result?.data?.name,
+              success:true,
             });
             this.bsModalRef.hide();
           })
@@ -128,5 +132,5 @@ export class AreaModalComponent implements OnInit {
   }
   search$ = new BehaviorSubject<{ id: string }>({ id: '' });
   get cityIds$(): Observable<IdValue[]> {
-    return this.areaPageState.select('cityIds');  }
+    return this.areaState.select('cityIds');  }
 }

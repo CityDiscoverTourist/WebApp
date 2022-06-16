@@ -1,11 +1,11 @@
-<div class="pt-3 px-5 mx-5">
-  <div class="d-flex align-items-center justify-content-between mx-5">
+<div class="pt-3 px-5">
+  <div class="d-flex align-items-center justify-content-between">
     <div class="flex-fill"></div>
     <a class="btn btn-primary" style="min-width: 120px" (click)="showAddCity()">
       <i class="bi bi-plus"></i> Thêm thành phố
     </a>
   </div>
-  <div class="bg-white my-3 p-3 rounded mx-5">
+  <div class="bg-white my-3 p-3 rounded">
     <div class="rounded bg-white">
       <form class="mb-4" [formGroup]="searchForm">
         <div class="d-flex">
@@ -25,6 +25,16 @@
               (keyup.enter)="search$.next(searchForm.value)"
             />
           </div>
+          <ng-select
+            [items]="status"
+            bindValue="name"
+            bindLabel="name"
+            style="min-width: 200px"
+            placeholder="Chọn trạng thái"
+            class="me-3"
+            formControlName="status"
+          ></ng-select>
+
           <button
             type="button"
             class="btn btn-primary"
@@ -76,7 +86,12 @@
             ngx-datatable-cell-template
           >
             <button
-              class="btn btn-success btn-sm rounded-0"
+              class="btn btn-sm me-2"
+              style="
+                color: #fff;
+                background-color: #4caf50;
+                border-color: #4caf50;
+              "
               type="button"
               data-toggle="tooltip"
               data-placement="top"
@@ -86,8 +101,13 @@
               <i class="bi bi-pencil"></i>
             </button>
             <button
-              class="btn btn-danger btn-sm rounded-0"
+              class="btn btn-sm me-2"
               type="button"
+              style="
+                color: #fff;
+                background-color: #f44335;
+                border-color: #f44335;
+              "
               data-toggle="tooltip"
               data-placement="top"
               title="Delete"

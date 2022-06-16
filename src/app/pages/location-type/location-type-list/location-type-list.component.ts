@@ -32,6 +32,7 @@ import { LocationTypeListState } from '../states';
 export class LocationTypeListComponent implements OnInit {
   @ViewChild(DatatableComponent) table!: DatatableComponent;
   columns: TableColumn[] = [];
+  status: { id: number; name: string }[] = [];
   constructor(
     private locationTypeListState: RxState<LocationTypeListState>,
     private locationTypeService: LocationtypeService,
@@ -41,10 +42,12 @@ export class LocationTypeListComponent implements OnInit {
   ngOnInit(): void {
     this.initTable();
     this.locationTypeListState.connect(
-      this.search$.pipe(
-        tap(() => this.locationTypeListState.set({ loading: true })),
-        switchMap((s) => this.locationTypeService.getLocationTypes(s))
-      ).pipe(tap(data=>console.log(data))),
+      this.search$
+        .pipe(
+          tap(() => this.locationTypeListState.set({ loading: true })),
+          switchMap((s) => this.locationTypeService.getLocationTypes(s))
+        )
+        .pipe(tap((data) => console.log(data))),
       (_, result) => ({
         locationtypes: result.data.map(
           (x, i) =>
@@ -59,6 +62,8 @@ export class LocationTypeListComponent implements OnInit {
         loading: false,
       })
     );
+
+    this.status = this.locationTypeService.status;
 
     this.locationTypeListState.hold(this.submitSearch$, (form) => {
       this.search$.next({
@@ -117,13 +122,13 @@ export class LocationTypeListComponent implements OnInit {
   }
 
   get locationtypes$(): Observable<LocationTypeListItem[]> {
-    return this.locationTypeListState.select('locationtypes').pipe(tap(data=>console.log(data)));
+    return this.locationTypeListState.select('locationtypes');
   }
   get metadata$(): Observable<PagingMetadata> {
-    return this.locationTypeListState.select('metadata').pipe(tap(data=>console.log(data)));
+    return this.locationTypeListState.select('metadata');
   }
   get loading$(): Observable<boolean> {
-    return this.locationTypeListState.select('loading').pipe(tap(data=>console.log(data)));
+    return this.locationTypeListState.select('loading');
   }
 
   onPage(paging: PageInfo) {
@@ -143,16 +148,17 @@ export class LocationTypeListComponent implements OnInit {
   search$ = new BehaviorSubject<SearchInfo>({});
   searchForm = new FormGroup({
     keyword: new FormControl(),
+    status: new FormControl(),
   });
 
-  submitSearch$ = new Subject<Partial<{ keyword: string }>>();
+  submitSearch$ = new Subject<Partial<{ keyword: string; status: string }>>();
   resetSearch$ = new Subject<void>();
 
   showAddLocationType() {
     const bsModalRef = this.modalService.show(LocationTypeModalComponent, {
       initialState: {
         simpleForm: false,
-        title: 'loại địa điểm',
+        title: 'loại vị trí',
         type: 'Thêm',
       },
     });
@@ -209,20 +215,23 @@ export class LocationTypeListComponent implements OnInit {
       next: (result) => {
         const data = result as { id: number; name: string };
         if (data.id > 0 && data.name !== undefined) {
-          this.toast.success('Cập nhật loại vị trí thành công!', {
-            position: 'top-center',
-            duration: 2000,
-            style: {
-              border: '1px solid #0a0',
-              padding: '16px',
-            },
-            iconTheme: {
-              primary: '#0a0',
-              secondary: '#fff',
-            },
-            role: 'status',
-            ariaLive: 'polite',
-          });
+          this.toast.success(
+            'Cập nhật loại vị trí thành công!'
+            // , {
+            //   position: 'top-center',
+            //   duration: 2000,
+            //   style: {
+            //     border: '1px solid #0a0',
+            //     padding: '16px',
+            //   },
+            //   iconTheme: {
+            //     primary: '#0a0',
+            //     secondary: '#fff',
+            //   },
+            //   role: 'status',
+            //   ariaLive: 'polite',
+            // }
+          );
           this.search$.next({
             ...this.search$.getValue(),
           });

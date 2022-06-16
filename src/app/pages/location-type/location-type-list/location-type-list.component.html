@@ -29,6 +29,15 @@
               (keyup.enter)="search$.next(searchForm.value)"
             />
           </div>
+          <ng-select
+            [items]="status"
+            bindValue="name"
+            bindLabel="name"
+            style="min-width: 200px"
+            placeholder="Chọn trạng thái"
+            class="me-3"
+            formControlName="status"
+          ></ng-select>
           <button
             type="button"
             class="btn btn-primary"

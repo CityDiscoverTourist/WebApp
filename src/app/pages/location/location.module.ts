@@ -6,6 +6,7 @@ import { LocationComponent } from './location.component';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { LocationState, LOCATION_STATE } from './states/location.state';
 import { RxState } from '@rx-angular/state';
+import { AreaState, AREA_STATE } from '../area/states/area.state';
 
 const lib = [NgxDatatableModule];
 
@@ -22,6 +23,11 @@ const lib = [NgxDatatableModule];
   providers:[{
     provide:LOCATION_STATE,
     useFactory:()=>new RxState<LocationState>()
-  }]
+  },
+  {
+    provide:AREA_STATE,
+    useFactory:()=>new RxState<AreaState>()
+  }
+]
 })
 export class LocationModule { }

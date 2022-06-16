@@ -7,4 +7,4 @@ export interface AreaListState{
     metadata:PagingMetadata,
     loading:boolean;
 }
-export const AREA_STATE=new InjectionToken<RxState<AreaListState>>("AREA_STATE");
+export const AREA_LIST_STATE=new InjectionToken<RxState<AreaListState>>("AREA_LIST_STATE");

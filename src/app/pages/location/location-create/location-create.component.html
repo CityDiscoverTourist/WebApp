@@ -22,6 +22,7 @@
                   <label class="form-label" for="address">Địa chỉ</label>
                   <div class="input-group mb-1">
                     <input
+                      placeholder="Dùng ô search bên dưới để tìm kiếm vị trí"
                       type="text"
                       class="form-control"
                       aria-label="address"
@@ -55,6 +56,7 @@
                         <ng-template ng-header-tmp>
                           <button
                             class="btn btn-default btn-sm rounded-0 text-center w-100"
+                            (click)="showAddLocationType()"
                           >
                             <i class="bi bi-plus-circle"></i>
                             Thêm loại vị trí
@@ -70,8 +72,19 @@
                         [items]="areaIds$ | async"
                         bindValue="id"
                         bindLabel="value"
+                        class="header-p-0"
                         formControlName="areaId"
-                      ></ng-select>
+                      >
+                      <ng-template ng-header-tmp>
+                        <button
+                          class="btn btn-default btn-sm rounded-0 text-center w-100"
+                          (click)="showAddArea()"
+                        >
+                          <i class="bi bi-plus-circle"></i>
+                          Thêm khu vực
+                        </button>
+                      </ng-template>
+                    </ng-select>
                     </div>
                   </div>
                 </div>
@@ -123,13 +136,6 @@
           type="button"
           class="btn btn-primary mt-3"
           (click)="submit$.next(form)"
-        >
-          Thêm
-        </button>
-        <button
-          type="button"
-          class="btn btn-primary mt-3"
-          (click)="submitForm()"
         >
           Thêm
         </button>

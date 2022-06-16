@@ -39,6 +39,7 @@ interface QuestUpdateState {
 export class QuestEditComponent implements OnInit {
   private id: string;
   public questListItem: QuestListItem;
+  public img: string = '';
   constructor(
     @Inject(QUEST_STATE) private questState: RxState<QuestState>,
     private fb: FormBuilder,
@@ -68,6 +69,7 @@ export class QuestEditComponent implements OnInit {
           tap((data) => {
             this.id = data.id.toString();
             this.form.patchValue(data);
+            this.img = data.imagePath;
           })
         ),
       (_, result) => ({
@@ -79,7 +81,12 @@ export class QuestEditComponent implements OnInit {
     this.state.connect(
       this.selectedFile$
         .pipe(tap(() => setTimeout(() => this.cd.detectChanges(), 100)))
-        .pipe(tap((file) => this.form.patchValue({ image: file[0] }))),
+        .pipe(
+          tap((file) => {
+            this.img = '';
+            this.form.patchValue({ image: file[0] });
+          })
+        ),
       (_prev, files) => ({
         files: [...files],
       })
@@ -102,15 +109,17 @@ export class QuestEditComponent implements OnInit {
     this.state.connect(
       valid$.pipe(
         tap(() => this.state.set({ submitting: true })),
-        switchMap((f) => this.questService.updateQuest(f.value as QuestCreate)),
-        tap((result) => {          
+        switchMap((f) => {
+          console.log(this.form.value);
+          return this.questService.updateQuest(f.value as QuestCreate);
+        }),
+        tap((result) => {
           if (result.id) {
             this.toast.success('Cập nhật quest thành công');
           }
         })
       ),
       (_prev, curr) => ({
-      
         error: undefined,
         submitting: false,
       })
@@ -125,10 +134,7 @@ export class QuestEditComponent implements OnInit {
     this.questState.connect(this.questypeIds$, (prev, curr) => ({
       questTypeIds: [...prev.questTypeIds, { id: curr.id, value: curr.name }],
     }));
-
   }
-
-  
 
   form!: FormGroup;
 
@@ -142,7 +148,7 @@ export class QuestEditComponent implements OnInit {
       estimatedDistance: [],
       availableTime: [],
       questTypeId: [],
-      imagePath: [],
+      image: [""],
       questOwnerId: [2],
       areaId: [],
       status: [false],
@@ -175,4 +181,10 @@ export class QuestEditComponent implements OnInit {
   formSubmit$ = new Subject<FormGroup>();
   submit$ = new Subject<FormGroup>();
   questypeIds$ = new Subject<{ id: number; name: string }>();
+
+  deleteImage() {
+    this.img = '';
+    this.form.controls['image'].setValue('');
+    console.log(this.form.value);
+  }
 }

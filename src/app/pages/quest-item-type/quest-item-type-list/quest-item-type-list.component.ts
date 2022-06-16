@@ -32,6 +32,7 @@ import { QuestItemTypeListState } from '../states';
 export class QuestItemTypeListComponent implements OnInit {
   @ViewChild(DatatableComponent) table!: DatatableComponent;
   columns: TableColumn[] = [];
+  status: { id: number; name: string }[] = [];
   constructor(
     private questItemTypeListState: RxState<QuestItemTypeListState>,
     private questItemTypeService: QuestItemTypeService,
@@ -59,6 +60,8 @@ export class QuestItemTypeListComponent implements OnInit {
         loading: false,
       })
     );
+
+    this.status = this.questItemTypeService.status;
 
     this.questItemTypeListState.hold(this.submitSearch$, (form) => {
       this.search$.next({
@@ -143,9 +146,11 @@ export class QuestItemTypeListComponent implements OnInit {
   search$ = new BehaviorSubject<SearchInfo>({});
   searchForm = new FormGroup({
     keyword: new FormControl(),
+    status: new FormControl(),
   });
 
-  submitSearch$ = new Subject<Partial<{ keyword: string }>>();
+  submitSearch$ = new Subject<Partial<{ keyword: string; status: string }>>();
+
   resetSearch$ = new Subject<void>();
 
   showAddQuestItemType() {

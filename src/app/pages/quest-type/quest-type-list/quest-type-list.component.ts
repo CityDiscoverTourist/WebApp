@@ -27,6 +27,7 @@ import { QuestTypeListState } from '../states';
 export class QuestTypeListComponent implements OnInit {
   @ViewChild(DatatableComponent) table!: DatatableComponent;
   columns: TableColumn[] = [];
+  status: { id: number; name: string }[] = [];
   constructor(
     private questTypeListState: RxState<QuestTypeListState>,
     private questTypeService: QuestTypeService,
@@ -58,6 +59,8 @@ export class QuestTypeListComponent implements OnInit {
       })
     );
 
+    this.status = this.questTypeService.status;
+
     this.questTypeListState.hold(this.submitSearch$, (form) => {
       this.search$.next({
         ...this.search$.getValue(),
@@ -77,18 +80,20 @@ export class QuestTypeListComponent implements OnInit {
       this.table.offset = 0;
     });
   }
-  @ViewChild('actionTemplate', { static: true }) public actionTemplate: TemplateRef<any>;
-  @ViewChild('imageTemplate', { static: true }) public imageTemplate: TemplateRef<any>;
+  @ViewChild('actionTemplate', { static: true })
+  public actionTemplate: TemplateRef<any>;
+  @ViewChild('imageTemplate', { static: true })
+  public imageTemplate: TemplateRef<any>;
 
   initTable() {
     this.columns = [
       {
         prop: 'imagePath',
-        name:'Hình ảnh',
+        name: 'Hình ảnh',
         sortable: false,
         cellTemplate: this.imageTemplate,
         cellClass: 'align-items-center d-flex',
-        width:50
+        width: 50,
       },
       {
         prop: 'name',
@@ -144,9 +149,10 @@ export class QuestTypeListComponent implements OnInit {
   search$ = new BehaviorSubject<SearchInfo>({});
   searchForm = new FormGroup({
     keyword: new FormControl(),
+    status: new FormControl(),
   });
 
-  submitSearch$ = new Subject<Partial<{ keyword: string }>>();
+  submitSearch$ = new Subject<Partial<{ keyword: string; status: string }>>();
   resetSearch$ = new Subject<void>();
 
   showAddQuestType() {
@@ -224,6 +230,7 @@ export class QuestTypeListComponent implements OnInit {
             role: 'status',
             ariaLive: 'polite',
           });
+          window.location.reload();
           this.search$.next({
             ...this.search$.getValue(),
           });

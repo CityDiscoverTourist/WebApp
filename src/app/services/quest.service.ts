@@ -124,7 +124,7 @@ export class QuestService {
     payload.append('updatedDate', '');
     payload.append('status', quest.status);
     payload.append('questTypeId', quest.questTypeId.toString());
-    payload.append('questOwnerId', quest.questOwnerId.toString());
+    // payload.append('questOwnerId', quest.questOwnerId.toString());
     payload.append('areaId', quest.areaId.toString());
 
     return this.http

@@ -1,4 +1,9 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+} from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { RxState } from '@rx-angular/state';
 import { BsModalRef } from 'ngx-bootstrap/modal';
@@ -30,17 +35,20 @@ export class QuestTypeModalComponent implements OnInit {
   id: string = '';
   title: string = '';
   type: string = '';
+  public img: string = '';
+  status: { id: number; name: string }[] = [];
   constructor(
     public bsModalRef: BsModalRef,
     private fb: FormBuilder,
     private state: RxState<ModalState>,
     private questTypeService: QuestTypeService,
     private questTypeDetailState: RxState<QuestTypeDetailState>,
-    private cd: ChangeDetectorRef,
+    private cd: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
     this.initForm();
+    this.status=this.questTypeService.status;
     this.search$.next({ id: this.id });
     this.questTypeDetailState.connect(
       this.search$
@@ -55,6 +63,7 @@ export class QuestTypeModalComponent implements OnInit {
               name: data.name,
               status: data.status,
             });
+            this.img = data.imagePath;
           })
         ),
       (_, result) => ({
@@ -66,7 +75,12 @@ export class QuestTypeModalComponent implements OnInit {
     this.questTypeDetailState.connect(
       this.selectedFile$
         .pipe(tap(() => setTimeout(() => this.cd.detectChanges(), 100)))
-        .pipe(tap((file) => this.form.patchValue({ image: file[0] }))),
+        .pipe(
+          tap((file) => {
+            this.img = '';
+            this.form.patchValue({ image: file[0] });
+          })
+        ),
       (_prev, files) => ({
         files: [...files],
       })
@@ -137,8 +151,8 @@ export class QuestTypeModalComponent implements OnInit {
     this.form = this.fb.group({
       id: [0],
       name: [null, [Validators.required]],
-      status: [],
-      image:[],
+      status: ['',[Validators.required]],
+      image: [],
     });
   }
 

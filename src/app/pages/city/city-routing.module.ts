@@ -22,13 +22,6 @@ const routes: Routes = [
           (m) => m.CityListModule
         ),
       },
-      {
-        path: 'detail',
-        loadChildren: () =>
-        import('./city-detail/city-detail.module').then(
-          (m) => m.CityDetailModule
-        ),
-      },
     ],
   },
 ];

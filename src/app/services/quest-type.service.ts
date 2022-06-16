@@ -9,13 +9,17 @@ import {
   QuestType,
   QuestTypeCreate,
   QuestTypeListItem,
+  QuestTypeListSearch,
 } from '../models/questtype.model';
+import { BaseService } from './base.service';
 
 @Injectable({
   providedIn: 'root',
 })
-export class QuestTypeService {
-  constructor(private http: HttpClient) {}
+export class QuestTypeService extends BaseService {
+  constructor(private http: HttpClient) {
+    super();
+  }
 
   httpOptions = {
     headers: new HttpHeaders({ encrypt: 'multipart/form-data' }),
@@ -39,7 +43,9 @@ export class QuestTypeService {
       );
   }
 
-  getQuestTypes(search: SearchInfo): Observable<Paging<QuestTypeListItem>> {
+  getQuestTypes(
+    search: QuestTypeListSearch
+  ): Observable<Paging<QuestTypeListItem>> {
     var sortBy =
       `${search.sort?.sortBy}` === 'undefined' ? '' : search.sort?.sortBy;
     var sortDir =
@@ -49,6 +55,7 @@ export class QuestTypeService {
       pageNumber: isNaN(search?.currentPage!) ? 1 : search?.currentPage! + 1,
       pagesize: 10,
       orderby: `${sortBy} ${sortDir}`,
+      status: search?.status,
     });
     var result = this.http.get<Paging<QuestTypeListItem>>(
       'https://citytourist.azurewebsites.net/api/v1/quest-types?' + query,
@@ -93,6 +100,7 @@ export class QuestTypeService {
               id: response.data?.id,
               name: response.data?.name,
               status: response.data?.status,
+              imagePath: response.data?.imagePath,
             } as QuestType)
         )
       );
