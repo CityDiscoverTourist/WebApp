@@ -8,11 +8,14 @@ import {
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HotToastService } from '@ngneat/hot-toast';
 import { RxState } from '@rx-angular/state';
-import { Observable, partition, Subject, switchMap, tap } from 'rxjs';
+import { BsModalService } from 'ngx-bootstrap/modal';
+import { Observable, partition, Subject, switchMap, tap, take } from 'rxjs';
 import { IdValue, LocationCreate } from 'src/app/models';
 import { LocationService } from 'src/app/services';
 import * as goongjs from 'src/assets/goong-js';
 import * as GoongGeocoder from 'src/assets/goonggeo';
+import { QuestTypeModalComponent } from '../../share';
+import { LocationTypeModalComponent } from '../../share/location-type-modal/location-type-modal.component';
 import { LocationState, LOCATION_STATE } from '../states/location.state';
 
 interface LocationCreateState {
@@ -35,7 +38,8 @@ export class LocationCreateComponent implements OnInit, AfterViewChecked {
     private fb: FormBuilder,
     private state: RxState<LocationCreateState>,
     private locationService: LocationService,
-    private toast: HotToastService
+    private toast: HotToastService,
+    private modalService: BsModalService
   ) {
     this.state.set({
       showLocationDescription: false,
@@ -113,12 +117,24 @@ export class LocationCreateComponent implements OnInit, AfterViewChecked {
         submitting: false,
       })
     );
-    // hay
+    
     this.state.hold(invalid$.pipe(), (f) => {
       this.toast.error('Giá trị bạn nhập không đúng');
-      // this.form.revalidateControls([]);
       f.revalidateControls([]);
     });
+
+    //add locationTypeAdded
+    this.locationState.connect(
+      this.locationTypeAdded$
+        .pipe(
+          tap((locationType) => {
+            this.form.get('locationTypeId')?.setValue(locationType.id);
+          })
+        ),
+      (prev, curr) => ({
+        locationTypeIds: [...prev.locationTypeIds, { id: curr.id, value: curr.name }],
+      })
+    );
   }
 
   form!: FormGroup;
@@ -153,15 +169,29 @@ export class LocationCreateComponent implements OnInit, AfterViewChecked {
   formSubmit$ = new Subject<FormGroup>();
   submit$ = new Subject<FormGroup>();
 
-  submitForm() {
-    const valid = this.form.valid;
-    // this.formSubmit$.next(this.form);
-    console.log(`form state =${valid}`, this.form.value);
-
-    if (valid) {
-      // this.formSubmit$.next(this.form);
-    } else {
-      this.form.revalidateControls([]);
-    }
+  showAddLocationType() {
+    const bsModalRef = this.modalService.show(LocationTypeModalComponent, {
+      initialState: {
+        simpleForm: false,
+        title: 'loại vị trí',
+        type: 'Thêm',
+      },
+    });
+    bsModalRef.onHide?.pipe(take(1)).subscribe({
+      next: (result) => {
+        const data = result as { id: number; name: string };
+        const locationTypeAdded = result as { id: number; name: string };
+          this.locationTypeAdded$.next({
+            id: locationTypeAdded.id,
+            name: locationTypeAdded.name,
+          });
+        if (data.id > 0 && data.name.length > 0) {
+          this.toast.success('Tạo loại vị trí thành công!');
+        }
+      },
+    });
   }
+
+  locationTypeAdded$ = new Subject<{ id: number; name: string }>();
+  areaAdded$ = new Subject<{ id: number; name: string }>();
 }

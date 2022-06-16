@@ -158,7 +158,7 @@ export class LocationTypeListComponent implements OnInit {
     const bsModalRef = this.modalService.show(LocationTypeModalComponent, {
       initialState: {
         simpleForm: false,
-        title: 'loại địa điểm',
+        title: 'loại vị trí',
         type: 'Thêm',
       },
     });

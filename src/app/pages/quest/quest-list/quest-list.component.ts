@@ -208,7 +208,6 @@ export class QuestListComponent implements OnInit {
         maxWidth: 200,
         name: 'Khu vực',
         sortable: true,
-        cellTemplate:this.edit,
       },
     ];
   }
