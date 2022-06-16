@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { RxState } from '@rx-angular/state';
 import { BsModalRef } from 'ngx-bootstrap/modal';
@@ -13,7 +13,10 @@ import {
   switchMap,
   tap,
 } from 'rxjs';
+import { IdValue } from 'src/app/models';
 import { LocationtypeService } from 'src/app/services';
+import { AreaState, AREA_STATE } from '../../area/states/area.state';
+
 import { LocationTypeDetailState } from '../states';
 declare type ModalState = {
   hasError: boolean;
@@ -35,7 +38,8 @@ export class LocationTypeModalComponent implements OnInit {
     private fb: FormBuilder,
     private state: RxState<ModalState>,
     private locationTypeService: LocationtypeService,
-    private locationTypeDetailState: RxState<LocationTypeDetailState>
+    private locationTypeDetailState: RxState<LocationTypeDetailState>,
+    @Inject(AREA_STATE) private areaState: RxState<AreaState>,
   ) {}
 
   ngOnInit(): void {
@@ -127,15 +131,10 @@ export class LocationTypeModalComponent implements OnInit {
   }
   search$ = new BehaviorSubject<{ id: string }>({ id: '' });
 
-  // get statusIds(): Observable<IdValue[]> {
-  //   var arr: string[] = [];
-  //   for (let item in Status) {
-  //     if (isNaN(Number(item))) {
-  //       arr.push(item);
-  //     }
-  //   }
-  //   var mapData= arr.map((curr, index) => ({ id: index, value: `${curr}` } as IdValue));
-  //   return of(
-  //   );
-  // }
+  get cityIds$(): Observable<IdValue[]> {
+    return this.areaState
+      .select('cityIds')
+      // .pipe(tap((x) => x.forEach((x) => this.citys.set(x.id, x.value))));
+  }
+
 }

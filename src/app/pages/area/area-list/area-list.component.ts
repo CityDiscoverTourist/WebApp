@@ -28,7 +28,8 @@ import {
 import { AreaService } from 'src/app/services/area.service';
 import { PageInfo, SortInfo } from 'src/app/types';
 import { AreaModalComponent, DeleteModalComponent } from '../../share';
-import { AreaListPageState, AreaListState, AREA_PAGE_STATE } from './states';
+import { AreaListState } from '../states';
+import { AreaState, AREA_STATE } from '../states/area.state';
 
 @Component({
   selector: 'app-area-list',
@@ -40,7 +41,7 @@ export class AreaListComponent implements OnInit {
   columns: TableColumn[] = [];
   citys = new Map<number, string>();
   constructor(
-    @Inject(AREA_PAGE_STATE) private areaPageState: RxState<AreaListPageState>,
+    @Inject(AREA_STATE) private areaState: RxState<AreaState>,
     private areaSerice: AreaService,
     private areaListState: RxState<AreaListState>,
     private modalService: BsModalService,
@@ -143,7 +144,7 @@ export class AreaListComponent implements OnInit {
     return this.areaListState.select('loading');
   }
   get cityIds$(): Observable<IdValue[]> {
-    return this.areaPageState
+    return this.areaState
       .select('cityIds')
       .pipe(tap((x) => x.forEach((x) => this.citys.set(x.id, x.value))));
   }

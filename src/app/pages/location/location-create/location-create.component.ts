@@ -22,7 +22,7 @@ import { IdValue, LocationCreate } from 'src/app/models';
 import { LocationService } from 'src/app/services';
 import * as goongjs from 'src/assets/goong-js';
 import * as GoongGeocoder from 'src/assets/goonggeo';
-import { QuestTypeModalComponent } from '../../share';
+import { AreaModalComponent, QuestTypeModalComponent } from '../../share';
 import { LocationTypeModalComponent } from '../../share/location-type-modal/location-type-modal.component';
 import { LocationState, LOCATION_STATE } from '../states/location.state';
 
@@ -47,7 +47,7 @@ export class LocationCreateComponent implements OnInit, AfterViewChecked {
     private state: RxState<LocationCreateState>,
     private locationService: LocationService,
     private toast: HotToastService,
-    private modalService: BsModalService
+    private modalService: BsModalService,
   ) {
     this.state.set({
       showLocationDescription: false,
@@ -145,6 +145,19 @@ export class LocationCreateComponent implements OnInit, AfterViewChecked {
         ],
       })
     );
+    this.locationState.connect(
+      this.areaAdded$.pipe(
+        tap((area) => {
+          this.form.get('areaId')?.setValue(area.id);
+        })
+      ),
+      (prev, curr) => ({
+        areaIds: [
+          ...prev.areaIds,
+          { id: curr.id, value: curr.name },
+        ],
+      })
+    );
   }
 
   form!: FormGroup;
@@ -202,6 +215,33 @@ export class LocationCreateComponent implements OnInit, AfterViewChecked {
           });
           if (data.id > 0 && data.name.length > 0) {
             this.toast.success('Tạo loại vị trí thành công!');
+          }
+        },
+      });
+  }
+  showAddArea() {
+    const bsModalRef = this.modalService.show(AreaModalComponent, {
+      initialState: {
+        simpleForm: false,
+        title: 'khu vực',
+        type: 'Thêm',
+      },
+    });
+    bsModalRef.onHide
+      ?.pipe(
+        take(1),
+        filter((s) => (s as any).success)
+      )
+      .subscribe({
+        next: (result) => {
+          const data = result as { id: number; name: string };
+          const areaAdded = result as { id: number; name: string };
+          this.areaAdded$.next({
+            id: areaAdded.id,
+            name: areaAdded.name,
+          });
+          if (data.id > 0 && data.name.length > 0) {
+            this.toast.success('Tạo khu vực thành công!');
           }
         },
       });

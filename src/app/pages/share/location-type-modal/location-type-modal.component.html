@@ -30,13 +30,6 @@
       [ngClass]="{ col: !simpleForm }"
       *ngIf="!simpleForm"
     >
-      <!-- <label for="status" class="form-label">Trạng thái</label>
-        <input
-          type="text"
-          id="status"
-          class="form-control"
-          formControlName="status"
-        /> -->
       <label for="status" class="form-label">Trạng thái</label>
       <ng-select
         [items]="status"
@@ -53,14 +46,6 @@
       >
         Vui lòng chọn trạng thái
       </div>
-      <!-- <ng-select
-        appearance="outline"
-        [searchable]="false"
-        formControlName="agree"
-      >
-        <ng-option [value]="true">Active</ng-option>
-        <ng-option [value]="false">InActive</ng-option>
-      </ng-select> -->
     </div>
     <div *ngIf="hasError$ | async" class="alert alert-danger">
       Form không hợp lệ! Hãy kiểm tra lại

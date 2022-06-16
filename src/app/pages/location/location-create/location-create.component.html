@@ -72,8 +72,19 @@
                         [items]="areaIds$ | async"
                         bindValue="id"
                         bindLabel="value"
+                        class="header-p-0"
                         formControlName="areaId"
-                      ></ng-select>
+                      >
+                      <ng-template ng-header-tmp>
+                        <button
+                          class="btn btn-default btn-sm rounded-0 text-center w-100"
+                          (click)="showAddArea()"
+                        >
+                          <i class="bi bi-plus-circle"></i>
+                          Thêm khu vực
+                        </button>
+                      </ng-template>
+                    </ng-select>
                     </div>
                   </div>
                 </div>

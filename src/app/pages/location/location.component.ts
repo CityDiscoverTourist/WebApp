@@ -1,7 +1,8 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { RxState } from '@rx-angular/state';
-import { AreaService } from 'src/app/services';
+import { AreaService, CityService } from 'src/app/services';
 import { LocationtypeService } from 'src/app/services/locationtype.service';
+import { AreaState, AREA_STATE } from '../area/states/area.state';
 import { LocationState, LOCATION_STATE } from './states/location.state';
 
 @Component({
@@ -16,13 +17,18 @@ export class LocationComponent implements OnInit {
   constructor(
     @Inject(LOCATION_STATE) locationState: RxState<LocationState>,
     private readonly locationTypeService: LocationtypeService,
-    private readonly areaService: AreaService
+    private readonly areaService: AreaService,
+    private readonly cityService: CityService,
+    @Inject(AREA_STATE) areaState: RxState<AreaState>
   ) {
     locationState.connect(locationTypeService.getLocationType(), (_, curr) => ({
       locationTypeIds: curr,
     }));
     locationState.connect(areaService.getAreaType(), (_, curr) => ({
       areaIds: curr,
+    }));
+    areaState.connect(cityService.getCityIdValue(), (_, curr) => ({
+      cityIds: curr,
     }));
   }
 }
