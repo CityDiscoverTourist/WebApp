@@ -52,7 +52,8 @@ const lib = [QuillModule.forRoot(), NgSelectModule,NgxDropzoneModule,LetModule];
     ...lib,
     FormsModule,
     ReactiveFormsModule,
-    NgxSpinnerModule
+    NgxSpinnerModule,
+    NgxDropzoneModule
   ],
   providers: [NotificationService],
   bootstrap: [AppComponent],
