@@ -47,7 +47,7 @@ export class LocationCreateComponent implements OnInit, AfterViewChecked {
     private state: RxState<LocationCreateState>,
     private locationService: LocationService,
     private toast: HotToastService,
-    private modalService: BsModalService,
+    private modalService: BsModalService
   ) {
     this.state.set({
       showLocationDescription: false,
@@ -115,7 +115,7 @@ export class LocationCreateComponent implements OnInit, AfterViewChecked {
           this.locationService.addLocation(f.value as LocationCreate)
         ),
         tap((result) => {
-          if (result.id) {
+          if (result.data?.id) {
             this.toast.success('Tạo quest thành công');
           }
         })
@@ -152,10 +152,7 @@ export class LocationCreateComponent implements OnInit, AfterViewChecked {
         })
       ),
       (prev, curr) => ({
-        areaIds: [
-          ...prev.areaIds,
-          { id: curr.id, value: curr.name },
-        ],
+        areaIds: [...prev.areaIds, { id: curr.id, value: curr.name }],
       })
     );
   }

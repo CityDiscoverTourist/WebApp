@@ -146,8 +146,19 @@
                 [items]="locationIds | async"
                 bindValue="id"
                 bindLabel="value"
+                class="header-p-0"
                 formControlName="locationId"
-              ></ng-select>
+              >
+              <ng-template ng-header-tmp>
+                <button
+                  class="btn btn-default btn-sm rounded-0 text-center w-100"
+                  (click)="showAddLocation()"
+                >
+                  <i class="bi bi-plus-circle"></i>
+                  Thêm vị trí
+                </button>
+              </ng-template>
+            </ng-select>
             </div>
           </div>
         </div>

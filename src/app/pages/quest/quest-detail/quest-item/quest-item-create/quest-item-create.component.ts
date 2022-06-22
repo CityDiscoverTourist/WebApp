@@ -3,9 +3,11 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HotToastService } from '@ngneat/hot-toast';
 import { RxState } from '@rx-angular/state';
-import { Observable, partition, Subject, switchMap, tap } from 'rxjs';
+import { BsModalService } from 'ngx-bootstrap/modal';
+import { filter, Observable, partition, Subject, switchMap, tap,take } from 'rxjs';
 import { QuestItemType } from 'src/app/common/enums';
 import { IdValue, QuestItemCreate } from 'src/app/models';
+import { LocationModalComponent } from 'src/app/pages/share';
 import { QuestItemService } from 'src/app/services';
 import { QuestItemState, QUEST_ITEM_STATE } from '../states';
 
@@ -32,7 +34,8 @@ export class QuestItemCreateComponent implements OnInit {
     private toast: HotToastService,
     private cd: ChangeDetectorRef,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private modalService: BsModalService,
   ) {
     this.state.set({
       showQuestDescription: false,
@@ -48,13 +51,6 @@ export class QuestItemCreateComponent implements OnInit {
     this.href = this.router.url;
     var questId = this.href.match(/([\d]+)/g)?.[0];
     this.form.controls['questId'].setValue(questId);
-
-    // this.state.connect(
-    //   this.formSubmit$
-    //     .pipe(switchMap((f) => this.questItemService.addQuestItem(f.value as QuestItemCreate)))
-    //     .pipe(tap((data) => console.log(data))),
-    //   (_prev, curr) => ({})
-    // );
 
     const [valid$, invalid$] = partition(this.submit$, (f) => f.valid);
 
@@ -75,7 +71,7 @@ export class QuestItemCreateComponent implements OnInit {
         submitting: false,
       })
     );
-    // hay
+
     this.state.hold(invalid$.pipe(), (f) => {
       this.toast.error('Giá trị bạn nhập không đúng');
       f.revalidateControls([]);
@@ -137,17 +133,32 @@ export class QuestItemCreateComponent implements OnInit {
   selectedFile$ = new Subject<File[]>();
   removedFiles$ = new Subject<File>();
 
-  // submitForm() {
-  //   const valid = this.form.valid;
-  //   console.log('value', valid);
-
-  //   this.formSubmit$.next(this.form);
-  //   console.log(`form state =${valid}`, this.form.value);
-
-  //   if (valid) {
-  //     this.formSubmit$.next(this.form);
-  //   } else {
-  //     this.form.revalidateControls([]);
-  //   }
-  // }
+  
+  showAddLocation() {
+    const bsModalRef = this.modalService.show(LocationModalComponent, {
+      initialState: {
+        simpleForm: false,
+        title: 'vị trí',
+        type: 'Thêm',
+      },
+    });
+    bsModalRef.onHide
+      ?.pipe(
+        take(1),
+        filter((s) => (s as any).success)
+      )
+      .subscribe({
+        next: (result) => {
+          const data = result as { id: number; name: string };
+          const areaAdded = result as { id: number; name: string };
+          // this.areaAdded$.next({
+          //   id: areaAdded.id,
+          //   name: areaAdded.name,
+          // });
+          // if (data.id > 0 && data.name.length > 0) {
+          //   this.toast.success('Tạo khu vực thành công!');
+          // }
+        },
+      });
+  }
 }
