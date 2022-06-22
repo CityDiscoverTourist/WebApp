@@ -25,10 +25,6 @@ export interface Paging<T> {
   status: string;
 }
 
-// export interface Result<T>{
-//   data?:T;
-//   statusCode?:string;
-// }
 export interface Result<T> {
   message?: string;
   data?: T;
@@ -44,7 +40,3 @@ export interface pagination {
   hasNext: boolean;
   hasPrevious: boolean;
 }
-
-// export interface BaseError{
-//   statusCode:string |null;
-// }

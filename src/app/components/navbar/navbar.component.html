@@ -1,9 +1,14 @@
-<header class="header" style="height: 52px; top: 0; z-index: 10">
-  <div
+<header
+  class="header"
+  style="height: 52px; top: 0; z-index: 10"
+  class="align-items-center bg-white d-flex justify-content-center p-4 position-sticky shadow-sm"
+>
+  <!-- <header class="header" style="height: 52px; top: 0; z-index: 10"> -->
+  <!-- <div
     class="align-items-center bg-white d-flex px-3"
     style="line-height: 52px"
-  >
-    <div>
+  > -->
+  <!-- <div>
       <i class="bi bi-chevron-left"></i>
       <a
         style="color: #212529; font-size: 1.3rem;text-decoration: none;"
@@ -11,7 +16,24 @@
         [routerLink]="['./quest']"
         >{{ getTitle() }}</a
       >
-    </div>
-    <div class="flex-fill"></div>
-  </div>
+    </div> -->
+  <!-- style="color: #212529; font-size: 1.3rem; text-decoration: none" -->
+  <!-- routerLinkActive="active" -->
+  <a
+    routerLink="{{ pageUrl }}"
+    style="
+      font-size: 1rem;
+      font-weight: 500;
+      line-height: 20px;
+      text-decoration: none;
+      color: #747c87;
+    "
+  >
+    <ng-container *ngIf="pageTitle.includes('Quay lại')">
+      <i class="bi bi-chevron-left"></i>
+    </ng-container>
+    {{ pageTitle }}
+  </a>
+  <div class="flex-fill"></div>
+  <!-- </div> -->
 </header>

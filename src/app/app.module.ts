@@ -23,6 +23,8 @@ import { NgSelectModule } from '@ng-select/ng-select';
 import { NgxDropzoneModule } from 'ngx-dropzone';
 import { LetModule } from '@rx-angular/template';
 import { CityModalComponent } from './pages/share/city-modal/city-modal.component';
+import { LocationModalComponent } from './pages/share/location-modal/location-modal.component';
+import { NgxSpinnerModule } from 'ngx-spinner';
 
 const lib = [QuillModule.forRoot(), NgSelectModule,NgxDropzoneModule,LetModule];
 
@@ -40,6 +42,7 @@ const lib = [QuillModule.forRoot(), NgSelectModule,NgxDropzoneModule,LetModule];
     DeleteModalComponent,
     QuestItemTypeModalComponent,
     AreaModalComponent,
+    LocationModalComponent,
   ],
   imports: [
     BrowserModule,
@@ -49,6 +52,7 @@ const lib = [QuillModule.forRoot(), NgSelectModule,NgxDropzoneModule,LetModule];
     ...lib,
     FormsModule,
     ReactiveFormsModule,
+    NgxSpinnerModule
   ],
   providers: [NotificationService],
   bootstrap: [AppComponent],

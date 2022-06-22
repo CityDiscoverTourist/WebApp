@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Inject, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { RxState } from '@rx-angular/state';
 import { BsModalRef } from 'ngx-bootstrap/modal';
@@ -13,19 +13,18 @@ import {
   switchMap,
   tap,
 } from 'rxjs';
-import { LocationtypeService } from 'src/app/services';
-import { LocationTypeDetailState } from '../states';
+import { LocationService } from 'src/app/services';
 declare type ModalState = {
   hasError: boolean;
 };
 @Component({
-  selector: 'app-location-type-modal',
-  templateUrl: './location-type-modal.component.html',
-  styleUrls: ['./location-type-modal.component.scss'],
+  selector: 'app-location-modal',
+  templateUrl: './location-modal.component.html',
+  styleUrls: ['./location-modal.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [RxState],
 })
-export class LocationTypeModalComponent implements OnInit {
+export class LocationModalComponent implements OnInit {
   id: string = '';
   title: string = '';
   type: string = '';
@@ -34,56 +33,26 @@ export class LocationTypeModalComponent implements OnInit {
     public bsModalRef: BsModalRef,
     private fb: FormBuilder,
     private state: RxState<ModalState>,
-    private locationTypeService: LocationtypeService,
-    private locationTypeDetailState: RxState<LocationTypeDetailState>,
+    private locationService: LocationService // private locationTypeDetailState: RxState<LocationTypeDetailState>,
   ) {}
 
   ngOnInit(): void {
     this.initForm();
-    this.status=this.locationTypeService.status;
+    this.status = this.locationService.status;
     this.search$.next({ id: this.id });
-    this.locationTypeDetailState.connect(
-      this.search$
-        .pipe(
-          tap((_) => this.locationTypeDetailState.set({ loading: true })),
-          switchMap((s) => this.locationTypeService.getLocationTypeById(s.id))
-        )
-        .pipe(
-          tap((data) => {
-            this.form.patchValue({
-              id: data.id,
-              name: data.name,
-              status: data.status,
-            });
-          })
-        ),
-      (_, result) => ({
-        quest: result,
-        loading: false,
-      })
-    );
+
     const [$valid, $invalid] = partition(this.submit$, (f) => f.valid);
     this.state.connect(
       $valid
         .pipe(
           switchMap((form) => {
-            if (+this.id > 0) {
-              return this.locationTypeService
-                .updateLocationTypeById(form.value)
-                .pipe(
-                  catchError(() =>
-                    of({ status: 'data not modified', data: null })
-                  )
-                );
-            } else {
-              return this.locationTypeService
-                .addLocationType(form.value)
-                .pipe(
-                  catchError(() =>
-                    of({ status: 'data not modified', data: null })
-                  )
-                );
-            }
+            return this.locationService
+              .addLocation(form.value)
+              .pipe(
+                catchError(() =>
+                  of({ status: 'data not modified', data: null })
+                )
+              );
           })
         )
         .pipe(
@@ -92,7 +61,7 @@ export class LocationTypeModalComponent implements OnInit {
             this.bsModalRef.onHide?.emit({
               id: result?.data?.id,
               name: result?.data?.name,
-              success:true,
+              success: true,
             });
             this.bsModalRef.hide();
           })
@@ -116,7 +85,7 @@ export class LocationTypeModalComponent implements OnInit {
     this.form = this.fb.group({
       id: [],
       name: [null, [Validators.required]],
-      status: ['',[Validators.required]],
+      status: ['', [Validators.required]],
     });
   }
 
