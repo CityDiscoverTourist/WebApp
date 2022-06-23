@@ -1,4 +1,3 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import {
   BehaviorSubject,
@@ -73,10 +72,7 @@ export class AuthenticateService {
     if (!claims || Date.now().valueOf() > claims.exp * 1000) {
       return of(null);
     }
-    console.log(claims);
-    console.log(claims.exp * 1000);
-    console.log(Date.now().valueOf());
-    console.log(claims.exp * 1000);
+  
     const user: CurrentUser = {
       fullName: claims[
         'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name'
@@ -85,7 +81,6 @@ export class AuthenticateService {
         'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress'
       ] as string,
     };
-    console.log(user);
     return of(user);
   }
 }
