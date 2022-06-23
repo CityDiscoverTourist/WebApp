@@ -1,5 +1,6 @@
 export * from "./authenticate.service";
 export * from "./storage.service";
+export * from "./signalr.service";
 export * from "./user.service";
 export * from "./quest.service";
 export * from "./notification.service";
