@@ -59,7 +59,7 @@
       <div class="border overflow-hidden rouded shadow-sm">
         <ngx-datatable
           class="material rounded"
-          [rows]="[]"
+          [rows]="customerTasks$ | async"
           [columns]="columns"
           columnMode="force"
           [headerHeight]="50"
@@ -71,6 +71,9 @@
             emptyMessage: 'Không có customer task để hiển thị!',
             totalMessage: 'customer task'
           }"
+          [count]="(metadata$ | async)?.totalCount || 0"
+          [offset]="((metadata$ | async)?.currentPage || 0) - 1"
+          [limit]="10"
         >
           <ng-template
             #actionTemplate
