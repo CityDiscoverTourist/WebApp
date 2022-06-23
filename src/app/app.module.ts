@@ -9,7 +9,7 @@ import { QuestOwnerLayoutComponent } from './layouts/quest-owner-layout/quest-ow
 import { QuestTypeComponent } from './pages/quest-type/quest-type.component';
 
 import { QuillModule } from 'ngx-quill';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NotificationService } from './services';
 import { LocationTypeModalComponent } from './pages/share/location-type-modal/location-type-modal.component';
@@ -25,8 +25,14 @@ import { LetModule } from '@rx-angular/template';
 import { CityModalComponent } from './pages/share/city-modal/city-modal.component';
 import { LocationModalComponent } from './pages/share/location-modal/location-modal.component';
 import { NgxSpinnerModule } from 'ngx-spinner';
+import { AuthorizeInterceptor } from './interceptors';
 
-const lib = [QuillModule.forRoot(), NgSelectModule,NgxDropzoneModule,LetModule];
+const lib = [
+  QuillModule.forRoot(),
+  NgSelectModule,
+  NgxDropzoneModule,
+  LetModule,
+];
 
 @NgModule({
   declarations: [
@@ -53,9 +59,16 @@ const lib = [QuillModule.forRoot(), NgSelectModule,NgxDropzoneModule,LetModule];
     FormsModule,
     ReactiveFormsModule,
     NgxSpinnerModule,
-    NgxDropzoneModule
+    NgxDropzoneModule,
   ],
-  providers: [NotificationService],
+  providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthorizeInterceptor,
+      multi: true,
+    },
+  ],
+  // providers: [NotificationService],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
