@@ -22,7 +22,6 @@ const lib = [
     AreaListRoutingModule,
     FormsModule,
     ReactiveFormsModule,
-    NgxDatatableModule,
     ...lib,
   ],
 })

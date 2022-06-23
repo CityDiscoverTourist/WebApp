@@ -19,6 +19,7 @@
     "@angular/platform-browser": "~13.3.0",
     "@angular/platform-browser-dynamic": "~13.3.0",
     "@angular/router": "~13.3.0",
+    "@aspnet/signalr": "^1.0.27",
     "@ng-select/ng-select": "^8.1.1",
     "@ngneat/hot-toast": "4.1.0",
     "@ngneat/overview": "^3.0.0",

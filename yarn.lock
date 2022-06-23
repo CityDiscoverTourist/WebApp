@@ -227,6 +227,11 @@
   dependencies:
     tslib "^2.3.0"
 
+"@aspnet/signalr@^1.0.27":
+  version "1.0.27"
+  resolved "https://registry.yarnpkg.com/@aspnet/signalr/-/signalr-1.0.27.tgz#0bb44faa7d1e131a2c9b17c064c1792d41dcd4d9"
+  integrity sha512-utZvBF9snjdwIBpvcFa6htqFTVaTN50QIZUoiznKpYSZImew1a1Ci7VYmK8HODqwRqUtj0o5/xR1nzt8xex5sA==
+
 "@assemblyscript/loader@^0.10.1":
   version "0.10.1"
   resolved "https://registry.yarnpkg.com/@assemblyscript/loader/-/loader-0.10.1.tgz#70e45678f06c72fa2e350e8553ec4a4d72b92e06"

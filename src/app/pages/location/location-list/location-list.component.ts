@@ -21,12 +21,7 @@ import {
   take,
   tap,
 } from 'rxjs';
-import {
-  IdValue,
-  LocationListItem,
-  PagingMetadata,
-  SearchInfo,
-} from 'src/app/models';
+import { IdValue, LocationListItem, PagingMetadata } from 'src/app/models';
 import { LocationService } from 'src/app/services/location.service';
 import { PageInfo, SortInfo } from 'src/app/types';
 
@@ -61,10 +56,12 @@ export class LocationListComponent implements OnInit {
     this.initTable();
 
     this.locationListState.connect(
-      this.search$.pipe(
-        tap((_) => this.locationListState.set({ loading: true })),
-        switchMap((s) => this.locationSerice.getLocations(s))
-      ),
+      this.search$
+        .pipe(
+          tap((_) => this.locationListState.set({ loading: true })),
+          switchMap((s) => this.locationSerice.getLocations(s))
+        )
+        .pipe(take(1)),
       (_, result) => ({
         locations: result.data.map(
           (x, index) =>

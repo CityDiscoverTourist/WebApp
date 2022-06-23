@@ -4,7 +4,15 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { HotToastService } from '@ngneat/hot-toast';
 import { RxState } from '@rx-angular/state';
 import { BsModalService } from 'ngx-bootstrap/modal';
-import { filter, Observable, partition, Subject, switchMap, tap,take } from 'rxjs';
+import {
+  filter,
+  Observable,
+  partition,
+  Subject,
+  switchMap,
+  tap,
+  take,
+} from 'rxjs';
 import { QuestItemType } from 'src/app/common/enums';
 import { IdValue, QuestItemCreate } from 'src/app/models';
 import { LocationModalComponent } from 'src/app/pages/share';
@@ -35,7 +43,7 @@ export class QuestItemCreateComponent implements OnInit {
     private cd: ChangeDetectorRef,
     private route: ActivatedRoute,
     private router: Router,
-    private modalService: BsModalService,
+    private modalService: BsModalService
   ) {
     this.state.set({
       showQuestDescription: false,
@@ -133,7 +141,6 @@ export class QuestItemCreateComponent implements OnInit {
   selectedFile$ = new Subject<File[]>();
   removedFiles$ = new Subject<File>();
 
-  
   showAddLocation() {
     const bsModalRef = this.modalService.show(LocationModalComponent, {
       initialState: {
