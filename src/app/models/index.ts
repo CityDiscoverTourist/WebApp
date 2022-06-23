@@ -7,3 +7,5 @@ export * from "./area.model";
 export * from "./questtype.model";
 export * from "./questitemtype.model";
 export * from "./questitem.model";
+export * from "./customertask.model";
+export * from "./user.model";
