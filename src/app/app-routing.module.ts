@@ -53,6 +53,13 @@ const routes: Routes = [
           ),
       },
       {
+        path: 'customer-quest',
+        loadChildren: () =>
+          import('src/app/pages/customer-quest/customer-quest.module').then(
+            (m) => m.CustomerQuestModule
+          ),
+      },
+      {
         path: 'quest-item-type',
         loadChildren: () =>
           import('src/app/pages/quest-item-type/quest-item-type.module').then(

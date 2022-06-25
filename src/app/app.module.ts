@@ -9,7 +9,11 @@ import { QuestOwnerLayoutComponent } from './layouts/quest-owner-layout/quest-ow
 import { QuestTypeComponent } from './pages/quest-type/quest-type.component';
 
 import { QuillModule } from 'ngx-quill';
-import { HttpClientModule, HTTP_INTERCEPTORS,HttpClient } from '@angular/common/http';
+import {
+  HttpClientModule,
+  HTTP_INTERCEPTORS,
+  HttpClient,
+} from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { LocationTypeModalComponent } from './pages/share/location-type-modal/location-type-modal.component';
 import { QuestTypeModalComponent } from './pages/share/quest-type-modal/quest-type-modal.component';
@@ -67,7 +71,7 @@ const lib = [
       multi: true,
     },
     // NotificationService
-    HttpClient
+    HttpClient,
   ],
   bootstrap: [AppComponent],
 })
