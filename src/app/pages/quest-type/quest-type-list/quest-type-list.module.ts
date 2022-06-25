@@ -25,7 +25,6 @@ const lib = [
     QuestTypeListRoutingModule,
     FormsModule,
     ReactiveFormsModule,
-    HttpClientModule,
     ...lib,
   ],
 })
