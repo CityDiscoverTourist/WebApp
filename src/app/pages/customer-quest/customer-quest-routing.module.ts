@@ -21,6 +21,20 @@ const routes: Routes = [
             (m) => m.CustomerQuestListModule
           ),
       },
+      {
+        path: ':id/customer-tasks',
+        loadChildren: () =>
+          import('./customer-quest-detail/customer-quest-detail.module').then(
+            (m) => m.CustomerQuestDetailModule
+          ),
+      },
+      {
+        path: ':id',
+        loadChildren: () =>
+          import('./customer-quest-detail/customer-quest-detail.module').then(
+            (m) => m.CustomerQuestDetailModule
+          ),
+      },
     ],
   },
 ];
