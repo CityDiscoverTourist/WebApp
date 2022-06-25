@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
 import * as signalR from '@aspnet/signalr';
+import { Observable, Subject } from 'rxjs';
+import { CustomerTask } from '../models';
 
 @Injectable({
   providedIn: 'root',
@@ -7,7 +9,9 @@ import * as signalR from '@aspnet/signalr';
 export class SignalrService {
 
   hubConnection: signalR.HubConnection | undefined;
-
+  subject: Subject<any> = new Subject<any>();
+  subjectCustomerTask$: Subject<any> = new Subject<any>();
+  subjectUpdateCustomerTask$: Subject<any> = new Subject<any>();
   constructor() {}
 
   public startConnection = () => {
@@ -20,9 +24,27 @@ export class SignalrService {
       .catch((err) => console.log(`Error while starting connection ` + err));
   };
 
+
+  // public addTranferDataListener=()=>{
+  //   this.hubConnection?.on('AddCustomerTask',(data)=>{
+  //     console.log(data);
+  //   })
+  // }
   public addTranferDataListener=()=>{
     this.hubConnection?.on('AddCustomerTask',(data)=>{
+     this.subject.next(data);
+    })
+  }
+  public addTranferDataCustomerTaskListener=()=>{
+    this.hubConnection?.on('CustomerStartNextQuestItem',(data)=>{
+     this.subjectCustomerTask$.next(data);
+    })
+  }
+  public addTranferDataUpdateCustomerTaskListener=()=>{
+    this.hubConnection?.on('UpdateCustomerTask',(data)=>{
+      console.log("awww");
       console.log(data);
+     this.subjectUpdateCustomerTask$.next(data);
     })
   }
 }
