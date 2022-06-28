@@ -52,7 +52,7 @@ export class DeleteModalComponent implements OnInit {
       case 'thành phố':
         {
           this.cityService.deleteCityById(id).subscribe((data) => {
-            if (data?.areas.length) {
+            if (data?.areas?.length) {
               this.bsModalRef.hide();
               this.toast.success(`Xóa ${this.title} không thành công`);
               var title = data.areas.map((x) => x.name).join(', ');
@@ -74,11 +74,19 @@ export class DeleteModalComponent implements OnInit {
           this.locationTypeService
             .deleteLocationTypeById(id)
             .subscribe((data) => {
-              this.bsModalRef.onHide?.emit({
-                status: data,
-              });
-              this.bsModalRef.hide();
-              this.toast.success(`Xóa ${this.title} thành công`);
+              if (data?.locations?.length) {
+                this.bsModalRef.hide();
+                this.toast.success(`Xóa ${this.title} không thành công`);
+                this.toast.info(
+                  `Loại địa điểm này đang chứa các địa điểm khác nên không xóa được`
+                );
+              } else {
+                this.bsModalRef.onHide?.emit({
+                  data: data,
+                });
+                this.bsModalRef.hide();
+                this.toast.success(`Xóa ${this.title} thành công`);
+              }
             });
         }
         break;
@@ -96,7 +104,7 @@ export class DeleteModalComponent implements OnInit {
       case 'khu vực':
         {
           this.areaService.deleteAreaById(id).subscribe((data) => {
-            if (data?.locations.length) {
+            if (data?.locations?.length) {
               this.bsModalRef.hide();
               this.toast.success(`Xóa ${this.title} không thành công`);
               this.toast.info(
