@@ -11,14 +11,16 @@ import {
   partition,
   Subject,
   switchMap,
-  tap,
+  tap
 } from 'rxjs';
+import { isExistedNameValidatorCity } from 'src/app/common/validations';
 import { CityService } from 'src/app/services';
-import { CityDetailState } from '../states';
 
-declare type ModalState = {
+interface CityState {
+  loading: boolean;
+  submitting: boolean;
   hasError: boolean;
-};
+}
 
 @Component({
   selector: 'app-city-modal-update',
@@ -34,19 +36,18 @@ export class CityModalComponent implements OnInit {
   constructor(
     public bsModalRef: BsModalRef,
     private fb: FormBuilder,
-    private state: RxState<ModalState>,
-    private cityService: CityService,
-    private cityDetailState: RxState<CityDetailState>
+    private state: RxState<CityState>,
+    private cityService: CityService
   ) {}
 
   ngOnInit(): void {
     this.initForm();
     this.status = this.cityService.status;
     this.search$.next({ id: this.id });
-    this.cityDetailState.connect(
+    this.state.connect(
       this.search$
         .pipe(
-          tap((_) => this.cityDetailState.set({ loading: true })),
+          tap((_) => this.state.set({ loading: true })),
           switchMap((s) => this.cityService.getCityById(s.id))
         )
         .pipe(
@@ -59,7 +60,7 @@ export class CityModalComponent implements OnInit {
           })
         ),
       (_, result) => ({
-        quest: result,
+        city: result,
         loading: false,
       })
     );
@@ -68,6 +69,7 @@ export class CityModalComponent implements OnInit {
     this.state.connect(
       $valid
         .pipe(
+          tap(() => this.state.set({ submitting: true })),
           switchMap((form) => {
             if (+this.id > 0) {
               return this.cityService
@@ -94,14 +96,17 @@ export class CityModalComponent implements OnInit {
             this.bsModalRef.onHide?.emit({
               id: result?.data?.id,
               name: result?.data?.name,
+              success: true,
             });
             this.bsModalRef.hide();
           })
         ),
       (_prev, curr) => ({
         hasError: curr.status == 'data modified' ? false : true,
+        submitting: false,
       })
     );
+
     this.state.connect(
       $invalid.pipe(tap(() => this.form.revalidateControls([]))),
       () => ({
@@ -116,7 +121,11 @@ export class CityModalComponent implements OnInit {
   initForm() {
     this.form = this.fb.group({
       id: [0],
-      name: ['', [Validators.required]],
+      name: [
+        '',
+        [Validators.required],
+        [isExistedNameValidatorCity(this.cityService, this.type)],
+      ],
       status: ['', [Validators.required]],
     });
   }
@@ -128,7 +137,11 @@ export class CityModalComponent implements OnInit {
   }
   search$ = new BehaviorSubject<{ id: string }>({ id: '' });
 
-  submit(){
-    console.log(this.form.value);
+  get name() {
+    return this.form.get('name');
+  }
+
+  public get submitting$(): Observable<boolean> {
+    return this.state.select('submitting');
   }
 }

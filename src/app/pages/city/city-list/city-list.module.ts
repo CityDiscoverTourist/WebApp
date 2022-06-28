@@ -7,18 +7,25 @@ import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { HotToastModule } from '@ngneat/hot-toast';
-const lib = [NgSelectModule, NgxDatatableModule,ModalModule.forRoot(),HotToastModule.forRoot()];
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
+
+const lib = [
+  NgSelectModule,
+  NgxDatatableModule,
+  ModalModule.forRoot(),
+  HotToastModule.forRoot(),
+  TooltipModule.forRoot(),
+];
+
 @NgModule({
-  declarations: [
-    CityListComponent
-  ],
+  declarations: [CityListComponent],
   imports: [
     CommonModule,
     CityListRoutingModule,
     FormsModule,
     ReactiveFormsModule,
-    ...lib
+
+    ...lib,
   ],
-  
 })
-export class CityListModule { }
+export class CityListModule {}
