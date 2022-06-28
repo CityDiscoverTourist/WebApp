@@ -11,7 +11,7 @@ import {
   partition,
   Subject,
   switchMap,
-  tap
+  tap,
 } from 'rxjs';
 import { isExistedNameValidatorCity } from 'src/app/common/validations';
 import { CityService } from 'src/app/services';

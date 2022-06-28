@@ -11,15 +11,17 @@ import {
   partition,
   Subject,
   switchMap,
-  tap,
+  tap
 } from 'rxjs';
+import { isExistedNameValidatorArea } from 'src/app/common/validations';
 import { IdValue } from 'src/app/models';
 import { AreaService } from 'src/app/services';
 import { AreaState, AREA_STATE } from '../../area/states/area.state';
-import { AreaDetailState } from '../states';
-declare type ModalState = {
+interface AreaDetailState {
+  loading: boolean;
+  submitting: boolean;
   hasError: boolean;
-};
+}
 @Component({
   selector: 'app-area-modal',
   templateUrl: './area-modal.component.html',
@@ -35,20 +37,19 @@ export class AreaModalComponent implements OnInit {
   constructor(
     public bsModalRef: BsModalRef,
     private fb: FormBuilder,
-    private state: RxState<ModalState>,
+    private state: RxState<AreaDetailState>,
     private areaSerice: AreaService,
-    private areaDetailState: RxState<AreaDetailState>,
-    @Inject(AREA_STATE) private areaState: RxState<AreaState>,
+    @Inject(AREA_STATE) private areaState: RxState<AreaState>
   ) {}
 
   ngOnInit(): void {
     this.initForm();
-    this.status=this.areaSerice.status;
+    this.status = this.areaSerice.status;
     this.search$.next({ id: this.id });
-    this.areaDetailState.connect(
+    this.state.connect(
       this.search$
         .pipe(
-          tap((_) => this.areaDetailState.set({ loading: true })),
+          tap((_) => this.state.set({ loading: true })),
           switchMap((s) => this.areaSerice.getAreaById(s.id))
         )
         .pipe(
@@ -57,7 +58,7 @@ export class AreaModalComponent implements OnInit {
               id: data.id,
               name: data.name,
               status: data.status,
-              cityId:data.cityId
+              cityId: data.cityId,
             });
           })
         ),
@@ -70,6 +71,7 @@ export class AreaModalComponent implements OnInit {
     this.state.connect(
       $valid
         .pipe(
+          tap(() => this.state.set({ submitting: true })),
           switchMap((form) => {
             if (+this.id > 0) {
               return this.areaSerice
@@ -96,7 +98,7 @@ export class AreaModalComponent implements OnInit {
             this.bsModalRef.onHide?.emit({
               id: result?.data?.id,
               name: result?.data?.name,
-              success:true,
+              success: true,
             });
             this.bsModalRef.hide();
           })
@@ -119,9 +121,13 @@ export class AreaModalComponent implements OnInit {
   initForm() {
     this.form = this.fb.group({
       id: [0],
-      name: [null, [Validators.required]],
-      status: [],
-      cityId:[]
+      name: [
+        null,
+        [Validators.required],
+        [isExistedNameValidatorArea(this.areaSerice, this.type)],
+      ],
+      status: ['', [Validators.required]],
+      cityId: [0,[Validators.required]],
     });
   }
 
@@ -132,5 +138,14 @@ export class AreaModalComponent implements OnInit {
   }
   search$ = new BehaviorSubject<{ id: string }>({ id: '' });
   get cityIds$(): Observable<IdValue[]> {
-    return this.areaState.select('cityIds');  }
+    return this.areaState.select('cityIds');
+  }
+
+  get name() {
+    return this.form.get('name');
+  }
+
+  public get submitting$(): Observable<boolean> {
+    return this.state.select('submitting');
+  }
 }

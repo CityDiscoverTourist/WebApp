@@ -31,7 +31,7 @@
             bindLabel="value"
             [closeOnSelect]="true"
             style="min-width: 200px"
-            placeholder="Thành phố"
+            placeholder="khu vực"
             class="me-3"
             formControlName="cityIds"
           ></ng-select>
@@ -79,44 +79,58 @@
           (page)="onPage($event)"
           (sort)="onSort($event)"
         >
-          <ng-template
-            #actionTemplate
-            let-row="row"
-            let-value="value"
-            let-expanded="expanded"
-            ngx-datatable-cell-template
-          >
-            <button
-              class="btn btn-sm me-2"
-              style="
-                color: #fff;
-                background-color: #4caf50;
-                border-color: #4caf50;
-              "
-              type="button"
-              data-toggle="tooltip"
-              data-placement="top"
-              title="Edit"
-              (click)="onUpdate(row.id)"
-            >
-              <i class="bi bi-pencil"></i>
-            </button>
-            <button
-              class="btn btn-sm me-2"
-              type="button"
-              style="
-                color: #fff;
-                background-color: #f44335;
-                border-color: #f44335;
-              "
-              data-toggle="tooltip"
-              data-placement="top"
-              title="Delete"
-              (click)="onDelete(row.id)"
-            >
-              <i class="bi bi-trash3"></i>
-            </button>
-          </ng-template>
+        <ng-template
+        #actionTemplate
+        let-row="row"
+        let-value="value"
+        let-expanded="expanded"
+        ngx-datatable-cell-template
+      >
+        <button
+          class="btn btn-sm me-2"
+          style="
+            color: #fff;
+            background-color: #4caf50;
+            border-color: #4caf50;
+          "
+          type="button"
+          data-toggle="tooltip"
+          data-placement="top"
+          [tooltip]="'Nhấp chuột để cập nhật khu vực'"
+          title="Edit"
+          (click)="onUpdate(row.id)"
+        >
+          <i class="bi bi-pencil"></i>
+        </button>
+        <button
+          class="btn btn-sm me-2"
+          type="button"
+          [ngStyle]="
+            row.status == 'Deleted'
+              ? {
+                  color: '#fff',
+                  backgroundColor: '#f44335',
+                  borderColor: '#f44335'
+                }
+              : {
+                  color: '#fff',
+                  backgroundColor: '#f44335',
+                  borderColor: '#f44335'
+                }
+          "
+          data-toggle="tooltip"
+          data-placement="top"
+          [tooltip]="
+            row.status == 'Deleted'
+              ? 'Bạn không thể xóa vì khu vực này đã được xóa trước đây'
+              : 'Nhấp chuột để xóa khu vực'
+          "
+          (click)="onDelete(row.id)"
+          [disabled]="row.status == 'Deleted' ? true : false"
+        >
+          <i class="bi bi-trash3"></i>
+        </button>
+      </ng-template>
         </ngx-datatable>
       </div>
     </div>
