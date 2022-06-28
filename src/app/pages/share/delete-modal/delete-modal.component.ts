@@ -27,15 +27,14 @@ export class DeleteModalComponent implements OnInit {
     private cityService: CityService,
     private questItemTypeService: QuestItemTypeService,
     private locationTypeService: LocationtypeService,
-    private areaService:AreaService,
-    private questTypeService:QuestTypeService,
-    private locationService:LocationService,
-    private questItemService:QuestItemService,
-    
+    private areaService: AreaService,
+    private questTypeService: QuestTypeService,
+    private locationService: LocationService,
+    private questItemService: QuestItemService
   ) {}
 
   ngOnInit(): void {}
-  deleteQuest(id: string) {
+  delete(id: string) {
     switch (this.title) {
       case 'loại Quest Item':
         {
@@ -53,11 +52,18 @@ export class DeleteModalComponent implements OnInit {
       case 'thành phố':
         {
           this.cityService.deleteCityById(id).subscribe((data) => {
-            this.bsModalRef.onHide?.emit({
-              status: data,
-            });
-            this.bsModalRef.hide();
-            this.toast.success(`Xóa ${this.title} thành công`);
+            if (data?.areas.length) {
+              this.bsModalRef.hide();
+              this.toast.success(`Xóa ${this.title} không thành công`);
+              var title=data.areas.map(x=>x.name).join(", ");
+              this.toast.info(`Thành phồ này đang chứa các khu vực ${title} nên không xóa được`);
+            }else{
+               this.bsModalRef.onHide?.emit({
+                data: data,
+              });
+              this.bsModalRef.hide();
+              this.toast.success(`Xóa ${this.title} thành công`);
+            }
           });
         }
         break;
@@ -76,54 +82,46 @@ export class DeleteModalComponent implements OnInit {
         break;
       case 'vị trí':
         {
-          this.locationService
-            .deleteLocationById(id)
-            .subscribe((data) => {
-              this.bsModalRef.onHide?.emit({
-                status: data,
-              });
-              this.bsModalRef.hide();
-              this.toast.success(`Xóa ${this.title} thành công`);
+          this.locationService.deleteLocationById(id).subscribe((data) => {
+            this.bsModalRef.onHide?.emit({
+              status: data,
             });
+            this.bsModalRef.hide();
+            this.toast.success(`Xóa ${this.title} thành công`);
+          });
         }
         break;
       case 'khu vực':
         {
-          this.areaService
-            .deleteAreaById(id)
-            .subscribe((data) => {
-              this.bsModalRef.onHide?.emit({
-                status: data,
-              });
-              this.bsModalRef.hide();
-              this.toast.success(`Xóa ${this.title} thành công`);
+          this.areaService.deleteAreaById(id).subscribe((data) => {
+            this.bsModalRef.onHide?.emit({
+              status: data,
             });
+            this.bsModalRef.hide();
+            this.toast.success(`Xóa ${this.title} thành công`);
+          });
         }
         break;
       case 'loại Quest':
         {
-          this.questTypeService
-            .deleteQuestTypeById(id)
-            .subscribe((data) => {
-              this.bsModalRef.onHide?.emit({
-                status: data,
-              });
-              this.bsModalRef.hide();
-              this.toast.success(`Xóa ${this.title} thành công`);
+          this.questTypeService.deleteQuestTypeById(id).subscribe((data) => {
+            this.bsModalRef.onHide?.emit({
+              status: data,
             });
+            this.bsModalRef.hide();
+            this.toast.success(`Xóa ${this.title} thành công`);
+          });
         }
         break;
       case 'Quest Item':
         {
-          this.questItemService
-            .deleteQuestItemById(id)
-            .subscribe((data) => {
-              this.bsModalRef.onHide?.emit({
-                status: data,
-              });
-              this.bsModalRef.hide();
-              this.toast.success(`Xóa ${this.title} thành công`);
+          this.questItemService.deleteQuestItemById(id).subscribe((data) => {
+            this.bsModalRef.onHide?.emit({
+              status: data,
             });
+            this.bsModalRef.hide();
+            this.toast.success(`Xóa ${this.title} thành công`);
+          });
         }
         break;
       default:
