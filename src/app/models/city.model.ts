@@ -1,3 +1,4 @@
+import { Area } from './area.model';
 import { SearchInfo } from './common.model';
 
 export interface City {
@@ -16,6 +17,7 @@ export interface CityListItem {
   id: number;
   name: string;
   status: string;
+  areas:Area[]
 }
 
 export interface CityListSearch extends SearchInfo {
