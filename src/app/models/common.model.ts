@@ -8,7 +8,6 @@ export interface IdValue {
   value: string;
 }
 
-
 export interface PagingMetadata {
   totalCount: number;
   totalPages: number;
@@ -26,17 +25,8 @@ export interface Paging<T> {
 }
 
 export interface Result<T> {
-  message?: string;
-  data?: T;
-  pagination?: pagination;
-  status?: string;
-}
-
-export interface pagination {
-  totalCount: number;
-  totalPages: number;
-  pageSize: number;
-  currentPage: number;
-  hasNext: boolean;
-  hasPrevious: boolean;
+  message: string;
+  data: T;
+  pagination: PagingMetadata;
+  status: string;
 }
