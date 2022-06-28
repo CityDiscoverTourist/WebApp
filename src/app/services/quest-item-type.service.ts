@@ -78,7 +78,7 @@ export class QuestItemTypeService extends BaseService{
   }
   deleteQuestItemTypeById(id: string): Observable<string | undefined> {
     return this.http
-      .delete(
+      .delete<Result<QuestItemTypeListItem>>(
         `https://citytourist.azurewebsites.net/api/v1/quest-item-types/${id}`,
          { headers: this._sharedHeaders }
       )

@@ -94,7 +94,7 @@ export class LocationService   extends BaseService {
 
   deleteLocationById(id: string): Observable<string | undefined> {
     return this.http
-      .delete(
+      .delete<Result<LocationListItem>>(
         `https://citytourist.azurewebsites.net/api/v1/locations/${id}`,
         { headers: this._sharedHeaders }
       )

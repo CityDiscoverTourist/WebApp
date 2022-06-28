@@ -93,7 +93,7 @@ export class AreaService extends BaseService {
   }
   deleteAreaById(id: string): Observable<string | undefined> {
     return this.http
-      .delete(
+      .delete<Result<AreaListItem>>(
         `https://citytourist.azurewebsites.net/api/v1/areas/${id}`,
          { headers: this._sharedHeaders }
       )
