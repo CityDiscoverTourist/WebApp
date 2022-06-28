@@ -2,16 +2,11 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { stringify } from 'query-string';
 import { map, Observable } from 'rxjs';
+import { environment } from 'src/environments/environment';
 import {
-  Area,
-  AreaListItem,
-  AreaListSearch,
-  Paging,
-  IdValue,
-  AreaCreate,
-  Result,
+  Area, AreaCreate, AreaListItem,
+  AreaListSearch, IdValue, Paging, Result
 } from '../models';
-import { Pagination } from '../models/pagination.model';
 import { BaseService } from './base.service';
 
 @Injectable({
@@ -27,14 +22,13 @@ export class AreaService extends BaseService {
     );
   }
 
-  getArea(): Observable<IdValue[]> {
+  getAreaIdValue(): Observable<IdValue[]> {
     return this.http
-      .get<Pagination<Area>>(
-        'https://citytourist.azurewebsites.net/api/v1/areas',
-         { headers: this._sharedHeaders }
-      )
+      .get<Paging<Area>>(`${environment.apiUrl}/api/v1/areas`, {
+        headers: this._sharedHeaders,
+      })
       .pipe(
-        map((response: Pagination<Area>) =>
+        map((response: Paging<Area>) =>
           [...response.data].map(
             (i) =>
               ({
@@ -60,52 +54,33 @@ export class AreaService extends BaseService {
     });
 
     var result = this.http.get<Paging<Area>>(
-      'https://citytourist.azurewebsites.net/api/v1/areas?' + query,
-       { headers: this._sharedHeaders }
+      `${environment.apiUrl}/api/v1/areas?` + query,
+      { headers: this._sharedHeaders }
     );
     return result;
   }
 
-  getAreaType(): Observable<IdValue[]> {
-    return this.http
-      .get<Pagination<Area>>(
-        'https://citytourist.azurewebsites.net/api/v1/areas',
-         { headers: this._sharedHeaders }
-      )
-      .pipe(
-        map((response: Pagination<Area>) =>
-          [...response.data].map(
-            (i) =>
-              ({
-                id: i.id,
-                value: `${i.name}`,
-              } as IdValue)
-          )
-        )
-      );
-  }
   addArea(payload: Partial<AreaCreate>): Observable<Result<Partial<Area>>> {
     return this.http.post<Result<Partial<Area>>>(
-      `https://citytourist.azurewebsites.net/api/v1/areas/`,
+      `${environment.apiUrl}/api/v1/areas/`,
       payload,
-       { headers: this._sharedHeaders }
+      { headers: this._sharedHeaders }
     );
   }
-  deleteAreaById(id: string): Observable<string | undefined> {
+  deleteAreaById(id: string): Observable<AreaListItem | undefined> {
     return this.http
       .delete<Result<AreaListItem>>(
-        `https://citytourist.azurewebsites.net/api/v1/areas/${id}`,
-         { headers: this._sharedHeaders }
+        `${environment.apiUrl}/api/v1/areas/${id}`,
+        { headers: this._sharedHeaders }
       )
-      .pipe(map((response: Result<AreaListItem>) => response.status));
+      .pipe(map((response: Result<AreaListItem>) => response.data));
   }
 
   getAreaById(id: string | undefined): Observable<Area> {
     return this.http
-      .get<Result<Area>>(
-        `https://citytourist.azurewebsites.net/api/v1/areas/${id}`,
-         { headers: this._sharedHeaders }
-      )
+      .get<Result<Area>>(`${environment.apiUrl}/api/v1/areas/${id}`, {
+        headers: this._sharedHeaders,
+      })
       .pipe(
         map(
           (response: Result<Area>) =>
@@ -122,9 +97,19 @@ export class AreaService extends BaseService {
     payload: Partial<AreaCreate>
   ): Observable<Result<Partial<Area>>> {
     return this.http.put<Result<Partial<Area>>>(
-      `https://citytourist.azurewebsites.net/api/v1/areas/`,
+      `${environment.apiUrl}/api/v1/areas/`,
       payload,
-       { headers: this._sharedHeaders }
+      { headers: this._sharedHeaders }
+    );
+  }
+
+  checkNameExisted(name: string): Observable<boolean> {
+    const query = stringify({
+      name,
+    });
+    return this.http.get<boolean>(
+      `${environment.apiUrl}/api/v1/areas/check?` + query,
+      { headers: this._sharedHeaders }
     );
   }
 }
