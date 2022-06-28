@@ -8,23 +8,23 @@ import { ModalModule } from 'ngx-bootstrap/modal';
 import { HotToastModule } from '@ngneat/hot-toast';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
 
 const lib = [
   NgxDatatableModule,
   ModalModule.forRoot(),
   HotToastModule.forRoot(),
   NgSelectModule,
+  TooltipModule.forRoot(),
 ];
 @NgModule({
-  declarations: [
-    LocationTypeListComponent
-  ],
+  declarations: [LocationTypeListComponent],
   imports: [
     CommonModule,
     LocationTypeListRoutingModule,
     FormsModule,
     ReactiveFormsModule,
-    ...lib
-  ]
+    ...lib,
+  ],
 })
-export class LocationTypeListModule { }
+export class LocationTypeListModule {}

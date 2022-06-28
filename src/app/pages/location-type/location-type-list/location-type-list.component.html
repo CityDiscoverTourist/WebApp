@@ -6,7 +6,7 @@
       style="min-width: 120px"
       (click)="showAddLocationType()"
     >
-      <i class="bi bi-plus"></i> Thêm loại vị trí
+      <i class="bi bi-plus"></i> Thêm loại địa điểm
     </a>
   </div>
   <div class="bg-white my-3 p-3 rounded">
@@ -22,8 +22,8 @@
             <input
               type="text"
               class="border-start-0 form-control outline-none"
-              placeholder="Tìm kiếm loại vị trí"
-              aria-label="Tìm kiếm loại vị trí"
+              placeholder="Tìm kiếm loại địa điểm"
+              aria-label="Tìm kiếm loại địa điểm"
               aria-describedby="search-icon"
               formControlName="keyword"
               (keyup.enter)="search$.next(searchForm.value)"
@@ -72,8 +72,8 @@
           [externalPaging]="true"
           [externalSorting]="true"
           [messages]="{
-            emptyMessage: 'Không có loại vị trí để hiển thị!',
-            totalMessage: 'Location Type'
+            emptyMessage: 'Không có loại địa điểm để hiển thị!',
+            totalMessage: 'loại địa điểm'
           }"
           [count]="(metadata$ | async)?.totalCount || 0"
           [offset]="((metadata$ | async)?.currentPage || 0) - 1"
@@ -98,6 +98,7 @@
               type="button"
               data-toggle="tooltip"
               data-placement="top"
+              [tooltip]="'Nhấp chuột để cập nhật loại địa điểm'"
               title="Edit"
               (click)="onUpdate(row.id)"
             >
@@ -106,15 +107,28 @@
             <button
               class="btn btn-sm me-2"
               type="button"
-              style="
-                color: #fff;
-                background-color: #f44335;
-                border-color: #f44335;
+              [ngStyle]="
+                row.status == 'Deleted'
+                  ? {
+                      color: '#fff',
+                      backgroundColor: '#f44335',
+                      borderColor: '#f44335'
+                    }
+                  : {
+                      color: '#fff',
+                      backgroundColor: '#f44335',
+                      borderColor: '#f44335'
+                    }
               "
               data-toggle="tooltip"
               data-placement="top"
-              title="Delete"
+              [tooltip]="
+                row.status == 'Deleted'
+                  ? 'Bạn không thể xóa vì loại địa điểm này đã được xóa trước đây'
+                  : 'Nhấp chuột để xóa thành phố'
+              "
               (click)="onDelete(row.id)"
+              [disabled]="row.status == 'Deleted' ? true : false"
             >
               <i class="bi bi-trash3"></i>
             </button>

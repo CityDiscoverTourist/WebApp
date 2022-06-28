@@ -6,16 +6,17 @@ import { DatatableComponent, TableColumn } from '@swimlane/ngx-datatable';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import {
   BehaviorSubject,
+  filter,
   Observable,
   Subject,
   switchMap,
   take,
-  tap,
+  tap
 } from 'rxjs';
 import {
   LocationTypeListItem,
   PagingMetadata,
-  SearchInfo,
+  SearchInfo
 } from 'src/app/models';
 import { LocationtypeService } from 'src/app/services';
 import { PageInfo, SortInfo } from 'src/app/types';
@@ -162,30 +163,25 @@ export class LocationTypeListComponent implements OnInit {
         type: 'Thêm',
       },
     });
-    bsModalRef.onHide?.pipe(take(1)).subscribe({
-      next: (result) => {
-        const data = result as { id: number; name: string };
-        if (data.id > 0 && data.name.length > 0) {
-          this.toast.success('Tạo loại địa điểm thành công!', {
-            position: 'top-center',
-            duration: 5000,
-            style: {
-              border: '1px solid #0a0',
-              padding: '16px',
-            },
-            iconTheme: {
-              primary: '#0a0',
-              secondary: '#fff',
-            },
-            role: 'status',
-            ariaLive: 'polite',
+    bsModalRef.onHide
+      ?.pipe(
+        take(1),
+        filter((s) => (s as any).success)
+      )
+      .subscribe({
+        next: (result) => {
+          const data = result as { id: number; name: string };
+          if (data.id > 0 && data.name.length > 0) {
+            this.toast.success('Tạo loại địa điểm thành công!', {
+              position: 'top-center',
+              duration: 5000,
+            });
+          }
+          this.search$.next({
+            ...this.search$.getValue(),
           });
-        }
-        this.search$.next({
-          ...this.search$.getValue(),
-        });
-      },
-    });
+        },
+      });
   }
   onDelete(id: string) {
     const bsModalRef = this.modalService.show(DeleteModalComponent, {
@@ -194,13 +190,18 @@ export class LocationTypeListComponent implements OnInit {
         title: 'loại vị trí',
       },
     });
-    bsModalRef.onHide?.pipe(take(1)).subscribe({
-      next: (result) => {
-        this.search$.next({
-          ...this.search$.getValue(),
-        });
-      },
-    });
+    bsModalRef.onHide
+      ?.pipe(
+        take(1),
+        filter((s) => (s as any).data)
+      )
+      .subscribe({
+        next: (result) => {
+          this.search$.next({
+            ...this.search$.getValue(),
+          });
+        },
+      });
   }
 
   onUpdate(id: string) {
@@ -211,32 +212,21 @@ export class LocationTypeListComponent implements OnInit {
         type: 'Cập nhật',
       },
     });
-    bsModalRef.onHide?.pipe(take(1)).subscribe({
-      next: (result) => {
-        const data = result as { id: number; name: string };
-        if (data.id > 0 && data.name !== undefined) {
-          this.toast.success(
-            'Cập nhật loại vị trí thành công!'
-            // , {
-            //   position: 'top-center',
-            //   duration: 2000,
-            //   style: {
-            //     border: '1px solid #0a0',
-            //     padding: '16px',
-            //   },
-            //   iconTheme: {
-            //     primary: '#0a0',
-            //     secondary: '#fff',
-            //   },
-            //   role: 'status',
-            //   ariaLive: 'polite',
-            // }
-          );
-          this.search$.next({
-            ...this.search$.getValue(),
-          });
-        }
-      },
-    });
+    bsModalRef.onHide
+      ?.pipe(
+        take(1),
+        filter((s) => (s as any).success)
+      )
+      .subscribe({
+        next: (result) => {
+          const data = result as { id: number; name: string };
+          if (data.id > 0 && data.name !== undefined) {
+            this.toast.success('Cập nhật loại vị trí thành công!');
+            this.search$.next({
+              ...this.search$.getValue(),
+            });
+          }
+        },
+      });
   }
 }

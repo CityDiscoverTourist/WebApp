@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Inject, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { RxState } from '@rx-angular/state';
 import { BsModalRef } from 'ngx-bootstrap/modal';
@@ -13,11 +13,14 @@ import {
   switchMap,
   tap,
 } from 'rxjs';
+import { isExistedNameValidatorLocationType } from 'src/app/common/validations';
 import { LocationtypeService } from 'src/app/services';
-import { LocationTypeDetailState } from '../states';
-declare type ModalState = {
+interface LocationTypeState {
+  loading: boolean;
+  submitting: boolean;
   hasError: boolean;
-};
+}
+
 @Component({
   selector: 'app-location-type-modal',
   templateUrl: './location-type-modal.component.html',
@@ -33,19 +36,18 @@ export class LocationTypeModalComponent implements OnInit {
   constructor(
     public bsModalRef: BsModalRef,
     private fb: FormBuilder,
-    private state: RxState<ModalState>,
-    private locationTypeService: LocationtypeService,
-    private locationTypeDetailState: RxState<LocationTypeDetailState>,
+    private state: RxState<LocationTypeState>,
+    private locationTypeService: LocationtypeService
   ) {}
 
   ngOnInit(): void {
     this.initForm();
-    this.status=this.locationTypeService.status;
+    this.status = this.locationTypeService.status;
     this.search$.next({ id: this.id });
-    this.locationTypeDetailState.connect(
+    this.state.connect(
       this.search$
         .pipe(
-          tap((_) => this.locationTypeDetailState.set({ loading: true })),
+          tap((_) => this.state.set({ loading: true })),
           switchMap((s) => this.locationTypeService.getLocationTypeById(s.id))
         )
         .pipe(
@@ -66,6 +68,7 @@ export class LocationTypeModalComponent implements OnInit {
     this.state.connect(
       $valid
         .pipe(
+          tap(() => this.state.set({ submitting: true })),
           switchMap((form) => {
             if (+this.id > 0) {
               return this.locationTypeService
@@ -92,7 +95,7 @@ export class LocationTypeModalComponent implements OnInit {
             this.bsModalRef.onHide?.emit({
               id: result?.data?.id,
               name: result?.data?.name,
-              success:true,
+              success: true,
             });
             this.bsModalRef.hide();
           })
@@ -114,9 +117,18 @@ export class LocationTypeModalComponent implements OnInit {
 
   initForm() {
     this.form = this.fb.group({
-      id: [],
-      name: [null, [Validators.required]],
-      status: ['',[Validators.required]],
+      id: [0],
+      name: [
+        '',
+        [Validators.required],
+        [
+          isExistedNameValidatorLocationType(
+            this.locationTypeService,
+            this.type
+          ),
+        ],
+      ],
+      status: ['', [Validators.required]],
     });
   }
 
@@ -126,4 +138,12 @@ export class LocationTypeModalComponent implements OnInit {
     return this.state.select('hasError');
   }
   search$ = new BehaviorSubject<{ id: string }>({ id: '' });
+
+  get name() {
+    return this.form.get('name');
+  }
+
+  public get submitting$(): Observable<boolean> {
+    return this.state.select('submitting');
+  }
 }
