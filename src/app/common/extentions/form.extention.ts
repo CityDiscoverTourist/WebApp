@@ -1,28 +1,18 @@
-import {
-  FormArray,
-  FormControl,
-  FormGroup,
-  ValidationErrors,
-} from '@angular/forms';
+import { FormArray, FormControl, FormGroup } from '@angular/forms';
 
 declare module '@angular/forms' {
   interface FormGroup {
     revalidateControls(keys: string[]): void;
     hasError(key: string): boolean;
     hasErrorOf(key: string, validationType: string): boolean;
-    //   revalidateControls(): void;
-    //   hasError(key: string): boolean;
-    //   hasErrorOf(key: string, validationType: string): ValidationErrors;
   }
 }
 FormGroup.prototype.revalidateControls = function (keys: string[] = []): void {
-  //   FormGroup.prototype.revalidateControls = function (): void {
   const form = this as FormGroup;
   if (!keys?.length) {
     keys = Object.keys(form.controls);
-    // keys = Object.keys(form);
   }
-  // const keys= Object.keys(form.controls);
+
   if (!keys.length) {
     return;
   }
@@ -48,7 +38,6 @@ FormGroup.prototype.hasError = function (key: string): boolean {
     throw new Error(`No control found under name ${key}`);
   }
   return control.invalid && (control.dirty || control.touched);
-  //   ?control.errors:null;
 };
 
 FormGroup.prototype.hasErrorOf = function (
@@ -61,7 +50,6 @@ FormGroup.prototype.hasErrorOf = function (
     throw new Error(`No control found under name ${key}`);
   }
   return control.errors && control.invalid && (control.dirty || control.touched)
-    // ? control.errors[validationType.toLowerCase()]
     ? control.errors[validationType]
     : false;
 };
