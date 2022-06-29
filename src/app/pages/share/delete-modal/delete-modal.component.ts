@@ -54,7 +54,7 @@ export class DeleteModalComponent implements OnInit {
           this.cityService.deleteCityById(id).subscribe((data) => {
             if (data?.areas?.length) {
               this.bsModalRef.hide();
-              this.toast.success(`Xóa ${this.title} không thành công`);
+              this.toast.error(`Xóa ${this.title} không thành công`);
               var title = data.areas.map((x) => x.name).join(', ');
               this.toast.info(
                 `Thành phồ này đang chứa các khu vực ${title} nên không xóa được`
@@ -76,9 +76,9 @@ export class DeleteModalComponent implements OnInit {
             .subscribe((data) => {
               if (data?.locations?.length) {
                 this.bsModalRef.hide();
-                this.toast.success(`Xóa ${this.title} không thành công`);
+                this.toast.error(`Xóa ${this.title} không thành công`);
                 this.toast.info(
-                  `Loại địa điểm này đang chứa các địa điểm khác nên không xóa được`
+                  `Loại địa điểm này đang chứa các địa điểm khác nên không xóa được`,
                 );
               } else {
                 this.bsModalRef.onHide?.emit({
@@ -106,7 +106,7 @@ export class DeleteModalComponent implements OnInit {
           this.areaService.deleteAreaById(id).subscribe((data) => {
             if (data?.locations?.length) {
               this.bsModalRef.hide();
-              this.toast.success(`Xóa ${this.title} không thành công`);
+              this.toast.error(`Xóa ${this.title} không thành công`);
               this.toast.info(
                 `Khu vực này đang chứa các địa điểm khác nên không xóa được`
               );
