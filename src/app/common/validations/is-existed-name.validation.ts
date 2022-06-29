@@ -4,7 +4,7 @@ import {
   ValidationErrors,
 } from '@angular/forms';
 import { map, Observable, of } from 'rxjs';
-import { AreaService, CityService, LocationtypeService } from 'src/app/services';
+import { AreaService, CityService, LocationService, LocationtypeService } from 'src/app/services';
 
 export function isExistedNameValidatorCity(
   cityService: CityService,
@@ -34,7 +34,20 @@ export function isExistedNameValidatorArea(
 }
 
 export function isExistedNameValidatorLocationType(
-  locationSerice: LocationtypeService,
+  locationTypeSerice: LocationtypeService,
+  value: string
+): AsyncValidatorFn {
+  return (control: AbstractControl): Observable<ValidationErrors | null> => {
+    if (value === 'Cập nhật') return of(null);
+    return locationTypeSerice.checkNameExisted(control.value).pipe(
+      map((result: boolean) => {
+        return result ? { nameAlreadyExists: true } : null;
+      })
+    );
+  };
+}
+export function isExistedNameValidatorLocation(
+  locationSerice: LocationService,
   value: string
 ): AsyncValidatorFn {
   return (control: AbstractControl): Observable<ValidationErrors | null> => {
