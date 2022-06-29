@@ -125,7 +125,7 @@
               [tooltip]="
                 row.status == 'Deleted'
                   ? 'Bạn không thể xóa vì loại địa điểm này đã được xóa trước đây'
-                  : 'Nhấp chuột để xóa thành phố'
+                  : 'Nhấp chuột để xóa loại địa điểm'
               "
               (click)="onDelete(row.id)"
               [disabled]="row.status == 'Deleted' ? true : false"

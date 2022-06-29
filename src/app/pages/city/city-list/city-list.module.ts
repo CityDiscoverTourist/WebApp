@@ -24,7 +24,6 @@ const lib = [
     CityListRoutingModule,
     FormsModule,
     ReactiveFormsModule,
-
     ...lib,
   ],
 })

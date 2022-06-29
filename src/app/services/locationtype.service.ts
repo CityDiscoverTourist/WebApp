@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { stringify } from 'query-string';
-import { map, Observable, of } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import {
   IdValue,
@@ -10,9 +10,8 @@ import {
   LocationTypeListItem,
   LocationTypeListSearch,
   Paging,
-  Result,
+  Result
 } from '../models';
-import { Pagination } from '../models/pagination.model';
 import { BaseService } from './base.service';
 
 @Injectable({
@@ -96,12 +95,12 @@ export class LocationtypeService extends BaseService {
 
   getLocationType(): Observable<IdValue[]> {
     return this.http
-      .get<Pagination<LocationType>>(
-        '${environment.apiUrl}/api/v1/location-types',
+      .get<Paging<LocationType>>(
+        `${environment.apiUrl}/api/v1/location-types`,
         { headers: this._sharedHeaders }
       )
       .pipe(
-        map((response: Pagination<LocationType>) =>
+        map((response: Paging<LocationType>) =>
           [...response.data].map(
             (i) =>
               ({
