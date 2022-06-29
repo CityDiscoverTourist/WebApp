@@ -6,6 +6,7 @@ import {
   OnInit,
 } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
 import { HotToastService } from '@ngneat/hot-toast';
 import { RxState } from '@rx-angular/state';
 import { BsModalService } from 'ngx-bootstrap/modal';
@@ -17,12 +18,16 @@ import {
   tap,
   take,
   filter,
+  catchError,
+  of,
+  map,
 } from 'rxjs';
+import { isExistedNameValidatorLocation } from 'src/app/common/validations';
 import { IdValue, LocationCreate } from 'src/app/models';
 import { LocationService } from 'src/app/services';
 import * as goongjs from 'src/assets/goong-js';
 import * as GoongGeocoder from 'src/assets/goonggeo';
-import { AreaModalComponent, QuestTypeModalComponent } from '../../share';
+import { AreaModalComponent } from '../../share';
 import { LocationTypeModalComponent } from '../../share/location-type-modal/location-type-modal.component';
 import { LocationState, LOCATION_STATE } from '../states/location.state';
 
@@ -41,13 +46,16 @@ interface LocationCreateState {
 export class LocationCreateComponent implements OnInit, AfterViewChecked {
   geoCoder: any;
   map: any;
+  status: { id: number; name: string }[] = [];
   constructor(
     @Inject(LOCATION_STATE) private locationState: RxState<LocationState>,
     private fb: FormBuilder,
     private state: RxState<LocationCreateState>,
     private locationService: LocationService,
     private toast: HotToastService,
-    private modalService: BsModalService
+    private modalService: BsModalService,
+    private router: Router,
+    private activatedRoute: ActivatedRoute
   ) {
     this.state.set({
       showLocationDescription: false,
@@ -61,7 +69,6 @@ export class LocationCreateComponent implements OnInit, AfterViewChecked {
     this.form.controls['latitude'].setValue(
       `${this.geoCoder?._map?._easeOptions?.center[0]}`
     );
-    // //get place id
     var s: keyof typeof this.geoCoder.lastSelected = 'description';
     var data = JSON.parse(this.geoCoder?.lastSelected);
     this.form.controls['address'].setValue(Object(data)['description']);
@@ -71,6 +78,7 @@ export class LocationCreateComponent implements OnInit, AfterViewChecked {
       showLocationDescription: !prev.showLocationDescription,
     }));
     this.initForm();
+    this.status = this.locationService.status;
     goongjs.accessToken = 'LnOytBI19Yitg3XO9SXpl998VuETKd1dvW33CLH6';
     this.map = new goongjs.Map({
       container: 'map',
@@ -106,17 +114,29 @@ export class LocationCreateComponent implements OnInit, AfterViewChecked {
     // Add the control to the map.
     this.map.addControl(this.geoCoder);
 
-    const [valid$, invalid$] = partition(this.submit$, (f) => f.valid);
+    const [valid$, invalid$] = partition(
+      this.submit$,
+      ({ form }) => form.valid
+    );
 
     this.state.connect(
       valid$.pipe(
         tap(() => this.state.set({ submitting: true })),
-        switchMap((f) =>
-          this.locationService.addLocation(f.value as LocationCreate)
+        switchMap(({ form, redirect }) =>
+          this.locationService.addLocation(form.value as LocationCreate).pipe(
+            catchError(() => of({ status: 'data not modified', data: null })),
+            map((r) => ({ ...r, redirect }))
+          )
         ),
         tap((result) => {
           if (result.data?.id) {
-            this.toast.success('Tạo quest thành công');
+            this.toast.success(`Tạo ${result.data.name} thành công`);
+            this.router.navigate(['../'], {
+              // this.router.navigate(['../', result?.data?.id], {
+              relativeTo: this.activatedRoute,
+            });
+          } else {
+            return;
           }
         })
       ),
@@ -126,9 +146,9 @@ export class LocationCreateComponent implements OnInit, AfterViewChecked {
       })
     );
 
-    this.state.hold(invalid$.pipe(), (f) => {
-      this.toast.error('Giá trị bạn nhập không đúng');
-      f.revalidateControls([]);
+    this.state.hold(invalid$.pipe(), ({ form, redirect }) => {
+      this.toast.error('Giá trị nhập không hợp lệ! Hãy kiểm tra lại');
+      form.revalidateControls([]);
     });
 
     //add locationTypeAdded
@@ -163,14 +183,18 @@ export class LocationCreateComponent implements OnInit, AfterViewChecked {
   initForm() {
     this.form = this.fb.group({
       id: [0],
-      name: [null, [Validators.required]],
+      name: [
+        null,
+        [Validators.required],
+        [isExistedNameValidatorLocation(this.locationService, 'Thêm')],
+      ],
       description: [''],
       longitude: [''],
       latitude: [''],
-      address: [''],
-      status: [''],
-      areaId: [],
-      locationTypeId: [],
+      address: ['', [Validators.required]],
+      status: ['', [Validators.required]],
+      areaId: [null, [Validators.required]],
+      locationTypeId: [null, [Validators.required]],
     });
   }
 
@@ -187,7 +211,8 @@ export class LocationCreateComponent implements OnInit, AfterViewChecked {
   }
 
   formSubmit$ = new Subject<FormGroup>();
-  submit$ = new Subject<FormGroup>();
+  // submit$ = new Subject<FormGroup>();
+  submit$ = new Subject<{ form: FormGroup; redirect: boolean }>();
 
   showAddLocationType() {
     const bsModalRef = this.modalService.show(LocationTypeModalComponent, {
@@ -246,4 +271,12 @@ export class LocationCreateComponent implements OnInit, AfterViewChecked {
 
   locationTypeAdded$ = new Subject<{ id: number; name: string }>();
   areaAdded$ = new Subject<{ id: number; name: string }>();
+
+  get name() {
+    return this.form.get('name');
+  }
+
+  public get submitting$(): Observable<boolean> {
+    return this.state.select('submitting');
+  }
 }

@@ -28,7 +28,6 @@ const routes: Routes = [
             (m) => m.LocationCreateModule
           ),
       },
-      //edit
       {
         path: ':id',
         loadChildren: () =>

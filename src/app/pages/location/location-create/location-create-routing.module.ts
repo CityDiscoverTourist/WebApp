@@ -6,12 +6,12 @@ const routes: Routes = [
   {
     path: '',
     component: LocationCreateComponent,
-  }
-]
-
+    data: { title: 'Quay lại danh sách địa điểm', url: 'location' },
+  },
+];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class LocationCreateRoutingModule { }
+export class LocationCreateRoutingModule {}
