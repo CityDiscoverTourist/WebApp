@@ -1,21 +1,15 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { map, Observable, of } from 'rxjs';
+import { stringify } from 'query-string';
+import { map, Observable } from 'rxjs';
+import { environment } from 'src/environments/environment';
 import {
-  IdValue,
-  LocationCreate,
-  LocationCreateResult,
-  LocationListItem,
+  IdValue, Location, LocationCreate, LocationListItem,
   LocationListSearch,
   Paging,
-  Result,
-  SearchInfo,
+  Result
 } from '../models';
-import { Pagination } from '../models/pagination.model';
-import { Location } from '../models';
-import { stringify } from 'query-string';
 import { BaseService } from './base.service';
-import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -32,11 +26,11 @@ export class LocationService extends BaseService {
 
   getLocationIds(): Observable<IdValue[]> {
     var result = this.http
-      .get<Pagination<Location>>(`${environment.apiUrl}/api/v1/locations`, {
+      .get<Paging<Location>>(`${environment.apiUrl}/api/v1/locations`, {
         headers: this._sharedHeaders,
       })
       .pipe(
-        map((response: Pagination<Location>) =>
+        map((response: Paging<Location>) =>
           [...response.data].map(
             (i) =>
               ({
