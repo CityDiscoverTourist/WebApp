@@ -218,7 +218,7 @@ export class LocationCreateComponent implements OnInit, AfterViewChecked {
     const bsModalRef = this.modalService.show(LocationTypeModalComponent, {
       initialState: {
         simpleForm: false,
-        title: 'loại vị trí',
+        title: 'loại địa điểm',
         type: 'Thêm',
       },
     });
@@ -236,7 +236,7 @@ export class LocationCreateComponent implements OnInit, AfterViewChecked {
             name: locationTypeAdded.name,
           });
           if (data.id > 0 && data.name.length > 0) {
-            this.toast.success('Tạo loại vị trí thành công!');
+            this.toast.success('Tạo loại địa điểm thành công!');
           }
         },
       });

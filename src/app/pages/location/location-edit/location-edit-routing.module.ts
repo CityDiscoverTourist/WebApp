@@ -6,10 +6,7 @@ const routes: Routes = [
   {
     path: '',
     component: LocationEditComponent,
-  },
-  {
-    path: 'edit',
-    component: LocationEditComponent,
+    data: { title: 'Quay lại danh sách địa điểm', url: 'location' },
   },
 ];
 
