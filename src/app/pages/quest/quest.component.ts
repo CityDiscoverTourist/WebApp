@@ -19,7 +19,7 @@ export class QuestComponent implements OnInit {
     questState.connect(questTypeService.getQuestType(),(_,curr)=>({
       questTypeIds:curr
     }));
-    questState.connect(areaService.getAreaType(),(_,curr)=>({
+    questState.connect(areaService.getAreaIdValue(),(_,curr)=>({
       areaIds:curr
     }));
   }

@@ -13,7 +13,7 @@
   <form [formGroup]="form">
     <div class="form-group" [ngClass]="{ col: !simpleForm }">
       <input type="hidden" formControlName="id" />
-      <label for="name" class="form-label">Tên loại {{ title }} </label>
+      <label for="name" class="form-label">Tên {{ title }} </label>
       <input
         id="name"
         type="text"
@@ -22,21 +22,22 @@
         [ngClass]="{ 'is-invalid': form?.hasError('name') }"
       />
       <div class="invalid-feedback" *ngIf="form.hasErrorOf('name', 'required')">
-        Tên của loại loại vị trí không được để trống
+        Tên của thành phố không được để trống
       </div>
+      <ng-container *ngIf="!id">
+        <div
+          class="invalid-feedback"
+          *ngIf="name?.errors?.['nameAlreadyExists']"
+        >
+          Tên của thành phố đã tồn tại.
+        </div>
+      </ng-container>
     </div>
     <div
       class="form-group"
       [ngClass]="{ col: !simpleForm }"
       *ngIf="!simpleForm"
     >
-      <!-- <label for="status" class="form-label">Trạng thái</label>
-        <input
-          type="text"
-          id="status"
-          class="form-control"
-          formControlName="status"
-        /> -->
       <label for="status" class="form-label">Trạng thái</label>
       <ng-select
         [items]="status"
@@ -53,34 +54,29 @@
       >
         Vui lòng chọn trạng thái
       </div>
-      <!-- <ng-select
-        appearance="outline"
-        [searchable]="false"
-        formControlName="agree"
-      >
-        <ng-option [value]="true">Active</ng-option>
-        <ng-option [value]="false">InActive</ng-option>
-      </ng-select> -->
     </div>
-    <div *ngIf="hasError$ | async" class="alert alert-danger">
-      Form không hợp lệ! Hãy kiểm tra lại
+    <div
+      *ngIf="hasError$ | async"
+      class="d-block p-2 bg-danger text-white p-2 mb-2 mt-3 text-center"
+    >
+      Giá trị nhập không hợp lệ! Hãy kiểm tra lại
     </div>
   </form>
 </div>
 <div class="modal-footer">
   <button
     type="button"
-    class="btn btn-outline-primary"
+    class="btn btn-outline-primary custom"
     (click)="bsModalRef.hide()"
   >
     Thoát
   </button>
-  <button type="button" class="btn btn-primary" (click)="submit$.next(form)">
-    {{ type }} {{ title }}
+  <button
+    type="button"
+    class="btn btn-primary custom"
+    [disabled]="submitting$ | async"
+    (click)="submit$.next(form)"
+  >
+    {{ (submitting$ | async) ? "Lưu ..." : "Lưu" }}
   </button>
-  
-  <button type="button" class="btn btn-primary" (click)="submit()">
-    ALoha
-  </button>
-
 </div>

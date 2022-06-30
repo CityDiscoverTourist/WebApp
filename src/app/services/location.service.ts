@@ -15,11 +15,12 @@ import { Pagination } from '../models/pagination.model';
 import { Location } from '../models';
 import { stringify } from 'query-string';
 import { BaseService } from './base.service';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
-export class LocationService   extends BaseService {
+export class LocationService extends BaseService {
   private _sharedHeaders = new HttpHeaders();
   constructor(private http: HttpClient) {
     super();
@@ -28,14 +29,12 @@ export class LocationService   extends BaseService {
       'application/json'
     );
   }
- 
 
   getLocationIds(): Observable<IdValue[]> {
     var result = this.http
-      .get<Pagination<Location>>(
-        'https://citytourist.azurewebsites.net/api/v1/locations',
-        { headers: this._sharedHeaders }
-      )
+      .get<Pagination<Location>>(`${environment.apiUrl}/api/v1/locations`, {
+        headers: this._sharedHeaders,
+      })
       .pipe(
         map((response: Pagination<Location>) =>
           [...response.data].map(
@@ -67,26 +66,17 @@ export class LocationService   extends BaseService {
       orderby: `${sortBy} ${sortDir}`,
     });
     var result = this.http.get<Paging<LocationListItem>>(
-      `https://citytourist.azurewebsites.net/api/v1/locations?` + query,
+      `${environment.apiUrl}/api/v1/locations?` + query,
       { headers: this._sharedHeaders }
     );
     return result;
   }
 
-  // addLocation(payload: LocationCreate): 
-  // Observable<LocationCreateResult> {
-  //   return this.http.post<LocationCreateResult>(
-  //     `https://citytourist.azurewebsites.net/api/v1/locations`,
-  //     payload,
-  //     { headers: this._sharedHeaders }
-  //   );
-  // }
-
   addLocation(
     payload: Partial<LocationCreate>
   ): Observable<Result<Partial<Location>>> {
     return this.http.post<Result<Partial<Location>>>(
-      `https://citytourist.azurewebsites.net/api/v1/location/`,
+      `${environment.apiUrl}/api/v1/locations/`,
       payload,
       { headers: this._sharedHeaders }
     );
@@ -94,8 +84,8 @@ export class LocationService   extends BaseService {
 
   deleteLocationById(id: string): Observable<string | undefined> {
     return this.http
-      .delete(
-        `https://citytourist.azurewebsites.net/api/v1/locations/${id}`,
+      .delete<Result<LocationListItem>>(
+        `${environment.apiUrl}/api/v1/locations/${id}`,
         { headers: this._sharedHeaders }
       )
       .pipe(map((response: Result<LocationListItem>) => response.status));
@@ -103,10 +93,9 @@ export class LocationService   extends BaseService {
 
   getLocationById(id: string | undefined): Observable<Location> {
     return this.http
-      .get<Result<Location>>(
-        `https://citytourist.azurewebsites.net/api/v1/locations/${id}`,
-        { headers: this._sharedHeaders }
-      )
+      .get<Result<Location>>(`${environment.apiUrl}/api/v1/locations/${id}`, {
+        headers: this._sharedHeaders,
+      })
       .pipe(
         map(
           (response: Result<Location>) =>
@@ -126,18 +115,21 @@ export class LocationService   extends BaseService {
   }
   updateLocationById(
     payload: Partial<LocationCreate>
-  ): Observable<LocationCreateResult> {
-    return this.http
-      .put<Result<Location>>(
-        `https://citytourist.azurewebsites.net/api/v1/locations/`,
-        payload,
-        { headers: this._sharedHeaders }
-      )
-      .pipe(
-        map(
-          (response: Result<Location>) =>
-            ({ id: response.data?.id } as LocationCreateResult)
-        )
-      );
+  ): Observable<Result<Partial<Location>>> {
+    return this.http.put<Result<Partial<Location>>>(
+      `${environment.apiUrl}/api/v1/locations/`,
+      payload,
+      { headers: this._sharedHeaders }
+    );
+  }
+
+  checkNameExisted(name: string): Observable<boolean> {
+    const query = stringify({
+      name,
+    });
+    return this.http.get<boolean>(
+      `${environment.apiUrl}/api/v1/locations/check?` + query,
+      { headers: this._sharedHeaders }
+    );
   }
 }

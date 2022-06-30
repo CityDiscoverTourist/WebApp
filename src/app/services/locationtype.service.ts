@@ -1,7 +1,8 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { stringify } from 'query-string';
-import { map, Observable, of } from 'rxjs';
+import { map, Observable } from 'rxjs';
+import { environment } from 'src/environments/environment';
 import {
   IdValue,
   LocationType,
@@ -9,9 +10,8 @@ import {
   LocationTypeListItem,
   LocationTypeListSearch,
   Paging,
-  Result,
+  Result
 } from '../models';
-import { Pagination } from '../models/pagination.model';
 import { BaseService } from './base.service';
 
 @Injectable({
@@ -42,7 +42,7 @@ export class LocationtypeService extends BaseService {
       status: search?.status,
     });
     var result = this.http.get<Paging<LocationTypeListItem>>(
-      'https://citytourist.azurewebsites.net/api/v1/location-types?' + query,
+      `${environment.apiUrl}/api/v1/location-types?` + query,
       { headers: this._sharedHeaders }
     );
     return result;
@@ -52,24 +52,24 @@ export class LocationtypeService extends BaseService {
     payload: Partial<LocationTypeCreate>
   ): Observable<Result<Partial<LocationType>>> {
     return this.http.post<Result<Partial<LocationType>>>(
-      `https://citytourist.azurewebsites.net/api/v1/location-types/`,
+      `${environment.apiUrl}/api/v1/location-types/`,
       payload,
       { headers: this._sharedHeaders }
     );
   }
-  deleteLocationTypeById(id: string): Observable<string | undefined> {
+  deleteLocationTypeById(id: string): Observable<LocationTypeListItem | undefined> {
     return this.http
-      .delete(
-        `https://citytourist.azurewebsites.net/api/v1/location-types/${id}`,
+      .delete<Result<LocationTypeListItem>>(
+        `${environment.apiUrl}/api/v1/location-types/${id}`,
         { headers: this._sharedHeaders }
       )
-      .pipe(map((response: Result<LocationTypeListItem>) => response.status));
+      .pipe(map((response: Result<LocationTypeListItem>) => response.data));
   }
 
   getLocationTypeById(id: string | undefined): Observable<LocationType> {
     return this.http
       .get<Result<LocationType>>(
-        `https://citytourist.azurewebsites.net/api/v1/location-types/${id}`,
+        `${environment.apiUrl}/api/v1/location-types/${id}`,
         { headers: this._sharedHeaders }
       )
       .pipe(
@@ -87,7 +87,7 @@ export class LocationtypeService extends BaseService {
     payload: Partial<LocationTypeCreate>
   ): Observable<Result<Partial<LocationType>>> {
     return this.http.put<Result<Partial<LocationType>>>(
-      `https://citytourist.azurewebsites.net/api/v1/location-types/`,
+      `${environment.apiUrl}/api/v1/location-types/`,
       payload,
       { headers: this._sharedHeaders }
     );
@@ -95,12 +95,12 @@ export class LocationtypeService extends BaseService {
 
   getLocationType(): Observable<IdValue[]> {
     return this.http
-      .get<Pagination<LocationType>>(
-        'https://citytourist.azurewebsites.net/api/v1/location-types',
+      .get<Paging<LocationType>>(
+        `${environment.apiUrl}/api/v1/location-types`,
         { headers: this._sharedHeaders }
       )
       .pipe(
-        map((response: Pagination<LocationType>) =>
+        map((response: Paging<LocationType>) =>
           [...response.data].map(
             (i) =>
               ({
@@ -110,5 +110,15 @@ export class LocationtypeService extends BaseService {
           )
         )
       );
+  }
+
+  checkNameExisted(name: string): Observable<boolean> {
+    const query = stringify({
+      name,
+    });
+    return this.http.get<boolean>(
+      `${environment.apiUrl}/api/v1/location-types/check?` + query,
+      { headers: this._sharedHeaders }
+    );
   }
 }

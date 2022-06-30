@@ -2,10 +2,11 @@ import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { HotToastService } from '@ngneat/hot-toast';
 import { RxState } from '@rx-angular/state';
-import { DatatableComponent, id, TableColumn } from '@swimlane/ngx-datatable';
+import { DatatableComponent, TableColumn } from '@swimlane/ngx-datatable';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import {
   BehaviorSubject,
+  filter,
   Observable,
   Subject,
   switchMap,
@@ -75,7 +76,6 @@ export class CityListComponent implements OnInit {
 
     this.cityListState.hold(this.resetSearch$, () => {
       this.searchForm.reset();
-      // this.submitSearch$.next({keyword:''});
       this.search$.next({ currentPage: 0 });
       this.table.offset = 0;
     });
@@ -156,25 +156,25 @@ export class CityListComponent implements OnInit {
         type: 'Thêm',
       },
     });
-    bsModalRef.onHide?.pipe(take(1)).subscribe({
-      next: (result) => {
-        const data = result as { id: number; name: string };
-        if (data.id > 0 && data.name.length > 0) {
-          this.toast.success('Tạo thành phố thành công!', {
-            duration: 5000,
-            dismissible: true,
-            style: {
-              padding: '16px',
-              width: '600px',
-              height: '62px',
-            },
+    bsModalRef.onHide
+      ?.pipe(
+        take(1),
+        filter((s) => (s as any).success)
+      )
+      .subscribe({
+        next: (result) => {
+          const data = result as { id: number; name: string };
+          if (data.id > 0 && data.name.length > 0) {
+            this.toast.success('Tạo thành phố thành công!', {
+              duration: 5000,
+              dismissible: true,
+            });
+          }
+          this.search$.next({
+            ...this.search$.getValue(),
           });
-        }
-        this.search$.next({
-          ...this.search$.getValue(),
-        });
-      },
-    });
+        },
+      });
   }
   onDelete(id: string) {
     const bsModalRef = this.modalService.show(DeleteModalComponent, {
@@ -183,7 +183,7 @@ export class CityListComponent implements OnInit {
         title: 'thành phố',
       },
     });
-    bsModalRef.onHide?.pipe(take(1)).subscribe({
+    bsModalRef.onHide?.pipe(take(1),filter((s)=>(s as any).data)).subscribe({
       next: (result) => {
         this.search$.next({
           ...this.search$.getValue(),
@@ -200,12 +200,17 @@ export class CityListComponent implements OnInit {
         type: 'Cập nhật',
       },
     });
-    bsModalRef.onHide?.pipe(take(1)).subscribe({
-      next: (result) => {
-        this.search$.next({
-          ...this.search$.getValue(),
-        });
-      },
-    });
+    bsModalRef.onHide
+      ?.pipe(
+        take(1),
+        filter((s) => (s as any).success)
+      )
+      .subscribe({
+        next: (result) => {
+          this.search$.next({
+            ...this.search$.getValue(),
+          });
+        },
+      });
   }
 }

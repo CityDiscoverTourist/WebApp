@@ -2,30 +2,31 @@ import {
   AfterContentInit,
   AfterViewChecked,
   Component,
-  DoCheck,
   Inject,
-  OnChanges,
   OnInit,
-  SimpleChanges,
 } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { HotToastService } from '@ngneat/hot-toast';
 import { RxState } from '@rx-angular/state';
+import { BsModalService } from 'ngx-bootstrap/modal';
 import {
   BehaviorSubject,
+  filter,
   Observable,
   partition,
   Subject,
   switchMap,
   tap,
+  take,
 } from 'rxjs';
 import { IdValue, LocationCreate } from 'src/app/models';
 import { LocationService } from 'src/app/services';
-import { LocationDetailState } from '../states';
-import { LocationState, LOCATION_STATE } from '../states/location.state';
 import * as goongjs from 'src/assets/goong-js';
 import * as GoongGeocoder from 'src/assets/goonggeo';
-import { HotToastService } from '@ngneat/hot-toast';
+import { AreaModalComponent, LocationTypeModalComponent } from '../../share';
+import { LocationDetailState } from '../states';
+import { LocationState, LOCATION_STATE } from '../states/location.state';
 
 interface LocationEditState {
   showLocationDescription: boolean;
@@ -37,31 +38,25 @@ interface LocationEditState {
   templateUrl: './location-edit.component.html',
   styleUrls: ['./location-edit.component.scss'],
 })
-export class LocationEditComponent
-  implements OnInit, AfterViewChecked, AfterContentInit
-{
+export class LocationEditComponent implements OnInit, AfterViewChecked {
   geoCoder: any;
   map: any;
   id = '';
+  status: { id: number; name: string }[] = [];
   constructor(
     private locationDetailState: RxState<LocationDetailState>,
     private router: Router,
-    private route: ActivatedRoute,
+    private activatedRoute: ActivatedRoute,
     private locationService: LocationService,
     private fb: FormBuilder,
     @Inject(LOCATION_STATE) private locationState: RxState<LocationState>,
+    private modalService: BsModalService,
     private state: RxState<LocationEditState>,
     private toast: HotToastService
   ) {
     this.state.set({
       showLocationDescription: false,
     });
-  }
-  ngAfterContentInit() {
-    // let myRow = document.getElementsByClassName('mapboxgl-ctrl-geocoder--input');
-    // if(myRow!=null){
-    //   (myRow.querySelector('.mapboxgl-ctrl-geocoder--input') as HTMLInputElement).value = "2 Công Xã Paris, Quận 1, Hồ Chí Minh";
-    // }
   }
   ngAfterViewChecked(): void {
     if (
@@ -80,10 +75,11 @@ export class LocationEditComponent
 
   ngOnInit(): void {
     this.initForm();
+    this.status = this.locationService.status;
     this.state.connect(this.toggleDescription$, (prev, _) => ({
       showLocationDescription: !prev.showLocationDescription,
     }));
-    this.search$.next({ id: this.route.snapshot.params['id'] });
+    this.search$.next({ id: this.activatedRoute.snapshot.params['id'] });
     this.locationDetailState.connect(
       this.search$
         .pipe(
@@ -137,17 +133,25 @@ export class LocationEditComponent
     // Add the control to the map.
     this.map.addControl(this.geoCoder);
 
-    const [valid$, invalid$] = partition(this.submit$, (f) => f.value);
+    const [valid$, invalid$] = partition(
+      this.submit$,
+      ({ form, redirect }) => form.valid
+    );
 
     this.state.connect(
       valid$.pipe(
         tap(() => this.state.set({ submitting: true })),
-        switchMap((f) =>
-          this.locationService.updateLocationById(f.value as LocationCreate)
+        switchMap(({ form, redirect }) =>
+          this.locationService.updateLocationById(form.value as LocationCreate)
         ),
         tap((result) => {
-          if (result.id) {
-            this.toast.success('Cập nhật vị trí thành công');
+          if (result.data?.id) {
+            this.toast.success(`Tạo ${result.data.name} thành công`);
+            this.router.navigate(['../'], {
+              relativeTo: this.activatedRoute,
+            });
+          } else {
+            return;
           }
         })
       ),
@@ -157,11 +161,33 @@ export class LocationEditComponent
       })
     );
     // hay
-    this.state.hold(invalid$.pipe(), (f) => {
-      this.toast.error('Giá trị bạn nhập không đúng');
-      // this.form.revalidateControls([]);
-      f.revalidateControls([]);
+    this.state.hold(invalid$.pipe(), ({ form, redirect }) => {
+      this.toast.error('Giá trị nhập không hợp lệ! Hãy kiểm tra lại');
+      form.revalidateControls([]);
     });
+    this.locationState.connect(
+      this.locationTypeAdded$.pipe(
+        tap((locationType) => {
+          this.form.get('locationTypeId')?.setValue(locationType.id);
+        })
+      ),
+      (prev, curr) => ({
+        locationTypeIds: [
+          ...prev.locationTypeIds,
+          { id: curr.id, value: curr.name },
+        ],
+      })
+    );
+    this.locationState.connect(
+      this.areaAdded$.pipe(
+        tap((area) => {
+          this.form.get('areaId')?.setValue(area.id);
+        })
+      ),
+      (prev, curr) => ({
+        areaIds: [...prev.areaIds, { id: curr.id, value: curr.name }],
+      })
+    );
   }
   search$ = new BehaviorSubject<{ id: string }>({ id: '' });
   form!: FormGroup;
@@ -174,10 +200,10 @@ export class LocationEditComponent
       description: [''],
       longitude: [''],
       latitude: [''],
-      address: [''],
-      status: [''],
-      areaId: [],
-      locationTypeId: [],
+      address: ['', [Validators.required]],
+      status: ['', [Validators.required]],
+      areaId: [null, [Validators.required]],
+      locationTypeId: [null, [Validators.required]],
     });
   }
   get locationTypeIds$(): Observable<IdValue[]> {
@@ -193,7 +219,8 @@ export class LocationEditComponent
   }
 
   formSubmit$ = new Subject<FormGroup>();
-  submit$ = new Subject<FormGroup>();
+  // submit$ = new Subject<FormGroup>();
+  submit$ = new Subject<{ form: FormGroup; redirect: boolean }>();
 
   // submitForm() {
   //   const valid = this.form.valid;
@@ -206,4 +233,63 @@ export class LocationEditComponent
   //     this.form.revalidateControls([]);
   //   }
   // }
+  showAddLocationType() {
+    const bsModalRef = this.modalService.show(LocationTypeModalComponent, {
+      initialState: {
+        simpleForm: false,
+        title: 'loại địa điểm',
+        type: 'Thêm',
+      },
+    });
+    bsModalRef.onHide
+      ?.pipe(
+        take(1),
+        filter((s) => (s as any).success)
+      )
+      .subscribe({
+        next: (result) => {
+          const data = result as { id: number; name: string };
+          const locationTypeAdded = result as { id: number; name: string };
+          this.locationTypeAdded$.next({
+            id: locationTypeAdded.id,
+            name: locationTypeAdded.name,
+          });
+          if (data.id > 0 && data.name.length > 0) {
+            this.toast.success('Tạo loại địa điểm thành công!');
+          }
+        },
+      });
+  }
+  showAddArea() {
+    const bsModalRef = this.modalService.show(AreaModalComponent, {
+      initialState: {
+        simpleForm: false,
+        title: 'khu vực',
+        type: 'Thêm',
+      },
+    });
+    bsModalRef.onHide
+      ?.pipe(
+        take(1),
+        filter((s) => (s as any).success)
+      )
+      .subscribe({
+        next: (result) => {
+          const data = result as { id: number; name: string };
+          const areaAdded = result as { id: number; name: string };
+          this.areaAdded$.next({
+            id: areaAdded.id,
+            name: areaAdded.name,
+          });
+          if (data.id > 0 && data.name.length > 0) {
+            this.toast.success('Tạo khu vực thành công!');
+          }
+        },
+      });
+  }
+  locationTypeAdded$ = new Subject<{ id: number; name: string }>();
+  areaAdded$ = new Subject<{ id: number; name: string }>();
+  public get submitting$(): Observable<boolean> {
+    return this.state.select('submitting');
+  }
 }

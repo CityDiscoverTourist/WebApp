@@ -24,7 +24,7 @@ export class LocationComponent implements OnInit {
     locationState.connect(locationTypeService.getLocationType(), (_, curr) => ({
       locationTypeIds: curr,
     }));
-    locationState.connect(areaService.getAreaType(), (_, curr) => ({
+    locationState.connect(areaService.getAreaIdValue(), (_, curr) => ({
       areaIds: curr,
     }));
     areaState.connect(cityService.getCityIdValue(), (_, curr) => ({

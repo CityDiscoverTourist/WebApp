@@ -3,7 +3,7 @@ import {
   Inject,
   OnInit,
   TemplateRef,
-  ViewChild,
+  ViewChild
 } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { HotToastService } from '@ngneat/hot-toast';
@@ -12,18 +12,19 @@ import { DatatableComponent, TableColumn } from '@swimlane/ngx-datatable';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import {
   BehaviorSubject,
+  filter,
   Observable,
   Subject,
   switchMap,
   take,
-  tap,
+  tap
 } from 'rxjs';
 
 import {
   AreaListItem,
   AreaListSearch,
   IdValue,
-  PagingMetadata,
+  PagingMetadata
 } from 'src/app/models';
 import { AreaService } from 'src/app/services/area.service';
 import { PageInfo, SortInfo } from 'src/app/types';
@@ -62,7 +63,6 @@ export class AreaListComponent implements OnInit {
               id: x.id,
               name: x.name,
               status: x.status,
-              // cityId: x.cityId,
               cityId: this.citys.get(x.cityId),
             } as AreaListItem)
         ),
@@ -179,7 +179,7 @@ export class AreaListComponent implements OnInit {
         type: 'Thêm',
       },
     });
-    bsModalRef.onHide?.pipe(take(1)).subscribe({
+    bsModalRef.onHide?.pipe(take(1), filter((s) => (s as any).success)).subscribe({
       next: (result) => {
         const data = result as { id: number; name: string };
         if (data.id > 0 && data.name.length > 0) {
@@ -211,7 +211,7 @@ export class AreaListComponent implements OnInit {
         title: 'khu vực',
       },
     });
-    bsModalRef.onHide?.pipe(take(1)).subscribe({
+    bsModalRef.onHide?.pipe(take(1),filter((s)=>(s as any).data)).subscribe({
       next: (result) => {
         this.search$.next({
           ...this.search$.getValue(),
@@ -228,7 +228,7 @@ export class AreaListComponent implements OnInit {
         type: 'Cập nhật',
       },
     });
-    bsModalRef.onHide?.pipe(take(1)).subscribe({
+    bsModalRef.onHide?.pipe(take(1),filter((s) => (s as any).success)).subscribe({
       next: (result) => {
         const data = result as { id: number; name: string };
         if (data.id > 0 && data.name !== undefined) {

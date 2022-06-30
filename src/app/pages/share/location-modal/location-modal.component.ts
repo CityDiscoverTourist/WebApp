@@ -33,7 +33,7 @@ export class LocationModalComponent implements OnInit {
     public bsModalRef: BsModalRef,
     private fb: FormBuilder,
     private state: RxState<ModalState>,
-    private locationService: LocationService // private locationTypeDetailState: RxState<LocationTypeDetailState>,
+    private locationService: LocationService
   ) {}
 
   ngOnInit(): void {

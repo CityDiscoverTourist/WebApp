@@ -37,7 +37,7 @@ export interface LocationCreate {
 
 export interface LocationListSearch extends SearchInfo {
   locationTypeIds?: number[];
-  areaIds?:number[];
+  areaIds?: number[];
 }
 
 export interface LocationCreateResult {

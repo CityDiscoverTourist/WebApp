@@ -80,7 +80,7 @@ export class QuestTypeService extends BaseService {
   }
   deleteQuestTypeById(id: string): Observable<string | undefined> {
     return this.http
-      .delete(
+      .delete<Result<QuestTypeListItem>>(
         `https://citytourist.azurewebsites.net/api/v1/quest-types/${id}`,
         this.httpOptions
       )

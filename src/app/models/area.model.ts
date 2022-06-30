@@ -6,6 +6,7 @@ export interface AreaListItem {
   name: string;
   status: string;
   cityId: string;
+  locations:Location[]
 }
 
 

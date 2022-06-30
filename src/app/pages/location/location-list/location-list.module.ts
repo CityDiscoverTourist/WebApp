@@ -7,12 +7,14 @@ import { NgSelectModule } from '@ng-select/ng-select';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HotToastModule } from '@ngneat/hot-toast';
 import { ModalModule } from 'ngx-bootstrap/modal';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
 
 const lib = [
   NgSelectModule,
   NgxDatatableModule,
   ModalModule.forRoot(),
   HotToastModule.forRoot(),
+  TooltipModule.forRoot(),
 ];
 
 @NgModule({

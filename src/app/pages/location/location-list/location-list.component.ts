@@ -1,37 +1,30 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  Inject,
-  INJECTOR,
-  OnInit,
+  Inject, OnInit,
   TemplateRef,
-  ViewChild,
+  ViewChild
 } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { RxState } from '@rx-angular/state';
 import { DatatableComponent, TableColumn } from '@swimlane/ngx-datatable';
 import {
-  BehaviorSubject,
-  mergeMap,
-  Observable,
-  of,
-  retry,
-  Subject,
+  BehaviorSubject, Observable, Subject,
   switchMap,
   take,
-  tap,
+  tap
 } from 'rxjs';
 import { IdValue, LocationListItem, PagingMetadata } from 'src/app/models';
 import { LocationService } from 'src/app/services/location.service';
 import { PageInfo, SortInfo } from 'src/app/types';
 
+import { ActivatedRoute, Router } from '@angular/router';
+import { HotToastService } from '@ngneat/hot-toast';
+import { BsModalService } from 'ngx-bootstrap/modal';
 import { LocationListSearch } from 'src/app/models';
+import { DeleteModalComponent } from '../../share';
 import { LocationState, LOCATION_STATE } from '../states/location.state';
 import { LocationListState } from '../states/locationlist.state';
-import { DeleteModalComponent } from '../../share';
-import { BsModalService } from 'ngx-bootstrap/modal';
-import { HotToastService } from '@ngneat/hot-toast';
-import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-location-list',
@@ -42,6 +35,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 })
 export class LocationListComponent implements OnInit {
   columns: TableColumn[];
+  
   constructor(
     @Inject(LOCATION_STATE) private locationState: RxState<LocationState>,
     private locationSerice: LocationService,
@@ -60,8 +54,7 @@ export class LocationListComponent implements OnInit {
         .pipe(
           tap((_) => this.locationListState.set({ loading: true })),
           switchMap((s) => this.locationSerice.getLocations(s))
-        )
-        .pipe(take(1)),
+        ),
       (_, result) => ({
         locations: result.data.map(
           (x, index) =>
@@ -84,6 +77,9 @@ export class LocationListComponent implements OnInit {
     );
 
     this.locationListState.hold(this.submitSearch$, (form) => {
+      console.log("data");
+      console.log(this.search$.getValue());
+      console.log(form);
       this.search$.next({
         ...this.search$.getValue(),
         ...form,

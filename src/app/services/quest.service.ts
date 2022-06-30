@@ -103,7 +103,7 @@ export class QuestService {
   }
   deleteQuestById(id: string): Observable<string | undefined> {
     return this.http
-      .delete(
+      .delete<Result<QuestListItem>>(
         `https://citytourist.azurewebsites.net/api/v1/quests/${id}`,
         this.httpOptions
       )

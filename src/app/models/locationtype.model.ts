@@ -11,6 +11,7 @@ export interface LocationTypeListItem {
   id: number;
   name: string;
   status: string;
+  locations:Location[]
 }
 
 export interface LocationTypeListSearch extends SearchInfo{

@@ -95,6 +95,7 @@
               type="button"
               data-toggle="tooltip"
               data-placement="top"
+              [tooltip]="'Nhấp chuột để cập nhật thành phố'"
               title="Edit"
               (click)="onUpdate(row.id)"
             >
@@ -103,15 +104,28 @@
             <button
               class="btn btn-sm me-2"
               type="button"
-              style="
-                color: #fff;
-                background-color: #f44335;
-                border-color: #f44335;
+              [ngStyle]="
+                row.status == 'Deleted'
+                  ? {
+                      color: '#fff',
+                      backgroundColor: '#f44335',
+                      borderColor: '#f44335'
+                    }
+                  : {
+                      color: '#fff',
+                      backgroundColor: '#f44335',
+                      borderColor: '#f44335'
+                    }
               "
               data-toggle="tooltip"
               data-placement="top"
-              title="Delete"
+              [tooltip]="
+                row.status == 'Deleted'
+                  ? 'Bạn không thể xóa vì thành phố này đã được xóa trước đây'
+                  : 'Nhấp chuột để xóa thành phố'
+              "
               (click)="onDelete(row.id)"
+              [disabled]="row.status == 'Deleted' ? true : false"
             >
               <i class="bi bi-trash3"></i>
             </button>
