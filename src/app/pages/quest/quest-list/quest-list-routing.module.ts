@@ -6,10 +6,12 @@ const routes: Routes = [
   {
     path: '',
     component: QuestListComponent,
+    data: { title: 'Danh sách quest', url: 'quest' },
   },
   {
     path: 'list',
     component: QuestListComponent,
+    data: { title: 'Danh sách quest', url: 'quest' },
   },
 ]
 

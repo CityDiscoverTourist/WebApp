@@ -1,5 +1,4 @@
 import {
-  ChangeDetectorRef,
   Component,
   Inject,
   OnInit,
@@ -9,25 +8,11 @@ import {
 import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RxState } from '@rx-angular/state';
-import {
-  ColumnChangesService,
-  DatatableComponent,
-  SelectionType,
-  TableColumn,
-} from '@swimlane/ngx-datatable';
-import {
-  BehaviorSubject,
-  Observable,
-  shareReplay,
-  Subject,
-  switchMap,
-  tap,
-} from 'rxjs';
+import { DatatableComponent, TableColumn } from '@swimlane/ngx-datatable';
+import { BehaviorSubject, Observable, Subject, switchMap, tap } from 'rxjs';
 import {
   IdValue,
-  Paging,
   PagingMetadata,
-  Quest,
   QuestListItem,
   QuestListSearch,
 } from 'src/app/models';
@@ -36,9 +21,9 @@ import { PageInfo, SortInfo } from 'src/app/types';
 import { QuestState, QUEST_STATE } from '../states/quest.state';
 import { QuestListState } from '../states/questlist.state';
 
-declare type FormType = {
-  keyword: string;
-  categories: number[];
+declare type language = {
+  id: string;
+  value: string;
 };
 
 @Component({
@@ -47,7 +32,10 @@ declare type FormType = {
   styleUrls: ['./quest-list.component.scss'],
 })
 export class QuestListComponent implements OnInit {
-  // records: QuestListItem[] = [];
+  language: language[] = [
+    { id: '0', value: 'Tiếng Anh' },
+    { id: '1', value: 'Tiếng Việt' },
+  ];
 
   @ViewChild('colCreatedAt', { static: true }) colCreatedAt!: TemplateRef<any>;
   columns: TableColumn[] = [];
@@ -62,26 +50,6 @@ export class QuestListComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // this.records = [...Array(50).keys()].map(
-    //   (i) =>
-    //     ({
-    //       index:++i,
-    //       id: i,
-    //       title: 'string',
-    //       description: 'string',
-    //       price: i,
-    //       estimatedTime: '120',
-    //       estimatedDistance: 'string',
-    //       availableTime: new Date(),
-    //       createdDate: new Date(),
-    //       updatedDate: new Date(),
-    //       status: 'string',
-    //       questTypeId: 1,
-    //       questOwnerId: 2,
-    //       areaId: 2,
-    //     } as QuestListItem)
-    // );
-
     this.initTable();
 
     this.questListState.connect(
@@ -116,7 +84,6 @@ export class QuestListComponent implements OnInit {
 
     //update search
     this.questListState.hold(this.submitSearch$, (form) => {
-      //submit reset nhay ve page 0
       this.search$.next({
         ...this.search$.getValue(),
         ...form,
@@ -125,9 +92,13 @@ export class QuestListComponent implements OnInit {
         (this.table.offset = 0);
     });
 
+    this.questListState.connect(this.resetSearch$, (prev, _) => ({
+      metadata: { ...prev.metadata, currentPage: 0 },
+    }));
+
     this.questListState.hold(this.resetSearch$, () => {
       this.searchForm.reset();
-      this.submitSearch$.next({});
+      this.search$.next({ currentPage: 0 });
       this.table.offset = 0;
     });
   }
@@ -158,6 +129,7 @@ export class QuestListComponent implements OnInit {
         name: 'Giá',
         sortable: true,
         maxWidth: 150,
+        cellTemplate: this.formatPrice,
       },
       {
         prop: 'estimatedTime',
@@ -196,6 +168,8 @@ export class QuestListComponent implements OnInit {
         name: 'Trạng thái',
         sortable: true,
         maxWidth: 150,
+        cellTemplate: this.formatStatus,
+        cellClass:'px-5'
       },
       // {
       //   prop: 'questOwnerId',
@@ -203,18 +177,18 @@ export class QuestListComponent implements OnInit {
       //   name: 'Quest owner',
       //   sortable: true,
       // },
-      {
-        prop: 'areaId',
-        maxWidth: 200,
-        name: 'Khu vực',
-        sortable: true,
-      },
+      // {
+      //   prop: 'areaId',
+      //   maxWidth: 200,
+      //   name: 'Khu vực',
+      //   sortable: true,
+      // },
     ];
   }
 
   @ViewChild('edit', { static: true }) edit!: TemplateRef<any>;
-  // @ViewChild('deleteBtn', { static: true }) deleteBtn!: TemplateRef<any>;
-  // selected = [];
+  @ViewChild('formatPrice', { static: true }) formatPrice!: TemplateRef<any>;
+  @ViewChild('formatStatus', { static: true }) formatStatus!: TemplateRef<any>;
 
   onActivate(event: any) {
     // console.log('Activate Event', event);
@@ -225,21 +199,13 @@ export class QuestListComponent implements OnInit {
       });
     }
   }
-  // onSelect({ selected }: any) {
-  //   console.log('Select Event', selected, this.selected);
-  // }
-
-  // SelectionType = SelectionType;
-
   onPage(paging: PageInfo) {
-    // console.log(paging);
     this.search$.next({
       ...this.search$.getValue(),
       currentPage: paging.offset,
     });
   }
   onSort(event: SortInfo) {
-    // console.log(event);
     this.table.offset - 1;
     this.search$.next({
       ...this.search$.getValue(),
@@ -247,12 +213,15 @@ export class QuestListComponent implements OnInit {
     });
   }
   get questTypeIds(): Observable<IdValue[]> {
-    return this.questState.select('questTypeIds');
+    return this.questState
+      .select('questTypeIds')
+      .pipe(tap((data) => console.log(data)));
   }
 
   searchForm = new FormGroup({
     keyword: new FormControl(),
     questTypeIds: new FormControl(),
+    language: new FormControl(),
   });
   search$ = new BehaviorSubject<QuestListSearch>({});
 
@@ -272,4 +241,5 @@ export class QuestListComponent implements OnInit {
 declare type FromType = {
   keyword: string;
   questTypeIds: number[];
+  language: string;
 };
