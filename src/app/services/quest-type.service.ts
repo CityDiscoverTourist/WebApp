@@ -3,8 +3,8 @@ import { Injectable } from '@angular/core';
 import { stringify } from 'query-string';
 import { map, of } from 'rxjs';
 import { Observable } from 'rxjs/internal/Observable';
+import { environment } from 'src/environments/environment';
 import { IdValue, Paging, Result, SearchInfo } from '../models';
-import { Pagination } from '../models/pagination.model';
 import {
   QuestType,
   QuestTypeCreate,
@@ -24,14 +24,14 @@ export class QuestTypeService extends BaseService {
   httpOptions = {
     headers: new HttpHeaders({ encrypt: 'multipart/form-data' }),
   };
-  getQuestType(): Observable<IdValue[]> {
+  getQuestTypeIdValue(): Observable<IdValue[]> {
     return this.http
-      .get<Pagination<QuestType>>(
-        'https://citytourist.azurewebsites.net/api/v1/quest-types',
+      .get<Paging<QuestType>>(
+        `${environment.apiUrl}/api/v1/quest-types`,
         this.httpOptions
       )
       .pipe(
-        map((response: Pagination<QuestType>) =>
+        map((response: Paging<QuestType>) =>
           [...response.data].map(
             (i) =>
               ({
@@ -58,7 +58,7 @@ export class QuestTypeService extends BaseService {
       status: search?.status,
     });
     var result = this.http.get<Paging<QuestTypeListItem>>(
-      'https://citytourist.azurewebsites.net/api/v1/quest-types?' + query,
+      `${environment.apiUrl}/api/v1/quest-types?` + query,
       this.httpOptions
     );
     return result;
@@ -73,7 +73,7 @@ export class QuestTypeService extends BaseService {
     payload.append('status', questTypeCreate.status);
     payload.append('image', questTypeCreate.image);
     return this.http.post<Result<Partial<QuestType>>>(
-      `https://citytourist.azurewebsites.net/api/v1/quest-types/`,
+      `${environment.apiUrl}/api/v1/quest-types/`,
       payload,
       this.httpOptions
     );
@@ -81,7 +81,7 @@ export class QuestTypeService extends BaseService {
   deleteQuestTypeById(id: string): Observable<string | undefined> {
     return this.http
       .delete<Result<QuestTypeListItem>>(
-        `https://citytourist.azurewebsites.net/api/v1/quest-types/${id}`,
+        `${environment.apiUrl}/api/v1/quest-types/${id}`,
         this.httpOptions
       )
       .pipe(map((response: Result<QuestTypeListItem>) => response.status));
@@ -90,7 +90,7 @@ export class QuestTypeService extends BaseService {
   getQuestTypeById(id: string | undefined): Observable<QuestType> {
     return this.http
       .get<Result<QuestType>>(
-        `https://citytourist.azurewebsites.net/api/v1/quest-types/${id}`,
+        `${environment.apiUrl}/api/v1/quest-types/${id}`,
         this.httpOptions
       )
       .pipe(
@@ -114,7 +114,7 @@ export class QuestTypeService extends BaseService {
     payload.append('status', questTypeCreate.status);
     payload.append('image', questTypeCreate.image);
     return this.http.put<Result<Partial<QuestType>>>(
-      `https://citytourist.azurewebsites.net/api/v1/quest-types/`,
+      `${environment.apiUrl}/api/v1/quest-types/`,
       payload,
       this.httpOptions
     );
