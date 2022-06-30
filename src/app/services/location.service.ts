@@ -20,7 +20,7 @@ import { environment } from 'src/environments/environment';
 @Injectable({
   providedIn: 'root',
 })
-export class LocationService   extends BaseService {
+export class LocationService extends BaseService {
   private _sharedHeaders = new HttpHeaders();
   constructor(private http: HttpClient) {
     super();
@@ -29,13 +29,12 @@ export class LocationService   extends BaseService {
       'application/json'
     );
   }
- 
+
   getLocationIds(): Observable<IdValue[]> {
     var result = this.http
-      .get<Pagination<Location>>(
-        `${environment.apiUrl}/api/v1/locations`,
-        { headers: this._sharedHeaders }
-      )
+      .get<Pagination<Location>>(`${environment.apiUrl}/api/v1/locations`, {
+        headers: this._sharedHeaders,
+      })
       .pipe(
         map((response: Pagination<Location>) =>
           [...response.data].map(
@@ -73,15 +72,6 @@ export class LocationService   extends BaseService {
     return result;
   }
 
-  // addLocation(payload: LocationCreate): 
-  // Observable<LocationCreateResult> {
-  //   return this.http.post<LocationCreateResult>(
-  //     `https://citytourist.azurewebsites.net/api/v1/locations`,
-  //     payload,
-  //     { headers: this._sharedHeaders }
-  //   );
-  // }
-
   addLocation(
     payload: Partial<LocationCreate>
   ): Observable<Result<Partial<Location>>> {
@@ -103,10 +93,9 @@ export class LocationService   extends BaseService {
 
   getLocationById(id: string | undefined): Observable<Location> {
     return this.http
-      .get<Result<Location>>(
-        `${environment.apiUrl}/api/v1/locations/${id}`,
-        { headers: this._sharedHeaders }
-      )
+      .get<Result<Location>>(`${environment.apiUrl}/api/v1/locations/${id}`, {
+        headers: this._sharedHeaders,
+      })
       .pipe(
         map(
           (response: Result<Location>) =>
@@ -126,19 +115,12 @@ export class LocationService   extends BaseService {
   }
   updateLocationById(
     payload: Partial<LocationCreate>
-  ): Observable<LocationCreateResult> {
-    return this.http
-      .put<Result<Location>>(
-        `${environment.apiUrl}/api/v1/locations/`,
-        payload,
-        { headers: this._sharedHeaders }
-      )
-      .pipe(
-        map(
-          (response: Result<Location>) =>
-            ({ id: response.data?.id } as LocationCreateResult)
-        )
-      );
+  ): Observable<Result<Partial<Location>>> {
+    return this.http.put<Result<Partial<Location>>>(
+      `${environment.apiUrl}/api/v1/locations/`,
+      payload,
+      { headers: this._sharedHeaders }
+    );
   }
 
   checkNameExisted(name: string): Observable<boolean> {
