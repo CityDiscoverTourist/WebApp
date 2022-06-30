@@ -11,11 +11,11 @@ import {
   partition,
   Subject,
   switchMap,
-  tap
+  tap,
 } from 'rxjs';
 import { isExistedNameValidatorArea } from 'src/app/common/validations';
 import { IdValue } from 'src/app/models';
-import { AreaService } from 'src/app/services';
+import { AreaService, CityService } from 'src/app/services';
 import { AreaState, AREA_STATE } from '../../area/states/area.state';
 interface AreaDetailState {
   loading: boolean;
@@ -39,8 +39,13 @@ export class AreaModalComponent implements OnInit {
     private fb: FormBuilder,
     private state: RxState<AreaDetailState>,
     private areaSerice: AreaService,
-    @Inject(AREA_STATE) private areaState: RxState<AreaState>
-  ) {}
+    @Inject(AREA_STATE) private areaState: RxState<AreaState>,
+    private readonly cityService: CityService
+  ) {
+    areaState.connect(cityService.getCityIdValue(), (_, curr) => ({
+      cityIds: curr,
+    }));
+  }
 
   ngOnInit(): void {
     this.initForm();
@@ -127,7 +132,7 @@ export class AreaModalComponent implements OnInit {
         [isExistedNameValidatorArea(this.areaSerice, this.type)],
       ],
       status: ['', [Validators.required]],
-      cityId: [0,[Validators.required]],
+      cityId: [0, [Validators.required]],
     });
   }
 
