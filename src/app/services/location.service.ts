@@ -76,13 +76,12 @@ export class LocationService extends BaseService {
     );
   }
 
-  deleteLocationById(id: string): Observable<string | undefined> {
+  deleteLocationById(id: string): Observable<LocationListItem | undefined> {
     return this.http
       .delete<Result<LocationListItem>>(
         `${environment.apiUrl}/api/v1/locations/${id}`,
         { headers: this._sharedHeaders }
-      )
-      .pipe(map((response: Result<LocationListItem>) => response.status));
+      ).pipe(map((response: Result<LocationListItem>) => response.data));
   }
 
   getLocationById(id: string | undefined): Observable<Location> {
