@@ -69,7 +69,7 @@ export class DeleteModalComponent implements OnInit {
           });
         }
         break;
-      case 'loại vị trí':
+      case 'loại địa điểm':
         {
           this.locationTypeService
             .deleteLocationTypeById(id)
@@ -78,7 +78,7 @@ export class DeleteModalComponent implements OnInit {
                 this.bsModalRef.hide();
                 this.toast.error(`Xóa ${this.title} không thành công`);
                 this.toast.info(
-                  `Loại địa điểm này đang chứa các địa điểm khác nên không xóa được`,
+                  `Loại địa điểm này đang chứa các địa điểm khác nên không xóa được`
                 );
               } else {
                 this.bsModalRef.onHide?.emit({
@@ -90,14 +90,22 @@ export class DeleteModalComponent implements OnInit {
             });
         }
         break;
-      case 'vị trí':
+      case 'địa điểm':
         {
           this.locationService.deleteLocationById(id).subscribe((data) => {
-            this.bsModalRef.onHide?.emit({
-              status: data,
-            });
-            this.bsModalRef.hide();
-            this.toast.success(`Xóa ${this.title} thành công`);
+            if (data?.questItems) {
+              this.bsModalRef.hide();
+              this.toast.error(`Xóa ${this.title} không thành công`);
+              this.toast.info(
+                `QuestItem khác đang sử dụng địa điểm nên không xóa được`
+              );
+            } else {
+              this.bsModalRef.onHide?.emit({
+                data: data,
+              });
+              this.bsModalRef.hide();
+              this.toast.success(`Xóa ${this.title} thành công`);
+            }
           });
         }
         break;
