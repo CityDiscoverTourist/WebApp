@@ -4,7 +4,12 @@ import {
   ValidationErrors,
 } from '@angular/forms';
 import { map, Observable, of } from 'rxjs';
-import { AreaService, CityService, LocationService, LocationtypeService } from 'src/app/services';
+import {
+  AreaService,
+  CityService,
+  LocationService,
+  LocationtypeService,
+} from 'src/app/services';
 
 export function isExistedNameValidatorCity(
   cityService: CityService,
