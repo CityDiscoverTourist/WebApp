@@ -6,6 +6,7 @@ const routes: Routes = [
   {
     path: '',
     component: QuestEditComponent,
+    data: { title: 'Quay lại danh sách quest', url: 'quest' },
   },
 ]
 
