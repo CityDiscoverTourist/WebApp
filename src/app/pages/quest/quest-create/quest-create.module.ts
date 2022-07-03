@@ -11,14 +11,18 @@ import { HotToastModule } from '@ngneat/hot-toast';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ModalModule } from 'ngx-bootstrap/modal';
+import { TimepickerModule } from 'ngx-bootstrap/timepicker';
 
-const lib=[
-  NgSelectModule,LetModule,NgxDropzoneModule,HotToastModule,ModalModule.forRoot()
-]
+const lib = [
+  NgSelectModule,
+  LetModule,
+  NgxDropzoneModule,
+  HotToastModule,
+  ModalModule.forRoot(),
+  TimepickerModule.forRoot()
+];
 @NgModule({
-  declarations: [
-    QuestCreateComponent
-  ],
+  declarations: [QuestCreateComponent],
   imports: [
     CommonModule,
     QuestCreateRoutingModule,
@@ -28,6 +32,6 @@ const lib=[
     BsDropdownModule.forRoot(),
     QuillModule.forRoot(),
     ...lib,
-  ]
+  ],
 })
-export class QuestCreateModule { }
+export class QuestCreateModule {}
