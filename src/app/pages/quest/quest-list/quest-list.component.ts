@@ -169,7 +169,6 @@ export class QuestListComponent implements OnInit {
         sortable: true,
         maxWidth: 150,
         cellTemplate: this.formatStatus,
-        cellClass:'px-5'
       },
       // {
       //   prop: 'questOwnerId',

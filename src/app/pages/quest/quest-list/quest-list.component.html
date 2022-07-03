@@ -115,9 +115,37 @@
 <ng-template #formatPrice let-value="value"> {{ value }} vnđ </ng-template>
 <ng-template #formatStatus let-value="value">
   <ng-container *ngIf="value == 'Inactive'">
-    <i class="bi bi-x-circle" style="color: red; font-size: 18px"></i>
+    <!-- <i class="bi bi-x-circle" style="color: red; font-size: 18px"></i> -->
+    <span
+      style="
+        border: 1px solid #dc143c;
+        padding: 5px 18px;
+        color: #fff;
+        border-radius: 5px;
+        background-color: #dc143c;
+        display: inline-block;
+        min-width: 85px !important; min-height: 30px !important;
+        text-align: center;
+      "
+    >
+      Inactive
+    </span>
   </ng-container>
   <ng-container *ngIf="value == 'Active'">
-    <i class="bi bi-check2" style="color: '#0EBF00'; font-size: 18px"></i>
+    <!-- <i class="bi bi-check2" style="color: '#0EBF00'; font-size: 18px"></i> -->
+    <span
+      style="
+        border: 1px solid #07bc0c;
+        padding: 5px 18px;
+        color: #fff;
+        border-radius: 5px;
+        background-color: #07bc0c;
+        display: inline-block;
+        min-width: 85px !important; min-height: 30px !important;
+        text-align: center;
+      "
+    >
+      Active
+    </span>
   </ng-container>
 </ng-template>
