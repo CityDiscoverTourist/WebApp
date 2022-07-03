@@ -1,4 +1,4 @@
-import { SearchInfo } from "./common.model";
+import { SearchInfo } from './common.model';
 
 export interface Quest {
   id: number;
@@ -10,16 +10,15 @@ export interface Quest {
   availableTime: Date;
   createdDate: Date;
   updatedDate: Date;
-  status:string;
+  status: string;
   questTypeId: number;
   questOwnerId: number;
   areaId: number;
-  imagePath:string;
+  imagePath: string;
 }
 
-
 export interface QuestListItem {
-  index:number;
+  index: number;
   id: number;
   title: string;
   description: string;
@@ -29,16 +28,16 @@ export interface QuestListItem {
   availableTime: Date;
   createdDate: Date;
   updatedDate: Date;
-  status:string;
+  status: string;
   questTypeId: number;
   questOwnerId: number;
   areaId: number;
-  imagePath:string;
+  imagePath: string;
 }
-
 
 export interface QuestListSearch extends SearchInfo {
   questTypeIds?: number[];
+  language?: string;
 }
 
 export interface QuestCreate {
@@ -48,17 +47,16 @@ export interface QuestCreate {
   price: number;
   estimatedTime: string;
   estimatedDistance: string;
-  image:File;
+  image: File;
   availableTime: string;
   createdDate: Date;
   updatedDate: Date;
-  status:string;
+  status: string;
   questTypeId: number;
   questOwnerId: number;
   areaId: number;
 }
 
-export interface QuestCreateResult{
-  id:number;
+export interface QuestCreateResult {
+  id: number;
 }
-
