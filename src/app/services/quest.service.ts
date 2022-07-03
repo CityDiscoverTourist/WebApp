@@ -39,7 +39,7 @@ export class QuestService extends BaseService {
       pageNumber: isNaN(search?.currentPage!) ? 1 : search?.currentPage! + 1,
       pagesize: 10,
       orderby: `${sortBy} ${sortDir}`,
-      language: language,
+      language: language ? language : 0,
     });
     var result = this.http.get<Paging<QuestListItem>>(
       `${environment.apiUrl}/api/v1/quests?` + query,
