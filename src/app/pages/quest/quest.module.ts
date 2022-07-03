@@ -4,21 +4,20 @@ import { QuestRoutingModule } from './quest-routing.module';
 import { QuestComponent } from './quest.component';
 import { RxState } from '@rx-angular/state';
 import { QuestState, QUEST_STATE } from './states/quest.state';
-
-
+import { AreaState, AREA_STATE } from '../area/states/area.state';
 
 @NgModule({
-  declarations: [
-    QuestComponent
+  declarations: [QuestComponent],
+  imports: [CommonModule, QuestRoutingModule],
+  providers: [
+    {
+      provide: QUEST_STATE,
+      useFactory: () => new RxState<QuestState>(),
+    },
+    {
+      provide:AREA_STATE,
+      useFactory:()=>new RxState<AreaState>()
+    }
   ],
-  imports: [
-    CommonModule,
-    QuestRoutingModule,
-  ],
-  providers:[{
-    provide:QUEST_STATE,
-    useFactory:()=>new RxState<QuestState>()
-  }]
-
 })
-export class QuestModule { }
+export class QuestModule {}
