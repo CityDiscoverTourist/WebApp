@@ -27,7 +27,7 @@ import {
   PagingMetadata,
 } from 'src/app/models';
 import { SignalrService } from 'src/app/services';
-import { CustomerTaskListState } from '../../customer-task/states';
+import { CustomerTaskListState } from '../states';
 
 @Component({
   selector: 'app-customer-quest-detail',
