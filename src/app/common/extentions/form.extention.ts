@@ -5,6 +5,7 @@ declare module '@angular/forms' {
     revalidateControls(keys: string[]): void;
     hasError(key: string): boolean;
     hasErrorOf(key: string, validationType: string): boolean;
+    hasValue(key: string): boolean;
   }
 }
 FormGroup.prototype.revalidateControls = function (keys: string[] = []): void {
@@ -52,4 +53,11 @@ FormGroup.prototype.hasErrorOf = function (
   return control.errors && control.invalid && (control.dirty || control.touched)
     ? control.errors[validationType]
     : false;
+};
+
+FormGroup.prototype.hasValue = function (key: string): boolean {
+  const form = this as FormGroup;
+  const control = form.get('title')?.value;
+  if (control.length > 0) return true;
+  return false;
 };
