@@ -3,26 +3,31 @@ import {
   ChangeDetectorRef,
   Component,
   Inject,
-  OnInit,
+  OnInit
 } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+import { HotToastService } from '@ngneat/hot-toast';
+import { RxState } from '@rx-angular/state';
+import { BsModalService } from 'ngx-bootstrap/modal';
 import {
+  catchError,
+  filter,
+  map,
   Observable,
+  of,
   partition,
+  pipe,
   Subject,
   switchMap,
   take,
-  tap,
+  tap
 } from 'rxjs';
-import { RxState } from '@rx-angular/state';
-import { QuestState, QUEST_STATE } from '../states/quest.state';
+import { hourValidator } from 'src/app/common/validations';
 import { IdValue, QuestCreate } from 'src/app/models';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { HotToastService } from '@ngneat/hot-toast';
 import { QuestService } from 'src/app/services';
-import { ActivatedRoute } from '@angular/router';
-import { BsModalService } from 'ngx-bootstrap/modal';
-import { QuestTypeModalComponent } from '../../share/quest-type-modal/quest-type-modal.component';
-import { LocationTypeModalComponent } from '../../share/location-type-modal/location-type-modal.component';
+import { AreaModalComponent, QuestTypeModalComponent } from '../../share';
+import { QuestState, QUEST_STATE } from '../states/quest.state';
 
 interface QuestEditState {
   showQuestDescription: boolean;
@@ -39,6 +44,7 @@ interface QuestEditState {
   providers: [RxState],
 })
 export class QuestCreateComponent implements OnInit {
+  status: { id: number; name: string }[] = [];
   constructor(
     @Inject(QUEST_STATE) private questState: RxState<QuestState>,
     private state: RxState<QuestEditState>,
@@ -46,6 +52,7 @@ export class QuestCreateComponent implements OnInit {
     private toast: HotToastService,
     private cd: ChangeDetectorRef,
     private questService: QuestService,
+    private router: Router,
     private activatedRoute: ActivatedRoute,
     private modalService: BsModalService
   ) {
@@ -61,6 +68,7 @@ export class QuestCreateComponent implements OnInit {
     }));
 
     this.initForm();
+    this.status = this.questService.status;
 
     this.state.connect(
       this.selectedFile$
@@ -81,51 +89,101 @@ export class QuestCreateComponent implements OnInit {
       }
     );
 
-    //cach này đúng nhưng dỡ
-    // this.state.connect(
-    //   this.formSubmit$
-    //     .pipe(
-    //       switchMap((f) => this.questService.addQuest(f.value as QuestCreate))
-    //     )
-    //     .pipe(
-    //       tap((data) => {
-    //         console.log(data);
-    //         console.log('có vao ko');
-    //       })
-    //     ),
-    //   (_prev, curr) => ({
-    //     error: undefined,
-    //   })
-    // );
-
-    const [valid$, invalid$] = partition(this.submit$, (f) => f.valid);
+    const [valid$, invalid$] = partition(
+      this.submit$,
+      ({ form }) => form.valid
+    );
 
     this.state.connect(
       valid$.pipe(
         tap(() => this.state.set({ submitting: true })),
-        switchMap((f) => this.questService.addQuest(f.value as QuestCreate)),
+        pipe(
+          tap(({ form }) => {
+            var title = form.controls['title'].value + ' ';
+            var arrName = title.split('|');
+            if (arrName.length == 1) {
+              title = arrName[0] + '()' + arrName[0];
+            } else {
+              title = arrName[0] + '()' + arrName[1];
+            }
+            form.value['title'] = title;
+            var description = form.controls['description'].value;
+            var arrDescription = description.split('|');
+            if (arrDescription.length == 1) {
+              description = arrDescription[0] + '()' + arrDescription[0];
+            } else {
+              description = arrDescription[0] + '()' + arrDescription[1];
+            }
+            form.value['description'] = description;
+            form.controls['status'].value == 'true'
+              ? (form.value['status'] = 'Active')
+              : (form.value['status'] = 'Inactive');
+            return form;
+          })
+        ),
+        switchMap(({ form, redirect }) =>
+          this.questService.addQuest(form.value as QuestCreate).pipe(
+            catchError(() => of({ status: 'data not modified', data: null })),
+            map((r) => ({ ...r, redirect }))
+          )
+        ),
         tap((result) => {
-          if (result.id) {
-            this.toast.success('Tạo quest thành công');
+          if (!result.data?.id) {
+            return;
+          }
+          this.toast.success(`Tạo quest thành công`);
+          if (result.redirect) {
+            this.router.navigate(['../', result.data?.id], {
+              relativeTo: this.activatedRoute,
+            });
+          } else {
+            this.initForm();
           }
         })
       ),
       (_prev, curr) => ({
-      
         error: undefined,
         submitting: false,
       })
     );
-    // hay
-    this.state.hold(invalid$.pipe(), (f) => {
-      this.toast.error('Giá trị bạn nhập không đúng');
-      // this.form.revalidateControls([]);
-      f.revalidateControls([]);
+
+    this.state.hold(invalid$.pipe(), ({ form }) => {
+      this.toast.error('Giá trị bạn nhập không hợp lệ');
+      form.revalidateControls([]);
     });
 
-    this.questState.connect(this.questypeIds$, (prev, curr) => ({
-      questTypeIds: [...prev.questTypeIds, { id: curr.id, value: curr.name }],
-    }));
+    this.questState.connect(
+      this.questypeAdded$.pipe(
+        tap((questType) => {
+          this.form.get('questTypeId')?.setValue(questType.id);
+        })
+      ),
+      (prev, curr) => ({
+        questTypeIds: [...prev.questTypeIds, { id: curr.id, value: curr.name }],
+      })
+    );
+
+    this.questState.connect(
+      this.questypeAdded$.pipe(
+        tap((questType) => {
+          this.form.get('locationTypeIds')?.setValue(questType.id);
+        })
+      ),
+      (prev, curr) => ({
+        questTypeIds: [...prev.questTypeIds, { id: curr.id, value: curr.name }],
+      })
+    );
+
+    this.questState.connect(
+      this.areaAdded$.pipe(
+        tap((area) => {
+          this.form.get('areaId')?.setValue(area.id);
+        })
+      ),
+      (prev, curr) => ({
+        areaIds: [...prev.areaIds, { id: curr.id, value: curr.name }],
+      })
+    );
   }
 
   toggleDescription$ = new Subject<void>();
@@ -137,7 +195,7 @@ export class QuestCreateComponent implements OnInit {
     return this.questState.select('questTypeIds');
   }
 
-  get areaIds(): Observable<IdValue[]> {
+  get areaIds$(): Observable<IdValue[]> {
     return this.questState.select('areaIds');
   }
 
@@ -147,49 +205,91 @@ export class QuestCreateComponent implements OnInit {
     this.form = this.fb.group({
       id: [0],
       title: ['', [Validators.required, Validators.minLength(8)]],
-      description: [''],
+      description: [
+        '<p>Tiếng việt:</p><p><br/></p><p><br/></p><p><br/></p>|<p>Tiếng Anh:</p>',
+      ],
       price: [0, [Validators.required, Validators.min(10)]],
-      estimatedTime: [''],
-      estimatedDistance: [''],
-      availableTime: [],
-      questTypeId: [],
+      estimatedTime: ['', [Validators.required]],
+      estimatedDistance: ['', [Validators.required]],
+      availableTime: ['', [Validators.required], [hourValidator()]],
+      questTypeId: ['', [Validators.required]],
       image: [],
       questOwnerId: [''],
-      areaId: [],
-      status: [false],
+      areaId: ['', [Validators.required]],
+      status: ['', [Validators.required]],
     });
   }
-  // submitForm() {
-  //   const valid = this.form.valid;
-  //   this.formSubmit$.next(this.form);
-  //   console.log(`form state =${valid}`, this.form.value);
 
-  //   if (valid) {
-  //     this.formSubmit$.next(this.form);
-  //   } else {
-  //     this.form.revalidateControls([]);
-  //   }
-  // }
+  get availableTime() {
+    return this.form.get('availableTime');
+  }
+
+  get title() {
+    console.log(this.form.get('title'));
+    return this.form.get('title');
+  }
+
   selectedFile$ = new Subject<File[]>();
   removedFiles$ = new Subject<File>();
   formSubmit$ = new Subject<FormGroup>();
-  submit$ = new Subject<FormGroup>();
+  submit$ = new Subject<{ form: FormGroup; redirect: boolean }>();
 
   showAddQuestType() {
-    const bsModalRef = this.modalService.show(LocationTypeModalComponent, {
+    const bsModalRef = this.modalService.show(QuestTypeModalComponent, {
       initialState: {
         simpleForm: false,
         title: 'loại quest',
         type: 'Thêm',
       },
     });
-    bsModalRef.onHide?.pipe(take(1)).subscribe({
-      next: (result) => {
-        const questypeIds = result as { id: number; name: string };
-        this.questypeIds$.next({ id: questypeIds.id, name: questypeIds.name });
-      },
-    });
+    bsModalRef.onHide
+      ?.pipe(
+        take(1),
+        filter((s) => (s as any).success)
+      )
+      .subscribe({
+        next: (result) => {
+          const data = result as { id: number; name: string };
+          const questTypeAdded = result as { id: number; name: string };
+          this.questypeAdded$.next({
+            id: questTypeAdded.id,
+            name: questTypeAdded.name,
+          });
+          if (data.id > 0 && data.name.length > 0) {
+            this.toast.success('Tạo loại quest thành công!');
+          }
+        },
+      });
   }
 
-  questypeIds$ = new Subject<{ id: number; name: string }>();
+  showAddArea() {
+    const bsModalRef = this.modalService.show(AreaModalComponent, {
+      initialState: {
+        simpleForm: false,
+        title: 'khu vực',
+        type: 'Thêm',
+      },
+    });
+    bsModalRef.onHide
+      ?.pipe(
+        take(1),
+        filter((s) => (s as any).success)
+      )
+      .subscribe({
+        next: (result) => {
+          const data = result as { id: number; name: string };
+          const areaAdded = result as { id: number; name: string };
+          this.areaAdded$.next({
+            id: areaAdded.id,
+            name: areaAdded.name,
+          });
+          if (data.id > 0 && data.name.length > 0) {
+            this.toast.success('Tạo khu vực thành công!');
+          }
+        },
+      });
+  }
+
+  questypeAdded$ = new Subject<{ id: number; name: string }>();
+  areaAdded$ = new Subject<{ id: number; name: string }>();
 }
