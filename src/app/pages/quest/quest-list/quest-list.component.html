@@ -69,17 +69,19 @@
         </div>
       </form>
       <!-- table -->
-
+      <!--  [headerHeight]="45"
+          [footerHeight]="50"
+          [rowHeight]="50" -->
       <div class="border overflow-hidden rouded shadow-sm">
         <ngx-datatable
           class="material rounded"
           [rows]="areas$ | async"
           [columns]="columns"
           columnMode="force"
-          [headerHeight]="50"
           [loadingIndicator]="(loading$ | async) === true"
+          [headerHeight]="40"
           [footerHeight]="50"
-          [rowHeight]="50"
+          [rowHeight]="45"
           [externalPaging]="true"
           [externalSorting]="true"
           [messages]="{
@@ -113,22 +115,37 @@
   </div>
 </div>
 <ng-template #formatPrice let-value="value"> {{ value }} vnđ </ng-template>
+<ng-template #formatestimatedTime let-value="value">
+  {{ value }} phút
+</ng-template>
 <ng-template #formatStatus let-value="value">
   <ng-container *ngIf="value == 'Inactive'">
     <!-- <i class="bi bi-x-circle" style="color: red; font-size: 18px"></i> -->
     <span
       style="
+        background-color: #cb2027;
+        color: #fff;
+        transition: 200ms;
+        padding: 0px 0px;
+        border-radius: 4px;
+        display: inline-block;
+        text-align: center;
+        width: 100px;
+      "
+    >
+      <!-- style="
         border: 1px solid #dc143c;
         padding: 5px 18px;
         color: #fff;
         border-radius: 5px;
         background-color: #dc143c;
         display: inline-block;
-        min-width: 85px !important; min-height: 30px !important;
+        min-width: 85px !important;
+        min-height: 30px !important;
         text-align: center;
         margin: -5px 1px;
       "
-    >
+    > -->
       Inactive
     </span>
   </ng-container>
@@ -136,17 +153,30 @@
     <!-- <i class="bi bi-check2" style="color: '#0EBF00'; font-size: 18px"></i> -->
     <span
       style="
+        background: #c2fbd7;
+        color: green;
+        transition: 200ms;
+        padding: 0px 0px;
+        border-radius: 4px;
+        display: inline-block;
+        text-align: center;
+        width: 100px;
+      "
+    >
+      <!-- <span
+      style="
         border: 1px solid #07bc0c;
         padding: 5px 18px;
         color: #fff;
         border-radius: 5px;
         background-color: #07bc0c;
         display: inline-block;
-        min-width: 85px !important; min-height: 30px !important;
+        min-width: 85px !important;
+        min-height: 30px !important;
         text-align: center;
         margin: -5px 1px;
       "
-    >
+    > -->
       Active
     </span>
   </ng-container>

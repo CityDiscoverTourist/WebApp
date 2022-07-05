@@ -1,4 +1,5 @@
 import {
+  AfterViewInit,
   Component,
   Inject,
   OnInit,
@@ -31,7 +32,7 @@ declare type language = {
   templateUrl: './quest-list.component.html',
   styleUrls: ['./quest-list.component.scss'],
 })
-export class QuestListComponent implements OnInit {
+export class QuestListComponent implements OnInit, AfterViewInit {
   language: language[] = [
     { id: '0', value: 'Tiếng Anh' },
     { id: '1', value: 'Tiếng Việt' },
@@ -103,15 +104,20 @@ export class QuestListComponent implements OnInit {
     });
   }
 
+  ngAfterViewInit() {
+    // this.table.cssClasses =
+    //   ' display: flex !important;align-items: center !important;';
+  }
+
   initTable() {
     this.columns = [
-      {
-        prop: 'index',
-        name: 'STT',
-        sortable: true,
-        canAutoResize: true,
-        maxWidth: 75,
-      },
+      // {
+      //   prop: 'index',
+      //   name: 'STT',
+      //   sortable: true,
+      //   canAutoResize: true,
+      //   maxWidth: 75,
+      // },
       {
         prop: 'title',
         name: 'Tên quest',
@@ -136,6 +142,7 @@ export class QuestListComponent implements OnInit {
         name: 'Ước lượng',
         sortable: true,
         maxWidth: 150,
+        cellTemplate: this.formatestimatedTime,
       },
       // {
       //   prop: 'estimatedDistance',
@@ -169,6 +176,7 @@ export class QuestListComponent implements OnInit {
         sortable: true,
         maxWidth: 150,
         cellTemplate: this.formatStatus,
+        cellClass: 'text-align: center !important;',
       },
       // {
       //   prop: 'questOwnerId',
@@ -188,17 +196,16 @@ export class QuestListComponent implements OnInit {
   @ViewChild('edit', { static: true }) edit!: TemplateRef<any>;
   @ViewChild('formatPrice', { static: true }) formatPrice!: TemplateRef<any>;
   @ViewChild('formatStatus', { static: true }) formatStatus!: TemplateRef<any>;
+  @ViewChild('formatestimatedTime', { static: true })
+  formatestimatedTime!: TemplateRef<any>;
 
   onActivate(event: any) {
     // console.log('Activate Event', event);
     if (event.type == 'click') {
       console.log(event.row);
-      this.router.navigate(
-        ['./', event.row.id],
-        {
-          relativeTo: this.activatedRoute,
-        }
-      );
+      this.router.navigate(['./', event.row.id], {
+        relativeTo: this.activatedRoute,
+      });
     }
   }
   onPage(paging: PageInfo) {
