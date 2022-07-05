@@ -110,6 +110,43 @@ export class QuestDetailComponent implements OnInit {
 
     //QuestItem
     this.questItemListState.connect(
+      this.activatedRoute.paramMap.pipe(
+        tap((_) => this.questDetailState.set({ loading: true })),
+        filter((p) => p.has('id')),
+        map((p) => Number(p.get('id'))),
+        switchMap((s) => {
+          this.searchQuestItem$.next({ questId: s });
+          return this.questItemService.getQuestItemsByQuestId({ questId: s });
+        })
+      ),
+      (_, result) => ({
+        questitems: result.data.map(
+          (x, index) =>
+            ({
+              index: ++index,
+              id: x.id,
+              content: x.content,
+              description: x.description,
+              duration: x.duration,
+              createdDate: x.createdDate,
+              updatedDate: x.updatedDate,
+              qrCode: x.qrCode,
+              triggerMode: x.triggerMode,
+              rightAnswer: x.rightAnswer,
+              answerImageUrl: x.answerImageUrl,
+              status: x.status,
+              questItemTypeId: x.questItemTypeId,
+              locationId: x.locationId,
+              questId: x.questId,
+              itemId: x.itemId,
+            } as QuestItemListItem)
+        ),
+        metadata: { ...result.pagination },
+        loading: false,
+      })
+    );
+
+    this.questItemListState.connect(
       this.searchQuestItem$.pipe(
         switchMap((s) => this.questItemService.getQuestItemsByQuestId(s))
       ),
@@ -256,14 +293,13 @@ export class QuestDetailComponent implements OnInit {
   @ViewChild(DatatableComponent) table!: DatatableComponent;
 
   onPage(paging: PageInfo) {
-    // console.log(paging);
+    console.log(this.searchQuestItem$.getValue());
     this.searchQuestItem$.next({
       ...this.searchQuestItem$.getValue(),
       currentPage: paging.offset,
     });
   }
   onSort(event: SortInfo) {
-    // console.log(event);
     this.table.offset - 1;
     this.searchQuestItem$.next({
       ...this.searchQuestItem$.getValue(),
