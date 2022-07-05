@@ -42,7 +42,7 @@
             bindLabel="value"
             [closeOnSelect]="true"
             style="min-width: 200px"
-            placeholder="Chọn phiên bản"
+            placeholder="Chọn tên phiên bản"
             class="me-3"
             formControlName="language"
           ></ng-select>
@@ -79,9 +79,9 @@
           [columns]="columns"
           columnMode="force"
           [loadingIndicator]="(loading$ | async) === true"
-          [headerHeight]="40"
           [footerHeight]="50"
           [rowHeight]="45"
+          [headerHeight]="45"
           [externalPaging]="true"
           [externalSorting]="true"
           [messages]="{
@@ -95,6 +95,11 @@
           (sort)="onSort($event)"
           (activate)="onActivate($event)"
         >
+          <!-- <ngx-datatable-column
+            [headerCheckboxable]="true"
+            [checkboxable]="true"
+          >
+          </ngx-datatable-column> -->
         </ngx-datatable>
       </div>
     </div>
@@ -146,7 +151,7 @@
         margin: -5px 1px;
       "
     > -->
-      Inactive
+      InActive
     </span>
   </ng-container>
   <ng-container *ngIf="value == 'Active'">

@@ -32,7 +32,7 @@ declare type language = {
   templateUrl: './quest-list.component.html',
   styleUrls: ['./quest-list.component.scss'],
 })
-export class QuestListComponent implements OnInit, AfterViewInit {
+export class QuestListComponent implements OnInit {
   language: language[] = [
     { id: '0', value: 'Tiếng Anh' },
     { id: '1', value: 'Tiếng Việt' },
@@ -42,6 +42,7 @@ export class QuestListComponent implements OnInit, AfterViewInit {
   columns: TableColumn[] = [];
 
   @ViewChild(DatatableComponent) table!: DatatableComponent;
+
   constructor(
     @Inject(QUEST_STATE) private questState: RxState<QuestState>,
     private questService: QuestService,
@@ -104,11 +105,6 @@ export class QuestListComponent implements OnInit, AfterViewInit {
     });
   }
 
-  ngAfterViewInit() {
-    // this.table.cssClasses =
-    //   ' display: flex !important;align-items: center !important;';
-  }
-
   initTable() {
     this.columns = [
       // {
@@ -120,7 +116,7 @@ export class QuestListComponent implements OnInit, AfterViewInit {
       // },
       {
         prop: 'title',
-        name: 'Tên quest',
+        name: 'Tên Quest',
         sortable: true,
         canAutoResize: true,
       },
@@ -139,7 +135,7 @@ export class QuestListComponent implements OnInit, AfterViewInit {
       },
       {
         prop: 'estimatedTime',
-        name: 'Ước lượng',
+        name: 'Thời gian',
         sortable: true,
         maxWidth: 150,
         cellTemplate: this.formatestimatedTime,
@@ -172,11 +168,11 @@ export class QuestListComponent implements OnInit, AfterViewInit {
       // },
       {
         prop: 'status',
-        name: 'Trạng thái',
+        name: 'Trạng Thái',
         sortable: true,
         maxWidth: 150,
         cellTemplate: this.formatStatus,
-        cellClass: 'text-align: center !important;',
+        cellClass: '',
       },
       // {
       //   prop: 'questOwnerId',
