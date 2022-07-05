@@ -57,7 +57,7 @@ FormGroup.prototype.hasErrorOf = function (
 
 FormGroup.prototype.hasValue = function (key: string): boolean {
   const form = this as FormGroup;
-  const control = form.get('title')?.value;
+  const control = form.get(key)?.value;
   if (control.length > 0) return true;
   return false;
 };
