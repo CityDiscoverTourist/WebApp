@@ -228,6 +228,13 @@ export class QuestDetailComponent implements OnInit {
         canAutoResize: true,
       },
       {
+        prop: 'rightAnswer',
+        name: 'Đáp án',
+        sortable: true,
+        canAutoResize: true,
+        maxWidth: 250,
+      },
+      {
         prop: 'createdDate',
         name: 'Ngày tạo',
         sortable: true,

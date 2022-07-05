@@ -1,6 +1,8 @@
 <div class="px-5" *rxLet="quest$ as vm">
   <div class="d-flex align-items-center justify-content-between mb-0 px-3">
-    <div>{{ vm.title }}</div>
+    <div>
+      <h6>{{ vm.title }}</h6>
+    </div>
     <div class="flex-fill"></div>
     <a routerLink="../" class="btn btn-outline-primary mt-2 me-3">Thoát</a>
     <a
@@ -13,7 +15,7 @@
     <a class="btn btn-primary mt-2" [routerLink]="['./edit']">Sửa quest</a>
   </div>
   <div class="row px-4 pt-2">
-    <div class="card mb-1">
+    <div class="card mb-1" style="border: 1px solid #fff">
       <div class="card-header bg-white">Thông tin quest</div>
       <div class="card-body" style="font-size: 0.8rem">
         <div class="row">
