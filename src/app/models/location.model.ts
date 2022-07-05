@@ -1,4 +1,5 @@
 import { SearchInfo } from './common.model';
+import { QuestItem } from './questitem.model';
 
 export interface LocationListItem {
   id: number;
@@ -10,6 +11,7 @@ export interface LocationListItem {
   status: string;
   areaId: number;
   locationTypeId: number;
+  questItems?: QuestItem[];
 }
 
 export interface Location {

@@ -21,9 +21,12 @@ import {
 import { QuestTypeService } from 'src/app/services/quest-type.service';
 import { QuestTypeDetailState } from '../states';
 
-declare type ModalState = {
+interface QuestTypeState {
+  loading: boolean;
+  submitting: boolean;
   hasError: boolean;
-};
+}
+
 @Component({
   selector: 'app-quest-type-modal',
   templateUrl: './quest-type-modal.component.html',
@@ -40,7 +43,7 @@ export class QuestTypeModalComponent implements OnInit {
   constructor(
     public bsModalRef: BsModalRef,
     private fb: FormBuilder,
-    private state: RxState<ModalState>,
+    private state: RxState<QuestTypeState>,
     private questTypeService: QuestTypeService,
     private questTypeDetailState: RxState<QuestTypeDetailState>,
     private cd: ChangeDetectorRef
@@ -102,6 +105,7 @@ export class QuestTypeModalComponent implements OnInit {
     this.state.connect(
       $valid
         .pipe(
+          tap(() => this.state.set({ submitting: true })),
           switchMap((form) => {
             if (+this.id > 0) {
               return this.questTypeService
@@ -128,6 +132,7 @@ export class QuestTypeModalComponent implements OnInit {
             this.bsModalRef.onHide?.emit({
               id: result?.data?.id,
               name: result?.data?.name,
+              success: true,
             });
             this.bsModalRef.hide();
           })
@@ -140,6 +145,7 @@ export class QuestTypeModalComponent implements OnInit {
       $invalid.pipe(tap(() => this.form.revalidateControls([]))),
       () => ({
         hasError: true,
+        submitting: false,
       })
     );
   }
@@ -167,5 +173,13 @@ export class QuestTypeModalComponent implements OnInit {
   removedFiles$ = new Subject<File>();
   get vm$(): Observable<QuestTypeDetailState> {
     return this.questTypeDetailState.select();
+  }
+
+  get name() {
+    return this.form.get('name');
+  }
+
+  public get submitting$(): Observable<boolean> {
+    return this.state.select('submitting');
   }
 }

@@ -77,7 +77,6 @@ export class LocationListComponent implements OnInit {
     );
 
     this.locationListState.hold(this.submitSearch$, (form) => {
-      console.log("data");
       console.log(this.search$.getValue());
       console.log(form);
       this.search$.next({
@@ -212,7 +211,7 @@ export class LocationListComponent implements OnInit {
     const bsModalRef = this.modalService.show(DeleteModalComponent, {
       initialState: {
         id: id,
-        title: 'vị trí',
+        title: 'địa điểm',
       },
     });
     bsModalRef.onHide?.pipe(take(1)).subscribe({

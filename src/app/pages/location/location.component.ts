@@ -19,7 +19,7 @@ export class LocationComponent implements OnInit {
     private readonly locationTypeService: LocationtypeService,
     private readonly areaService: AreaService,
     private readonly cityService: CityService,
-    @Inject(AREA_STATE) areaState: RxState<AreaState>
+    @Inject(AREA_STATE) areaState: RxState<AreaState>,
   ) {
     locationState.connect(locationTypeService.getLocationType(), (_, curr) => ({
       locationTypeIds: curr,

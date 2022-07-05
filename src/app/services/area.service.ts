@@ -4,8 +4,13 @@ import { stringify } from 'query-string';
 import { map, Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import {
-  Area, AreaCreate, AreaListItem,
-  AreaListSearch, IdValue, Paging, Result
+  Area,
+  AreaCreate,
+  AreaListItem,
+  AreaListSearch,
+  IdValue,
+  Paging,
+  Result,
 } from '../models';
 import { BaseService } from './base.service';
 
@@ -45,9 +50,12 @@ export class AreaService extends BaseService {
       `${search.sort?.sortBy}` === 'undefined' ? '' : search.sort?.sortBy;
     var sortDir =
       `${search?.sort?.dir}` === 'undefined' ? '' : search.sort?.dir;
+    var cityId = search?.cityIds == null ? 0 : search?.cityIds;
+
     const query = stringify({
       name: search.keyword,
-      cityid: search?.cityIds,
+      // cityid: search?.cityIds,
+      cityid: cityId,
       pageNumber: isNaN(search?.currentPage!) ? 1 : search?.currentPage! + 1,
       pagesize: 10,
       orderby: `${sortBy} ${sortDir}`,

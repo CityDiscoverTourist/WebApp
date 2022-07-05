@@ -8,18 +8,21 @@ import {
 import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RxState } from '@rx-angular/state';
-import {
-  DatatableComponent,
-  SelectionType,
-  TableColumn,
-} from '@swimlane/ngx-datatable';
+import { DatatableComponent, TableColumn } from '@swimlane/ngx-datatable';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import {
   BehaviorSubject,
-  take,
+  combineLatest,
+  filter,
+  forkJoin,
+  map,
+  mergeAll,
+  mergeMap,
   Observable,
+  of,
   Subject,
   switchMap,
+  take,
   tap,
 } from 'rxjs';
 import {
@@ -29,12 +32,13 @@ import {
   QuestItemListItem,
   QuestItemListSearch,
   QuestListItem,
-  SearchInfo,
 } from 'src/app/models';
 import {
+  AreaService,
   QuestItemService,
   QuestItemTypeService,
   QuestService,
+  QuestTypeService,
 } from 'src/app/services';
 import { PageInfo, SortInfo } from 'src/app/types';
 import { DeleteModalComponent } from '../../share';
@@ -62,7 +66,9 @@ export class QuestDetailComponent implements OnInit {
     private questItemService: QuestItemService,
     private questItemListState: RxState<QuestItemListState>,
     private router: Router,
-    private route: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
+    private areaService: AreaService,
+    private questTypeService: QuestTypeService
   ) {}
 
   ngOnInit(): void {
@@ -73,21 +79,36 @@ export class QuestDetailComponent implements OnInit {
       })
     );
     //Quest
-    this.search$.next({ id: this.route.snapshot.params['id'] });
     this.questDetailState.connect(
-      this.search$
-        .pipe(
-          tap((_) => this.questDetailState.set({ loading: true })),
-          switchMap((s) => this.questService.getQuestById(s.id))
+      this.activatedRoute.paramMap.pipe(
+        tap((_) => this.questDetailState.set({ loading: true })),
+        filter((p) => p.has('id')),
+        map((p) => p.get('id')?.toString()),
+        switchMap((id) => this.questService.getQuestById(id)),
+        switchMap((data) =>
+          forkJoin(
+            [
+              this.questService.getQuestById(data.id.toString()),
+              this.areaService.getAreaById(data.areaId.toString()),
+              this.questTypeService.getQuestTypeById(
+                data.questTypeId.toString()
+              ),
+            ],
+            (quest, area, questType) => {
+              quest.areaName = area.name;
+              quest.questTypeName = questType.name;
+              return quest;
+            }
+          )
         )
-        .pipe(tap((data) => (this.id = data.id.toString()))),
+      ),
       (_, result) => ({
         quest: result,
         loading: false,
       })
     );
+
     //QuestItem
-    this.searchQuestItem$.next({ questId: this.route.snapshot.params['id'] });
     this.questItemListState.connect(
       this.searchQuestItem$.pipe(
         switchMap((s) => this.questItemService.getQuestItemsByQuestId(s))
@@ -144,8 +165,7 @@ export class QuestDetailComponent implements OnInit {
     });
   }
 
-  search$ = new BehaviorSubject<{ id: string }>({ id: '' });
-  get quest$(): Observable<Quest> {
+  get quest$(): Observable<QuestListItem> {
     return this.questDetailState.select('quest');
   }
 
@@ -214,7 +234,7 @@ export class QuestDetailComponent implements OnInit {
 
   onUpdate(id: string) {
     this.router.navigate([`quest-item/${id}/edit`], {
-      relativeTo: this.route,
+      relativeTo: this.activatedRoute,
     });
   }
 

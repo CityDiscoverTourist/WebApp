@@ -159,7 +159,7 @@ export class LocationTypeListComponent implements OnInit {
     const bsModalRef = this.modalService.show(LocationTypeModalComponent, {
       initialState: {
         simpleForm: false,
-        title: 'loại vị trí',
+        title: 'loại địa điểm',
         type: 'Thêm',
       },
     });
@@ -187,7 +187,7 @@ export class LocationTypeListComponent implements OnInit {
     const bsModalRef = this.modalService.show(DeleteModalComponent, {
       initialState: {
         id: id,
-        title: 'loại vị trí',
+        title: 'loại địa điểm',
       },
     });
     bsModalRef.onHide

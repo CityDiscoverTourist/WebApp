@@ -46,13 +46,6 @@ const routes: Routes = [
           ),
       },
       {
-        path: 'customer-task',
-        loadChildren: () =>
-          import('src/app/pages/customer-task/customer-task.module').then(
-            (m) => m.CustomerTaskModule
-          ),
-      },
-      {
         path: 'customer-quest',
         loadChildren: () =>
           import('src/app/pages/customer-quest/customer-quest.module').then(

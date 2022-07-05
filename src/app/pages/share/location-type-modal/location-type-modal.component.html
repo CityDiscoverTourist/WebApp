@@ -22,14 +22,14 @@
         [ngClass]="{ 'is-invalid': form?.hasError('name') }"
       />
       <div class="invalid-feedback" *ngIf="form.hasErrorOf('name', 'required')">
-        Tên của loại loại vị trí không được để trống
+        Tên của địa điểm không được để trống
       </div>
       <ng-container *ngIf="!id">
         <div
           class="invalid-feedback"
           *ngIf="name?.errors?.['nameAlreadyExists']"
         >
-          Tên của loại vị trí đã tồn tại.
+          Tên của địa điểm đã tồn tại.
         </div>
       </ng-container>
     </div>

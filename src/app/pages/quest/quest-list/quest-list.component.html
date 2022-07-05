@@ -36,16 +36,16 @@
             class="me-3"
             formControlName="questTypeIds"
           ></ng-select>
-          <!-- <ng-select
-            [items]="cityIds$ | async"
+          <ng-select
+            [items]="language"
             bindValue="id"
             bindLabel="value"
             [closeOnSelect]="true"
             style="min-width: 200px"
-            placeholder="Thành phố"
+            placeholder="Chọn phiên bản"
             class="me-3"
-            formControlName="cityIds"
-          ></ng-select> -->
+            formControlName="language"
+          ></ng-select>
           <div class="btn-group">
             <button
               type="button"
@@ -82,7 +82,10 @@
           [rowHeight]="50"
           [externalPaging]="true"
           [externalSorting]="true"
-          [messages]="{emptyMessage: 'Không có quest để hiển thị!', totalMessage: 'quest'}"
+          [messages]="{
+            emptyMessage: 'Không có quest để hiển thị!',
+            totalMessage: 'quest'
+          }"
           [count]="(metadata$ | async)?.totalCount || 0"
           [offset]="((metadata$ | async)?.currentPage || 0) - 1"
           [limit]="10"
@@ -109,3 +112,42 @@
     </ng-template>
   </div>
 </div>
+<ng-template #formatPrice let-value="value"> {{ value }} vnđ </ng-template>
+<ng-template #formatStatus let-value="value">
+  <ng-container *ngIf="value == 'Inactive'">
+    <!-- <i class="bi bi-x-circle" style="color: red; font-size: 18px"></i> -->
+    <span
+      style="
+        border: 1px solid #dc143c;
+        padding: 5px 18px;
+        color: #fff;
+        border-radius: 5px;
+        background-color: #dc143c;
+        display: inline-block;
+        min-width: 85px !important; min-height: 30px !important;
+        text-align: center;
+        margin: -5px 1px;
+      "
+    >
+      Inactive
+    </span>
+  </ng-container>
+  <ng-container *ngIf="value == 'Active'">
+    <!-- <i class="bi bi-check2" style="color: '#0EBF00'; font-size: 18px"></i> -->
+    <span
+      style="
+        border: 1px solid #07bc0c;
+        padding: 5px 18px;
+        color: #fff;
+        border-radius: 5px;
+        background-color: #07bc0c;
+        display: inline-block;
+        min-width: 85px !important; min-height: 30px !important;
+        text-align: center;
+        margin: -5px 1px;
+      "
+    >
+      Active
+    </span>
+  </ng-container>
+</ng-template>

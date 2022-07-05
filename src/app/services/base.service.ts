@@ -11,7 +11,7 @@ export class BaseService {
     },
     {
       id: 2,
-      name: 'InActive',
+      name: 'Inactive',
     },
   ];
 

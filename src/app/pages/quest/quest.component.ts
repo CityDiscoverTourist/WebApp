@@ -7,22 +7,20 @@ import { QuestState, QUEST_STATE } from './states/quest.state';
   selector: 'app-quest',
   templateUrl: './quest.component.html',
   styleUrls: ['./quest.component.scss'],
-  providers: [RxState]
+  providers: [RxState],
 })
 export class QuestComponent implements OnInit {
-
   constructor(
-    private readonly questTypeService:QuestTypeService,
+    private readonly questTypeService: QuestTypeService,
     @Inject(QUEST_STATE) private questState: RxState<QuestState>,
-    private readonly areaService:AreaService
+    private readonly areaService: AreaService
   ) {
-    questState.connect(questTypeService.getQuestType(),(_,curr)=>({
-      questTypeIds:curr
+    questState.connect(questTypeService.getQuestTypeIdValue(), (_, curr) => ({
+      questTypeIds: curr,
     }));
-    questState.connect(areaService.getAreaIdValue(),(_,curr)=>({
-      areaIds:curr
+    questState.connect(areaService.getAreaIdValue(), (_, curr) => ({
+      areaIds: curr,
     }));
   }
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 }
