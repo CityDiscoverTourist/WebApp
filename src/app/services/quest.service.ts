@@ -73,33 +73,13 @@ export class QuestService extends BaseService {
     );
   }
 
-  getQuestById(id: string | undefined): Observable<Quest> {
+  getQuestById(id: string | undefined): Observable<QuestListItem> {
     return this.http
-      .get<Result<Quest>>(
+      .get<Result<QuestListItem>>(
         `${environment.apiUrl}/api/v1/quests/${id}`,
         this.httpOptions
       )
-      .pipe(
-        map(
-          (response: Result<Quest>) =>
-            ({
-              id: response.data?.id,
-              title: response.data?.title,
-              description: response.data?.description,
-              price: response.data?.price,
-              estimatedTime: response.data?.estimatedTime,
-              estimatedDistance: response.data?.estimatedDistance,
-              availableTime: response.data?.availableTime,
-              createdDate: response.data?.createdDate,
-              updatedDate: response.data?.updatedDate,
-              status: response.data?.status,
-              questTypeId: response.data?.questTypeId,
-              questOwnerId: response.data?.questOwnerId,
-              areaId: response.data?.areaId,
-              imagePath: response.data?.imagePath,
-            } as Quest)
-        )
-      );
+      .pipe(map((response: Result<QuestListItem>) => response.data));
   }
   deleteQuestById(id: string): Observable<string | undefined> {
     return this.http
