@@ -51,7 +51,7 @@ export class QuestTypeModalComponent implements OnInit {
 
   ngOnInit(): void {
     this.initForm();
-    this.status=this.questTypeService.status;
+    this.status = this.questTypeService.status;
     this.search$.next({ id: this.id });
     this.questTypeDetailState.connect(
       this.search$
@@ -101,12 +101,26 @@ export class QuestTypeModalComponent implements OnInit {
       }
     );
 
-    const [$valid, $invalid] = partition(this.submit$, (f) => f.valid);
+    const [$valid, $invalid] = partition(
+      this.submit$,
+      ({ form }) => form.valid
+    );
     this.state.connect(
       $valid
         .pipe(
           tap(() => this.state.set({ submitting: true })),
-          switchMap((form) => {
+          tap(({ form }) => {
+            var name = form.controls['name'].value + ' ';
+            var arrName = name.split('|');
+            if (arrName.length == 1) {
+              name = arrName[0] + '()' + arrName[0];
+            } else {
+              name = arrName[0] + '()' + arrName[1];
+            }
+            form.value['name'] = name;
+            return form;
+          }),
+          switchMap(({ form }) => {
             if (+this.id > 0) {
               return this.questTypeService
                 .updateQuestTypeById(form.value)
@@ -156,13 +170,13 @@ export class QuestTypeModalComponent implements OnInit {
   initForm() {
     this.form = this.fb.group({
       id: [0],
-      name: [null, [Validators.required]],
-      status: ['',[Validators.required]],
+      name: ['', [Validators.required]],
+      status: ['', [Validators.required]],
       image: [],
     });
   }
 
-  submit$ = new Subject<FormGroup>();
+  submit$ = new Subject<{ form: FormGroup }>();
 
   public get hasError$(): Observable<boolean> {
     return this.state.select('hasError');
