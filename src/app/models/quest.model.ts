@@ -33,6 +33,8 @@ export interface QuestListItem {
   questOwnerId: number;
   areaId: number;
   imagePath: string;
+  areaName:string;
+  questTypeName:string;
 }
 
 export interface QuestListSearch extends SearchInfo {

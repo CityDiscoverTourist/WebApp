@@ -193,9 +193,12 @@ export class QuestListComponent implements OnInit {
     // console.log('Activate Event', event);
     if (event.type == 'click') {
       console.log(event.row);
-      this.router.navigate(['./', event.row.id], {
-        relativeTo: this.activatedRoute,
-      });
+      this.router.navigate(
+        ['./', event.row.id],
+        {
+          relativeTo: this.activatedRoute,
+        }
+      );
     }
   }
   onPage(paging: PageInfo) {
