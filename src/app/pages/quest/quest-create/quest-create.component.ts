@@ -225,7 +225,6 @@ export class QuestCreateComponent implements OnInit {
   }
 
   get title() {
-    console.log(this.form.get('title'));
     return this.form.get('title');
   }
 
