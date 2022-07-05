@@ -29,7 +29,9 @@ $btn-icon-width: 38px;
 // @import "~bootstrap/scss/bootstrap";
 
 /* Importing Datepicker SCSS file. */
-// @import "node_modules/ngx-bootstrap/datepicker/bs-datepicker";
+
+
+
 .btn-hoverable {
   &:hover {
     background: rgba(0, 0, 0, 0.1) !important;
@@ -115,3 +117,14 @@ input.number[type="number"] {
     color: #0964cf;
   }
 }
+
+.ngx-datatable.material {
+  .datatable-header {
+    .datatable-header-cell {
+        font-size: 1rem;
+        line-height: 20px;
+        color: #747c87;
+    }
+  }
+}
+
