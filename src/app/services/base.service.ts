@@ -7,11 +7,11 @@ export class BaseService {
   status = [
     {
       id: 1,
-      name: 'Active',
+      value: 'Active',
     },
     {
       id: 2,
-      name: 'Inactive',
+      value: 'Inactive',
     },
   ];
 
