@@ -3,24 +3,22 @@ import {
   ChangeDetectorRef,
   Component,
   Inject,
-  OnInit,
+  OnInit
 } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { HotToastService } from '@ngneat/hot-toast';
 import { RxState } from '@rx-angular/state';
 import {
-  BehaviorSubject,
   filter,
   map,
   Observable,
   partition,
   pipe,
   Subject,
-  switchMap,
-  take,
-  tap,
+  switchMap, tap
 } from 'rxjs';
+import { hourValidator } from 'src/app/common/validations';
 import { IdValue, Quest, QuestCreate, QuestListItem } from 'src/app/models';
 import { QuestService } from 'src/app/services';
 import { QuestDetailState, QuestState, QUEST_STATE } from '../states';
@@ -39,6 +37,7 @@ interface QuestUpdateState {
   providers: [RxState],
 })
 export class QuestEditComponent implements OnInit {
+  status: { id: number; value: string }[] = [];
   private id: string;
   public questListItem: QuestListItem;
   public img: string = '';
@@ -59,6 +58,7 @@ export class QuestEditComponent implements OnInit {
     }));
 
     this.initForm();
+    this.status = this.questService.status;
 
     this.questDetailState.connect(
       this.activatedRoute.paramMap
@@ -70,11 +70,10 @@ export class QuestEditComponent implements OnInit {
         )
         .pipe(
           tap((data) => {
-            console.log(data);
             this.id = data.id.toString();
             this.form.patchValue(data);
             this.img = data.imagePath;
-          })
+          }),
         ),
       (_, result) => ({
         quest: result,
@@ -110,14 +109,14 @@ export class QuestEditComponent implements OnInit {
 
     const [valid$, invalid$] = partition(
       this.submit$,
-      ({ form }) => form.value
+      ({ form }) => form.valid
     );
 
     this.state.connect(
       valid$.pipe(
         tap(() => this.state.set({ submitting: true })),
         pipe(
-          tap(({ form }) => {
+          tap(({ form, redirect }) => {
             var title = form.controls['title'].value + ' ';
             var arrName = title.split('|');
             if (arrName.length == 1) {
@@ -170,14 +169,14 @@ export class QuestEditComponent implements OnInit {
       title: ['', [Validators.required, Validators.minLength(8)]],
       description: [],
       price: [0, [Validators.required, Validators.min(10)]],
-      estimatedTime: [''],
-      estimatedDistance: [],
-      availableTime: [],
-      questTypeId: [],
+      estimatedTime: ['', [Validators.required]],
+      estimatedDistance: ['', [Validators.required]],
+      availableTime: ['', [Validators.required], [hourValidator()]],
+      questTypeId: ['', [Validators.required]],
       image: [''],
       questOwnerId: [2],
-      areaId: [],
-      status: [],
+      areaId: ['', [Validators.required]],
+      status: ['', [Validators.required]],
     });
   }
 
@@ -195,7 +194,7 @@ export class QuestEditComponent implements OnInit {
     return this.questState.select('questTypeIds');
   }
 
-  get areaIds(): Observable<IdValue[]> {
+  get areaIds$(): Observable<IdValue[]> {
     return this.questState.select('areaIds');
   }
 
@@ -211,4 +210,8 @@ export class QuestEditComponent implements OnInit {
     this.img = '';
     this.form.controls['image'].setValue('');
   }
+
+  showAddQuestType() {}
+
+  showAddArea() {}
 }

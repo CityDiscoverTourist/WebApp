@@ -10,22 +10,62 @@
               <input
                 type="text"
                 class="form-control"
-                placeholder="Nhập tên quest"
+                placeholder="Nhập tên quest tiếng việt | tiếng anh"
                 id="title"
                 formControlName="title"
+                [ngClass]="{ 'is-invalid': form?.hasError('title') }"
               />
+              <div
+                class="invalid-feedback"
+                *ngIf="form?.hasErrorOf('title', 'required')"
+              >
+                Tên quest bắt buộc
+              </div>
+              <div
+                class="invalid-feedback"
+                *ngIf="form?.hasErrorOf('title', 'minlength')"
+              >
+                Độ dài tên ít nhất 8 kí tự
+              </div>
+              <small
+                id="title"
+                class="form-text text-muted"
+                *ngIf="form?.hasValue('title')"
+                >Dùng | để phân cách nếu thêm tên tiếng anh
+              </small>
             </div>
             <div class="row mb-3">
               <div class="col">
                 <div class="form-group">
                   <label class="form-label" for="price">Giá tiền</label>
-                  <input
-                    type="number"
-                    class="form-control"
-                    id="price"
-                    formControlName="price"
-                  />
-                  <div class="invalid-feedback">Giá lớn hơn 10</div>
+                  <div class="input-group mb-3">
+                    <input
+                      type="number"
+                      class="form-control"
+                      id="price"
+                      formControlName="price"
+                      [ngClass]="{ 'is-invalid': form?.hasError('price') }"
+                    />
+                    <div class="input-group-append">
+                      <span
+                        class="input-group-text"
+                        style="width: 50px !important"
+                        >vnđ</span
+                      >
+                    </div>
+                    <div
+                      class="invalid-feedback"
+                      *ngIf="form?.hasErrorOf('price', 'required')"
+                    >
+                      Giá tiền bắt buộc
+                    </div>
+                    <div
+                      class="invalid-feedback"
+                      *ngIf="form?.hasErrorOf('price', 'min')"
+                    >
+                      Giá lớn hơn 10
+                    </div>
+                  </div>
                 </div>
               </div>
               <div class="col">
@@ -35,12 +75,29 @@
                   >
                   <div class="input-group mb-3">
                     <input
-                      type="text"
+                      type="number"
                       class="form-control"
                       aria-label="estimatedTime"
                       id="estimatedTime"
                       formControlName="estimatedTime"
+                      [ngClass]="{
+                        'is-invalid': form?.hasError('estimatedTime')
+                      }"
                     />
+                    <div class="input-group-append">
+                      <span
+                        class="input-group-text"
+                        style="width: 50px !important"
+                        >phút</span
+                      >
+                    </div>
+
+                    <div
+                      class="invalid-feedback"
+                      *ngIf="form?.hasErrorOf('estimatedTime', 'required')"
+                    >
+                      Thời gian dự tính bắt buộc
+                    </div>
                   </div>
                 </div>
               </div>
@@ -51,24 +108,57 @@
                   <label class="form-label" for="availableTime"
                     >Thời gian hoạt động</label
                   >
-                  <input
-                    type="text"
-                    class="form-control"
-                    id="availableTime"
-                    formControlName="availableTime"
-                    placeholder="7h AM/ 17h PM"
-                  />
+                  <div class="input-group mb-3">
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="availableTime"
+                      formControlName="availableTime"
+                      min="07:00"
+                      max="18:00"
+                      placeholder="07:00 AM - 18:00 PM"
+                      [ngClass]="{
+                        'is-invalid': form?.hasError('availableTime')
+                      }"
+                    />
+                    <div
+                      class="invalid-feedback"
+                      *ngIf="form.hasErrorOf('availableTime', 'required')"
+                    >
+                      Thời gian hoạt động bắt buộc
+                    </div>
+                  </div>
                 </div>
               </div>
               <div class="col">
                 <div class="form-group">
-                  <label class="form-label">Khoảng cách ước tính</label>
-                  <input
-                    type="text"
-                    class="form-control"
-                    id="estimatedDistance"
-                    formControlName="estimatedDistance"
-                  />
+                  <label class="form-label" for="estimatedDistance"
+                    >Khoảng cách ước tính</label
+                  >
+                  <div class="input-group mb-3">
+                    <input
+                      type="number"
+                      class="form-control"
+                      id="estimatedDistance"
+                      formControlName="estimatedDistance"
+                      [ngClass]="{
+                        'is-invalid': form?.hasError('estimatedDistance')
+                      }"
+                    />
+                    <div class="input-group-append">
+                      <span
+                        class="input-group-text"
+                        style="width: 50px !important"
+                        >km</span
+                      >
+                    </div>
+                    <div
+                      class="invalid-feedback"
+                      *ngIf="form.hasErrorOf('estimatedDistance', 'required')"
+                    >
+                      Khoảng cách ước tính bắt buộc
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -148,74 +238,85 @@
       </div>
       <div class="col-4">
         <div class="card mb-3">
-          <div class="card-header bg-white py-3">Thông tin thêm</div>
+          <!-- <div class="card-header bg-white py-3">Thông tin thêm</div> -->
           <div class="card-body">
             <div class="form-group mb-3">
-              <label for="questTypeId" class="form-label">Loại quest</label>
+              <label for="questTypeId" class="form-label"
+                >Chọn loại quest</label
+              >
               <ng-select
                 [items]="questTypeIds | async"
                 bindValue="id"
                 bindLabel="value"
                 formControlName="questTypeId"
                 class="header-p-0"
+                [ngClass]="{
+                  'is-invalid': form?.hasError('questTypeId')
+                }"
               >
                 <ng-template ng-header-tmp>
                   <button
                     class="btn btn-default btn-sm rounded-0 text-center w-100"
+                    (click)="showAddQuestType()"
                   >
                     <i class="bi bi-plus-circle"></i>
                     Thêm loại quest
                   </button>
-                </ng-template>
-              </ng-select>
+                </ng-template></ng-select
+              >
+              <div
+                class="invalid-feedback"
+                *ngIf="form.hasErrorOf('questTypeId', 'required')"
+              >
+                Loại quest bắt buộc
+              </div>
             </div>
             <div class="form-group mb-3">
               <label for="areaId" class="form-label">Chọn khu vực</label>
               <ng-select
-                [items]="areaIds | async"
+                [items]="areaIds$ | async"
                 bindValue="id"
                 bindLabel="value"
+                class="header-p-0"
                 formControlName="areaId"
+                [ngClass]="{ 'is-invalid': form?.hasError('areaId') }"
               >
                 <ng-template ng-header-tmp>
                   <button
                     class="btn btn-default btn-sm rounded-0 text-center w-100"
+                    (click)="showAddArea()"
                   >
                     <i class="bi bi-plus-circle"></i>
                     Thêm khu vực
                   </button>
-                </ng-template></ng-select
+                </ng-template>
+              </ng-select>
+              <div
+                class="invalid-feedback"
+                *ngIf="form.hasErrorOf('areaId', 'required')"
               >
+                Vui lòng chọn khu vực
+              </div>
             </div>
           </div>
         </div>
         <div class="card mb-3">
           <div class="card-body">
-            <!-- <div class="d-flex align-items-end justify-content-between">
-                <div>
-                  <span>Trạng thái</span>
-                  <div>Áp dụng</div>
-                </div>
-                <div class="form-check form-switch mb-0">
-                  <input
-                    class="form-check-input"
-                    type="checkbox"
-                    role="switch"
-                    id="status"
-                  />
-                  <label class="form-check-label" for="status"></label>
-                </div>
-              </div> -->
-            <div class="col">
-              <div class="form-group">
-                <label class="form-label" for="status">Trạng thái</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  id="status"
-                  formControlName="status"
-                />
-              </div>
+            <label for="status" class="form-label">Trạng thái</label>
+            <ng-select
+              [items]="status"
+              bindValue="value"
+              bindLabel="value"
+              placeholder="Chọn trạng thái"
+              [clearable]="true"
+              formControlName="status"
+              [ngClass]="{ 'is-invalid': form?.hasError('status') }"
+            ></ng-select>
+            <div
+              class="invalid-feedback"
+              *ngIf="form.hasErrorOf('status', 'required')"
+            >
+              Vui lòng chọn trạng thái
             </div>
           </div>
         </div>
