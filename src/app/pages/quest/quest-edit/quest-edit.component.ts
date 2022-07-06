@@ -11,6 +11,8 @@ import { HotToastService } from '@ngneat/hot-toast';
 import { RxState } from '@rx-angular/state';
 import {
   BehaviorSubject,
+  filter,
+  map,
   Observable,
   partition,
   pipe,
@@ -45,28 +47,30 @@ export class QuestEditComponent implements OnInit {
     private fb: FormBuilder,
     private toast: HotToastService,
     private cd: ChangeDetectorRef,
-    private route: ActivatedRoute,
+    private activatedRoute: ActivatedRoute,
     private questDetailState: RxState<QuestDetailState>,
     private questService: QuestService,
     private state: RxState<QuestUpdateState>
   ) {}
 
   ngOnInit(): void {
-    var id = +this.route.snapshot.params['id'].toString();
     this.state.connect(this.toggleDescription$, (prev, _) => ({
       showQuestDescription: !prev.showQuestDescription,
     }));
 
     this.initForm();
-    this.search$.next({ id: id.toString() });
+
     this.questDetailState.connect(
-      this.search$
+      this.activatedRoute.paramMap
         .pipe(
           tap((_) => this.questDetailState.set({ loading: true })),
-          switchMap((s) => this.questService.getQuestById(s.id))
+          filter((p) => p.has('id')),
+          map((p) => p.get('id')?.toString()),
+          switchMap((s) => this.questService.getQuestByIdNoLangue(s))
         )
         .pipe(
           tap((data) => {
+            console.log(data);
             this.id = data.id.toString();
             this.form.patchValue(data);
             this.img = data.imagePath;
@@ -104,14 +108,38 @@ export class QuestEditComponent implements OnInit {
       }
     );
 
-    const [valid$, invalid$] = partition(this.submit$, (f) => f.value);
+    const [valid$, invalid$] = partition(
+      this.submit$,
+      ({ form }) => form.value
+    );
 
     this.state.connect(
       valid$.pipe(
         tap(() => this.state.set({ submitting: true })),
-        switchMap((f) => {
+        pipe(
+          tap(({ form }) => {
+            var title = form.controls['title'].value + ' ';
+            var arrName = title.split('|');
+            if (arrName.length == 1) {
+              title = arrName[0] + '()' + arrName[0];
+            } else {
+              title = arrName[0] + '()' + arrName[1];
+            }
+            form.value['title'] = title;
+            var description = form.controls['description'].value;
+            var arrDescription = description.split('|');
+            if (arrDescription.length == 1) {
+              description = arrDescription[0] + '()' + arrDescription[0];
+            } else {
+              description = arrDescription[0] + '()' + arrDescription[1];
+            }
+            form.value['description'] = description;
+            return form;
+          })
+        ),
+        switchMap(({ form }) => {
           console.log(this.form.value);
-          return this.questService.updateQuest(f.value as QuestCreate);
+          return this.questService.updateQuest(form.value as QuestCreate);
         }),
         tap((result) => {
           if (result.id) {
@@ -124,11 +152,9 @@ export class QuestEditComponent implements OnInit {
         submitting: false,
       })
     );
-    // hay
-    this.state.hold(invalid$.pipe(), (f) => {
+    this.state.hold(invalid$.pipe(), ({ form }) => {
       this.toast.error('Giá trị bạn nhập không đúng');
-      // this.form.revalidateControls([]);
-      f.revalidateControls([]);
+      form.revalidateControls([]);
     });
 
     this.questState.connect(this.questypeIds$, (prev, curr) => ({
@@ -148,14 +174,13 @@ export class QuestEditComponent implements OnInit {
       estimatedDistance: [],
       availableTime: [],
       questTypeId: [],
-      image: [""],
+      image: [''],
       questOwnerId: [2],
       areaId: [],
-      status: [false],
+      status: [],
     });
   }
 
-  search$ = new BehaviorSubject<{ id: string | undefined }>({ id: '' });
   get quest$(): Observable<Quest> {
     return this.questDetailState.select('quest');
   }
@@ -179,12 +204,11 @@ export class QuestEditComponent implements OnInit {
   }
 
   formSubmit$ = new Subject<FormGroup>();
-  submit$ = new Subject<FormGroup>();
+  submit$ = new Subject<{ form: FormGroup; redirect: boolean }>();
   questypeIds$ = new Subject<{ id: number; name: string }>();
 
   deleteImage() {
     this.img = '';
     this.form.controls['image'].setValue('');
-    console.log(this.form.value);
   }
 }
