@@ -98,7 +98,7 @@ export class QuestService extends BaseService {
       .pipe(map((response: Result<QuestListItem>) => response.status));
   }
 
-  updateQuest(quest: QuestCreate): Observable<QuestCreateResult> {
+  updateQuest(quest: QuestCreate): Observable<Result<Quest>> {
     let payload = new FormData();
     payload.append('id', quest.id.toString());
     payload.append('title', quest.title);
@@ -115,17 +115,10 @@ export class QuestService extends BaseService {
     // payload.append('questOwnerId', quest.questOwnerId.toString());
     payload.append('areaId', quest.areaId.toString());
 
-    return this.http
-      .put<Result<Quest>>(
-        `${environment.apiUrl}/api/v1/quests/`,
-        payload,
-        this.httpOptions
-      )
-      .pipe(
-        map(
-          (response: Result<Quest>) =>
-            ({ id: response.data?.id } as QuestCreateResult)
-        )
-      );
+    return this.http.put<Result<Quest>>(
+      `${environment.apiUrl}/api/v1/quests/`,
+      payload,
+      this.httpOptions
+    );
   }
 }
