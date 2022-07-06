@@ -81,6 +81,14 @@ export class QuestService extends BaseService {
       )
       .pipe(map((response: Result<QuestListItem>) => response.data));
   }
+  getQuestByIdNoLangue(id: string | undefined): Observable<QuestListItem> {
+    return this.http
+      .get<Result<QuestListItem>>(
+        `${environment.apiUrl}/api/v1/quests/${id}/not-language`,
+        this.httpOptions
+      )
+      .pipe(map((response: Result<QuestListItem>) => response.data));
+  }
   deleteQuestById(id: string): Observable<string | undefined> {
     return this.http
       .delete<Result<QuestListItem>>(
