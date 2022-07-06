@@ -3,20 +3,23 @@ import {
   ChangeDetectorRef,
   Component,
   Inject,
-  OnInit
+  OnInit,
 } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { HotToastService } from '@ngneat/hot-toast';
 import { RxState } from '@rx-angular/state';
 import {
+  catchError,
   filter,
   map,
   Observable,
+  of,
   partition,
   pipe,
   Subject,
-  switchMap, tap
+  switchMap,
+  tap,
 } from 'rxjs';
 import { hourValidator } from 'src/app/common/validations';
 import { IdValue, Quest, QuestCreate, QuestListItem } from 'src/app/models';
@@ -46,6 +49,7 @@ export class QuestEditComponent implements OnInit {
     private fb: FormBuilder,
     private toast: HotToastService,
     private cd: ChangeDetectorRef,
+    private router: Router,
     private activatedRoute: ActivatedRoute,
     private questDetailState: RxState<QuestDetailState>,
     private questService: QuestService,
@@ -73,7 +77,7 @@ export class QuestEditComponent implements OnInit {
             this.id = data.id.toString();
             this.form.patchValue(data);
             this.img = data.imagePath;
-          }),
+          })
         ),
       (_, result) => ({
         quest: result,
@@ -136,13 +140,23 @@ export class QuestEditComponent implements OnInit {
             return form;
           })
         ),
-        switchMap(({ form }) => {
-          console.log(this.form.value);
-          return this.questService.updateQuest(form.value as QuestCreate);
-        }),
+        switchMap(({ form, redirect }) =>
+          this.questService.updateQuest(form.value as QuestCreate).pipe(
+            catchError(() => of({ status: 'data not modified', data: null })),
+            map((r) => ({ ...r, redirect }))
+          )
+        ),
         tap((result) => {
-          if (result.id) {
-            this.toast.success('Cập nhật quest thành công');
+          if (!result.data?.id) {
+            return;
+          }
+          this.toast.success(`Cập nhật quest thành công`);
+          if (result.redirect) {
+            this.router.navigate(['../../', result.data?.id], {
+              relativeTo: this.activatedRoute,
+            });
+          } else {
+            this.initForm();
           }
         })
       ),
