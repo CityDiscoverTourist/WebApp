@@ -29,7 +29,7 @@ export class CityListComponent implements OnInit {
   records: CityListItem[] = [];
   @ViewChild(DatatableComponent) table!: DatatableComponent;
   columns: TableColumn[] = [];
-  status: { id: number; name: string }[] = [];
+  status: { id: number; value: string }[] = [];
 
   constructor(
     private cityListState: RxState<CityListState>,

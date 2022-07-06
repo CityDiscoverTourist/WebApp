@@ -39,7 +39,7 @@ export class QuestTypeModalComponent implements OnInit {
   title: string = '';
   type: string = '';
   public img: string = '';
-  status: { id: number; name: string }[] = [];
+  status: { id: number; value: string }[] = [];
   constructor(
     public bsModalRef: BsModalRef,
     private fb: FormBuilder,

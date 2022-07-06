@@ -46,7 +46,7 @@ interface LocationCreateState {
 export class LocationCreateComponent implements OnInit, AfterViewChecked {
   geoCoder: any;
   map: any;
-  status: { id: number; name: string }[] = [];
+  status: { id: number; value: string }[] = [];
   constructor(
     @Inject(LOCATION_STATE) private locationState: RxState<LocationState>,
     private fb: FormBuilder,

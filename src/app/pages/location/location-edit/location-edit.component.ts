@@ -42,7 +42,7 @@ export class LocationEditComponent implements OnInit, AfterViewChecked {
   geoCoder: any;
   map: any;
   id = '';
-  status: { id: number; name: string }[] = [];
+  status: { id: number; value: string }[] = [];
   constructor(
     private locationDetailState: RxState<LocationDetailState>,
     private router: Router,

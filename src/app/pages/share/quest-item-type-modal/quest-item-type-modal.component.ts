@@ -31,7 +31,7 @@ export class QuestItemTypeModalComponent implements OnInit {
   id: string = '';
   title: string = '';
   type: string = '';
-  status: { id: number; name: string }[] = [];
+  status: { id: number; value: string }[] = [];
 
   constructor(
     public bsModalRef: BsModalRef,

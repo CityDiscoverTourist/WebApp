@@ -33,7 +33,7 @@ import { LocationTypeListState } from '../states';
 export class LocationTypeListComponent implements OnInit {
   @ViewChild(DatatableComponent) table!: DatatableComponent;
   columns: TableColumn[] = [];
-  status: { id: number; name: string }[] = [];
+  status: { id: number; value: string }[] = [];
   constructor(
     private locationTypeListState: RxState<LocationTypeListState>,
     private locationTypeService: LocationtypeService,
