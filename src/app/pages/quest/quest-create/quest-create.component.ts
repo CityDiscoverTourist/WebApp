@@ -3,7 +3,7 @@ import {
   ChangeDetectorRef,
   Component,
   Inject,
-  OnInit
+  OnInit,
 } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -21,7 +21,7 @@ import {
   Subject,
   switchMap,
   take,
-  tap
+  tap,
 } from 'rxjs';
 import { hourValidator } from 'src/app/common/validations';
 import { IdValue, QuestCreate } from 'src/app/models';
@@ -107,7 +107,7 @@ export class QuestCreateComponent implements OnInit {
               title = arrName[0] + '()' + arrName[1];
             }
             form.value['title'] = title;
-            var description = form.controls['description'].value;
+            var description = form.controls['description'].value+"";
             var arrDescription = description.split('|');
             if (arrDescription.length == 1) {
               description = arrDescription[0] + '()' + arrDescription[0];
@@ -115,9 +115,14 @@ export class QuestCreateComponent implements OnInit {
               description = arrDescription[0] + '()' + arrDescription[1];
             }
             form.value['description'] = description;
-            form.controls['status'].value == 'true'
-              ? (form.value['status'] = 'Active')
-              : (form.value['status'] = 'Inactive');
+            var availableTime1 = form.controls['availableTime1'].value + ' ';
+            var availableTime2 = form.controls['availableTime2'].value + ' ';
+            var availableTime =
+              form.controls['availableTime1'].value +
+              ' - ' +
+              form.controls['availableTime2'].value +
+              ' ';
+            form.value['availableTime'] = availableTime;
             return form;
           })
         ),
@@ -205,13 +210,25 @@ export class QuestCreateComponent implements OnInit {
     this.form = this.fb.group({
       id: [0],
       title: ['', [Validators.required, Validators.minLength(8)]],
-      description: [
-        '<p>Tiếng việt:</p><p><br/></p><p><br/></p><p><br/></p>|<p>Tiếng Anh:</p>',
-      ],
+      description: [],
       price: [0, [Validators.required, Validators.min(10)]],
       estimatedTime: ['', [Validators.required]],
       estimatedDistance: ['', [Validators.required]],
-      availableTime: ['', [Validators.required], [hourValidator()]],
+      availableTime: [''],
+      availableTime1: [
+        '',
+        [
+          Validators.required,
+          Validators.pattern('^([7-9]|0[7-9]|1[0-2]):[0-5][0-9]$'),
+        ],
+      ],
+      availableTime2: [
+        '',
+        [
+          Validators.required,
+          Validators.pattern('^([1-6]|0[1-6]):[0-5][0-9]$'),
+        ],
+      ],
       questTypeId: ['', [Validators.required]],
       image: [],
       questOwnerId: [''],
@@ -220,8 +237,8 @@ export class QuestCreateComponent implements OnInit {
     });
   }
 
-  get availableTime() {
-    return this.form.get('availableTime');
+  get availableTime2() {
+    return this.form.get('availableTime2');
   }
 
   get title() {

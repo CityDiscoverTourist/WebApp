@@ -75,7 +75,7 @@
                   >
                   <div class="input-group mb-3">
                     <input
-                      type="text"
+                      type="number"
                       class="form-control"
                       aria-label="estimatedTime"
                       id="estimatedTime"
@@ -112,74 +112,69 @@
                     <input
                       type="text"
                       class="form-control"
+                      id="availableTime1"
+                      placeholder="07:00"
+                      formControlName="availableTime1"
+                      [ngClass]="{
+                        'is-invalid': form?.hasError('availableTime1')
+                      }"
+                    />
+                    <div class="input-group-append">
+                      <span
+                        class="input-group-text"
+                        style="width: 50px !important"
+                        >AM</span
+                      >
+                    </div>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="availableTime2"
+                      placeholder="06:00"
+                      formControlName="availableTime2"
+                      [ngClass]="{
+                        'is-invalid': form?.hasError('availableTime2')
+                      }"
+                    />
+                    <div class="input-group-append">
+                      <span
+                        class="input-group-text"
+                        style="width: 50px !important"
+                        >PM</span
+                      >
+                    </div>
+                    <input
+                      type="hidden"
+                      class="form-control"
                       id="availableTime"
                       formControlName="availableTime"
-                      min="07:00"
-                      max="18:00"
-                      placeholder="07:00 AM - 18:00 PM"
                       [ngClass]="{
                         'is-invalid': form?.hasError('availableTime')
                       }"
                     />
                     <div
                       class="invalid-feedback"
-                      *ngIf="form.hasErrorOf('availableTime', 'required')"
+                      *ngIf="form.hasErrorOf('availableTime1', 'required')"
                     >
-                      Thời gian hoạt động bắt buộc
+                      Thời gian bắt đầu bắt buộc
                     </div>
                     <div
                       class="invalid-feedback"
-                      *ngIf="availableTime?.errors?.['format789']"
+                      *ngIf="form.hasErrorOf('availableTime1', 'pattern')"
                     >
-                      Thời gian từ 07:00 AM - 18:00 PM
+                      Thời gian bắt từ 07:00 AM đến 12:00 AM
                     </div>
                     <div
                       class="invalid-feedback"
-                      *ngIf="availableTime?.errors?.['formatColon']"
+                      *ngIf="form.hasErrorOf('availableTime2', 'required')"
                     >
-                      Dùng : phân cách giữa giờ và phút
+                      Thời gian kết thúc bắt buộc
                     </div>
                     <div
                       class="invalid-feedback"
-                      *ngIf="availableTime?.errors?.['formatSecond59']"
+                      *ngIf="form.hasErrorOf('availableTime2', 'pattern')"
                     >
-                      Số giây từ 00 đên 50
-                    </div>
-                    <div
-                      class="invalid-feedback"
-                      *ngIf="availableTime?.errors?.['format1017']"
-                    >
-                      Thời gian bắt đầu từ 07 AM đến 18 PM
-                    </div>
-                    <div
-                      class="invalid-feedback"
-                      *ngIf="availableTime?.errors?.['formatAM']"
-                    >
-                      Định dạng 07:00 AM - 18:00 PM
-                    </div>
-                    <div
-                      class="invalid-feedback"
-                      *ngIf="availableTime?.errors?.['formatSecond']"
-                    >
-                      Phút không hợp lệ
-                    </div>
-                    <div
-                      class="invalid-feedback"
-                      *ngIf="availableTime?.errors?.['formatHorizontalConflict']"
-                    >
-                      Kí tự - để phân tách giữa thời gian bắt đầu và kết thúc
-                    </div>
-                    <div
-                      class="invalid-feedback"
-                      *ngIf="availableTime?.errors?.['formatCloseTime']"
-                    >
-                      Thời gian kết thúc không hợp lệ (lớn nhất 18h)
-                    </div>
-                    <div
-                      class="invalid-feedback"
-                      *ngIf="availableTime?.errors?.['formatPM']"
-                    >
-                      Định dạng 07:00 AM - 18:00 PM
+                      Thời gian kết thúc từ 01:00 PM đến 06:00 PM
                     </div>
                   </div>
                 </div>
@@ -191,7 +186,7 @@
                   >
                   <div class="input-group mb-3">
                     <input
-                      type="text"
+                      type="number"
                       class="form-control"
                       id="estimatedDistance"
                       formControlName="estimatedDistance"
@@ -236,9 +231,7 @@
 
         <div class="card mb-3">
           <div class="card-body">
-            <div
-              class="d-flex bg-white border-bottom-0 mb-3 p-0 px-0"
-            >
+            <div class="d-flex bg-white border-bottom-0 mb-3 p-0 px-0">
               <div>Ảnh quest</div>
               <div class="flex-fill"></div>
               <!-- <div class="me-3" style="color: #0d6efd">
@@ -359,21 +352,6 @@
         </div>
         <div class="card mb-3">
           <div class="card-body">
-            <!-- <div class="d-flex align-items-end justify-content-between"> -->
-            <!-- <div>
-                <span>Trạng thái</span>
-                <div>Áp dụng</div>
-              </div>
-              <div class="form-check form-switch mb-0">
-                <input
-                  class="form-check-input"
-                  type="checkbox"
-                  role="switch"
-                  id="status"
-                  formControlName="status"
-                />
-                <label class="form-check-label" for="status"></label>
-              </div> -->
             <label for="status" class="form-label">Trạng thái</label>
             <ng-select
               [items]="status"
