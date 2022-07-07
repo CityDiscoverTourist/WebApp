@@ -115,8 +115,6 @@ export class QuestCreateComponent implements OnInit {
               description = arrDescription[0] + '()' + arrDescription[1];
             }
             form.value['description'] = description;
-            var availableTime1 = form.controls['availableTime1'].value + ' ';
-            var availableTime2 = form.controls['availableTime2'].value + ' ';
             var availableTime =
               form.controls['availableTime1'].value +
               ' - ' +
