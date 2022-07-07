@@ -112,20 +112,69 @@
                     <input
                       type="text"
                       class="form-control"
+                      id="availableTime1"
+                      placeholder="07:00"
+                      formControlName="availableTime1"
+                      [ngClass]="{
+                        'is-invalid': form?.hasError('availableTime1')
+                      }"
+                    />
+                    <div class="input-group-append">
+                      <span
+                        class="input-group-text"
+                        style="width: 50px !important"
+                        >AM</span
+                      >
+                    </div>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="availableTime2"
+                      placeholder="06:00"
+                      formControlName="availableTime2"
+                      [ngClass]="{
+                        'is-invalid': form?.hasError('availableTime2')
+                      }"
+                    />
+                    <div class="input-group-append">
+                      <span
+                        class="input-group-text"
+                        style="width: 50px !important"
+                        >PM</span
+                      >
+                    </div>
+                    <input
+                      type="hidden"
+                      class="form-control"
                       id="availableTime"
                       formControlName="availableTime"
-                      min="07:00"
-                      max="18:00"
-                      placeholder="07:00 AM - 18:00 PM"
                       [ngClass]="{
                         'is-invalid': form?.hasError('availableTime')
                       }"
                     />
                     <div
                       class="invalid-feedback"
-                      *ngIf="form.hasErrorOf('availableTime', 'required')"
+                      *ngIf="form.hasErrorOf('availableTime1', 'required')"
                     >
-                      Thời gian hoạt động bắt buộc
+                      Thời gian bắt đầu bắt buộc
+                    </div>
+                    <div
+                      class="invalid-feedback"
+                      *ngIf="form.hasErrorOf('availableTime1', 'pattern')"
+                    >
+                      Thời gian bắt từ 07:00 AM đến 12:00 AM
+                    </div>
+                    <div
+                      class="invalid-feedback"
+                      *ngIf="form.hasErrorOf('availableTime2', 'required')"
+                    >
+                      Thời gian kết thúc bắt buộc
+                    </div>
+                    <div
+                      class="invalid-feedback"
+                      *ngIf="form.hasErrorOf('availableTime2', 'pattern')"
+                    >
+                      Thời gian kết thúc từ 01:00 PM đến 06:00 PM
                     </div>
                   </div>
                 </div>
@@ -173,6 +222,7 @@
               <quill-editor
                 [styles]="{ height: '400px' }"
                 formControlName="description"
+                placeholder="Dùng | để phân cách nếu thêm mô tả tiếng anh"
               ></quill-editor>
             </div>
           </div>
