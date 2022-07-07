@@ -129,7 +129,7 @@ export class QuestEditComponent implements OnInit {
               title = arrName[0] + '()' + arrName[1];
             }
             form.value['title'] = title;
-            var description = form.controls['description'].value;
+            var description = form.controls['description'].value + '';
             var arrDescription = description.split('|');
             if (arrDescription.length == 1) {
               description = arrDescription[0] + '()' + arrDescription[0];
@@ -137,6 +137,12 @@ export class QuestEditComponent implements OnInit {
               description = arrDescription[0] + '()' + arrDescription[1];
             }
             form.value['description'] = description;
+            var availableTime =
+              form.controls['availableTime1'].value +
+              ' - ' +
+              form.controls['availableTime2'].value +
+              ' ';
+            form.value['availableTime'] = availableTime;
             return form;
           })
         ),
@@ -185,7 +191,21 @@ export class QuestEditComponent implements OnInit {
       price: [0, [Validators.required, Validators.min(10)]],
       estimatedTime: ['', [Validators.required]],
       estimatedDistance: ['', [Validators.required]],
-      availableTime: ['', [Validators.required], [hourValidator()]],
+      availableTime: [''],
+      availableTime1: [
+        '',
+        [
+          Validators.required,
+          Validators.pattern('^([7-9]|0[7-9]|1[0-2]):[0-5][0-9]$'),
+        ],
+      ],
+      availableTime2: [
+        '',
+        [
+          Validators.required,
+          Validators.pattern('^([1-6]|0[1-6]):[0-5][0-9]$'),
+        ],
+      ],
       questTypeId: ['', [Validators.required]],
       image: [''],
       questOwnerId: [2],
