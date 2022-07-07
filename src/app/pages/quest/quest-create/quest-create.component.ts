@@ -155,21 +155,11 @@ export class QuestCreateComponent implements OnInit {
       form.revalidateControls([]);
     });
 
-    this.questState.connect(
-      this.questypeAdded$.pipe(
-        tap((questType) => {
-          this.form.get('questTypeId')?.setValue(questType.id);
-        })
-      ),
-      (prev, curr) => ({
-        questTypeIds: [...prev.questTypeIds, { id: curr.id, value: curr.name }],
-      })
-    );
 
     this.questState.connect(
       this.questypeAdded$.pipe(
         tap((questType) => {
-          this.form.get('locationTypeIds')?.setValue(questType.id);
+          this.form.get('questTypeId')?.setValue(questType.id);
         })
       ),
       (prev, curr) => ({
