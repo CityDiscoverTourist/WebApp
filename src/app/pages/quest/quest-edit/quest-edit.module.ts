@@ -7,10 +7,15 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgxDropzoneModule } from 'ngx-dropzone';
 import { LetModule } from '@rx-angular/template';
 import { QuillModule } from 'ngx-quill';
+import { ModalModule } from 'ngx-bootstrap/modal';
 
-const lib=[
-  NgSelectModule,NgxDropzoneModule,LetModule,QuillModule.forRoot(),
-]
+const lib = [
+  NgSelectModule,
+  NgxDropzoneModule,
+  LetModule,
+  QuillModule.forRoot(),
+  ModalModule.forRoot(),
+];
 @NgModule({
   declarations: [QuestEditComponent],
   imports: [

@@ -9,6 +9,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HotToastService } from '@ngneat/hot-toast';
 import { RxState } from '@rx-angular/state';
+import { BsModalService } from 'ngx-bootstrap/modal';
 import {
   catchError,
   filter,
@@ -20,13 +21,15 @@ import {
   Subject,
   switchMap,
   tap,
+  take,
 } from 'rxjs';
 import { hourValidator } from 'src/app/common/validations';
 import { IdValue, Quest, QuestCreate, QuestListItem } from 'src/app/models';
 import { QuestService } from 'src/app/services';
+import { QuestTypeModalComponent } from '../../share';
 import { QuestDetailState, QuestState, QUEST_STATE } from '../states';
 
-interface QuestUpdateState {
+interface QuestEditState {
   showQuestDescription: boolean;
   files: File[];
   error?: string;
@@ -53,7 +56,8 @@ export class QuestEditComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     private questDetailState: RxState<QuestDetailState>,
     private questService: QuestService,
-    private state: RxState<QuestUpdateState>
+    private state: RxState<QuestEditState>,
+    private modalService: BsModalService,
   ) {}
 
   ngOnInit(): void {
@@ -179,6 +183,17 @@ export class QuestEditComponent implements OnInit {
     this.questState.connect(this.questypeIds$, (prev, curr) => ({
       questTypeIds: [...prev.questTypeIds, { id: curr.id, value: curr.name }],
     }));
+
+    this.questState.connect(
+      this.questypeAdded$.pipe(
+        tap((questType) => {
+          this.form.get('locationTypeIds')?.setValue(questType.id);
+        })
+      ),
+      (prev, curr) => ({
+        questTypeIds: [...prev.questTypeIds, { id: curr.id, value: curr.name }],
+      })
+    );
   }
 
   form!: FormGroup;
@@ -221,7 +236,7 @@ export class QuestEditComponent implements OnInit {
   selectedFile$ = new Subject<File[]>();
   removedFiles$ = new Subject<File>();
   loadFile$ = new Subject<File>();
-  get vm$(): Observable<QuestUpdateState> {
+  get vm$(): Observable<QuestEditState> {
     return this.state.select();
   }
   get questTypeIds(): Observable<IdValue[]> {
@@ -245,7 +260,35 @@ export class QuestEditComponent implements OnInit {
     this.form.controls['image'].setValue('');
   }
 
-  showAddQuestType() {}
+  showAddQuestType() {
+    const bsModalRef = this.modalService.show(QuestTypeModalComponent, {
+      initialState: {
+        simpleForm: false,
+        title: 'loại quest',
+        type: 'Thêm',
+      },
+    });
+    bsModalRef.onHide
+      ?.pipe(
+        take(1),
+        filter((s) => (s as any).success)
+      )
+      .subscribe({
+        next: (result) => {
+          const data = result as { id: number; name: string };
+          const questTypeAdded = result as { id: number; name: string };
+          this.questypeAdded$.next({
+            id: questTypeAdded.id,
+            name: questTypeAdded.name,
+          });
+          if (data.id > 0 && data.name.length > 0) {
+            this.toast.success('Tạo loại quest thành công!');
+          }
+        },
+      });
+  }
 
   showAddArea() {}
+
+  questypeAdded$ = new Subject<{ id: number; name: string }>();
 }
