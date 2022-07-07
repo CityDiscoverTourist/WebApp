@@ -190,7 +190,7 @@ export class QuestTypeModalComponent implements OnInit {
   }
 
   get name() {
-    return this.form.get('name');
+    return this.form.get('name')?.value?.length;
   }
 
   public get submitting$(): Observable<boolean> {

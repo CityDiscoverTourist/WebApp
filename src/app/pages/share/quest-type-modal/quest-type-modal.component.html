@@ -24,10 +24,7 @@
       <div class="invalid-feedback" *ngIf="form.hasErrorOf('name', 'required')">
         Tên của loại Quest Item không được để trống
       </div>
-      <small
-        id="name"
-        class="form-text text-muted"
-        *ngIf="form?.hasValue('name')"
+      <small id="name" class="form-text text-muted" *ngIf="name > 0"
         >Dùng | để phân cách nếu thêm tên tiếng anh
       </small>
     </div>
