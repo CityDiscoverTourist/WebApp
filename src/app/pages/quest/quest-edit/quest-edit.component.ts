@@ -26,7 +26,7 @@ import {
 import { hourValidator } from 'src/app/common/validations';
 import { IdValue, Quest, QuestCreate, QuestListItem } from 'src/app/models';
 import { QuestService } from 'src/app/services';
-import { QuestTypeModalComponent } from '../../share';
+import { AreaModalComponent, QuestTypeModalComponent } from '../../share';
 import { QuestDetailState, QuestState, QUEST_STATE } from '../states';
 
 interface QuestEditState {
@@ -187,11 +187,22 @@ export class QuestEditComponent implements OnInit {
     this.questState.connect(
       this.questypeAdded$.pipe(
         tap((questType) => {
-          this.form.get('locationTypeIds')?.setValue(questType.id);
+          this.form.get('questTypeId')?.setValue(questType.id);
         })
       ),
       (prev, curr) => ({
         questTypeIds: [...prev.questTypeIds, { id: curr.id, value: curr.name }],
+      })
+    );
+
+    this.questState.connect(
+      this.areaAdded$.pipe(
+        tap((area) => {
+          this.form.get('areaId')?.setValue(area.id);
+        })
+      ),
+      (prev, curr) => ({
+        areaIds: [...prev.areaIds, { id: curr.id, value: curr.name }],
       })
     );
   }
@@ -288,7 +299,34 @@ export class QuestEditComponent implements OnInit {
       });
   }
 
-  showAddArea() {}
+  showAddArea() {
+    const bsModalRef = this.modalService.show(AreaModalComponent, {
+      initialState: {
+        simpleForm: false,
+        title: 'khu vực',
+        type: 'Thêm',
+      },
+    });
+    bsModalRef.onHide
+      ?.pipe(
+        take(1),
+        filter((s) => (s as any).success)
+      )
+      .subscribe({
+        next: (result) => {
+          const data = result as { id: number; name: string };
+          const areaAdded = result as { id: number; name: string };
+          this.areaAdded$.next({
+            id: areaAdded.id,
+            name: areaAdded.name,
+          });
+          if (data.id > 0 && data.name.length > 0) {
+            this.toast.success('Tạo khu vực thành công!');
+          }
+        },
+      });
+  }
 
   questypeAdded$ = new Subject<{ id: number; name: string }>();
+  areaAdded$ = new Subject<{ id: number; name: string }>();
 }

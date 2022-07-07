@@ -155,7 +155,6 @@ export class QuestCreateComponent implements OnInit {
       form.revalidateControls([]);
     });
 
-
     this.questState.connect(
       this.questypeAdded$.pipe(
         tap((questType) => {
@@ -217,10 +216,10 @@ export class QuestCreateComponent implements OnInit {
           Validators.pattern('^([1-6]|0[1-6]):[0-5][0-9]$'),
         ],
       ],
-      questTypeId: ['', [Validators.required]],
+      questTypeId: [null, [Validators.required]],
       image: [],
       questOwnerId: [''],
-      areaId: ['', [Validators.required]],
+      areaId: [null, [Validators.required]],
       status: ['', [Validators.required]],
     });
   }
