@@ -2,6 +2,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { stringify } from 'query-string';
 import { map, Observable } from 'rxjs';
+import { environment } from 'src/environments/environment';
 import {
   IdValue,
   Paging,
@@ -17,7 +18,7 @@ import { BaseService } from './base.service';
 @Injectable({
   providedIn: 'root',
 })
-export class QuestItemTypeService extends BaseService{
+export class QuestItemTypeService extends BaseService {
   private _sharedHeaders = new HttpHeaders();
   constructor(private http: HttpClient) {
     super();
@@ -29,8 +30,8 @@ export class QuestItemTypeService extends BaseService{
   getQuestItemTypeIds(): Observable<IdValue[]> {
     var result = this.http
       .get<Pagination<QuestItemType>>(
-        'https://citytourist.azurewebsites.net/api/v1/quest-item-types',
-         { headers: this._sharedHeaders }
+        `${environment.apiUrl}/api/v1/quest-item-types`,
+        { headers: this._sharedHeaders }
       )
       .pipe(
         map((response: Pagination<QuestItemType>) =>
@@ -61,8 +62,8 @@ export class QuestItemTypeService extends BaseService{
       status: search?.status,
     });
     var result = this.http.get<Paging<QuestItemTypeListItem>>(
-      'https://citytourist.azurewebsites.net/api/v1/quest-item-types?' + query,
-       { headers: this._sharedHeaders }
+      `${environment.apiUrl}/api/v1/quest-item-types?` + query,
+      { headers: this._sharedHeaders }
     );
     return result;
   }
@@ -71,16 +72,16 @@ export class QuestItemTypeService extends BaseService{
     payload: Partial<QuestItemTypeCreate>
   ): Observable<Result<Partial<QuestItemType>>> {
     return this.http.post<Result<Partial<QuestItemType>>>(
-      `https://citytourist.azurewebsites.net/api/v1/quest-item-types/`,
+      `${environment.apiUrl}/api/v1/quest-item-types/`,
       payload,
-       { headers: this._sharedHeaders }
+      { headers: this._sharedHeaders }
     );
   }
   deleteQuestItemTypeById(id: string): Observable<string | undefined> {
     return this.http
       .delete<Result<QuestItemTypeListItem>>(
-        `https://citytourist.azurewebsites.net/api/v1/quest-item-types/${id}`,
-         { headers: this._sharedHeaders }
+        `${environment.apiUrl}/api/v1/quest-item-types/${id}`,
+        { headers: this._sharedHeaders }
       )
       .pipe(map((response: Result<QuestItemTypeListItem>) => response.status));
   }
@@ -88,8 +89,8 @@ export class QuestItemTypeService extends BaseService{
   getQuestItemTypeById(id: string | undefined): Observable<QuestItemType> {
     return this.http
       .get<Result<QuestItemType>>(
-        `https://citytourist.azurewebsites.net/api/v1/quest-item-types/${id}`,
-         { headers: this._sharedHeaders }
+        `${environment.apiUrl}/api/v1/quest-item-types/${id}`,
+        { headers: this._sharedHeaders }
       )
       .pipe(
         map(
@@ -106,9 +107,9 @@ export class QuestItemTypeService extends BaseService{
     payload: Partial<QuestItemTypeCreate>
   ): Observable<Result<Partial<QuestItemType>>> {
     return this.http.put<Result<Partial<QuestItemType>>>(
-      `https://citytourist.azurewebsites.net/api/v1/quest-item-types/`,
+      `${environment.apiUrl}/api/v1/quest-item-types/`,
       payload,
-       { headers: this._sharedHeaders }
+      { headers: this._sharedHeaders }
     );
   }
 }
