@@ -29,7 +29,7 @@ import { QuestService } from 'src/app/services';
 import { AreaModalComponent, QuestTypeModalComponent } from '../../share';
 import { QuestState, QUEST_STATE } from '../states/quest.state';
 
-interface QuestEditState {
+interface QuestCreateState {
   showQuestDescription: boolean;
   files: File[];
   error?: string;
@@ -47,7 +47,7 @@ export class QuestCreateComponent implements OnInit {
   status: { id: number; value: string }[] = [];
   constructor(
     @Inject(QUEST_STATE) private questState: RxState<QuestState>,
-    private state: RxState<QuestEditState>,
+    private state: RxState<QuestCreateState>,
     private fb: FormBuilder,
     private toast: HotToastService,
     private cd: ChangeDetectorRef,
@@ -107,7 +107,7 @@ export class QuestCreateComponent implements OnInit {
               title = arrName[0] + '()' + arrName[1];
             }
             form.value['title'] = title;
-            var description = form.controls['description'].value+"";
+            var description = form.controls['description'].value + '';
             var arrDescription = description.split('|');
             if (arrDescription.length == 1) {
               description = arrDescription[0] + '()' + arrDescription[0];
@@ -190,7 +190,7 @@ export class QuestCreateComponent implements OnInit {
   }
 
   toggleDescription$ = new Subject<void>();
-  get vm$(): Observable<QuestEditState> {
+  get vm$(): Observable<QuestCreateState> {
     return this.state.select();
   }
 
