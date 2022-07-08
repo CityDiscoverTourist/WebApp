@@ -131,11 +131,19 @@ export class DeleteModalComponent implements OnInit {
       case 'loại Quest':
         {
           this.questTypeService.deleteQuestTypeById(id).subscribe((data) => {
-            this.bsModalRef.onHide?.emit({
-              status: data,
-            });
-            this.bsModalRef.hide();
-            this.toast.success(`Xóa ${this.title} thành công`);
+            if (data?.quests?.length) {
+              this.bsModalRef.hide();
+              this.toast.error(`Xóa ${this.title} không thành công`);
+              this.toast.info(
+                `Loại quest này đang chứa các quest khác nên không xóa được`
+              );
+            } else {
+              this.bsModalRef.onHide?.emit({
+                data: data,
+              });
+              this.bsModalRef.hide();
+              this.toast.success(`Xóa ${this.title} thành công`);
+            }
           });
         }
         break;
