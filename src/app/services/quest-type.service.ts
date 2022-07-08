@@ -78,13 +78,13 @@ export class QuestTypeService extends BaseService {
       this.httpOptions
     );
   }
-  deleteQuestTypeById(id: string): Observable<string | undefined> {
+  deleteQuestTypeById(id: string): Observable<QuestTypeListItem | undefined> {
     return this.http
       .delete<Result<QuestTypeListItem>>(
         `${environment.apiUrl}/api/v1/quest-types/${id}`,
         this.httpOptions
       )
-      .pipe(map((response: Result<QuestTypeListItem>) => response.status));
+      .pipe(map((response: Result<QuestTypeListItem>) => response.data));
   }
 
   getQuestTypeById(id: string | undefined): Observable<QuestType> {
