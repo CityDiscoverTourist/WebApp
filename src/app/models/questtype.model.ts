@@ -20,6 +20,7 @@ export interface QuestTypeListItem{
   name:string;
   status:string;
   imagePath:string;
+  quests:[];
 }
 
 export interface QuestTypeListSearch extends SearchInfo {
