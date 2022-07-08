@@ -14,11 +14,12 @@ import {
   tap,
 } from 'rxjs';
 import { QuestItemTypeService } from 'src/app/services';
-import { QuestItemTypeDetailState } from '../states';
 
-declare type ModalState = {
+interface QuestItemTypeState {
+  loading: boolean;
+  submitting: boolean;
   hasError: boolean;
-};
+}
 
 @Component({
   selector: 'app-quest-item-type-modal',
@@ -36,19 +37,18 @@ export class QuestItemTypeModalComponent implements OnInit {
   constructor(
     public bsModalRef: BsModalRef,
     private fb: FormBuilder,
-    private state: RxState<ModalState>,
-    private questItemTypeService: QuestItemTypeService,
-    private questItemTypeDetailState: RxState<QuestItemTypeDetailState>
+    private state: RxState<QuestItemTypeState>,
+    private questItemTypeService: QuestItemTypeService
   ) {}
 
   ngOnInit(): void {
     this.initForm();
-    this.status=this.questItemTypeService.status;
+    this.status = this.questItemTypeService.status;
     this.search$.next({ id: this.id });
-    this.questItemTypeDetailState.connect(
+    this.state.connect(
       this.search$
         .pipe(
-          tap((_) => this.questItemTypeDetailState.set({ loading: true })),
+          tap((_) => this.state.set({ loading: true })),
           switchMap((s) => this.questItemTypeService.getQuestItemTypeById(s.id))
         )
         .pipe(
@@ -78,8 +78,7 @@ export class QuestItemTypeModalComponent implements OnInit {
                     of({ status: 'data not modified', data: null })
                   )
                 );
-            } 
-            else {
+            } else {
               return this.questItemTypeService
                 .addQuestItemType(form.value)
                 .pipe(
@@ -117,9 +116,9 @@ export class QuestItemTypeModalComponent implements OnInit {
 
   initForm() {
     this.form = this.fb.group({
-      id:[],
+      id: [],
       name: [null, [Validators.required]],
-      status: ['',[Validators.required]],
+      status: ['', [Validators.required]],
     });
   }
 
@@ -129,4 +128,8 @@ export class QuestItemTypeModalComponent implements OnInit {
     return this.state.select('hasError');
   }
   search$ = new BehaviorSubject<{ id: string }>({ id: '' });
+
+  public get submitting$(): Observable<boolean> {
+    return this.state.select('submitting');
+  }
 }

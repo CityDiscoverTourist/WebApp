@@ -42,7 +42,6 @@ import {
 } from 'src/app/services';
 import { PageInfo, SortInfo } from 'src/app/types';
 import { DeleteModalComponent } from '../../share';
-import { QuestDeleteModalComponent } from '../../share/quest-delete-modal/quest-delete-modal.component';
 import { QuestItemListState } from '../states';
 import { QuestDetailState } from '../states/questdetail.state';
 import { QuestItemState, QUEST_ITEM_STATE } from './quest-item/states';
@@ -194,13 +193,7 @@ export class QuestDetailComponent implements OnInit {
     });
   }
 
-  showDeleteQuest() {
-    const bsModalRef = this.modalService.show(QuestDeleteModalComponent, {
-      initialState: {
-        id: this.id,
-      },
-    });
-  }
+ 
 
   get quest$(): Observable<QuestListItem> {
     return this.questDetailState.select('quest');
