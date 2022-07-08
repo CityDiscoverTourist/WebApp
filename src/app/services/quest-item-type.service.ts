@@ -77,13 +77,15 @@ export class QuestItemTypeService extends BaseService {
       { headers: this._sharedHeaders }
     );
   }
-  deleteQuestItemTypeById(id: string): Observable<string | undefined> {
+  deleteQuestItemTypeById(
+    id: string
+  ): Observable<QuestItemTypeListItem | undefined> {
     return this.http
       .delete<Result<QuestItemTypeListItem>>(
         `${environment.apiUrl}/api/v1/quest-item-types/${id}`,
         { headers: this._sharedHeaders }
       )
-      .pipe(map((response: Result<QuestItemTypeListItem>) => response.status));
+      .pipe(map((response: Result<QuestItemTypeListItem>) => response.data));
   }
 
   getQuestItemTypeById(id: string | undefined): Observable<QuestItemType> {
