@@ -19,12 +19,12 @@ import {
   tap,
 } from 'rxjs';
 import { QuestTypeService } from 'src/app/services/quest-type.service';
-import { QuestTypeDetailState } from '../states';
 
-interface QuestTypeState {
+interface QuestTypeDetailState {
   loading: boolean;
   submitting: boolean;
   hasError: boolean;
+  files: File[];
 }
 
 @Component({
@@ -43,7 +43,7 @@ export class QuestTypeModalComponent implements OnInit {
   constructor(
     public bsModalRef: BsModalRef,
     private fb: FormBuilder,
-    private state: RxState<QuestTypeState>,
+    private state: RxState<QuestTypeDetailState>,
     private questTypeService: QuestTypeService,
     private questTypeDetailState: RxState<QuestTypeDetailState>,
     private cd: ChangeDetectorRef
