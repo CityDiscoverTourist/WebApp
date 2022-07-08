@@ -57,7 +57,7 @@ export class QuestEditComponent implements OnInit {
     private questDetailState: RxState<QuestDetailState>,
     private questService: QuestService,
     private state: RxState<QuestEditState>,
-    private modalService: BsModalService,
+    private modalService: BsModalService
   ) {}
 
   ngOnInit(): void {
@@ -79,7 +79,18 @@ export class QuestEditComponent implements OnInit {
         .pipe(
           tap((data) => {
             this.id = data.id.toString();
+            var da = data.availableTime;
+            var availableTime = data.availableTime
+              .toString()
+              .toLocaleLowerCase()
+              .split('-');
             this.form.patchValue(data);
+            this.form
+              .get('availableTime1')
+              ?.setValue(availableTime[0].replace('am', '').trim());
+            this.form
+              .get('availableTime2')
+              ?.setValue(availableTime[1].replace('pm', '').trim());
             this.img = data.imagePath;
           })
         ),
@@ -143,9 +154,9 @@ export class QuestEditComponent implements OnInit {
             form.value['description'] = description;
             var availableTime =
               form.controls['availableTime1'].value +
-              ' - ' +
+              ' AM - ' +
               form.controls['availableTime2'].value +
-              ' ';
+              ' PM ';
             form.value['availableTime'] = availableTime;
             return form;
           })

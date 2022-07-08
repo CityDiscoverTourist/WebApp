@@ -109,7 +109,7 @@ export class QuestCreateComponent implements OnInit {
             form.value['title'] = title;
             var description = form.controls['description'].value + '';
             var arrDescription = description.split('|');
-            if (arrDescription.length == 1) {
+            if (arrDescription.length == 1 && description != null) {
               description = arrDescription[0] + '()' + arrDescription[0];
             } else {
               description = arrDescription[0] + '()' + arrDescription[1];
@@ -117,9 +117,9 @@ export class QuestCreateComponent implements OnInit {
             form.value['description'] = description;
             var availableTime =
               form.controls['availableTime1'].value +
-              ' - ' +
+              ' AM - ' +
               form.controls['availableTime2'].value +
-              ' ';
+              ' PM ';
             form.value['availableTime'] = availableTime;
             return form;
           })
