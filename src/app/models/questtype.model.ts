@@ -25,5 +25,6 @@ export interface QuestTypeListItem{
 
 export interface QuestTypeListSearch extends SearchInfo {
   status?: number[];
+  language?: string;
 }
 
