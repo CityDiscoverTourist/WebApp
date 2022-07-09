@@ -35,6 +35,7 @@ export interface QuestListItem {
   imagePath: string;
   areaName:string;
   questTypeName:string;
+  questItems:[]
 }
 
 export interface QuestListSearch extends SearchInfo {
