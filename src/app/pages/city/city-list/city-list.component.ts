@@ -154,6 +154,7 @@ export class CityListComponent implements OnInit {
         simpleForm: false,
         title: 'thành phố',
         type: 'Thêm',
+        id:'0',
       },
     });
     bsModalRef.onHide

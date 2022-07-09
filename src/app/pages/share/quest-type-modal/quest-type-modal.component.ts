@@ -45,19 +45,25 @@ export class QuestTypeModalComponent implements OnInit {
     private fb: FormBuilder,
     private state: RxState<QuestTypeDetailState>,
     private questTypeService: QuestTypeService,
-    private questTypeDetailState: RxState<QuestTypeDetailState>,
     private cd: ChangeDetectorRef
-  ) {}
+  ) {
+    this.state.set({
+      files: [],
+    });
+  }
 
   ngOnInit(): void {
     this.initForm();
     this.status = this.questTypeService.status;
     this.search$.next({ id: this.id });
-    this.questTypeDetailState.connect(
+    this.state.connect(
       this.search$
         .pipe(
-          tap((_) => this.questTypeDetailState.set({ loading: true })),
-          switchMap((s) => this.questTypeService.getQuestTypeById(s.id))
+          tap((_) => this.state.set({ loading: true })),
+          switchMap((s) => {
+            // var id = s.id > 0 ? s.id : '0';
+            return this.questTypeService.getQuestTypeById(s.id);
+          })
         )
         .pipe(
           tap((data) => {
@@ -75,7 +81,7 @@ export class QuestTypeModalComponent implements OnInit {
       })
     );
 
-    this.questTypeDetailState.connect(
+    this.state.connect(
       this.selectedFile$
         .pipe(tap(() => setTimeout(() => this.cd.detectChanges(), 100)))
         .pipe(
@@ -89,7 +95,7 @@ export class QuestTypeModalComponent implements OnInit {
       })
     );
 
-    this.questTypeDetailState.connect(
+    this.state.connect(
       this.removedFiles$.pipe(
         tap(() => setTimeout(() => this.cd.markForCheck(), 100))
       ),
@@ -155,6 +161,7 @@ export class QuestTypeModalComponent implements OnInit {
         hasError: curr.status == 'data modified' ? false : true,
       })
     );
+
     this.state.connect(
       $invalid.pipe(tap(() => this.form.revalidateControls([]))),
       () => ({
@@ -186,7 +193,7 @@ export class QuestTypeModalComponent implements OnInit {
   selectedFile$ = new Subject<File[]>();
   removedFiles$ = new Subject<File>();
   get vm$(): Observable<QuestTypeDetailState> {
-    return this.questTypeDetailState.select();
+    return this.state.select();
   }
 
   get name() {

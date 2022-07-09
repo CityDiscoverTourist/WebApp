@@ -153,7 +153,7 @@ export class QuestTypeListComponent implements OnInit {
     status: new FormControl(),
   });
 
-  submitSearch$ = new Subject<Partial<{ keyword: string; status: string }>>();
+  submitSearch$ = new Subject<Partial<{ keyword: string; status: string;language: string; }>>();
   resetSearch$ = new Subject<void>();
 
   showAddQuestType() {
