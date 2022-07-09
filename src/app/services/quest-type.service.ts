@@ -50,12 +50,15 @@ export class QuestTypeService extends BaseService {
       `${search.sort?.sortBy}` === 'undefined' ? '' : search.sort?.sortBy;
     var sortDir =
       `${search?.sort?.dir}` === 'undefined' ? '' : search.sort?.dir;
+      var language =
+      `${search?.language}` === 'undefined' ? '1' : search?.language;
     const query = stringify({
       name: search.keyword,
       pageNumber: isNaN(search?.currentPage!) ? 1 : search?.currentPage! + 1,
       pagesize: 10,
       orderby: `${sortBy} ${sortDir}`,
       status: search?.status,
+      language: language ? language : 0,
     });
     var result = this.http.get<Paging<QuestTypeListItem>>(
       `${environment.apiUrl}/api/v1/quest-types?` + query,
@@ -90,7 +93,7 @@ export class QuestTypeService extends BaseService {
   getQuestTypeById(id: string | undefined): Observable<QuestType> {
     return this.http
       .get<Result<QuestType>>(
-        `${environment.apiUrl}/api/v1/quest-types/${id}`,
+        `${environment.apiUrl}/api/v1/quest-types/${id}/not-language`,
         this.httpOptions
       )
       .pipe(
