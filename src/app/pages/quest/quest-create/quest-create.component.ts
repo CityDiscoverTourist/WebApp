@@ -223,9 +223,6 @@ export class QuestCreateComponent implements OnInit {
     });
   }
 
-  get availableTime2() {
-    return this.form.get('availableTime2');
-  }
 
   get title() {
     return this.form.get('title');
