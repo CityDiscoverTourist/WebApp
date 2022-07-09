@@ -9,6 +9,7 @@ import {
   LocationtypeService,
   QuestItemService,
   QuestItemTypeService,
+  QuestService,
   QuestTypeService,
 } from 'src/app/services';
 
@@ -30,7 +31,8 @@ export class DeleteModalComponent implements OnInit {
     private areaService: AreaService,
     private questTypeService: QuestTypeService,
     private locationService: LocationService,
-    private questItemService: QuestItemService
+    private questItemService: QuestItemService,
+    private questService:QuestService,
   ) {}
 
   ngOnInit(): void {}
@@ -144,6 +146,25 @@ export class DeleteModalComponent implements OnInit {
               this.toast.error(`Xóa ${this.title} không thành công`);
               this.toast.info(
                 `Loại quest này đang chứa các quest khác nên không xóa được`
+              );
+            } else {
+              this.bsModalRef.onHide?.emit({
+                data: data,
+              });
+              this.bsModalRef.hide();
+              this.toast.success(`Xóa ${this.title} thành công`);
+            }
+          });
+        }
+        break;
+      case 'Quest':
+        {
+          this.questService.deleteQuestById(id).subscribe((data) => {
+            if (data?.questItems?.length) {
+              this.bsModalRef.hide();
+              this.toast.error(`Xóa ${this.title} không thành công`);
+              this.toast.info(
+                `Quest này đang chứa các quest item khác nên không xóa được`
               );
             } else {
               this.bsModalRef.onHide?.emit({

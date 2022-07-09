@@ -6,11 +6,8 @@ import { environment } from 'src/environments/environment';
 import {
   Paging,
   Quest,
-  QuestCreate,
-  QuestCreateResult,
-  QuestListItem,
-  QuestListSearch,
-  Result,
+  QuestCreate, QuestListItem,
+  QuestListSearch, Result
 } from '../models';
 import { BaseService } from './base.service';
 
@@ -89,13 +86,13 @@ export class QuestService extends BaseService {
       )
       .pipe(map((response: Result<QuestListItem>) => response.data));
   }
-  deleteQuestById(id: string): Observable<string | undefined> {
+  deleteQuestById(id: string): Observable<QuestListItem | undefined> {
     return this.http
       .delete<Result<QuestListItem>>(
         `${environment.apiUrl}/api/v1/quests/${id}`,
         this.httpOptions
       )
-      .pipe(map((response: Result<QuestListItem>) => response.status));
+      .pipe(map((response: Result<QuestListItem>) => response.data));
   }
 
   updateQuest(quest: QuestCreate): Observable<Result<Quest>> {

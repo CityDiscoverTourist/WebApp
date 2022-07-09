@@ -193,8 +193,6 @@ export class QuestDetailComponent implements OnInit {
     });
   }
 
- 
-
   get quest$(): Observable<QuestListItem> {
     return this.questDetailState.select('quest');
   }
@@ -267,6 +265,25 @@ export class QuestDetailComponent implements OnInit {
         });
       },
     });
+  }
+
+  deleteQuest(id: number) {
+    const bsModalRef = this.modalService.show(DeleteModalComponent, {
+      initialState: {
+        id: id.toString(),
+        title: 'Quest',
+      },
+    });
+    bsModalRef.onHide
+      ?.pipe(
+        take(1),
+        filter((s) => (s as any).data)
+      )
+      .subscribe({
+        next: (result) => {
+          window.location.reload();
+        },
+      });
   }
 
   onUpdate(id: string) {
