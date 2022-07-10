@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, Inject, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HotToastService } from '@ngneat/hot-toast';
 import { RxState } from '@rx-angular/state';
@@ -12,6 +12,10 @@ import {
   switchMap,
   tap,
   take,
+  pipe,
+  catchError,
+  map,
+  of,
 } from 'rxjs';
 import { QuestItemType } from 'src/app/common/enums';
 import { IdValue, QuestItemCreate } from 'src/app/models';
@@ -41,7 +45,7 @@ export class QuestItemCreateComponent implements OnInit {
     private questItemService: QuestItemService,
     private toast: HotToastService,
     private cd: ChangeDetectorRef,
-    private route: ActivatedRoute,
+    private activatedRoute: ActivatedRoute,
     private router: Router,
     private modalService: BsModalService
   ) {
@@ -60,17 +64,54 @@ export class QuestItemCreateComponent implements OnInit {
     var questId = this.href.match(/([\d]+)/g)?.[0];
     this.form.controls['questId'].setValue(questId);
 
-    const [valid$, invalid$] = partition(this.submit$, (f) => f.valid);
+    const [valid$, invalid$] = partition(
+      this.submit$,
+      ({ form }) => form.valid
+    );
 
     this.state.connect(
       valid$.pipe(
         tap(() => this.state.set({ submitting: true })),
-        switchMap((f) =>
-          this.questItemService.addQuestItem(f.value as QuestItemCreate)
+        pipe(
+          tap(({ form }) => {
+            var content = form.controls['content'].value + ' ';
+            var arrName = content.split('|');
+            if (arrName.length == 1) {
+              content = arrName[0] + '()' + arrName[0];
+            } else {
+              content = arrName[0] + '()' + arrName[1];
+            }
+            form.value['content'] = content;
+            var description = form.controls['description'].value + '';
+            var arrDescription = description.split('|');
+            if (arrDescription.length == 1 && description != null) {
+              description = arrDescription[0] + '()' + arrDescription[0];
+            } else {
+              description = arrDescription[0] + '()' + arrDescription[1];
+            }
+            form.value['description'] = description;
+            return form;
+          })
+        ),
+        switchMap(({ form, redirect }) =>
+          this.questItemService
+            .addQuestItem(form.value as QuestItemCreate)
+            .pipe(
+              catchError(() => of({ status: 'data not modified', data: null })),
+              map((r) => ({ ...r, redirect }))
+            )
         ),
         tap((result) => {
-          if (result.id) {
-            this.toast.success('Tạo quest thành công');
+          if (!result.data?.id) {
+            return;
+          }
+          this.toast.success(`Tạo quest item thành công`);
+          if (result.redirect) {
+            this.router.navigate(['../../'], {
+              relativeTo: this.activatedRoute,
+            });
+          } else {
+            this.initForm();
           }
         })
       ),
@@ -80,9 +121,9 @@ export class QuestItemCreateComponent implements OnInit {
       })
     );
 
-    this.state.hold(invalid$.pipe(), (f) => {
+    this.state.hold(invalid$.pipe(), ({ form }) => {
       this.toast.error('Giá trị bạn nhập không đúng');
-      f.revalidateControls([]);
+      form.revalidateControls([]);
     });
     this.state.connect(
       this.selectedFile$
@@ -115,20 +156,20 @@ export class QuestItemCreateComponent implements OnInit {
   initForm() {
     this.form = this.fb.group({
       id: [0],
-      content: [''],
+      content: ['', Validators.required],
       description: [''],
       duration: [0],
       createdDate: [new Date()],
       updatedDate: [],
       qrCode: [''],
       triggerMode: [0],
-      rightAnswer: [''],
+      rightAnswer: ['', Validators.required],
       answerImageUrl: [],
-      status: [],
+      status: [false],
       questItemTypeId: [QuestItemType.QuestionandAnswer],
-      locationId: [],
+      locationId: ['', Validators.required],
       questId: [],
-      itemId: [null],
+      itemId: [0],
     });
   }
   toggleDescription$ = new Subject<void>();
@@ -136,36 +177,36 @@ export class QuestItemCreateComponent implements OnInit {
     return this.state.select();
   }
   formSubmit$ = new Subject<FormGroup>();
-  submit$ = new Subject<FormGroup>();
+  submit$ = new Subject<{ form: FormGroup; redirect: boolean }>();
 
   selectedFile$ = new Subject<File[]>();
   removedFiles$ = new Subject<File>();
 
-  showAddLocation() {
-    const bsModalRef = this.modalService.show(LocationModalComponent, {
-      initialState: {
-        simpleForm: false,
-        title: 'vị trí',
-        type: 'Thêm',
-      },
-    });
-    bsModalRef.onHide
-      ?.pipe(
-        take(1),
-        filter((s) => (s as any).success)
-      )
-      .subscribe({
-        next: (result) => {
-          const data = result as { id: number; name: string };
-          const areaAdded = result as { id: number; name: string };
-          // this.areaAdded$.next({
-          //   id: areaAdded.id,
-          //   name: areaAdded.name,
-          // });
-          // if (data.id > 0 && data.name.length > 0) {
-          //   this.toast.success('Tạo khu vực thành công!');
-          // }
-        },
-      });
-  }
+  // showAddLocation() {
+  //   const bsModalRef = this.modalService.show(LocationModalComponent, {
+  //     initialState: {
+  //       simpleForm: false,
+  //       title: 'địa điêmr',
+  //       type: 'Thêm',
+  //     },
+  //   });
+  //   bsModalRef.onHide
+  //     ?.pipe(
+  //       take(1),
+  //       filter((s) => (s as any).success)
+  //     )
+  //     .subscribe({
+  //       next: (result) => {
+  //         const data = result as { id: number; name: string };
+  //         const areaAdded = result as { id: number; name: string };
+  // this.areaAdded$.next({
+  //   id: areaAdded.id,
+  //   name: areaAdded.name,
+  // });
+  // if (data.id > 0 && data.name.length > 0) {
+  //   this.toast.success('Tạo khu vực thành công!');
+  // }
+  //       },
+  //     });
+  // }
 }

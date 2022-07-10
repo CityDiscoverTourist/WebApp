@@ -41,7 +41,9 @@
                   [value]="3"
                   formControlName="questItemTypeId"
                 />
-                <label class="form-check-label" for="rq"> Reverse Question </label>
+                <label class="form-check-label" for="rq">
+                  Reverse Question
+                </label>
               </div>
             </div>
           </div>
@@ -57,7 +59,20 @@
                 id="content"
                 rows="2"
                 formControlName="content"
+                [ngClass]="{ 'is-invalid': form?.hasError('content') }"
               ></textarea>
+              <div
+                class="invalid-feedback"
+                *ngIf="form?.hasErrorOf('content', 'required')"
+              >
+                Nội dung câu hỏi bắt buộc
+              </div>
+              <small
+                id="content"
+                class="form-text text-muted"
+                *ngIf="form?.hasValue('content')"
+                >Dùng | để phân cách nếu thêm tên tiếng anh
+              </small>
             </div>
             <button
               type="button"
@@ -85,60 +100,29 @@
                     placeholder="Nhập nội dung câu trả lời"
                     id="rightAnswer"
                     formControlName="rightAnswer"
+                    [ngClass]="{ 'is-invalid': form?.hasError('rightAnswer') }"
                   ></textarea>
+                  <div
+                    class="invalid-feedback"
+                    *ngIf="form?.hasErrorOf('rightAnswer', 'required')"
+                  >
+                    Câu trả lời bắt buộc
+                  </div>
+                  <small
+                    id="rightAnswer"
+                    class="form-text text-muted"
+                    *ngIf="form?.hasValue('rightAnswer')"
+                    >Dùng | để phân cách nếu thêm tên tiếng anh
+                  </small>
                 </div>
               </div>
-              <!-- <div class="col">
-                <div class="form-group">
-                  <label class="form-label" for="answerImageUrl"
-                    >URL ảnh câu trả lời</label
-                  >
-                  <input
-                    type="text"
-                    class="form-control"
-                    id="answerImageUrl"
-                    formControlName="answerImageUrl"
-                  />
-                </div>
-              </div> -->
             </div>
-            <!-- <div class="form-group mb-3">
-              <label class="form-label" for="content">Ảnh Quest Item</label>
-              <div class="border rounded text-center">
-                <div
-                  class="custom-dropzone"
-                  style="border: none"
-                  ngx-dropzone
-                  [accept]="'image/*'"
-                  [multiple]="false"
-                  (change)="selectedFile$.next($event.addedFiles)"
-                >
-                  <ngx-dropzone-label>
-                    <div>
-                      <i class="bi bi-plus"></i>
-                      <span>kéo và thả hình ảnh ở đây hoặc</span>
-                      <span class="ms-1 text-decoration-underline text-primary">
-                        tải lên từ máy tính của bạn</span
-                      >
-                    </div>
-                  </ngx-dropzone-label>
-                  <ngx-dropzone-image-preview
-                    ngProjectAs="ngx-dropzone-preview"
-                    *ngFor="let f of vm.files"
-                    [file]="f"
-                    [removable]="true"
-                    (removed)="removedFiles$.next(f)"
-                  >
-                  </ngx-dropzone-image-preview>
-                </div>
-              </div>
-            </div> -->
           </div>
         </div>
       </div>
       <div class="col-4">
         <div class="card mb-3">
-          <div class="card-header bg-white py-3">Thông tin thêm</div>
+          <!-- <div class="card-header bg-white py-3">Thông tin thêm</div> -->
           <div class="card-body">
             <div class="form-group mb-3">
               <label for="locationId" class="form-label">Chọn đia điểm</label>
@@ -148,17 +132,24 @@
                 bindLabel="value"
                 class="header-p-0"
                 formControlName="locationId"
+                [ngClass]="{ 'is-invalid': form?.hasError('locationId') }"
               >
-              <ng-template ng-header-tmp>
-                <button
-                  class="btn btn-default btn-sm rounded-0 text-center w-100"
-                  (click)="showAddLocation()"
-                >
-                  <i class="bi bi-plus-circle"></i>
-                  Thêm vị trí
-                </button>
-              </ng-template>
-            </ng-select>
+                <!-- <ng-template ng-header-tmp>
+                  <button
+                    class="btn btn-default btn-sm rounded-0 text-center w-100"
+                    (click)="showAddLocation()"
+                  >
+                    <i class="bi bi-plus-circle"></i>
+                    Thêm địa điểm
+                  </button>
+                </ng-template> -->
+              </ng-select>
+              <div
+                class="invalid-feedback"
+                *ngIf="form?.hasErrorOf('locationId', 'required')"
+              >
+                Địa điểm bắt buộc
+              </div>
             </div>
           </div>
         </div>
@@ -180,7 +171,7 @@
                 <label class="form-check-label" for="status"></label>
               </div>
             </div>
-            <hr />
+            <!-- <hr /> -->
             <!-- <div class="form-group mb-3">
               <label for="itemId" class="form-label">Chọn Quest Item</label>
               <input
@@ -189,7 +180,7 @@
                 id="itemId"
                 formControlName="itemId"
               /> -->
-              <!-- <ng-select
+            <!-- <ng-select
                 [items]="questItemTypeIds | async"
                 bindValue="id"
                 bindLabel="value"
@@ -202,21 +193,18 @@
         </div>
       </div>
       <div>
-        <button
-          type="button"
-          class="btn btn-primary mt-3 me-2"
-          (click)="this.submit$.next(form)"
-        >
-          Thêm
-        </button>
-        <a routerLink="../../" class="btn btn-outline-primary mt-3">Thoát</a>
-        <!-- <button
-          type="button"
-          class="btn btn-primary mt-3"
-          (click)="submitForm()"
-        >
-          Thêm
-        </button> -->
+        <div class="mb-3">
+          <div class="btn-group" dropdown>
+            <button
+              type="button"
+              class="btn btn-primary"
+              (click)="submit$.next({form,redirect:true})"
+            >
+              Thêm
+            </button>
+          </div>
+          <a routerLink="../" class="btn btn-outline-primary ms-3">Thoát</a>
+        </div>
       </div>
     </div>
   </form>

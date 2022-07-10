@@ -55,19 +55,12 @@ export class QuestItemService extends BaseService {
 
   addQuestItem(
     questItemCreate: QuestItemCreate
-  ): Observable<QuestItemCreateResult> {
-    return this.http
-      .post<Result<QuestItem>>(
-        `${environment.apiUrl}/api/v1/quest-items/`,
-        questItemCreate,
-        this.httpOptions
-      )
-      .pipe(
-        map(
-          (response: Result<QuestItem>) =>
-            ({ id: response.data?.id } as QuestItemCreateResult)
-        )
-      );
+  ): Observable<Result<QuestItem>> {
+    return this.http.post<Result<QuestItem>>(
+      `${environment.apiUrl}/api/v1/quest-items/`,
+      questItemCreate,
+      this.httpOptions
+    );
   }
 
   deleteQuestItemById(id: string): Observable<string | undefined> {
