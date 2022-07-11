@@ -4,46 +4,24 @@
       <div class="col-8">
         <div class="card mb-3">
           <div class="bg-white card-header d-flex justify-content-between py-3">
-            <span>Chọn loại QuestItem</span>
+            <span>Chọn loại câu hỏi</span>
           </div>
           <div class="card-body">
-            <div class="d-flex">
-              <div class="form-check me-5">
-                <input
-                  class="form-check-input"
-                  type="radio"
-                  name="questItemTypeId"
-                  id="qa"
-                  formControlName="questItemTypeId"
-                  [value]="1"
-                />
-                <label class="form-check-label" for="qa">
-                  Question and Answer
-                </label>
-              </div>
-              <div class="form-check me-5">
-                <input
-                  class="form-check-input"
-                  type="radio"
-                  name="questItemTypeId"
-                  id="qr"
-                  [value]="2"
-                  formControlName="questItemTypeId"
-                />
-                <label class="form-check-label" for="qr"> Qr game </label>
-              </div>
-              <div class="form-check">
-                <input
-                  class="form-check-input"
-                  type="radio"
-                  name="questItemTypeId"
-                  id="rq"
-                  [value]="3"
-                  formControlName="questItemTypeId"
-                />
-                <label class="form-check-label" for="rq">
-                  Reverse Question
-                </label>
+            <div class="d-flex" *ngIf="questItemTypeIds | async as qt">
+              <div *ngFor="let e of qt; let i = index">
+                <div class="form-check me-3">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    name="questItemTypeId"
+                    [id]="e.id"
+                    formControlName="questItemTypeId"
+                    [value]="e.value"
+                  />
+                  <label class="form-check-label" [for]="e.id">
+                    Question and Answer
+                  </label>
+                </div>
               </div>
             </div>
           </div>
@@ -71,7 +49,7 @@
                 id="content"
                 class="form-text text-muted"
                 *ngIf="form?.hasValue('content')"
-                >Dùng | để phân cách nếu thêm tên tiếng anh
+                >Dùng | để phân cách nếu thêm nội dung câu hỏi tiếng anh
               </small>
             </div>
             <button
@@ -86,7 +64,14 @@
                 <quill-editor
                   [styles]="{ height: '200px' }"
                   formControlName="description"
+                  placeholder="Dùng | để phân cách nếu thêm tên tiếng anh"
                 ></quill-editor>
+                <small
+                  id="description"
+                  class="form-text text-muted"
+                  *ngIf="form?.hasValue('description')"
+                  >Dùng | để phân cách nếu thêm mô tả tiếng anh
+                </small>
               </div>
             </div>
             <div class="row mb-3 mt-3">
@@ -108,12 +93,12 @@
                   >
                     Câu trả lời bắt buộc
                   </div>
-                  <small
+                  <!-- <small
                     id="rightAnswer"
                     class="form-text text-muted"
                     *ngIf="form?.hasValue('rightAnswer')"
                     >Dùng | để phân cách nếu thêm tên tiếng anh
-                  </small>
+                  </small> -->
                 </div>
               </div>
             </div>
@@ -153,7 +138,7 @@
             </div>
           </div>
         </div>
-        <div class="card mb-3">
+        <!-- <div class="card mb-3">
           <div class="card-body">
             <div class="d-flex align-items-end justify-content-between mb-2">
               <div>
@@ -171,24 +156,26 @@
                 <label class="form-check-label" for="status"></label>
               </div>
             </div>
-            <!-- <hr /> -->
-            <!-- <div class="form-group mb-3">
-              <label for="itemId" class="form-label">Chọn Quest Item</label>
-              <input
-                type="text"
-                class="form-control"
-                id="itemId"
-                formControlName="itemId"
-              /> -->
-            <!-- <ng-select
-                [items]="questItemTypeIds | async"
-                bindValue="id"
-                bindLabel="value"
-                formControlName="itemId"
-                class="header-p-0"
-              >
-              </ng-select> -->
-            <!-- </div> -->
+          </div>
+        </div> -->
+        <div class="card mb-3">
+          <div class="card-body">
+            <label for="status" class="form-label">Trạng thái</label>
+            <ng-select
+              [items]="status"
+              bindValue="value"
+              bindLabel="value"
+              placeholder="Chọn trạng thái"
+              [clearable]="false"
+              formControlName="status"
+              [ngClass]="{ 'is-invalid': form?.hasError('status') }"
+            ></ng-select>
+            <div
+              class="invalid-feedback"
+              *ngIf="form.hasErrorOf('status', 'required')"
+            >
+              Vui lòng chọn trạng thái
+            </div>
           </div>
         </div>
       </div>

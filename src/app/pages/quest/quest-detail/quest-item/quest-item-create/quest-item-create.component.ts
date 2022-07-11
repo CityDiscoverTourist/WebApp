@@ -38,6 +38,7 @@ interface QuestItemCreateState {
 export class QuestItemCreateComponent implements OnInit {
   private id: string;
   public href: string = '';
+  status: { id: number; value: string }[] = [];
   constructor(
     @Inject(QUEST_ITEM_STATE) private questItemState: RxState<QuestItemState>,
     private fb: FormBuilder,
@@ -60,6 +61,7 @@ export class QuestItemCreateComponent implements OnInit {
       showQuestDescription: !prev.showQuestDescription,
     }));
     this.initForm();
+    this.status = this.questItemService.status;
     this.href = this.router.url;
     var questId = this.href.match(/([\d]+)/g)?.[0];
     this.form.controls['questId'].setValue(questId);
@@ -111,6 +113,7 @@ export class QuestItemCreateComponent implements OnInit {
               relativeTo: this.activatedRoute,
             });
           } else {
+            this.form.reset();
             this.initForm();
           }
         })
@@ -122,7 +125,7 @@ export class QuestItemCreateComponent implements OnInit {
     );
 
     this.state.hold(invalid$.pipe(), ({ form }) => {
-      this.toast.error('Giá trị bạn nhập không đúng');
+      this.toast.error('Giá trị bạn nhập không hợp lệ');
       form.revalidateControls([]);
     });
     this.state.connect(
@@ -159,7 +162,7 @@ export class QuestItemCreateComponent implements OnInit {
       content: ['', Validators.required],
       description: [''],
       duration: [0],
-      createdDate: [new Date()],
+      createdDate: [],
       updatedDate: [],
       qrCode: [''],
       triggerMode: [0],
