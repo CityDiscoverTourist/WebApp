@@ -87,10 +87,10 @@ export class QuestEditComponent implements OnInit {
             this.form.patchValue(data);
             this.form
               .get('availableTime1')
-              ?.setValue(availableTime[0].replace('am', '').trim());
+              ?.setValue(availableTime[0]?.replace('am', '').trim());
             this.form
               .get('availableTime2')
-              ?.setValue(availableTime[1].replace('pm', '').trim());
+              ?.setValue(availableTime[1]?.replace('pm', '').trim());
             this.img = data.imagePath;
           })
         ),
