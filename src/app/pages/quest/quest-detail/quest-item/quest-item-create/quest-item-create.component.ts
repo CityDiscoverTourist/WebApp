@@ -152,7 +152,8 @@ export class QuestItemCreateComponent implements OnInit {
     return this.questItemState.select('locationIds');
   }
   get questItemTypeIds(): Observable<IdValue[]> {
-    return this.questItemState.select('questItemTypeIds');
+    return this.questItemState.select('questItemTypeIds')
+    .pipe(tap((data) => console.log(data)));
   }
   form!: FormGroup;
 

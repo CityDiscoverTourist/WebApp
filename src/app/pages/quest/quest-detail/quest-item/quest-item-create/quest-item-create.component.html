@@ -8,18 +8,18 @@
           </div>
           <div class="card-body">
             <div class="d-flex" *ngIf="questItemTypeIds | async as qt">
-              <div *ngFor="let e of qt; let i = index">
+              <div *ngFor="let item of qt; index as i">
                 <div class="form-check me-3">
                   <input
                     class="form-check-input"
                     type="radio"
                     name="questItemTypeId"
-                    [id]="e.id"
+                    id="{{ qt[i].id }}"
                     formControlName="questItemTypeId"
-                    [value]="e.value"
+                    value="{{ qt[i].id }}"
                   />
-                  <label class="form-check-label" [for]="e.id">
-                    Question and Answer
+                  <label class="form-check-label" for="{{ qt[i].id }}">
+                    {{ qt[i].value }}
                   </label>
                 </div>
               </div>
