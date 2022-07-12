@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { stringify } from 'query-string';
-import { map, Observable } from 'rxjs';
+import { map, Observable, Subject } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import {
   IdValue, Location, LocationCreate, LocationListItem,
@@ -125,4 +125,6 @@ export class LocationService extends BaseService {
       { headers: this._sharedHeaders }
     );
   }
+
+  locationAdded$ = new Subject<{ id: number; name: string }>();
 }
