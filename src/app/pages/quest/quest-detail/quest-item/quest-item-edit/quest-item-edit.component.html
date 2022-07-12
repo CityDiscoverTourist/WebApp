@@ -1,145 +1,170 @@
 <div class="container py-4" *rxLet="vm$ as vm">
-    <form [formGroup]="form">
-      <div class="row">
-        <div class="col-8">
-          <div class="card mb-3">
-            <div class="bg-white card-header d-flex justify-content-between py-3">
-              <span>Chọn loại QuestItem</span>
-            </div>
-            <div class="card-body">
-              <div class="d-flex">
-                <div class="form-check me-5">
+  <form [formGroup]="form">
+    <div class="row">
+      <div class="col-8">
+        <div class="card mb-3">
+          <div class="bg-white card-header d-flex justify-content-between py-3">
+            <span>Chọn loại câu hỏi</span>
+          </div>
+          <div class="card-body">
+            <div
+              class="d-flex flex-wrap"
+              *ngIf="questItemTypeIds | async as qt"
+            >
+              <div *ngFor="let item of qt; index as i" class="row">
+                <div class="form-check me-4">
                   <input
                     class="form-check-input"
                     type="radio"
                     name="questItemTypeId"
-                    id="qa"
+                    id="{{ qt[i].id }}"
                     formControlName="questItemTypeId"
-                    [value]="1"
+                    [value]="qt[i].id"
                   />
-                  <label class="form-check-label" for="qa">
-                    Question and Answer
+                  <label class="form-check-label" for="{{ qt[i].id }}">
+                    {{ qt[i].name }}
                   </label>
-                </div>
-                <div class="form-check me-5">
-                  <input
-                    class="form-check-input"
-                    type="radio"
-                    name="questItemTypeId"
-                    id="qr"
-                    [value]="2"
-                    formControlName="questItemTypeId"
-                  />
-                  <label class="form-check-label" for="qr"> Qr game </label>
-                </div>
-                <div class="form-check">
-                  <input
-                    class="form-check-input"
-                    type="radio"
-                    name="questItemTypeId"
-                    id="rq"
-                    [value]="3"
-                    formControlName="questItemTypeId"
-                  />
-                  <label class="form-check-label" for="rq"> Reverse Question </label>
                 </div>
               </div>
             </div>
           </div>
-          <div class="card mb-3">
-            <div class="card-header bg-white py-3">Thông tin chung</div>
-            <div class="card-body">
-              <div class="form-group mb-3">
-                <label class="form-label" for="content">Nội dung câu hỏi</label>
-                <textarea
-                  class="form-control"
-                  placeholder="Nhập nội dung câu hỏi"
-                  id="content"
-                  rows="2"
-                  formControlName="content"
-                ></textarea>
-              </div>
-              <button
-                type="button"
-                class="btn btn-sm btn-primary"
-                (click)="toggleDescription$.next()"
+        </div>
+        <div class="card mb-3">
+          <div class="card-header bg-white py-3">Thông tin chung</div>
+          <div class="card-body">
+            <div class="form-group mb-3">
+              <label class="form-label" for="content">Nội dung câu hỏi</label>
+              <textarea
+                class="form-control"
+                placeholder="Nhập nội dung câu hỏi"
+                id="content"
+                rows="2"
+                formControlName="content"
+                [ngClass]="{ 'is-invalid': form?.hasError('content') }"
+              ></textarea>
+              <div
+                class="invalid-feedback"
+                *ngIf="form?.hasErrorOf('content', 'required')"
               >
-                Mô tả
-              </button>
-              <div class="mt-3" *ngIf="vm.showQuestDescription">
-                <div class="mt-3">
-                  <quill-editor
-                    [styles]="{ height: '200px' }"
-                    formControlName="description"
-                  ></quill-editor>
-                </div>
+                Nội dung câu hỏi bắt buộc
               </div>
-              <div class="row mb-3 mt-3">
-                <div class="col">
-                  <div class="form-group">
-                    <label class="form-label" for="rightAnswer"
-                      >Câu trả lời</label
-                    >
-                    <textarea
-                      class="form-control"
-                      placeholder="Nhập nội dung câu trả lời"
-                      id="rightAnswer"
-                      formControlName="rightAnswer"
-                    ></textarea>
+              <small
+                id="content"
+                class="form-text text-muted"
+                *ngIf="form?.hasValue('content')"
+                >Dùng | để phân cách nếu thêm nội dung câu hỏi tiếng anh
+              </small>
+            </div>
+            <button
+              type="button"
+              class="btn btn-sm btn-primary"
+              (click)="toggleDescription$.next()"
+            >
+              Mô tả
+            </button>
+            <div class="mt-3" *ngIf="vm.showQuestDescription">
+              <div class="mt-3">
+                <quill-editor
+                  [styles]="{ height: '200px' }"
+                  formControlName="description"
+                  placeholder="Dùng | để phân cách nếu thêm tên tiếng anh"
+                ></quill-editor>
+                <small
+                  id="description"
+                  class="form-text text-muted"
+                  *ngIf="form?.hasValue('description')"
+                  >Dùng | để phân cách nếu thêm mô tả tiếng anh
+                </small>
+              </div>
+            </div>
+            <div class="row mb-3 mt-3">
+              <div class="col">
+                <div class="form-group">
+                  <label class="form-label" for="rightAnswer"
+                    >Câu trả lời</label
+                  >
+                  <textarea
+                    class="form-control"
+                    placeholder="Nhập nội dung câu trả lời"
+                    id="rightAnswer"
+                    formControlName="rightAnswer"
+                    [ngClass]="{ 'is-invalid': form?.hasError('rightAnswer') }"
+                  ></textarea>
+                  <div
+                    class="invalid-feedback"
+                    *ngIf="form?.hasErrorOf('rightAnswer', 'required')"
+                  >
+                    Câu trả lời bắt buộc
                   </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-        <div class="col-4">
-          <div class="card mb-3">
-            <div class="card-header bg-white py-3">Thông tin thêm</div>
-            <div class="card-body">
-              <div class="form-group mb-3">
-                <label for="locationId" class="form-label">Chọn đia điểm</label>
-                <ng-select
-                  [items]="locationIds | async"
-                  bindValue="id"
-                  bindLabel="value"
-                  formControlName="locationId"
-                ></ng-select>
+      </div>
+      <div class="col-4">
+        <div class="card mb-3">
+          <div class="card-body">
+            <div class="form-group mb-3">
+              <label for="locationId" class="form-label">Chọn đia điểm</label>
+              <ng-select
+                [items]="locationIds | async"
+                bindValue="id"
+                bindLabel="value"
+                class="header-p-0"
+                formControlName="locationId"
+                [ngClass]="{ 'is-invalid': form?.hasError('locationId') }"
+              >
+                <ng-template ng-header-tmp>
+                  <button
+                    class="btn btn-default btn-sm rounded-0 text-center w-100"
+                    (click)="showAddLocation()"
+                  >
+                    <i class="bi bi-plus-circle"></i>
+                    Thêm địa điểm
+                  </button>
+                </ng-template>
+              </ng-select>
+              <div
+                class="invalid-feedback"
+                *ngIf="form?.hasErrorOf('locationId', 'required')"
+              >
+                Địa điểm bắt buộc
               </div>
-            </div>
-          </div>
-          <div class="card mb-3">
-            <div class="card-body">
-              <div class="d-flex align-items-end justify-content-between mb-2">
-                <div>
-                  <span>Trạng thái</span>
-                  <div>Áp dụng</div>
-                </div>
-                <div class="form-check form-switch mb-0">
-                  <input
-                    class="form-check-input"
-                    type="checkbox"
-                    role="switch"
-                    id="status"
-                    formControlName="status"
-                  />
-                  <label class="form-check-label" for="status"></label>
-                </div>
-              </div>
-              <hr />
             </div>
           </div>
         </div>
-        <div>
-          <button
-            type="button"
-            class="btn btn-primary mt-3 me-2"
-            (click)="this.submit$.next(form)"
-          >
-            Cập nhật
-          </button>
-          <a routerLink="../../" class="btn btn-outline-primary mt-3">Thoát</a>
+        <div class="card mb-3">
+          <div class="card-body">
+            <label for="status" class="form-label">Trạng thái</label>
+            <ng-select
+              [items]="status"
+              bindValue="value"
+              bindLabel="value"
+              placeholder="Chọn trạng thái"
+              [clearable]="false"
+              formControlName="status"
+              [ngClass]="{ 'is-invalid': form?.hasError('status') }"
+            ></ng-select>
+            <div
+              class="invalid-feedback"
+              *ngIf="form.hasErrorOf('status', 'required')"
+            >
+              Vui lòng chọn trạng thái
+            </div>
+          </div>
         </div>
       </div>
-    </form>
-  </div>
-  
+      <div>
+        <button
+          type="button"
+          class="btn btn-primary mt-3 me-3"
+          (click)="submit$.next({form,redirect:true})"
+        >
+          Cập nhật
+        </button>
+        <a routerLink="../../" class="btn btn-outline-primary mt-3">Thoát</a>
+      </div>
+    </div>
+  </form>
+</div>
