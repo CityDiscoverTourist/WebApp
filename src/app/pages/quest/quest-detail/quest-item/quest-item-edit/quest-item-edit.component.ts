@@ -1,12 +1,27 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HotToastService } from '@ngneat/hot-toast';
 import { RxState } from '@rx-angular/state';
-import { BehaviorSubject, Observable, partition, Subject, switchMap, tap } from 'rxjs';
-import { IdValue, QuestItemCreate } from 'src/app/models';
+import {
+  BehaviorSubject,
+  catchError,
+  map,
+  Observable,
+  of,
+  partition,
+  pipe,
+  Subject,
+  switchMap,
+  tap,
+} from 'rxjs';
+import { IdValue, QuestItemCreate, QuestItemType } from 'src/app/models';
 import { QuestItemService } from 'src/app/services';
-import { QuestItemDetailState, QuestItemState, QUEST_ITEM_STATE } from '../states';
+import {
+  QuestItemDetailState,
+  QuestItemState,
+  QUEST_ITEM_STATE,
+} from '../states';
 
 interface QuestItemEditState {
   showQuestDescription: boolean;
@@ -21,26 +36,25 @@ interface QuestItemEditState {
   styleUrls: ['./quest-item-edit.component.scss'],
 })
 export class QuestItemEditComponent implements OnInit {
-  id:string ='';
+  id: string = '';
+  status: { id: number; value: string }[] = [];
   constructor(
     @Inject(QUEST_ITEM_STATE) private questItemState: RxState<QuestItemState>,
     private fb: FormBuilder,
     private state: RxState<QuestItemEditState>,
     private questItemService: QuestItemService,
     private toast: HotToastService,
-    private route: ActivatedRoute,
-    private questItemDetailState: RxState<QuestItemDetailState>,
-
-  ) 
-  {
+    private activatedRoute: ActivatedRoute,
+    private router: Router,
+    private questItemDetailState: RxState<QuestItemDetailState>
+  ) {
     this.state.set({
       showQuestDescription: false,
-      // files: [],
     });
   }
 
   ngOnInit(): void {
-    this.search$.next({ id: this.route.snapshot.params['id'] });
+    this.search$.next({ id: this.activatedRoute.snapshot.params['id'] });
     this.questItemDetailState.connect(
       this.search$
         .pipe(
@@ -61,20 +75,59 @@ export class QuestItemEditComponent implements OnInit {
     );
 
     this.initForm();
+    this.status = this.questItemService.status;
     this.state.connect(this.toggleDescription$, (prev, curr) => ({
       showQuestDescription: !prev.showQuestDescription,
     }));
-    const [valid$, invalid$] = partition(this.submit$, (f) => f.valid);
+    const [valid$, invalid$] = partition(
+      this.submit$,
+      ({ form }) => form.valid
+    );
 
     this.state.connect(
       valid$.pipe(
         tap(() => this.state.set({ submitting: true })),
-        switchMap((f) =>
-          this.questItemService.updateQuestItemById(f.value as QuestItemCreate)
+        pipe(
+          tap(({ form }) => {
+            var content = form.controls['content'].value + ' ';
+            var arrName = content.split('|');
+            if (arrName.length == 1) {
+              content = arrName[0] + '()' + arrName[0];
+            } else {
+              content = arrName[0] + '()' + arrName[1];
+            }
+            form.value['content'] = content;
+            var description = form.controls['description'].value + '';
+            var arrDescription = description.split('|');
+            if (arrDescription.length == 1 && description != null) {
+              description = arrDescription[0] + '()' + arrDescription[0];
+            } else {
+              description = arrDescription[0] + '()' + arrDescription[1];
+            }
+            form.value['description'] = description;
+            return form;
+          })
+        ),
+        switchMap(({ form, redirect }) =>
+          this.questItemService
+            .updateQuestItemById(form.value as QuestItemCreate)
+            .pipe(
+              catchError(() => of({ status: 'data not modified', data: null })),
+              map((r) => ({ ...r, redirect }))
+            )
         ),
         tap((result) => {
-          if (result.id) {
-            this.toast.success('Cập nhật quest item thành công');
+          if (!result.data?.id) {
+            return;
+          }
+          this.toast.success(`Cập nhật quest item thành công`);
+          if (result.redirect) {
+            this.router.navigate(['../../../'], {
+              relativeTo: this.activatedRoute,
+            });
+          } else {
+            this.form.reset();
+            this.initForm();
           }
         })
       ),
@@ -83,32 +136,31 @@ export class QuestItemEditComponent implements OnInit {
         submitting: false,
       })
     );
-    // hay
-    this.state.hold(invalid$.pipe(), (f) => {
-      this.toast.error('Giá trị bạn nhập không đúng');
-      f.revalidateControls([]);
+
+    this.state.hold(invalid$.pipe(), ({ form }) => {
+      this.toast.error('Giá trị bạn nhập không hợp lệ');
+      form.revalidateControls([]);
     });
   }
 
   form!: FormGroup;
   search$ = new BehaviorSubject<{ id: string }>({ id: '' });
 
-
   initForm() {
     this.form = this.fb.group({
       id: [0],
-      content: [''],
+      content: ['', Validators.required],
       description: [''],
       duration: [0],
-      createdDate: [new Date()],
+      createdDate: [''],
       updatedDate: [],
       qrCode: [''],
       triggerMode: [0],
-      rightAnswer: [],
+      rightAnswer: ['', Validators.required],
       answerImageUrl: [],
       status: [],
-      questItemTypeId: [1],
-      locationId: [],
+      questItemTypeId: [1, Validators.required],
+      locationId: ['', Validators.required],
       questId: [],
       itemId: [null],
     });
@@ -120,6 +172,17 @@ export class QuestItemEditComponent implements OnInit {
   get locationIds(): Observable<IdValue[]> {
     return this.questItemState.select('locationIds');
   }
+  get questItemTypeIds(): Observable<QuestItemType[]> {
+    return this.questItemState
+      .select('questItemTypeIds')
+      .pipe(map((data) => data.filter((x) => x.status == 'Active')));
+  }
   formSubmit$ = new Subject<FormGroup>();
-  submit$ = new Subject<FormGroup>();
+  submit$ = new Subject<{ form: FormGroup; redirect: boolean }>();
+
+  showAddLocation() {
+    this.router.navigate(['../../../../../location/create', 'redirect'], {
+      relativeTo: this.activatedRoute,
+    });
+  }
 }

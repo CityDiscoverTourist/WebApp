@@ -177,6 +177,7 @@ export class AreaListComponent implements OnInit {
         simpleForm: false,
         title: 'khu vực',
         type: 'Thêm',
+        id:'0'
       },
     });
     bsModalRef.onHide?.pipe(take(1), filter((s) => (s as any).success)).subscribe({

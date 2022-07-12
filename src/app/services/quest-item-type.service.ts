@@ -27,7 +27,7 @@ export class QuestItemTypeService extends BaseService {
       'application/json'
     );
   }
-  getQuestItemTypeIds(): Observable<IdValue[]> {
+  getQuestItemTypeIds(): Observable<QuestItemType[]> {
     var result = this.http
       .get<Pagination<QuestItemType>>(
         `${environment.apiUrl}/api/v1/quest-item-types`,
@@ -39,8 +39,9 @@ export class QuestItemTypeService extends BaseService {
             (i) =>
               ({
                 id: i.id,
-                value: `${i.name}`,
-              } as IdValue)
+                name: `${i.name}`,
+                status: i.status,
+              } as QuestItemType)
           )
         )
       );
@@ -77,13 +78,15 @@ export class QuestItemTypeService extends BaseService {
       { headers: this._sharedHeaders }
     );
   }
-  deleteQuestItemTypeById(id: string): Observable<string | undefined> {
+  deleteQuestItemTypeById(
+    id: string
+  ): Observable<QuestItemTypeListItem | undefined> {
     return this.http
       .delete<Result<QuestItemTypeListItem>>(
         `${environment.apiUrl}/api/v1/quest-item-types/${id}`,
         { headers: this._sharedHeaders }
       )
-      .pipe(map((response: Result<QuestItemTypeListItem>) => response.status));
+      .pipe(map((response: Result<QuestItemTypeListItem>) => response.data));
   }
 
   getQuestItemTypeById(id: string | undefined): Observable<QuestItemType> {

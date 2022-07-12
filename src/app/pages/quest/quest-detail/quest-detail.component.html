@@ -8,7 +8,7 @@
     <a
       type="a"
       class="btn btn-outline-danger mt-2 me-3"
-      (click)="showDeleteQuest()"
+      (click)="deleteQuest(vm.id)"
     >
       Xóa
     </a>
@@ -121,7 +121,7 @@
       class="btn btn-primary"
       style="min-width: 120px"
     >
-      <i class="bi bi-plus"></i> Thêm QuestItem
+      <i class="bi bi-plus"></i> Thêm câu hỏi
     </a>
   </div>
   <div class="bg-white mx-3 p-3 rounded mt-2">
@@ -147,7 +147,7 @@
           <ng-select
             [items]="questItemTypeIds | async"
             bindValue="id"
-            bindLabel="value"
+            bindLabel="name"
             placeholder="Chọn loại quest item"
             [clearable]="false"
             [closeOnSelect]="true"

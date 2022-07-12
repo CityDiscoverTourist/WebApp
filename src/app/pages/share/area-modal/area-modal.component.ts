@@ -50,28 +50,30 @@ export class AreaModalComponent implements OnInit {
   ngOnInit(): void {
     this.initForm();
     this.status = this.areaSerice.status;
-    this.search$.next({ id: this.id });
-    this.state.connect(
-      this.search$
-        .pipe(
-          tap((_) => this.state.set({ loading: true })),
-          switchMap((s) => this.areaSerice.getAreaById(s.id))
-        )
-        .pipe(
-          tap((data) => {
-            this.form.patchValue({
-              id: data.id,
-              name: data.name,
-              status: data.status,
-              cityId: data.cityId,
-            });
-          })
-        ),
-      (_, result) => ({
-        quest: result,
-        loading: false,
-      })
-    );
+    if (Number(this.id) > 0) {
+      this.search$.next({ id: this.id });
+      this.state.connect(
+        this.search$
+          .pipe(
+            tap((_) => this.state.set({ loading: true })),
+            switchMap((s) => this.areaSerice.getAreaById(s.id))
+          )
+          .pipe(
+            tap((data) => {
+              this.form.patchValue({
+                id: data.id,
+                name: data.name,
+                status: data.status,
+                cityId: data.cityId,
+              });
+            })
+          ),
+        (_, result) => ({
+          quest: result,
+          loading: false,
+        })
+      );
+    }
     const [$valid, $invalid] = partition(this.submit$, (f) => f.valid);
     this.state.connect(
       $valid

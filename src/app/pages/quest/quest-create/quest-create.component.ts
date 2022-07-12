@@ -23,7 +23,6 @@ import {
   take,
   tap,
 } from 'rxjs';
-import { hourValidator } from 'src/app/common/validations';
 import { IdValue, QuestCreate } from 'src/app/models';
 import { QuestService } from 'src/app/services';
 import { AreaModalComponent, QuestTypeModalComponent } from '../../share';
@@ -109,7 +108,7 @@ export class QuestCreateComponent implements OnInit {
             form.value['title'] = title;
             var description = form.controls['description'].value + '';
             var arrDescription = description.split('|');
-            if (arrDescription.length == 1) {
+            if (arrDescription.length == 1 && description != null) {
               description = arrDescription[0] + '()' + arrDescription[0];
             } else {
               description = arrDescription[0] + '()' + arrDescription[1];
@@ -117,9 +116,9 @@ export class QuestCreateComponent implements OnInit {
             form.value['description'] = description;
             var availableTime =
               form.controls['availableTime1'].value +
-              ' - ' +
+              ' AM - ' +
               form.controls['availableTime2'].value +
-              ' ';
+              ' PM ';
             form.value['availableTime'] = availableTime;
             return form;
           })
@@ -140,6 +139,7 @@ export class QuestCreateComponent implements OnInit {
               relativeTo: this.activatedRoute,
             });
           } else {
+            this.form.reset();
             this.initForm();
           }
         })
@@ -222,10 +222,6 @@ export class QuestCreateComponent implements OnInit {
       areaId: [null, [Validators.required]],
       status: ['', [Validators.required]],
     });
-  }
-
-  get availableTime2() {
-    return this.form.get('availableTime2');
   }
 
   get title() {

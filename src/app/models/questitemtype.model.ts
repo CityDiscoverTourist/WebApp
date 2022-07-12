@@ -1,25 +1,25 @@
-import { SearchInfo } from "./common.model";
+import { SearchInfo } from './common.model';
 
-export interface QuestItemType{
-    id:number;
-    name:string;
-    status:string;
+export interface QuestItemType {
+  id: number;
+  name: string;
+  status: string;
 }
 
-export interface QuestItemTypeCreate{
-    id:number;
-    name:string;
-    status:string;
+export interface QuestItemTypeCreate {
+  id: number;
+  name: string;
+  status: string;
 }
 
-export interface QuestItemTypeListItem{
-    index:number;
-    id:number;
-    name:string;
-    status:string;
+export interface QuestItemTypeListItem {
+  index: number;
+  id: number;
+  name: string;
+  status: string;
+  questItems: [];
 }
 
-
-export interface QuestItemTypeListSearch extends SearchInfo{
-    status?:number[]
-  }
+export interface QuestItemTypeListSearch extends SearchInfo {
+  status?: number[];
+}

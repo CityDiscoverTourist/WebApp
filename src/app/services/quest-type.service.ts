@@ -50,12 +50,15 @@ export class QuestTypeService extends BaseService {
       `${search.sort?.sortBy}` === 'undefined' ? '' : search.sort?.sortBy;
     var sortDir =
       `${search?.sort?.dir}` === 'undefined' ? '' : search.sort?.dir;
+      var language =
+      `${search?.language}` === 'undefined' ? '1' : search?.language;
     const query = stringify({
       name: search.keyword,
       pageNumber: isNaN(search?.currentPage!) ? 1 : search?.currentPage! + 1,
       pagesize: 10,
       orderby: `${sortBy} ${sortDir}`,
       status: search?.status,
+      language: language ? language : 0,
     });
     var result = this.http.get<Paging<QuestTypeListItem>>(
       `${environment.apiUrl}/api/v1/quest-types?` + query,
@@ -78,19 +81,19 @@ export class QuestTypeService extends BaseService {
       this.httpOptions
     );
   }
-  deleteQuestTypeById(id: string): Observable<string | undefined> {
+  deleteQuestTypeById(id: string): Observable<QuestTypeListItem | undefined> {
     return this.http
       .delete<Result<QuestTypeListItem>>(
         `${environment.apiUrl}/api/v1/quest-types/${id}`,
         this.httpOptions
       )
-      .pipe(map((response: Result<QuestTypeListItem>) => response.status));
+      .pipe(map((response: Result<QuestTypeListItem>) => response.data));
   }
 
   getQuestTypeById(id: string | undefined): Observable<QuestType> {
     return this.http
       .get<Result<QuestType>>(
-        `${environment.apiUrl}/api/v1/quest-types/${id}`,
+        `${environment.apiUrl}/api/v1/quest-types/${id}/not-language`,
         this.httpOptions
       )
       .pipe(

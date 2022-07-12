@@ -30,25 +30,28 @@
       [ngClass]="{ col: !simpleForm }"
       *ngIf="!simpleForm"
     >
-    <label for="status" class="form-label">Trạng thái</label>
-    <ng-select
-      [items]="status"
-      bindValue="value"
-      bindLabel="value"
-      placeholder="Chọn trạng thái"
-      [clearable]="false"
-      formControlName="status"
-      [ngClass]="{ 'is-invalid': form?.hasError('status') }"
-    ></ng-select>
+      <label for="status" class="form-label">Trạng thái</label>
+      <ng-select
+        [items]="status"
+        bindValue="value"
+        bindLabel="value"
+        placeholder="Chọn trạng thái"
+        [clearable]="false"
+        formControlName="status"
+        [ngClass]="{ 'is-invalid': form?.hasError('status') }"
+      ></ng-select>
+      <div
+        class="invalid-feedback"
+        *ngIf="form.hasErrorOf('status', 'required')"
+      >
+        Vui lòng chọn trạng thái
+      </div>
+    </div>
     <div
-      class="invalid-feedback"
-      *ngIf="form.hasErrorOf('status', 'required')"
+      *ngIf="hasError$ | async"
+      class="d-block p-2 bg-danger text-white p-2 mb-2 mt-3 text-center"
     >
-      Vui lòng chọn trạng thái
-    </div>
-    </div>
-    <div *ngIf="hasError$ | async" class="alert alert-danger">
-      Form không hợp lệ! Hãy kiểm tra lại
+      Giá trị nhập không hợp lệ! Hãy kiểm tra lại
     </div>
   </form>
 </div>
@@ -60,7 +63,12 @@
   >
     Thoát
   </button>
-  <button type="button" class="btn btn-primary" (click)="submit$.next(form)">
-    {{ type }} {{ title }}
+  <button
+    type="button"
+    class="btn btn-primary custom"
+    [disabled]="submitting$ | async"
+    (click)="submit$.next(form)"
+  >
+    {{ (submitting$ | async) ? "Lưu ..." : "Lưu" }}
   </button>
 </div>

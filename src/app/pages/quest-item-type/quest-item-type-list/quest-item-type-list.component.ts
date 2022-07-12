@@ -159,6 +159,7 @@ export class QuestItemTypeListComponent implements OnInit {
         simpleForm: false,
         title: 'loại Quest Item',
         type: 'Thêm',
+        id:'0'
       },
     });
     bsModalRef.onHide?.pipe(take(1)).subscribe({

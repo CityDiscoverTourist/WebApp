@@ -1,20 +1,31 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { stringify } from 'query-string';
-import { map, Observable, of } from 'rxjs';
-import { Paging, QuestItem, QuestItemListSearch, Result } from '../models';
+import { map, Observable } from 'rxjs';
+import { environment } from 'src/environments/environment';
 import {
+  Paging,
+  QuestItem,
   QuestItemCreate,
   QuestItemCreateResult,
   QuestItemListItem,
+  QuestItemListSearch,
+  Result,
 } from '../models';
+import { BaseService } from './base.service';
 
 @Injectable({
   providedIn: 'root',
 })
-export class QuestItemService {
-  constructor(private http: HttpClient) {}
-
+export class QuestItemService extends BaseService {
+  private _sharedHeaders = new HttpHeaders();
+  constructor(private http: HttpClient) {
+    super();
+    this._sharedHeaders = this._sharedHeaders.set(
+      'Content-Type',
+      'application/json'
+    );
+  }
   httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
     // headers: new HttpHeaders({ encrypt: 'multipart/form-data' }),
@@ -36,7 +47,7 @@ export class QuestItemService {
       orderby: `${sortBy} ${sortDir}`,
     });
     var result = this.http.get<Paging<QuestItemListItem>>(
-      `https://citytourist.azurewebsites.net/api/v1/quest-items?` + query,
+      `${environment.apiUrl}/api/v1/quest-items?` + query,
       this.httpOptions
     );
     return result;
@@ -44,25 +55,18 @@ export class QuestItemService {
 
   addQuestItem(
     questItemCreate: QuestItemCreate
-  ): Observable<QuestItemCreateResult> {
-    return this.http
-      .post<Result<QuestItem>>(
-        `https://citytourist.azurewebsites.net/api/v1/quest-items/`,
-        questItemCreate,
-        this.httpOptions
-      )
-      .pipe(
-        map(
-          (response: Result<QuestItem>) =>
-            ({ id: response.data?.id } as QuestItemCreateResult)
-        )
-      );
+  ): Observable<Result<QuestItem>> {
+    return this.http.post<Result<QuestItem>>(
+      `${environment.apiUrl}/api/v1/quest-items/`,
+      questItemCreate,
+      this.httpOptions
+    );
   }
 
   deleteQuestItemById(id: string): Observable<string | undefined> {
     return this.http
       .delete<Result<QuestItemListItem>>(
-        `https://citytourist.azurewebsites.net/api/v1/quest-items/${id}`,
+        `${environment.apiUrl}/api/v1/quest-items/${id}/`,
         this.httpOptions
       )
       .pipe(map((response: Result<QuestItemListItem>) => response.status));
@@ -71,7 +75,7 @@ export class QuestItemService {
   getQuestItemById(id: string | undefined): Observable<QuestItem> {
     return this.http
       .get<Result<QuestItem>>(
-        `https://citytourist.azurewebsites.net/api/v1/quest-items/${id}`,
+        `${environment.apiUrl}/api/v1/quest-items/${id}/not-language/`,
         this.httpOptions
       )
       .pipe(
@@ -99,18 +103,11 @@ export class QuestItemService {
   }
   updateQuestItemById(
     payload: Partial<QuestItemCreate>
-  ): Observable<QuestItemCreateResult> {
-    return this.http
-      .put<Result<QuestItem>>(
-        `https://citytourist.azurewebsites.net/api/v1/quest-items/`,
-        payload,
-        this.httpOptions
-      )
-      .pipe(
-        map(
-          (response: Result<QuestItem>) =>
-            ({ id: response.data?.id } as QuestItemCreateResult)
-        )
-      );
+  ): Observable<Result<QuestItem>> {
+    return this.http.put<Result<QuestItem>>(
+      `${environment.apiUrl}/api/v1/quest-items/`,
+      payload,
+      this.httpOptions
+    );
   }
 }

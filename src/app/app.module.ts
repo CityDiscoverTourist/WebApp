@@ -17,7 +17,6 @@ import {
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { LocationTypeModalComponent } from './pages/share/location-type-modal/location-type-modal.component';
 import { QuestTypeModalComponent } from './pages/share/quest-type-modal/quest-type-modal.component';
-import { QuestDeleteModalComponent } from './pages/share/quest-delete-modal/quest-delete-modal.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { DeleteModalComponent } from './pages/share/delete-modal/delete-modal.component';
 import { QuestItemTypeModalComponent } from './pages/share/quest-item-type-modal/quest-item-type-modal.component';
@@ -45,7 +44,7 @@ const lib = [
     QuestOwnerLayoutComponent,
     LocationTypeModalComponent,
     QuestTypeModalComponent,
-    QuestDeleteModalComponent,
+
     NavbarComponent,
     CityModalComponent,
     DeleteModalComponent,

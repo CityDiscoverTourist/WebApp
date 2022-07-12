@@ -12,25 +12,20 @@ import { DatatableComponent, TableColumn } from '@swimlane/ngx-datatable';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import {
   BehaviorSubject,
-  combineLatest,
   filter,
   forkJoin,
   map,
-  mergeAll,
-  mergeMap,
   Observable,
-  of,
   Subject,
   switchMap,
   take,
   tap,
 } from 'rxjs';
 import {
-  IdValue,
   PagingMetadata,
-  Quest,
   QuestItemListItem,
   QuestItemListSearch,
+  QuestItemType,
   QuestListItem,
 } from 'src/app/models';
 import {
@@ -42,7 +37,6 @@ import {
 } from 'src/app/services';
 import { PageInfo, SortInfo } from 'src/app/types';
 import { DeleteModalComponent } from '../../share';
-import { QuestDeleteModalComponent } from '../../share/quest-delete-modal/quest-delete-modal.component';
 import { QuestItemListState } from '../states';
 import { QuestDetailState } from '../states/questdetail.state';
 import { QuestItemState, QUEST_ITEM_STATE } from './quest-item/states';
@@ -194,14 +188,6 @@ export class QuestDetailComponent implements OnInit {
     });
   }
 
-  showDeleteQuest() {
-    const bsModalRef = this.modalService.show(QuestDeleteModalComponent, {
-      initialState: {
-        id: this.id,
-      },
-    });
-  }
-
   get quest$(): Observable<QuestListItem> {
     return this.questDetailState.select('quest');
   }
@@ -276,13 +262,32 @@ export class QuestDetailComponent implements OnInit {
     });
   }
 
+  deleteQuest(id: number) {
+    const bsModalRef = this.modalService.show(DeleteModalComponent, {
+      initialState: {
+        id: id.toString(),
+        title: 'Quest',
+      },
+    });
+    bsModalRef.onHide
+      ?.pipe(
+        take(1),
+        filter((s) => (s as any).data)
+      )
+      .subscribe({
+        next: (result) => {
+          window.location.reload();
+        },
+      });
+  }
+
   onUpdate(id: string) {
     this.router.navigate([`quest-item/${id}/edit`], {
       relativeTo: this.activatedRoute,
     });
   }
 
-  get questItemTypeIds(): Observable<IdValue[]> {
+  get questItemTypeIds(): Observable<QuestItemType[]> {
     return this.questItemState.select('questItemTypeIds');
   }
   get questItems$(): Observable<QuestItemListItem[]> {

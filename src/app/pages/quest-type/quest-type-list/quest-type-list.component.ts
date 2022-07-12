@@ -6,6 +6,7 @@ import { DatatableComponent, TableColumn } from '@swimlane/ngx-datatable';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import {
   BehaviorSubject,
+  filter,
   Observable,
   Subject,
   switchMap,
@@ -152,7 +153,7 @@ export class QuestTypeListComponent implements OnInit {
     status: new FormControl(),
   });
 
-  submitSearch$ = new Subject<Partial<{ keyword: string; status: string }>>();
+  submitSearch$ = new Subject<Partial<{ keyword: string; status: string;language: string; }>>();
   resetSearch$ = new Subject<void>();
 
   showAddQuestType() {
@@ -163,30 +164,35 @@ export class QuestTypeListComponent implements OnInit {
         type: 'Thêm',
       },
     });
-    bsModalRef.onHide?.pipe(take(1)).subscribe({
-      next: (result) => {
-        const data = result as { id: number; name: string };
-        if (data.id > 0 && data.name.length > 0) {
-          this.toast.success('Tạo loại Quest thành công!', {
-            position: 'top-center',
-            duration: 5000,
-            style: {
-              border: '1px solid #0a0',
-              padding: '16px',
-            },
-            iconTheme: {
-              primary: '#0a0',
-              secondary: '#fff',
-            },
-            role: 'status',
-            ariaLive: 'polite',
+    bsModalRef.onHide
+      ?.pipe(
+        take(1),
+        filter((s) => (s as any).success)
+      )
+      .subscribe({
+        next: (result) => {
+          const data = result as { id: number; name: string };
+          if (data.id > 0 && data.name.length > 0) {
+            this.toast.success('Tạo loại Quest thành công!', {
+              position: 'top-center',
+              duration: 5000,
+              style: {
+                border: '1px solid #0a0',
+                padding: '16px',
+              },
+              iconTheme: {
+                primary: '#0a0',
+                secondary: '#fff',
+              },
+              role: 'status',
+              ariaLive: 'polite',
+            });
+          }
+          this.search$.next({
+            ...this.search$.getValue(),
           });
-        }
-        this.search$.next({
-          ...this.search$.getValue(),
-        });
-      },
-    });
+        },
+      });
   }
   onDelete(id: string) {
     const bsModalRef = this.modalService.show(DeleteModalComponent, {
@@ -195,13 +201,18 @@ export class QuestTypeListComponent implements OnInit {
         title: 'loại Quest',
       },
     });
-    bsModalRef.onHide?.pipe(take(1)).subscribe({
-      next: (result) => {
-        this.search$.next({
-          ...this.search$.getValue(),
-        });
-      },
-    });
+    bsModalRef.onHide
+      ?.pipe(
+        take(1),
+        filter((s) => (s as any).success)
+      )
+      .subscribe({
+        next: (result) => {
+          this.search$.next({
+            ...this.search$.getValue(),
+          });
+        },
+      });
   }
 
   onUpdate(id: string) {
@@ -212,30 +223,35 @@ export class QuestTypeListComponent implements OnInit {
         type: 'Cập nhật',
       },
     });
-    bsModalRef.onHide?.pipe(take(1)).subscribe({
-      next: (result) => {
-        const data = result as { id: number; name: string };
-        if (data.id > 0 && data.name !== undefined) {
-          this.toast.success('Cập nhật loại Quest thành công!', {
-            position: 'top-center',
-            duration: 2000,
-            style: {
-              border: '1px solid #0a0',
-              padding: '16px',
-            },
-            iconTheme: {
-              primary: '#0a0',
-              secondary: '#fff',
-            },
-            role: 'status',
-            ariaLive: 'polite',
-          });
-          window.location.reload();
-          this.search$.next({
-            ...this.search$.getValue(),
-          });
-        }
-      },
-    });
+    bsModalRef.onHide
+      ?.pipe(
+        take(1),
+        filter((s) => (s as any).success)
+      )
+      .subscribe({
+        next: (result) => {
+          const data = result as { id: number; name: string };
+          if (data.id > 0 && data.name !== undefined) {
+            this.toast.success('Cập nhật loại Quest thành công!', {
+              position: 'top-center',
+              duration: 2000,
+              style: {
+                border: '1px solid #0a0',
+                padding: '16px',
+              },
+              iconTheme: {
+                primary: '#0a0',
+                secondary: '#fff',
+              },
+              role: 'status',
+              ariaLive: 'polite',
+            });
+            window.location.reload();
+            this.search$.next({
+              ...this.search$.getValue(),
+            });
+          }
+        },
+      });
   }
 }
