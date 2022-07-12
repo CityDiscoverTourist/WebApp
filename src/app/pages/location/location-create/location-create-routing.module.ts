@@ -8,6 +8,11 @@ const routes: Routes = [
     component: LocationCreateComponent,
     data: { title: 'Quay lại danh sách địa điểm', url: 'location' },
   },
+  {
+    path: 'redirect',
+    component: LocationCreateComponent,
+    data: { title: 'Quay lại trang tạo câu hỏi', url: 'location' },
+  },
 ];
 
 @NgModule({
