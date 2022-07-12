@@ -27,7 +27,7 @@ export class QuestItemTypeService extends BaseService {
       'application/json'
     );
   }
-  getQuestItemTypeIds(): Observable<IdValue[]> {
+  getQuestItemTypeIds(): Observable<QuestItemType[]> {
     var result = this.http
       .get<Pagination<QuestItemType>>(
         `${environment.apiUrl}/api/v1/quest-item-types`,
@@ -39,8 +39,9 @@ export class QuestItemTypeService extends BaseService {
             (i) =>
               ({
                 id: i.id,
-                value: `${i.name}`,
-              } as IdValue)
+                name: `${i.name}`,
+                status: i.status,
+              } as QuestItemType)
           )
         )
       );

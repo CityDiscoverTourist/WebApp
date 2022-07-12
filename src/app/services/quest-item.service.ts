@@ -66,7 +66,7 @@ export class QuestItemService extends BaseService {
   deleteQuestItemById(id: string): Observable<string | undefined> {
     return this.http
       .delete<Result<QuestItemListItem>>(
-        `${environment.apiUrl}/api/v1/quest-items/${id}`,
+        `${environment.apiUrl}/api/v1/quest-items/${id}/`,
         this.httpOptions
       )
       .pipe(map((response: Result<QuestItemListItem>) => response.status));
@@ -75,7 +75,7 @@ export class QuestItemService extends BaseService {
   getQuestItemById(id: string | undefined): Observable<QuestItem> {
     return this.http
       .get<Result<QuestItem>>(
-        `${environment.apiUrl}/api/v1/quest-items/${id}`,
+        `${environment.apiUrl}/api/v1/quest-items/${id}/not-language/`,
         this.httpOptions
       )
       .pipe(
@@ -103,18 +103,11 @@ export class QuestItemService extends BaseService {
   }
   updateQuestItemById(
     payload: Partial<QuestItemCreate>
-  ): Observable<QuestItemCreateResult> {
-    return this.http
-      .put<Result<QuestItem>>(
-        `${environment.apiUrl}/api/v1/quest-items/`,
-        payload,
-        this.httpOptions
-      )
-      .pipe(
-        map(
-          (response: Result<QuestItem>) =>
-            ({ id: response.data?.id } as QuestItemCreateResult)
-        )
-      );
+  ): Observable<Result<QuestItem>> {
+    return this.http.put<Result<QuestItem>>(
+      `${environment.apiUrl}/api/v1/quest-items/`,
+      payload,
+      this.httpOptions
+    );
   }
 }

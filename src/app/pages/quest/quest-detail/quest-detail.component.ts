@@ -12,25 +12,20 @@ import { DatatableComponent, TableColumn } from '@swimlane/ngx-datatable';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import {
   BehaviorSubject,
-  combineLatest,
   filter,
   forkJoin,
   map,
-  mergeAll,
-  mergeMap,
   Observable,
-  of,
   Subject,
   switchMap,
   take,
   tap,
 } from 'rxjs';
 import {
-  IdValue,
   PagingMetadata,
-  Quest,
   QuestItemListItem,
   QuestItemListSearch,
+  QuestItemType,
   QuestListItem,
 } from 'src/app/models';
 import {
@@ -292,7 +287,7 @@ export class QuestDetailComponent implements OnInit {
     });
   }
 
-  get questItemTypeIds(): Observable<IdValue[]> {
+  get questItemTypeIds(): Observable<QuestItemType[]> {
     return this.questItemState.select('questItemTypeIds');
   }
   get questItems$(): Observable<QuestItemListItem[]> {

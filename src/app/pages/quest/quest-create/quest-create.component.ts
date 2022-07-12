@@ -3,7 +3,7 @@ import {
   ChangeDetectorRef,
   Component,
   Inject,
-  OnInit
+  OnInit,
 } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -21,7 +21,7 @@ import {
   Subject,
   switchMap,
   take,
-  tap
+  tap,
 } from 'rxjs';
 import { IdValue, QuestCreate } from 'src/app/models';
 import { QuestService } from 'src/app/services';
@@ -139,6 +139,7 @@ export class QuestCreateComponent implements OnInit {
               relativeTo: this.activatedRoute,
             });
           } else {
+            this.form.reset();
             this.initForm();
           }
         })
@@ -222,7 +223,6 @@ export class QuestCreateComponent implements OnInit {
       status: ['', [Validators.required]],
     });
   }
-
 
   get title() {
     return this.form.get('title');
