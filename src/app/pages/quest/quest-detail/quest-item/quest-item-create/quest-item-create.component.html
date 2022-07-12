@@ -7,19 +7,22 @@
             <span>Chọn loại câu hỏi</span>
           </div>
           <div class="card-body">
-            <div class="d-flex" *ngIf="questItemTypeIds | async as qt">
-              <div *ngFor="let item of qt; index as i">
-                <div class="form-check me-3">
+            <div
+              class="d-flex flex-wrap"
+              *ngIf="questItemTypeIds | async as qt"
+            >
+              <div *ngFor="let item of qt; index as i" class="row">
+                <div class="form-check me-4">
                   <input
                     class="form-check-input"
                     type="radio"
                     name="questItemTypeId"
                     id="{{ qt[i].id }}"
                     formControlName="questItemTypeId"
-                    value="{{ qt[i].id }}"
+                    [value]="qt[i].id"
                   />
                   <label class="form-check-label" for="{{ qt[i].id }}">
-                    {{ qt[i].value }}
+                    {{ qt[i].name }}
                   </label>
                 </div>
               </div>
@@ -93,12 +96,6 @@
                   >
                     Câu trả lời bắt buộc
                   </div>
-                  <!-- <small
-                    id="rightAnswer"
-                    class="form-text text-muted"
-                    *ngIf="form?.hasValue('rightAnswer')"
-                    >Dùng | để phân cách nếu thêm tên tiếng anh
-                  </small> -->
                 </div>
               </div>
             </div>
@@ -119,7 +116,7 @@
                 formControlName="locationId"
                 [ngClass]="{ 'is-invalid': form?.hasError('locationId') }"
               >
-                <!-- <ng-template ng-header-tmp>
+                <ng-template ng-header-tmp>
                   <button
                     class="btn btn-default btn-sm rounded-0 text-center w-100"
                     (click)="showAddLocation()"
@@ -127,7 +124,7 @@
                     <i class="bi bi-plus-circle"></i>
                     Thêm địa điểm
                   </button>
-                </ng-template> -->
+                </ng-template>
               </ng-select>
               <div
                 class="invalid-feedback"

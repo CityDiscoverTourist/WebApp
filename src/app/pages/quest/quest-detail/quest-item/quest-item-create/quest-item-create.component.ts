@@ -5,22 +5,21 @@ import { HotToastService } from '@ngneat/hot-toast';
 import { RxState } from '@rx-angular/state';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import {
-  filter,
+  catchError,
+  map,
   Observable,
+  of,
   partition,
+  pipe,
   Subject,
   switchMap,
   tap,
   take,
-  pipe,
-  catchError,
-  map,
-  of,
+  filter,
 } from 'rxjs';
-import { QuestItemType } from 'src/app/common/enums';
-import { IdValue, QuestItemCreate } from 'src/app/models';
-import { LocationModalComponent } from 'src/app/pages/share';
-import { QuestItemService } from 'src/app/services';
+import { IdValue, QuestItemCreate, QuestItemType } from 'src/app/models';
+import { LocationCreateComponent } from 'src/app/pages/location/location-create/location-create.component';
+import { LocationService, QuestItemService } from 'src/app/services';
 import { QuestItemState, QUEST_ITEM_STATE } from '../states';
 
 interface QuestItemCreateState {
@@ -28,6 +27,7 @@ interface QuestItemCreateState {
   files: File[];
   error?: string;
   submitting: boolean;
+  value: number;
 }
 
 @Component({
@@ -36,7 +36,6 @@ interface QuestItemCreateState {
   styleUrls: ['./quest-item-create.component.scss'],
 })
 export class QuestItemCreateComponent implements OnInit {
-  private id: string;
   public href: string = '';
   status: { id: number; value: string }[] = [];
   constructor(
@@ -48,10 +47,12 @@ export class QuestItemCreateComponent implements OnInit {
     private cd: ChangeDetectorRef,
     private activatedRoute: ActivatedRoute,
     private router: Router,
-    private modalService: BsModalService
+    private modalService: BsModalService,
+    private locationService: LocationService
   ) {
     this.state.set({
       showQuestDescription: false,
+
       files: [],
     });
   }
@@ -60,6 +61,17 @@ export class QuestItemCreateComponent implements OnInit {
     this.state.connect(this.toggleDescription$, (prev, curr) => ({
       showQuestDescription: !prev.showQuestDescription,
     }));
+    this.state.connect(this.toggleGuide$, (prev, curr) => {
+      console.log(prev);
+      console.log(curr);
+
+      return {
+        value: curr,
+      };
+    });
+    // this.state.connect(this.toggleGuide$, (prev, curr) => ({
+    //   value: curr,
+    // }));
     this.initForm();
     this.status = this.questItemService.status;
     this.href = this.router.url;
@@ -146,14 +158,26 @@ export class QuestItemCreateComponent implements OnInit {
         };
       }
     );
+
+    this.questItemState.connect(
+      this.locationService.locationAdded$.pipe(
+        tap((location) => {
+          this.form.get('locationId')?.setValue(location.id);
+        })
+      ),
+      (prev, curr) => ({
+        locationIds: [...prev.locationIds, { id: curr.id, value: curr.name }],
+      })
+    );
   }
 
   get locationIds(): Observable<IdValue[]> {
     return this.questItemState.select('locationIds');
   }
-  get questItemTypeIds(): Observable<IdValue[]> {
-    return this.questItemState.select('questItemTypeIds')
-    .pipe(tap((data) => console.log(data)));
+  get questItemTypeIds(): Observable<QuestItemType[]> {
+    return this.questItemState
+      .select('questItemTypeIds')
+      .pipe(map((data) => data.filter((x) => x.status == 'Active')));
   }
   form!: FormGroup;
 
@@ -169,14 +193,15 @@ export class QuestItemCreateComponent implements OnInit {
       triggerMode: [0],
       rightAnswer: ['', Validators.required],
       answerImageUrl: [],
-      status: [false],
-      questItemTypeId: [QuestItemType.QuestionandAnswer],
+      status: [],
+      questItemTypeId: [1, Validators.required],
       locationId: ['', Validators.required],
       questId: [],
       itemId: [0],
     });
   }
   toggleDescription$ = new Subject<void>();
+  toggleGuide$ = new Subject<number>();
   get vm$(): Observable<QuestItemCreateState> {
     return this.state.select();
   }
@@ -186,31 +211,9 @@ export class QuestItemCreateComponent implements OnInit {
   selectedFile$ = new Subject<File[]>();
   removedFiles$ = new Subject<File>();
 
-  // showAddLocation() {
-  //   const bsModalRef = this.modalService.show(LocationModalComponent, {
-  //     initialState: {
-  //       simpleForm: false,
-  //       title: 'địa điêmr',
-  //       type: 'Thêm',
-  //     },
-  //   });
-  //   bsModalRef.onHide
-  //     ?.pipe(
-  //       take(1),
-  //       filter((s) => (s as any).success)
-  //     )
-  //     .subscribe({
-  //       next: (result) => {
-  //         const data = result as { id: number; name: string };
-  //         const areaAdded = result as { id: number; name: string };
-  // this.areaAdded$.next({
-  //   id: areaAdded.id,
-  //   name: areaAdded.name,
-  // });
-  // if (data.id > 0 && data.name.length > 0) {
-  //   this.toast.success('Tạo khu vực thành công!');
-  // }
-  //       },
-  //     });
-  // }
+  showAddLocation() {
+    this.router.navigate(['../../../../location/create', 'redirect'], {
+      relativeTo: this.activatedRoute,
+    });
+  }
 }
