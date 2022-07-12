@@ -1,3 +1,4 @@
+import { Location } from '@angular/common';
 import {
   AfterViewChecked,
   ChangeDetectionStrategy,
@@ -11,16 +12,16 @@ import { HotToastService } from '@ngneat/hot-toast';
 import { RxState } from '@rx-angular/state';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import {
+  catchError,
+  filter,
+  map,
   Observable,
+  of,
   partition,
   Subject,
   switchMap,
-  tap,
   take,
-  filter,
-  catchError,
-  of,
-  map,
+  tap,
 } from 'rxjs';
 import { isExistedNameValidatorLocation } from 'src/app/common/validations';
 import { IdValue, LocationCreate } from 'src/app/models';
@@ -55,7 +56,8 @@ export class LocationCreateComponent implements OnInit, AfterViewChecked {
     private toast: HotToastService,
     private modalService: BsModalService,
     private router: Router,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
+    private location: Location
   ) {
     this.state.set({
       showLocationDescription: false,
@@ -131,10 +133,17 @@ export class LocationCreateComponent implements OnInit, AfterViewChecked {
         tap((result) => {
           if (result.data?.id) {
             this.toast.success(`Tạo ${result.data.name} thành công`);
-            this.router.navigate(['../'], {
-              // this.router.navigate(['../', result?.data?.id], {
-              relativeTo: this.activatedRoute,
-            });
+            if (this.router.url.endsWith('redirect')) {
+              this.locationService.locationAdded$.next({
+                id: result.data.id,
+                name: result.data!.name!,
+              });
+              this.location.back();
+            } else {
+              this.router.navigate(['../'], {
+                relativeTo: this.activatedRoute,
+              });
+            }
           } else {
             return;
           }
