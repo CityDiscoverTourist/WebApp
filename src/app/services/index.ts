@@ -13,3 +13,4 @@ export * from "./quest-item-type.service";
 export * from "./locationtype.service";
 export * from "./location.service";
 export * from "./customerquest.service";
+export * from "./customer.service";
