@@ -76,6 +76,13 @@ const routes: Routes = [
         loadChildren: () =>
           import('src/app/pages/area/area.module').then((m) => m.AreaModule),
       },
+      {
+        path: 'customer',
+        loadChildren: () =>
+          import('src/app/pages/customer/customer.module').then(
+            (m) => m.CustomerModule
+          ),
+      },
     ],
   },
   {
