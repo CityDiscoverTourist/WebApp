@@ -1,0 +1,179 @@
+<div class="pt-3 px-5">
+  <!-- <div class="d-flex align-items-center justify-content-between">
+    <div class="flex-fill"></div>
+    <a class="btn btn-primary" style="min-width: 100px">
+      <i class="bi bi-plus"></i> Thêm
+    </a>
+  </div> -->
+  <div class="bg-white my-3 p-3 rounded">
+    <div class="rounded bg-white">
+      <form class="mb-4" [formGroup]="searchForm">
+        <div class="d-flex">
+          <div class="input-group me-3">
+            <span
+              class="input-group-text bg-white border-end-0"
+              id="search-icon"
+              ><i class="bi bi-search"></i
+            ></span>
+            <input
+              type="text"
+              class="border-start-0 form-control outline-none"
+              placeholder="Tìm kiếm khách hàng"
+              aria-label="Tìm kiếm khách hàng"
+              aria-describedby="search-icon"
+              formControlName="keyword"
+              (keyup.enter)="search$.next(searchForm.value)"
+            />
+          </div>
+          <ng-select
+            [items]="isLock"
+            bindValue="value"
+            bindLabel="id"
+            style="min-width: 200px"
+            placeholder="Chọn trạng thái"
+            class="me-3"
+            formControlName="isLock"
+          ></ng-select>
+          <button
+            type="button"
+            class="btn btn-primary"
+            style="min-width: 120px"
+            (click)="submitSearch$.next(searchForm.value)"
+          >
+            <i class="bi bi-search"></i>
+            Tìm kiếm
+          </button>
+          <button
+            type="button"
+            class="btn btn-default"
+            style="min-width: 100px"
+            (click)="resetSearch$.next()"
+          >
+            <i class="bi bi-x-lg"></i>
+            Reset
+          </button>
+        </div>
+      </form>
+      <div class="border overflow-hidden rouded shadow-sm">
+        <ngx-datatable
+          class="material rounded"
+          [rows]="customers$ | async"
+          [loadingIndicator]="(loading$ | async) === true"
+          [columns]="columns"
+          columnMode="force"
+          [headerHeight]="50"
+          [footerHeight]="50"
+          [rowHeight]="50"
+          [externalPaging]="true"
+          [externalSorting]="true"
+          [messages]="{
+            emptyMessage: 'Không có khách hàng để hiển thị!',
+            totalMessage: 'Khách hàng'
+          }"
+          [count]="(metadata$ | async)?.totalCount || 0"
+          [offset]="((metadata$ | async)?.currentPage || 0) - 1"
+          [limit]="10"
+          (page)="onPage($event)"
+          (sort)="onSort($event)"
+        >
+          <ng-template
+            #imageTemplate
+            let-row="row"
+            let-value="value"
+            let-expanded="expanded"
+            ngx-datatable-cell-template
+          >
+            <div style="width: 100%; display: flex; justify-content: center">
+              <div class="d-grid" *ngIf="row?.imagePath">
+                <img
+                  style="width: 50px; height: 50px"
+                  src="{{ row?.imagePath }}"
+                  alt=""
+                />
+              </div>
+              <div class="d-grid" *ngIf="!row?.imagePath">
+                <svg
+                  class="MuiSvgIcon-root"
+                  focusable="false"
+                  viewBox="0 0 30 30"
+                  aria-hidden="true"
+                  style="width: 50px; height: 30px; color: rgb(232, 234, 235)"
+                >
+                  <path
+                    d="M2.8125 0H27.1875C28.7408 0 30 1.25918 30 2.8125V27.1875C30 28.7408 28.7408 30 27.1875 30H2.8125C1.25918 30 0 28.7408 0 27.1875V2.8125C0 1.25918 1.25918 0 2.8125 0ZM1.875 27.1875C1.875 27.7053 2.29471 28.125 2.8125 28.125H27.1875C27.7053 28.125 28.125 27.7053 28.125 27.1875V2.8125C28.125 2.29471 27.7053 1.875 27.1875 1.875H2.8125C2.29471 1.875 1.875 2.29471 1.875 2.8125V27.1875Z"
+                    fill="currentColor"
+                  ></path>
+                  <path
+                    d="M9.64686 16.2094C10.0125 15.8459 10.6031 15.8459 10.9687 16.2094L13.125 18.3657L17.1469 14.3438C17.5125 13.9803 18.103 13.9803 18.4687 14.3438L25.0312 20.9063C25.3937 21.276 25.3879 21.8696 25.0182 22.232C24.8462 22.4007 24.6159 22.4967 24.375 22.5001H5.62498C5.10725 22.503 4.68508 22.0858 4.68204 21.568C4.68057 21.3161 4.78053 21.0743 4.95936 20.8969L9.64686 16.2094Z"
+                    fill="currentColor"
+                  ></path>
+                  <path
+                    d="M12.1875 13.125C10.6342 13.125 9.375 11.8658 9.375 10.3125C9.375 8.7592 10.6342 7.5 12.1875 7.5C13.7408 7.5 15 8.7592 15 10.3125C15 11.8658 13.7408 13.125 12.1875 13.125Z"
+                    fill="currentColor"
+                  ></path>
+                </svg>
+              </div>
+            </div>
+          </ng-template>
+          <ng-template #genderTemplate let-value="value" let-row="row">
+            {{ row.gender == true ? "Nam" : "Nữ" }}
+          </ng-template>
+          <ng-template #confirmTemplate let-value="value" let-row="row">
+            {{ row.emailConfirmed == true ? "Đã xác thực" : "Chưa xác thực" }}
+          </ng-template>
+          <ng-template
+            #actionTemplate
+            let-row="row"
+            let-value="value"
+            let-expanded="expanded"
+            ngx-datatable-cell-template
+          >
+            <button
+              class="btn btn-sm me-2"
+              style="
+                color: #fff;
+                background-color: #4caf50;
+                border-color: #4caf50;
+              "
+              type="button"
+              data-toggle="tooltip"
+              data-placement="top"
+              [tooltip]="'Nhấp chuột để cập nhật thành phố'"
+              title="Edit"
+            >
+              <i class="bi bi-plus-square"></i>
+            </button>
+            <button
+              class="btn btn-sm me-2"
+              type="button"
+              [ngStyle]="
+                row.status == 'Deleted'
+                  ? {
+                      color: '#fff',
+                      backgroundColor: '#f44335',
+                      borderColor: '#f44335'
+                    }
+                  : {
+                      color: '#fff',
+                      backgroundColor: '#f44335',
+                      borderColor: '#f44335'
+                    }
+              "
+              data-toggle="tooltip"
+              data-placement="top"
+              [tooltip]="
+                row.status == 'Deleted'
+                  ? 'Bạn không thể xóa vì thành phố này đã được xóa trước đây'
+                  : 'Nhấp chuột để xóa thành phố'
+              "
+              (click)="onDelete(row.id)"
+              [disabled]="row.status == 'Deleted' ? true : false"
+            >
+              <i class="bi bi-trash3"></i>
+            </button>
+          </ng-template>
+        </ngx-datatable>
+      </div>
+    </div>
+  </div>
+</div>
