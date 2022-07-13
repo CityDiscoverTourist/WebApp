@@ -120,13 +120,13 @@ export class QuestListComponent implements OnInit {
         sortable: true,
         canAutoResize: true,
       },
-      {
-        prop: 'description',
-        name: 'Mô tả',
-        sortable: true,
-        minWidth: 600,
-        cellClass: '',
-      },
+      // {
+      //   prop: 'description',
+      //   name: 'Mô tả',
+      //   sortable: true,
+      //   minWidth: 600,
+      //   cellClass: '',
+      // },
       {
         prop: 'price',
         name: 'Giá',

@@ -4,10 +4,10 @@
       <h6>{{ vm.title }}</h6>
     </div>
     <div class="flex-fill"></div>
-    <a routerLink="../" class="btn btn-outline-primary mt-2 me-3">Thoát</a>
+    <a routerLink="../" class="btn btn-default px-4 mt-2 me-3">Thoát</a>
     <a
       type="a"
-      class="btn btn-outline-danger mt-2 me-3"
+      class="btn btn-danger px-4 mt-2 me-3"
       (click)="deleteQuest(vm.id)"
     >
       Xóa
@@ -148,7 +148,7 @@
             [items]="questItemTypeIds | async"
             bindValue="id"
             bindLabel="name"
-            placeholder="Chọn loại quest item"
+            placeholder="Chọn loại câu hỏi"
             [clearable]="false"
             [closeOnSelect]="true"
             style="min-width: 200px"
