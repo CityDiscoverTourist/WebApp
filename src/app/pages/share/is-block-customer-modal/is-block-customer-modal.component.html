@@ -1,0 +1,31 @@
+<div class="modal-header">
+    <h4 class="modal-title pull-left">Bạn chắc chắn muốn {{status?'block':"unlock"}} {{title}} với tên đăng nhập {{mail}}?</h4>
+    <button
+      type="button"
+      class="btn-close close pull-right"
+      aria-label="Close"
+      (click)="bsModalRef.hide()"
+    >
+      <span aria-hidden="true" class="visually-hidden">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="row">
+      <div class="col p-3">
+        Thao tác này sẽ {{status?'block':"unlock"}} {{title}} bạn đã chọn.
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button
+      type="button"
+      class="btn  {{status ? 'btn-outline-danger':'btn-outline-primary'}}"
+      (click)="bsModalRef.hide()"
+    >
+       Thoát 
+    </button>
+    <button type="button" class="btn {{status ? 'btn-danger':'btn-primary'}}" (click)="isBlock(id)">
+      Lưu 
+    </button>
+  </div>
+  
