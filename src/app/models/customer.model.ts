@@ -14,7 +14,7 @@ export interface Customer {
   phoneNumberConfirmed: true;
   twoFactorEnabled: true;
   lockoutEnd: string;
-  lockoutEnabled: true;
+  lockoutEnabled: boolean;
   accessFailedCount: number;
   imagePath: string;
   gender: boolean;
