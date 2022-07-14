@@ -1,9 +1,9 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { stringify } from 'query-string';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { Customer, CustomerListSearch, Paging } from '../models';
+import { Customer, CustomerListSearch, Paging, Result } from '../models';
 import { BaseService } from './base.service';
 
 @Injectable({
@@ -39,4 +39,13 @@ export class CustomerService extends BaseService {
       { headers: this._sharedHeaders }
     );
   }
+
+  isBlockCustomer(id: string, isBlock: boolean): Observable<Customer | undefined> {
+    return this.http
+      .put<Result<Customer>>(
+        `${environment.apiUrl}/api/v1/customers/${id}/${isBlock}`,
+        { headers: this._sharedHeaders }
+      ).pipe(map((response: Result<Customer>) => response.data));
+  }
+
 }
