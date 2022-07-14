@@ -44,7 +44,6 @@ const lib = [
     QuestOwnerLayoutComponent,
     LocationTypeModalComponent,
     QuestTypeModalComponent,
-
     NavbarComponent,
     CityModalComponent,
     DeleteModalComponent,

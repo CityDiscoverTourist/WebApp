@@ -121,13 +121,10 @@
           <ng-template #confirmTemplate let-value="value" let-row="row">
             {{ row.emailConfirmed == true ? "Đã xác thực" : "Chưa xác thực" }}
           </ng-template>
-          <ng-template
-            #actionTemplate
-            let-row="row"
-            let-value="value"
-            let-expanded="expanded"
-            ngx-datatable-cell-template
-          >
+          <ng-template #isBlockTemplate let-value="value" let-row="row">
+            {{ row.lockoutEnabled == true ? "Đã bị block" : "Chưa bị block" }}
+          </ng-template>
+          <ng-template #actionTemplate let-row="row" let-value="value">
             <button
               class="btn btn-sm me-2"
               style="
@@ -138,10 +135,11 @@
               type="button"
               data-toggle="tooltip"
               data-placement="top"
-              [tooltip]="'Nhấp chuột để cập nhật thành phố'"
-              title="Edit"
+              title="unlock"
+              (click)="isBlock(row.id, row.userName)"
+              [disabled]="!row.lockoutEnabled ? true : false"
             >
-              <i class="bi bi-plus-square"></i>
+              <i class="bi bi-arrow-counterclockwise"></i>
             </button>
             <button
               class="btn btn-sm me-2"
@@ -161,15 +159,11 @@
               "
               data-toggle="tooltip"
               data-placement="top"
-              [tooltip]="
-                row.status == 'Deleted'
-                  ? 'Bạn không thể xóa vì thành phố này đã được xóa trước đây'
-                  : 'Nhấp chuột để xóa thành phố'
-              "
-              (click)="onDelete(row.id)"
-              [disabled]="row.status == 'Deleted' ? true : false"
+              title="block"
+              (click)="block(row.id, row.userName)"
+              [disabled]="row.lockoutEnabled ? true : false"
             >
-              <i class="bi bi-trash3"></i>
+              <i class="bi bi-dash-circle-fill"></i>
             </button>
           </ng-template>
         </ngx-datatable>

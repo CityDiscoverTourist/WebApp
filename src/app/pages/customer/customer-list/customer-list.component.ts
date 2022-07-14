@@ -3,10 +3,23 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RxState } from '@rx-angular/state';
 import { DatatableComponent, TableColumn } from '@swimlane/ngx-datatable';
-import { BehaviorSubject, Observable, Subject, switchMap, tap } from 'rxjs';
+import { BsModalService } from 'ngx-bootstrap/modal';
+import {
+  BehaviorSubject,
+  Observable,
+  Subject,
+  switchMap,
+  tap,
+  take,
+  filter,
+} from 'rxjs';
 import { Customer, PagingMetadata, SearchInfo } from 'src/app/models';
 import { CustomerService } from 'src/app/services';
 import { PageInfo, SortInfo } from 'src/app/types';
+import {
+  DeleteModalComponent,
+  IsBlockCustomerModalComponent,
+} from '../../share';
 import { CustomerListState } from '../states';
 
 @Component({
@@ -19,14 +32,15 @@ export class CustomerListComponent implements OnInit {
   @ViewChild(DatatableComponent) table!: DatatableComponent;
   columns: TableColumn[] = [];
   isLock: { id: string; value: boolean }[] = [
-    { id: 'Active', value: true },
-    { id: 'InActive', value: false },
+    { id: 'Đã bị block', value: true },
+    { id: 'Chưa bị block', value: false },
   ];
   constructor(
     private customerListState: RxState<CustomerListState>,
     private customerService: CustomerService,
     private router: Router,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
+    private modalService: BsModalService
   ) {}
 
   ngOnInit(): void {
@@ -72,48 +86,63 @@ export class CustomerListComponent implements OnInit {
   public confirmTemplate: TemplateRef<any>;
   @ViewChild('actionTemplate', { static: true })
   public actionTemplate: TemplateRef<any>;
+  @ViewChild('isBlockTemplate', { static: true })
+  public isBlockTemplate: TemplateRef<any>;
 
   initTable() {
     this.columns = [
       {
         prop: 'imagePath',
-        name: 'Hình ảnh',
+        name: 'Ảnh',
         cellTemplate: this.imageTemplate,
         cellClass: 'align-items-center d-flex',
         width: 20,
+        sortable: false,
       },
       {
         prop: 'userName',
         name: 'Tên đăng nhập',
         minWidth: 50,
+        sortable: false,
       },
       {
         prop: 'email',
         name: 'Mail',
         minWidth: 50,
+        sortable: false,
       },
       {
         prop: 'emailConfirmed',
-        name: 'Xác thực mail',
-        minWidth: 50,
+        name: 'Xác thực',
+        width: 50,
+        sortable: false,
         cellTemplate: this.confirmTemplate,
+      },
+      {
+        prop: 'lockoutEnabled',
+        name: 'Trạng thái',
+        width: 50,
+        sortable: false,
+        cellTemplate: this.isBlockTemplate,
       },
       {
         prop: 'gender',
         name: 'Giới tính',
+        sortable: false,
         cellTemplate: this.genderTemplate,
         width: 50,
       },
       {
         prop: 'address',
         name: 'Địa chỉ',
+        sortable: false,
         minWidth: 100,
       },
       {
         prop: 'action',
         name: 'Thao tác',
+        sortable: false,
         width: 50,
-        canAutoResize: true,
         cellTemplate: this.actionTemplate,
       },
     ];
@@ -148,19 +177,49 @@ export class CustomerListComponent implements OnInit {
       sort: { sortBy: event.column.prop, dir: event.newValue },
     });
   }
-  onDelete(id: string) {
-    // const bsModalRef = this.modalService.show(DeleteModalComponent, {
-    //   initialState: {
-    //     id: id,
-    //     title: 'thành phố',
-    //   },
-    // });
-    // bsModalRef.onHide?.pipe(take(1),filter((s)=>(s as any).data)).subscribe({
-    //   next: (result) => {
-    //     this.search$.next({
-    //       ...this.search$.getValue(),
-    //     });
-    //   },
-    // });
+  isBlock(id: string, mail:string) {
+    const bsModalRef = this.modalService.show(IsBlockCustomerModalComponent, {
+      initialState: {
+        id: id,
+        title: 'khách hàng',
+        status: false,
+        mail:mail
+      },
+    });
+    bsModalRef.onHide
+      ?.pipe(
+        take(1),
+        filter((s) => (s as any).data)
+      )
+      .subscribe({
+        next: (result) => {
+          this.search$.next({
+            ...this.search$.getValue(),
+          });
+        },
+      });
+  }
+
+  block(id: string,  mail:string) {
+    const bsModalRef = this.modalService.show(IsBlockCustomerModalComponent, {
+      initialState: {
+        id: id,
+        title: 'khách hàng',
+        status: true,
+        mail:mail
+      },
+    });
+    bsModalRef.onHide
+      ?.pipe(
+        take(1),
+        filter((s) => (s as any).data)
+      )
+      .subscribe({
+        next: (result) => {
+          this.search$.next({
+            ...this.search$.getValue(),
+          });
+        },
+      });
   }
 }
