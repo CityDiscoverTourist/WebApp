@@ -56,7 +56,7 @@
       </form>
       <div class="border overflow-hidden rouded shadow-sm">
         <ngx-datatable
-          class="material rounded"
+          class="material"
           [rows]="customers$ | async"
           [loadingIndicator]="(loading$ | async) === true"
           [columns]="columns"
@@ -82,11 +82,12 @@
             let-value="value"
             let-expanded="expanded"
             ngx-datatable-cell-template
+            width="150"
           >
             <div style="width: 100%; display: flex; justify-content: center">
               <div class="d-grid" *ngIf="row?.imagePath">
                 <img
-                  style="width: 50px; height: 50px"
+                  style="width: 45px; height: 45px"
                   src="{{ row?.imagePath }}"
                   alt=""
                 />
@@ -97,7 +98,7 @@
                   focusable="false"
                   viewBox="0 0 30 30"
                   aria-hidden="true"
-                  style="width: 50px; height: 30px; color: rgb(232, 234, 235)"
+                  style="width: 45px; height: 45px; color: rgb(232, 234, 235)"
                 >
                   <path
                     d="M2.8125 0H27.1875C28.7408 0 30 1.25918 30 2.8125V27.1875C30 28.7408 28.7408 30 27.1875 30H2.8125C1.25918 30 0 28.7408 0 27.1875V2.8125C0 1.25918 1.25918 0 2.8125 0ZM1.875 27.1875C1.875 27.7053 2.29471 28.125 2.8125 28.125H27.1875C27.7053 28.125 28.125 27.7053 28.125 27.1875V2.8125C28.125 2.29471 27.7053 1.875 27.1875 1.875H2.8125C2.29471 1.875 1.875 2.29471 1.875 2.8125V27.1875Z"
@@ -116,13 +117,49 @@
             </div>
           </ng-template>
           <ng-template #genderTemplate let-value="value" let-row="row">
-            {{ row.gender == true ? "Nam" : "Nữ" }}
+            <!-- <p>{{ row.gender == true ? "Nam" : "Nữ" }}</p> -->
+            <span
+              style="
+                background-color: #cb2027;
+                color: #fff;
+                transition: 200ms;
+                padding: 5px 0px;
+                border-radius: 9px;
+                display: inline-block;
+                text-align: center;
+                width: 100px;
+              "
+              >{{ row.gender == true ? "Nam" : "Nữ" }}</span
+            >
           </ng-template>
           <ng-template #confirmTemplate let-value="value" let-row="row">
-            {{ row.emailConfirmed == true ? "Đã xác thực" : "Chưa xác thực" }}
+            <!-- {{ row.emailConfirmed == true ? "Đã xác thực" : "Chưa xác thực" }} -->
+            <span
+               [ngStyle]="{'background-color': row.emailConfirmed == true ?'#4caf50':'#6610f2', 
+               'color': '#fff',
+                'transition':'200ms',
+                'padding':'5px 0px',
+                'display': 'inline-block',
+                'text-align':'center',
+                'width':'100px',
+                'border-radius': '9px'
+              }"
+              >{{ row.emailConfirmed == true ? "Đã xác thực" : "Chưa xác thực"  }}</span
+            >
           </ng-template>
           <ng-template #isBlockTemplate let-value="value" let-row="row">
-            {{ row.lockoutEnabled == true ? "Đã bị block" : "Chưa bị block" }}
+            <span
+               [ngStyle]="{'background-color': row.lockoutEnabled == true ?'#cb2027':'#4caf50', 
+               'color': '#fff',
+                'transition':'200ms',
+                'padding':'5px 0px',
+                'display': 'inline-block',
+                'text-align':'center',
+                'width':'100px',
+                'border-radius': '9px'
+              }"
+              >{{ row.lockoutEnabled == true ? "Đã block" : "Chưa block" }}</span
+            >
           </ng-template>
           <ng-template #actionTemplate let-row="row" let-value="value">
             <button

@@ -1,4 +1,4 @@
-import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Component, OnInit, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RxState } from '@rx-angular/state';
@@ -26,14 +26,15 @@ import { CustomerListState } from '../states';
   selector: 'app-customer-list',
   templateUrl: './customer-list.component.html',
   styleUrls: ['./customer-list.component.scss'],
+  encapsulation: ViewEncapsulation.None,
   providers: [RxState],
 })
 export class CustomerListComponent implements OnInit {
   @ViewChild(DatatableComponent) table!: DatatableComponent;
   columns: TableColumn[] = [];
   isLock: { id: string; value: boolean }[] = [
-    { id: 'Đã bị block', value: true },
-    { id: 'Chưa bị block', value: false },
+    { id: 'Đã block', value: true },
+    { id: 'Chưa block', value: false },
   ];
   constructor(
     private customerListState: RxState<CustomerListState>,
@@ -107,7 +108,7 @@ export class CustomerListComponent implements OnInit {
       },
       {
         prop: 'email',
-        name: 'Mail',
+        name: 'Thư điện tử',
         minWidth: 50,
         sortable: false,
       },
@@ -116,6 +117,7 @@ export class CustomerListComponent implements OnInit {
         name: 'Xác thực',
         width: 50,
         sortable: false,
+        cellClass(data) {},
         cellTemplate: this.confirmTemplate,
       },
       {
@@ -125,25 +127,27 @@ export class CustomerListComponent implements OnInit {
         sortable: false,
         cellTemplate: this.isBlockTemplate,
       },
-      {
-        prop: 'gender',
-        name: 'Giới tính',
-        sortable: false,
-        cellTemplate: this.genderTemplate,
-        width: 50,
-      },
-      {
-        prop: 'address',
-        name: 'Địa chỉ',
-        sortable: false,
-        minWidth: 100,
-      },
+      // {
+      //   prop: 'gender',
+      //   name: 'Giới tính',
+      //   sortable: false,
+      //   cellTemplate: this.genderTemplate,
+      //   width: 50,
+      //   cellClass:'accordion-body'
+      // },
+      // {
+      //   prop: 'address',
+      //   name: 'Địa chỉ',
+      //   sortable: false,
+      //   minWidth: 100,
+      // },
       {
         prop: 'action',
         name: 'Thao tác',
         sortable: false,
         width: 50,
         cellTemplate: this.actionTemplate,
+        cellClass: 'text-align: center;',
       },
     ];
   }
@@ -177,13 +181,13 @@ export class CustomerListComponent implements OnInit {
       sort: { sortBy: event.column.prop, dir: event.newValue },
     });
   }
-  isBlock(id: string, mail:string) {
+  isBlock(id: string, mail: string) {
     const bsModalRef = this.modalService.show(IsBlockCustomerModalComponent, {
       initialState: {
         id: id,
         title: 'khách hàng',
         status: false,
-        mail:mail
+        mail: mail,
       },
     });
     bsModalRef.onHide
@@ -200,13 +204,13 @@ export class CustomerListComponent implements OnInit {
       });
   }
 
-  block(id: string,  mail:string) {
+  block(id: string, mail: string) {
     const bsModalRef = this.modalService.show(IsBlockCustomerModalComponent, {
       initialState: {
         id: id,
         title: 'khách hàng',
         status: true,
-        mail:mail
+        mail: mail,
       },
     });
     bsModalRef.onHide
