@@ -90,6 +90,11 @@ const routes: Routes = [
     loadChildren: () =>
       import('src/app/layouts/login/login.module').then((m) => m.LoginModule),
   },
+  {
+    path: 'forget-password',
+    loadChildren: () =>
+      import('src/app/layouts/forgot-password/forgot-password.module').then((m) => m.ForgotPasswordModule),
+  },
 ];
 
 @NgModule({
