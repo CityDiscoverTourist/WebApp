@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
+import { environment } from 'src/environments/environment';
 import { UserToken } from '../models';
 
 @Injectable({
@@ -10,7 +11,7 @@ export class UserService {
   constructor(private httpClient: HttpClient) {}
   login(email: string, password: string): Observable<UserToken> {
     return this.httpClient.post<any>(
-      `https://citytourist.azurewebsites.net/api/v1/auths/login`,
+      `${environment.apiUrl}/api/v1/auths/login`,
       { email, password }
     );
   }
