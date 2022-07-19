@@ -11,3 +11,4 @@ export * from './customertask.model';
 export * from './customerquest.model';
 export * from './user.model';
 export * from './customer.model';
+export * from './payment.model';
