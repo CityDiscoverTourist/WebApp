@@ -15,3 +15,4 @@ export * from "./location.service";
 export * from "./customerquest.service";
 export * from "./customer.service";
 export * from "./dashboard.service";
+export * from "./payment.service";
