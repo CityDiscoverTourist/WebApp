@@ -1,12 +1,4 @@
-import {
-  Component,
-  EventEmitter,
-  HostBinding,
-  Input,
-  OnInit,
-  Output,
-} from '@angular/core';
-import { NgxSpinnerService } from 'ngx-spinner';
+import { Component, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-admin-layout',
@@ -14,28 +6,24 @@ import { NgxSpinnerService } from 'ngx-spinner';
   styleUrls: ['./admin-layout.component.scss'],
 })
 export class AdminLayoutComponent implements OnInit {
-  typeSelected: string;
-  constructor(private spinnerService: NgxSpinnerService) {
-    this.typeSelected = 'ball-fussion';
+  isClose = false;
+  isClose1 = false;
+  isClose2 = false;
+  constructor() {}
+  ngOnInit(): void {}
+  changeShow() {
+    if (this.isClose) {
+      this.isClose = false;
+    } else this.isClose = true;
   }
-  ngOnInit(): void {
-
-    this.spinnerService.show();
-
-    setTimeout(() => {
-      this.spinnerService.hide();
-    }, 5000); 
+  changeShow1() {
+    if (this.isClose1) {
+      this.isClose1 = false;
+    } else this.isClose1 = true;
   }
-
-  status = false;
-  AddFunction() {
-    if (!this.status) {
-      this.status = true;
-    } else {
-      this.status = false;
-    }
+  changeShow2() {
+    if (this.isClose2) {
+      this.isClose2 = false;
+    } else this.isClose2 = true;
   }
-
-  
-
 }

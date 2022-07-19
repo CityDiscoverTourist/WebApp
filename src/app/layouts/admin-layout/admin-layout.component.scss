@@ -1,58 +1,69 @@
-$aside-bg:#202d3f;
-$aside-color:#cad6e2;
-$aside-w:230px;
+$aside-bg: #202d3f;
+$aside-color: #cad6e2;
+$aside-w: 230px;
 $aside-icon: 24px;
 $master-bg: #f0f1f1;
-.master{
-    min-height: 100vh;
-    background: $master-bg;
-    .aside{
-        background: $aside-bg;
-        color: $aside-color;
-    }
-    .main-container{
-        height: 100vh;
-        overflow: auto;
-    }
+.master {
+  min-height: 100vh;
+  background: $master-bg;
+  .aside {
+    background: $aside-bg;
+    color: $aside-color;
+  }
+  .main-container {
+    height: 100vh;
+    overflow: auto;
+  }
 }
 
-.aside{
-    a{
-        text-decoration: none;
-        color: inherit;
-        display: block;
-        max-width: 230px;
-        // width: 230px;
-        width: $aside-w;
-        // border: 1px solid black;
-        // padding: 10px 20px 10px 60px;
-        padding: 10px;
-        // padding-left: 60px;
-        &:hover{
-            color: #fff;
-            background-color: hsl(215deg 33% 24%);
-        }
+.aside {
+  ul#sidebar-nav {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+  }
+  ul#components-nav {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+  }
+  a {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+    min-width: $aside-w;
+    width: $aside-w;
+    padding: 10px;
+    &:hover {
+      color: #fff;
+      background-color: hsl(215deg 33% 24%) !important;
     }
-    .divider{
-        // padding: 10px;
-        padding: 5px;
-        // padding-left: 60px;
-        padding-left: 20px;
-        position: relative;
-        .bi {
-            /* border: 1px solid; */
-            position: absolute;
-            left: 1rem;
-            width: $aside-icon;
-            height: $aside-icon;
-            font-size: $aside-icon;
-            line-height: $aside-icon;
-            // width: 24px;
-            // height: 24px;
-            // font-size: 24px;
-            // line-height: 24px;
-            top: 8px;
-        }
+    &:active {
+      color: #fff;
+      background-color: hsl(215deg 33% 24%) !important;
     }
+    &:active:focus {
+      color: #fff;
+      background-color: hsl(215deg 33% 24%) !important;
+    }
+  }
+
+  .divider {
+    padding: 5px;
+    position: relative;
+    .bi {
+      position: absolute;
+      left: 1rem;
+      width: $aside-icon;
+      height: $aside-icon;
+      font-size: $aside-icon;
+      line-height: $aside-icon;
+      top: 8px;
+    }
+  }
 }
 
+a.nav-link.collapsed.d-flex.px-4.py-3:hover {
+  color: #fff;
+  background-color: hsl(215deg 33% 24%) !important;
+}

@@ -2,15 +2,14 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { stringify } from 'query-string';
 import { map, Observable } from 'rxjs';
-import { environment } from 'src/environments/environment';
+import { environment } from 'src/environments/environment.prod';
+
 import {
   Paging,
   QuestItem,
-  QuestItemCreate,
-  QuestItemCreateResult,
-  QuestItemListItem,
+  QuestItemCreate, QuestItemListItem,
   QuestItemListSearch,
-  Result,
+  Result
 } from '../models';
 import { BaseService } from './base.service';
 
@@ -21,14 +20,9 @@ export class QuestItemService extends BaseService {
   private _sharedHeaders = new HttpHeaders();
   constructor(private http: HttpClient) {
     super();
-    this._sharedHeaders = this._sharedHeaders.set(
-      'Content-Type',
-      'application/json'
-    );
   }
   httpOptions = {
-    headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
-    // headers: new HttpHeaders({ encrypt: 'multipart/form-data' }),
+    headers: new HttpHeaders({ encrypt: 'multipart/form-data' }),
   };
 
   getQuestItemsByQuestId(
@@ -56,11 +50,33 @@ export class QuestItemService extends BaseService {
   addQuestItem(
     questItemCreate: QuestItemCreate
   ): Observable<Result<QuestItem>> {
+    const { image, ...payload } = questItemCreate;
+
     return this.http.post<Result<QuestItem>>(
       `${environment.apiUrl}/api/v1/quest-items/`,
-      questItemCreate,
+      this.toFormData(payload,image),
       this.httpOptions
     );
+  }
+
+  toFormData(questItem: Partial<QuestItem>, image: File[]): FormData {
+    const formData = new FormData();
+    const payload = {
+      ...questItem,
+      itemId: questItem.itemId || 0,
+      duration: questItem.itemId || 0,
+      triggerMode:questItem.triggerMode||0,
+      updatedDate:questItem.updatedDate||'',
+    };
+    Object.keys(payload).forEach((key) =>
+      formData.append(key, (payload as any)[key])
+    );
+    if (image?.length > 0) {
+      for (let f of image) {
+        formData.append('Image', f, f.name);
+      }
+    }
+    return formData;
   }
 
   deleteQuestItemById(id: string): Observable<string | undefined> {

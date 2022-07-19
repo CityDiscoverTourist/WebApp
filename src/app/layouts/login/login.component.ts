@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { HotToastService } from '@ngneat/hot-toast';
 import { RxState } from '@rx-angular/state';
 import { Subject, takeUntil } from 'rxjs';
 import { AuthenticateService, UserService } from 'src/app/services';
@@ -19,7 +20,8 @@ export class LoginComponent implements OnInit, OnDestroy {
     private authService: AuthenticateService,
     private fb: FormBuilder,
     private router: Router,
-    private state: RxState<LoginState>
+    private state: RxState<LoginState>,
+    private toast: HotToastService
   ) {}
   ngOnDestroy(): void {
     this.sub$.next();
@@ -28,26 +30,18 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.initForm();
-    // this.manageEvents();
-    // this.state.connect(
-    //   this.form.valueChanges,
-    //   (prev, curr: { username: string; password: string }) => ({
-    //     ...prev,
-    //     username: curr.username,
-    //     password: curr.password,
-    //   })
-    // );
   }
   initForm(): void {
     this.form = this.fb.group({
       username: ['', [Validators.required]],
-      password: ['', [Validators.required]],
+      password: ['', [Validators.required, Validators.minLength(8)]],
     });
   }
   private sub$ = new Subject<void>();
   submit(): void {
     if (!this.form.valid) {
-      return; //todo: show msg
+      this.form.revalidateControls([]);
+      return;
     }
     const username = this.form.get('username')?.value;
     const pw = this.form.get('password')?.value;
@@ -61,26 +55,11 @@ export class LoginComponent implements OnInit, OnDestroy {
           if (userToken?.jwtToken.length) {
             this.router.navigate(['/']);
             this.authService.persistToken(userToken?.jwtToken);
-            //todo: use redireactUrl
+            this.toast.success('Đăng nhập thành công');
           }
         },
+        error: (err: Error) =>
+          this.toast.error('Tài khoản hoặc mật khẩu không chính xác'),
       });
   }
-  // private onSubmit = new Subject<void>();
-  // private manageEvents() {
-  //   this.state.hold(this.onSubmit, () => {
-  //     const valid = this.form.valid;
-  //     this.state.set({
-  //       hasError: !valid,
-  //     });
-  //     if (!valid) return;
-
-  //     this.userService.login(
-  //       this.state.get('username'),
-  //       this.state.get('password')
-  //     ).subscribe({
-  //       next:response=>{}
-  //     });
-  //   });
-  // }
 }

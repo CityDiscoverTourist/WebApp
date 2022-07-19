@@ -14,17 +14,15 @@ import {
   Subject,
   switchMap,
   tap,
-  take,
-  filter,
 } from 'rxjs';
 import { IdValue, QuestItemCreate, QuestItemType } from 'src/app/models';
-import { LocationCreateComponent } from 'src/app/pages/location/location-create/location-create.component';
 import { LocationService, QuestItemService } from 'src/app/services';
 import { QuestItemState, QUEST_ITEM_STATE } from '../states';
 
 interface QuestItemCreateState {
   showQuestDescription: boolean;
-  files: File[];
+  showTypeQuestsion: boolean;
+  image: File[];
   error?: string;
   submitting: boolean;
   value: number;
@@ -52,8 +50,8 @@ export class QuestItemCreateComponent implements OnInit {
   ) {
     this.state.set({
       showQuestDescription: false,
-
-      files: [],
+      image: [],
+      showTypeQuestsion: false,
     });
   }
 
@@ -61,17 +59,19 @@ export class QuestItemCreateComponent implements OnInit {
     this.state.connect(this.toggleDescription$, (prev, curr) => ({
       showQuestDescription: !prev.showQuestDescription,
     }));
-    this.state.connect(this.toggleGuide$, (prev, curr) => {
-      console.log(prev);
-      console.log(curr);
 
+    this.state.connect(this.toggleIsType$, (prev, curr) => {
+      var check = false;
+      if (curr == 2 && !prev.showTypeQuestsion) {
+        check = true;
+      } else {
+        check = false;
+      }
       return {
-        value: curr,
+        showTypeQuestsion: check,
       };
     });
-    // this.state.connect(this.toggleGuide$, (prev, curr) => ({
-    //   value: curr,
-    // }));
+
     this.initForm();
     this.status = this.questItemService.status;
     this.href = this.router.url;
@@ -88,6 +88,10 @@ export class QuestItemCreateComponent implements OnInit {
         tap(() => this.state.set({ submitting: true })),
         pipe(
           tap(({ form }) => {
+            console.log(form);
+            console.log('kkkk');
+            
+            
             var content = form.controls['content'].value + ' ';
             var arrName = content.split('|');
             if (arrName.length == 1) {
@@ -143,8 +147,10 @@ export class QuestItemCreateComponent implements OnInit {
     this.state.connect(
       this.selectedFile$
         .pipe(tap(() => setTimeout(() => this.cd.detectChanges(), 100)))
-        .pipe(tap((file) => this.form.patchValue({ image: file[0] }))),
-      (_prev, files) => ({ files: [...files] })
+        .pipe(tap((file) => this.form.patchValue({ image: file }))),
+        (prev, curr) => ({
+          image: [...prev.image, ...curr],
+        })
     );
 
     this.state.connect(
@@ -152,9 +158,9 @@ export class QuestItemCreateComponent implements OnInit {
         tap(() => setTimeout(() => this.cd.markForCheck(), 100))
       ),
       (prev, curr) => {
-        prev.files.splice(prev.files.indexOf(curr), 1);
+        prev.image.splice(prev.image.indexOf(curr), 1);
         return {
-          files: prev.files,
+          image: prev.image,
         };
       }
     );
@@ -191,17 +197,18 @@ export class QuestItemCreateComponent implements OnInit {
       updatedDate: [],
       qrCode: [''],
       triggerMode: [0],
-      rightAnswer: ['', Validators.required],
+      rightAnswer: [''],
       answerImageUrl: [],
       status: [],
       questItemTypeId: [1, Validators.required],
       locationId: ['', Validators.required],
       questId: [],
       itemId: [0],
+      image: [],
     });
   }
   toggleDescription$ = new Subject<void>();
-  toggleGuide$ = new Subject<number>();
+  toggleIsType$ = new Subject<number>();
   get vm$(): Observable<QuestItemCreateState> {
     return this.state.select();
   }

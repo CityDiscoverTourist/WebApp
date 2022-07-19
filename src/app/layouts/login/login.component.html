@@ -1,29 +1,83 @@
-<section class="vh-100">
-  <div class="container h-100">
-    <div class="row d-flex align-items-center justify-content-center h-50">
-      <form [formGroup]="form" class="col-6">
-        <label><h6>Đăng nhập tài khoản</h6></label>
-        <div class="form-group">
-          <label for="username">Email</label>
-          <input type="text" class="form-control" formControlName="username" />
+<section
+  class="section register min-vh-100 d-flex flex-column align-items-center justify-content-center"
+  style="background-color: #f0f1f1"
+>
+  <div class="container">
+    <div class="row justify-content-center">
+      <div
+        class="col-lg-4 col-md-6 d-flex flex-column align-items-center justify-content-center"
+      >
+        <div class="d-flex justify-content-center py-2">
+          <h5 class="logo d-flex align-items-center w-auto">
+            <span class="d-lg-block h2">City Discovery Admin</span>
+          </h5>
         </div>
-        <div class="form-group" class="mb-2">
-          <label for="password">Mật khẩu</label>
-          <input
-            type="password"
-            class="form-control"
-            formControlName="password"
-          />
+        <div class="card mb-3 shadow">
+          <div class="card-body" style="width: 400px">
+            <div class="pt-2 pb-2">
+              <p class="card-title text-center pb-0 fs-4">
+                Đăng nhập tài khoản
+              </p>
+              <p class="text-center text-muted small fs-6">
+                Nhập tài khoản và mật khẩu của bạn
+              </p>
+            </div>
+
+            <form [formGroup]="form">
+              <div class="form-group">
+                <label for="username">Tài khoản</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="username"
+                  [ngClass]="{ 'is-invalid': form?.hasError('username') }"
+                />
+                <div
+                  class="invalid-feedback"
+                  *ngIf="form?.hasErrorOf('username', 'required')"
+                >
+                  Tài khoản bắt buộc
+                </div>
+              </div>
+
+              <div class="form-group" class="mb-2">
+                <label for="password">Mật khẩu</label>
+                <input
+                  type="password"
+                  class="form-control"
+                  formControlName="password"
+                  [ngClass]="{ 'is-invalid': form?.hasError('password') }"
+                />
+                <div
+                  class="invalid-feedback"
+                  *ngIf="form?.hasErrorOf('password', 'required')"
+                >
+                  Mật khẩu bắt buộc
+                </div>
+                <div
+                  class="invalid-feedback"
+                  *ngIf="form?.hasErrorOf('password', 'minlength')"
+                >
+                  Độ dài mật khẩu từ 8 kí tự
+                </div>
+              </div>
+              <button
+                type="button"
+                class="btn btn-primary btn-block mt-3 w-100"
+                (click)="submit()"
+              >
+                Đăng nhập
+              </button>
+              <div class="col-12 py-4">
+                <p class="small mb-0">
+                  Quên mật khẩu?
+                  <a href="./forget-password">Lấy lại mật khẩu mới</a>
+                </p>
+              </div>
+            </form>
+          </div>
         </div>
-        <div>
-          <!-- <button type="button" class="btn btn-primary" (click)="onSubmit.next()">
-            Submit
-          </button> -->
-          <button type="button" class="btn btn-primary" (click)="submit()">
-            Đăng nhập
-          </button>
-        </div>
-      </form>
+      </div>
     </div>
   </div>
 </section>
