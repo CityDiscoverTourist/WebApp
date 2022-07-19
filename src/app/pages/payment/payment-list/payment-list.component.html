@@ -1,0 +1,67 @@
+<div class="pt-3 px-5">
+    <div class="bg-white my-3 p-3 rounded">
+      <div class="rounded bg-white">
+        <form class="mb-4" [formGroup]="searchForm">
+          <div class="d-flex">
+            <ng-select
+              [items]="status"
+              bindValue="value"
+              bindLabel="id"
+              style="min-width: 200px"
+              placeholder="Chọn trạng thái"
+              class="me-3"
+              formControlName="status"
+              (change)="search$.next(searchForm.value)"
+            ></ng-select>
+            
+          </div>
+        </form>
+        <div class="border overflow-hidden rouded shadow-sm">
+          <ngx-datatable
+            class="material"
+            [rows]="payments$ | async"
+            [loadingIndicator]="(loading$ | async) === true"
+            [columns]="columns"
+            columnMode="force"
+            [headerHeight]="50"
+            [footerHeight]="50"
+            [rowHeight]="'auto'"
+            [externalPaging]="true"
+            [externalSorting]="true"
+            rowHeight="auto"
+            [columnMode]="ColumnMode.force"
+            [messages]="{
+              emptyMessage: 'Không có thanh toán để hiển thị!',
+              totalMessage: 'thanh toán'
+            }"
+            [count]="(metadata$ | async)?.totalCount || 0"
+            [offset]="((metadata$ | async)?.currentPage || 0) - 1"
+            [limit]="10"
+            (page)="onPage($event)"
+            (sort)="onSort($event)"
+          >
+          <ng-template #colCreatedAt let-value="value">
+            {{ value | date: "dd/MM/yyyy hh:mm a" }}
+          </ng-template>
+          <ng-template #formatPrice let-value="value">
+            {{ value | number }} vnđ
+          </ng-template>
+          <ng-template #statusTemplate let-value="value" let-row="row">
+            <span
+               [ngStyle]="{'background-color': row.status == 'Success' ?'#4caf50':'#6610f2', 
+               'color': '#fff',
+                'transition':'200ms',
+                'padding':'5px 0px',
+                'display': 'inline-block',
+                'text-align':'center',
+                'width':'100px',
+                'border-radius': '9px'
+              }"
+              >{{ row.status == 'Success' ? "Thành công" : "Đang xử lý"  }}</span
+            >
+          </ng-template>
+          </ngx-datatable>
+        </div>
+      </div>
+    </div>
+  </div>
