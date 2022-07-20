@@ -135,7 +135,7 @@
           <ng-template #confirmTemplate let-value="value" let-row="row">
             <!-- {{ row.emailConfirmed == true ? "Đã xác thực" : "Chưa xác thực" }} -->
             <span
-               [ngStyle]="{'background-color': row.emailConfirmed == true ?'#4caf50':'#6610f2', 
+               [ngStyle]="{'background-color': row.emailConfirmed == true ?'#4caf50':'#ff7221', 
                'color': '#fff',
                 'transition':'200ms',
                 'padding':'5px 0px',
@@ -158,7 +158,7 @@
                 'width':'100px',
                 'border-radius': '9px'
               }"
-              >{{ row.lockoutEnabled == true ? "Đã block" : "Chưa block" }}</span
+              >{{ row.lockoutEnabled == true ? "Đã khóa" : "Hoạt đông" }}</span
             >
           </ng-template>
           <ng-template #actionTemplate let-row="row" let-value="value">
