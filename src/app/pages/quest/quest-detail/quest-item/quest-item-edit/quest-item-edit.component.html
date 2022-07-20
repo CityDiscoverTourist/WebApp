@@ -20,6 +20,7 @@
                     id="{{ qt[i].id }}"
                     formControlName="questItemTypeId"
                     [value]="qt[i].id"
+                    (click)="toggleIsType$.next(qt[i].id)"
                   />
                   <label class="form-check-label" for="{{ qt[i].id }}">
                     {{ qt[i].name }}
@@ -78,7 +79,7 @@
               </div>
             </div>
             <div class="row mb-3 mt-3">
-              <div class="col">
+              <div class="col" *ngIf="!vm.showTypeQuestsion">
                 <div class="form-group">
                   <label class="form-label" for="rightAnswer"
                     >Câu trả lời</label
@@ -88,13 +89,72 @@
                     placeholder="Nhập nội dung câu trả lời"
                     id="rightAnswer"
                     formControlName="rightAnswer"
-                    [ngClass]="{ 'is-invalid': form?.hasError('rightAnswer') }"
                   ></textarea>
+                </div>
+              </div>
+              <div class="card-body" *ngIf="vm.showTypeQuestsion">
+                <div class="d-flex bg-white border-bottom-0 mb-3 p-0 px-0">
+                  <div>Ảnh</div>
+                  <div class="flex-fill"></div>
+                </div>
+                <div
+                  class="border rounded text-center"
+                  style="border-style: dashed !important"
+                >
                   <div
-                    class="invalid-feedback"
-                    *ngIf="form?.hasErrorOf('rightAnswer', 'required')"
+                    class="custom-dropzone"
+                    style="border: none; height: 150px"
+                    ngx-dropzone
+                    [accept]="'image/*'"
+                    (change)="selectedFile$.next($event.addedFiles)"
                   >
-                    Câu trả lời bắt buộc
+                    <div
+                      *ngIf="listImages.length > 0"
+                      style="
+                        display: flex;
+                        justify-content: center;
+                        color: #333;
+                        cursor: pointer;
+                      "
+                    >
+                      <div *ngFor="let image of listImages; let i = index">
+                        <img
+                          style="width: 105px; height: 140px"
+                          class="me-2 "
+                          [src]="image"
+                        />
+                      </div>
+                    </div>
+                    <ngx-dropzone-label *ngIf="listImages.length <= 0">
+                      <div>
+                        <i class="bi bi-plus"></i>
+                        <span>kéo và thả hình ảnh ở đây hoặc</span>
+                        <span
+                          class="ms-1 text-decoration-underline text-primary"
+                        >
+                          tải lên từ máy tính của bạn</span
+                        >
+                      </div>
+                    </ngx-dropzone-label>
+                    <!-- <ngx-dropzone-label>
+                      <div>
+                        <i class="bi bi-plus"></i>
+                        <span>kéo và thả hình ảnh ở đây hoặc</span>
+                        <span
+                          class="ms-1 text-decoration-underline text-primary"
+                        >
+                          tải lên từ máy tính của bạn</span
+                        >
+                      </div>
+                    </ngx-dropzone-label> -->
+                    <ngx-dropzone-image-preview
+                      ngProjectAs="ngx-dropzone-preview"
+                      *ngFor="let f of vm.image"
+                      [file]="f"
+                      [removable]="true"
+                      (removed)="removedFiles$.next(f)"
+                    >
+                    </ngx-dropzone-image-preview>
                   </div>
                 </div>
               </div>

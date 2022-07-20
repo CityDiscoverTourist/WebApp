@@ -7,9 +7,10 @@ import { environment } from 'src/environments/environment.prod';
 import {
   Paging,
   QuestItem,
-  QuestItemCreate, QuestItemListItem,
+  QuestItemCreate,
+  QuestItemListItem,
   QuestItemListSearch,
-  Result
+  Result,
 } from '../models';
 import { BaseService } from './base.service';
 
@@ -54,7 +55,7 @@ export class QuestItemService extends BaseService {
 
     return this.http.post<Result<QuestItem>>(
       `${environment.apiUrl}/api/v1/quest-items/`,
-      this.toFormData(payload,image),
+      this.toFormData(payload, image),
       this.httpOptions
     );
   }
@@ -65,8 +66,8 @@ export class QuestItemService extends BaseService {
       ...questItem,
       itemId: questItem.itemId || 0,
       duration: questItem.itemId || 0,
-      triggerMode:questItem.triggerMode||0,
-      updatedDate:questItem.updatedDate||'',
+      triggerMode: questItem.triggerMode || 0,
+      updatedDate: questItem.updatedDate || '',
     };
     Object.keys(payload).forEach((key) =>
       formData.append(key, (payload as any)[key])
@@ -88,41 +89,21 @@ export class QuestItemService extends BaseService {
       .pipe(map((response: Result<QuestItemListItem>) => response.status));
   }
 
-  getQuestItemById(id: string | undefined): Observable<QuestItem> {
+  getQuestItemById(id: number | undefined): Observable<QuestItemListItem> {
     return this.http
-      .get<Result<QuestItem>>(
+      .get<Result<QuestItemListItem>>(
         `${environment.apiUrl}/api/v1/quest-items/${id}/not-language/`,
         this.httpOptions
       )
-      .pipe(
-        map(
-          (response: Result<QuestItem>) =>
-            ({
-              id: response.data?.id,
-              content: response.data?.content,
-              description: response.data?.description,
-              duration: response.data?.duration,
-              createdDate: response.data?.createdDate,
-              updatedDate: response.data?.updatedDate,
-              // qrCode: response.data?.qrCode,
-              // triggerMode: response.data?.triggerMode,
-              rightAnswer: response.data?.rightAnswer,
-              // answerImageUrl: response.data?.answerImageUrl,
-              status: response.data?.status,
-              questItemTypeId: response.data?.questItemTypeId,
-              locationId: response.data?.locationId,
-              questId: response.data?.questId,
-              // itemId: response.data?.itemId,
-            } as QuestItem)
-        )
-      );
+      .pipe(map((response: Result<QuestItemListItem>) => response.data));
   }
   updateQuestItemById(
-    payload: Partial<QuestItemCreate>
+    questItemCreate: QuestItemCreate
   ): Observable<Result<QuestItem>> {
+    const { image, ...payload } = questItemCreate;
     return this.http.put<Result<QuestItem>>(
       `${environment.apiUrl}/api/v1/quest-items/`,
-      payload,
+      this.toFormData(payload, image),
       this.httpOptions
     );
   }

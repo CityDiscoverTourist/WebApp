@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HotToastService } from '@ngneat/hot-toast';
@@ -6,6 +6,7 @@ import { RxState } from '@rx-angular/state';
 import {
   BehaviorSubject,
   catchError,
+  filter,
   map,
   Observable,
   of,
@@ -25,7 +26,8 @@ import {
 
 interface QuestItemEditState {
   showQuestDescription: boolean;
-  files: File[];
+  showTypeQuestsion: boolean;
+  image: File[];
   error?: string;
   submitting: boolean;
 }
@@ -37,6 +39,8 @@ interface QuestItemEditState {
 })
 export class QuestItemEditComponent implements OnInit {
   id: string = '';
+  questItemType: number;
+  listImages: string[] = [];
   status: { id: number; value: string }[] = [];
   constructor(
     @Inject(QUEST_ITEM_STATE) private questItemState: RxState<QuestItemState>,
@@ -46,25 +50,33 @@ export class QuestItemEditComponent implements OnInit {
     private toast: HotToastService,
     private activatedRoute: ActivatedRoute,
     private router: Router,
-    private questItemDetailState: RxState<QuestItemDetailState>
+    private questItemDetailState: RxState<QuestItemDetailState>,
+    private cd: ChangeDetectorRef,
   ) {
     this.state.set({
       showQuestDescription: false,
+      image: [],
+      showTypeQuestsion: false,
     });
   }
 
   ngOnInit(): void {
-    this.search$.next({ id: this.activatedRoute.snapshot.params['id'] });
     this.questItemDetailState.connect(
-      this.search$
+      this.activatedRoute.paramMap
         .pipe(
-          tap((_) => this.questItemDetailState.set({ loading: true })),
-          switchMap((s) => this.questItemService.getQuestItemById(s.id))
+          tap((p) => console.log(p)),
+          filter((p) => p.has('id') && Number(p.get('id')) > 0),
+          map((p) => Number(p.get('id'))),
+          switchMap((id) => this.questItemService.getQuestItemById(id))
         )
         .pipe(
           tap((data) => {
-            console.log(data);
             this.id = data.id.toString();
+            this.questItemType = data.questItemTypeId;
+            this.listImages = data.listImages;
+            if (this.questItemType == 2) {
+              this.toggleIsType$.next(2);
+            }
             this.form.patchValue(data);
           })
         ),
@@ -74,7 +86,27 @@ export class QuestItemEditComponent implements OnInit {
       })
     );
 
-    this.initForm();
+    this.state.connect(
+      this.selectedFile$
+        .pipe(tap(() => setTimeout(() => this.cd.detectChanges(), 100)))
+        .pipe(tap((file) => this.form.patchValue({ image: file }))),
+      (prev, curr) => ({
+        image: [...prev.image, ...curr],
+      })
+    );
+
+    this.state.connect(
+      this.removedFiles$.pipe(
+        tap(() => setTimeout(() => this.cd.markForCheck(), 100))
+      ),
+      (prev, curr) => {
+        prev.image.splice(prev.image.indexOf(curr), 1);
+        return {
+          image: prev.image,
+        };
+      }
+    );
+
     this.status = this.questItemService.status;
     this.state.connect(this.toggleDescription$, (prev, curr) => ({
       showQuestDescription: !prev.showQuestDescription,
@@ -141,10 +173,22 @@ export class QuestItemEditComponent implements OnInit {
       this.toast.error('Giá trị bạn nhập không hợp lệ');
       form.revalidateControls([]);
     });
+
+    this.state.connect(this.toggleIsType$, (prev, curr) => {
+      var check = false;
+      if (curr == 2 && !prev.showTypeQuestsion) {
+        check = true;
+      } else {
+        check = false;
+      }
+      return {
+        showTypeQuestsion: check,
+      };
+    });
+    this.initForm();
   }
 
   form!: FormGroup;
-  search$ = new BehaviorSubject<{ id: string }>({ id: '' });
 
   initForm() {
     this.form = this.fb.group({
@@ -156,19 +200,21 @@ export class QuestItemEditComponent implements OnInit {
       updatedDate: [],
       qrCode: [''],
       triggerMode: [0],
-      rightAnswer: ['', Validators.required],
+      rightAnswer: [''],
       answerImageUrl: [],
       status: [],
       questItemTypeId: [1, Validators.required],
       locationId: ['', Validators.required],
       questId: [],
-      itemId: [null],
+      itemId: [],
+      image: [],
     });
   }
   get vm$(): Observable<QuestItemEditState> {
     return this.state.select();
   }
   toggleDescription$ = new Subject<void>();
+  toggleIsType$ = new Subject<number>();
   get locationIds(): Observable<IdValue[]> {
     return this.questItemState.select('locationIds');
   }
@@ -179,6 +225,9 @@ export class QuestItemEditComponent implements OnInit {
   }
   formSubmit$ = new Subject<FormGroup>();
   submit$ = new Subject<{ form: FormGroup; redirect: boolean }>();
+
+  selectedFile$ = new Subject<File[]>();
+  removedFiles$ = new Subject<File>();
 
   showAddLocation() {
     this.router.navigate(['../../../../../location/create', 'redirect'], {

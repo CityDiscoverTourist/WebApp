@@ -11,7 +11,8 @@ export class UserService {
   constructor(private httpClient: HttpClient) {}
   login(email: string, password: string): Observable<UserToken> {
     return this.httpClient.post<any>(
-      `${environment.apiUrl}/api/v1/auths/login`,
+      `https://citytourist.azurewebsites.net/api/v1/auths/login-admin`,
+      // `${environment.apiUrl}/api/v1/auths/login`,
       { email, password }
     );
   }
