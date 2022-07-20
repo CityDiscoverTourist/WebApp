@@ -12,7 +12,7 @@
               *ngIf="questItemTypeIds | async as qt"
             >
               <div *ngFor="let item of qt; index as i" class="row">
-                <div class="form-check me-4">
+                <div class="form-check me-5">
                   <input
                     class="form-check-input"
                     type="radio"
@@ -22,9 +22,12 @@
                     [value]="qt[i].id"
                     (click)="toggleIsType$.next(qt[i].id)"
                   />
-                  <label class="form-check-label" for="{{ qt[i].id }}">
+                  
+                  <label class="form-check-label " for="{{ qt[i].id }}">
                     {{ qt[i].name }}
                   </label>
+                  <i class="ms-1 bi bi-info-circle-fill text-primary" (mouseenter)="changeTooltip(qt[i].id)"  [tooltip]="tolTemplate"></i>
+                  <ng-template #tolTemplate>{{contentTooltip}}</ng-template>
                 </div>
               </div>
             </div>
@@ -94,7 +97,7 @@
               </div>
               <div class="card-body" *ngIf="vm.showTypeQuestsion">
                 <div class="d-flex bg-white border-bottom-0 mb-3 p-0 px-0">
-                  <div>Ảnh quest</div>
+                  <div>Ảnh</div>
                   <div class="flex-fill"></div>
                 </div>
                 <div
@@ -140,7 +143,14 @@
                   </div>
                 </div>
               </div>
+              <small
+                id="content"
+                class="form-text text-muted"
+                *ngIf="vm.image.length>0"
+                >Tải lên từ bốn ảnh với các góc khác nhau để đạt hiệu quả tốt hơn!
+              </small>
             </div>
+            
           </div>
         </div>
       </div>

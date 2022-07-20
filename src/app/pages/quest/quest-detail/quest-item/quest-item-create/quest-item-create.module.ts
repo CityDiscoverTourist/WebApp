@@ -9,6 +9,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HotToastModule } from '@ngneat/hot-toast';
 import { NgxDropzoneModule } from 'ngx-dropzone';
 import { ModalModule } from 'ngx-bootstrap/modal';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
 
 const lib = [
   QuillModule.forRoot(),
@@ -18,7 +19,8 @@ const lib = [
   FormsModule,
   ReactiveFormsModule,
   HotToastModule.forRoot(),
-  ModalModule.forRoot()
+  ModalModule.forRoot(),
+  TooltipModule.forRoot()
 ];
 @NgModule({
   declarations: [QuestItemCreateComponent],
