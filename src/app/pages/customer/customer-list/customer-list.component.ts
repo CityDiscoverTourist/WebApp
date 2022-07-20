@@ -1,4 +1,10 @@
-import { Component, OnInit, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  TemplateRef,
+  ViewChild,
+  ViewEncapsulation,
+} from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RxState } from '@rx-angular/state';
@@ -33,8 +39,8 @@ export class CustomerListComponent implements OnInit {
   @ViewChild(DatatableComponent) table!: DatatableComponent;
   columns: TableColumn[] = [];
   isLock: { id: string; value: boolean }[] = [
-    { id: 'Đã block', value: true },
-    { id: 'Chưa block', value: false },
+    { id: 'Đã  khóa', value: true },
+    { id: 'Hoạt động', value: false },
   ];
   constructor(
     private customerListState: RxState<CustomerListState>,

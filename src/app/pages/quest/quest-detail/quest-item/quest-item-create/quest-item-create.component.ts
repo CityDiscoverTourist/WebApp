@@ -25,7 +25,6 @@ interface QuestItemCreateState {
   image: File[];
   error?: string;
   submitting: boolean;
-  value: number;
 }
 
 @Component({
@@ -88,10 +87,6 @@ export class QuestItemCreateComponent implements OnInit {
         tap(() => this.state.set({ submitting: true })),
         pipe(
           tap(({ form }) => {
-            console.log(form);
-            console.log('kkkk');
-            
-            
             var content = form.controls['content'].value + ' ';
             var arrName = content.split('|');
             if (arrName.length == 1) {
@@ -148,9 +143,9 @@ export class QuestItemCreateComponent implements OnInit {
       this.selectedFile$
         .pipe(tap(() => setTimeout(() => this.cd.detectChanges(), 100)))
         .pipe(tap((file) => this.form.patchValue({ image: file }))),
-        (prev, curr) => ({
-          image: [...prev.image, ...curr],
-        })
+      (prev, curr) => ({
+        image: [...prev.image, ...curr],
+      })
     );
 
     this.state.connect(
@@ -222,5 +217,16 @@ export class QuestItemCreateComponent implements OnInit {
     this.router.navigate(['../../../../location/create', 'redirect'], {
       relativeTo: this.activatedRoute,
     });
+  }
+
+  contentTooltip: string = '';
+  changeTooltip(id: number) {
+    if(id==1){
+      this.contentTooltip="Tạo câu hỏi";
+    }else if(id==2){
+      this.contentTooltip="Tạo câu hỏi so sánh hình ảnh";
+    }else if(id==3){
+      this.contentTooltip="Tạo câu hỏi nghịch đảo";
+    }
   }
 }
