@@ -35,4 +35,16 @@ export class DashboardService extends BaseService {
       { headers: this._sharedHeaders }
     );
   }
+  getTopPlayer(): Observable<string[]> {
+    return this.http.get<string[]>(
+      `${environment.apiUrl}/api/v1/dashboards/`,
+      { headers: this._sharedHeaders }
+    );
+  }
+  getTopQuestPlay(): Observable<string[]> {
+    return this.http.get<string[]>(
+      `${environment.apiUrl}/api/v1/dashboards/top-play`,
+      { headers: this._sharedHeaders }
+    );
+  }
 }
