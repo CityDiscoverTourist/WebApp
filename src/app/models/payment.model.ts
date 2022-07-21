@@ -8,6 +8,7 @@ export interface Payment {
   status: string;
   createdDate: Date;
   customerId: string;
+  customerEmail:string
   isValid: boolean;
   questId: number;
   questName: string;
