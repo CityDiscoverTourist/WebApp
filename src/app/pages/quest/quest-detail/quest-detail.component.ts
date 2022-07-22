@@ -7,6 +7,7 @@ import {
 } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { HotToastService } from '@ngneat/hot-toast';
 import { RxState } from '@rx-angular/state';
 import { DatatableComponent, TableColumn } from '@swimlane/ngx-datatable';
 import { BsModalService } from 'ngx-bootstrap/modal';
@@ -36,7 +37,7 @@ import {
   QuestTypeService,
 } from 'src/app/services';
 import { PageInfo, SortInfo } from 'src/app/types';
-import { DeleteModalComponent } from '../../share';
+import { DeleteModalComponent, SuggestionModalComponent } from '../../share';
 import { QuestItemListState } from '../states';
 import { QuestDetailState } from '../states/questdetail.state';
 import { QuestItemState, QUEST_ITEM_STATE } from './quest-item/states';
@@ -57,6 +58,7 @@ export class QuestDetailComponent implements OnInit {
     private questService: QuestService,
     private modalService: BsModalService,
     private questDetailState: RxState<QuestDetailState>,
+    private toast: HotToastService,
     //QuestItem
     private questItemService: QuestItemService,
     private questItemListState: RxState<QuestItemListState>,
@@ -110,12 +112,12 @@ export class QuestDetailComponent implements OnInit {
         filter((p) => p.has('id')),
         map((p) => Number(p.get('id'))),
         switchMap((s) => {
-          this.searchQuestItem$.next({ questId: s});
-          console.log("data");
-          localStorage.setItem("questId",s.toString());
-          
+          this.searchQuestItem$.next({ questId: s });
+          console.log('data');
+          localStorage.setItem('questId', s.toString());
+
           console.log(s);
-          
+
           return this.questItemService.getQuestItemsByQuestId({ questId: s });
         })
       ),
@@ -144,8 +146,7 @@ export class QuestDetailComponent implements OnInit {
         ...this.searchQuestItem$.getValue(),
         ...form,
         currentPage: 0,
-      })
-
+      });
     });
     this.questItemListState.hold(this.resetSearch$, () => {
       this.searchForm.reset();
@@ -214,7 +215,7 @@ export class QuestDetailComponent implements OnInit {
   onDelete(id: number) {
     const bsModalRef = this.modalService.show(DeleteModalComponent, {
       initialState: {
-        id: id+'',
+        id: id + '',
         title: 'Quest Item',
       },
     });
@@ -253,12 +254,11 @@ export class QuestDetailComponent implements OnInit {
   }
 
   get questItemTypeIds(): Observable<QuestItemType[]> {
-    return this.questItemState.select('questItemTypeIds')
+    return this.questItemState.select('questItemTypeIds');
   }
   get questItems$(): Observable<QuestItemListItem[]> {
-    setTimeout(() =>{}, 1000);
-    return this.questItemListState.select('questitems')
-    
+    setTimeout(() => {}, 1000);
+    return this.questItemListState.select('questitems');
   }
 
   get metadata$(): Observable<PagingMetadata> {
@@ -294,4 +294,34 @@ export class QuestDetailComponent implements OnInit {
 
   submitSearch$ = new Subject<Partial<{ keyword: string }>>();
   resetSearch$ = new Subject<void>();
+
+  showAddSuggestion(questItemId: number) {
+    console.log("aajaja");
+    
+    const bsModalRef = this.modalService.show(SuggestionModalComponent, {
+      initialState: {
+        simpleForm: false,
+        title: 'gợi ý',
+        type: 'Thêm',
+        id: '0',
+        
+      },
+    });
+    bsModalRef.onHide
+      ?.pipe(
+        take(1),
+        filter((s) => (s as any).success)
+      )
+      .subscribe({
+        next: (result) => {
+          const data = result as { id: number; content: string };
+          if (data.id > 0 && data.content.length > 0) {
+            this.toast.success('Tạo gợi ý thành công!', {
+              duration: 5000,
+              dismissible: true,
+            });
+          }
+        },
+      });
+  }
 }

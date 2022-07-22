@@ -208,19 +208,19 @@
             </div>
           </div>
 
-          <div class="row">
+          <div class="row mt-3">
             <div class="col-4">Trạng thái:</div>
             <div class="col-8">
               {{ q.status == "Active" ? "Hoạt động" : "Ngừng hoạt động" }}
             </div>
           </div>
-          <div class="row">
+          <div class="row mt-3">
             <div class="col-4">Ngày tạo:</div>
             <div class="col-8">
               {{ q.createdDate | date: "dd/MM/yyyy" }}
             </div>
           </div>
-          <div class="row">
+          <div class="row mt-3">
             <div class="col-4">Thao tác</div>
             <div class="col-8">
               <button
@@ -256,9 +256,11 @@
             </div>
           </div>
 
-          <div class="row">
+          <div class="row mt-3">
             <div class="col-4">Gợi ý:</div>
-            <div class="col-8">Tạo gợi ý</div>
+            <div class="col-8">
+              <button class="btn btn-primary btn-sm" (click)="showAddSuggestion(q.id)">Thêm</button>
+            </div>
           </div>
           <router-outlet></router-outlet>
         </div>

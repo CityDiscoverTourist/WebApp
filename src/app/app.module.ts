@@ -28,6 +28,7 @@ import { CityModalComponent } from './pages/share/city-modal/city-modal.componen
 import { LocationModalComponent } from './pages/share/location-modal/location-modal.component';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { AuthorizeInterceptor } from './interceptors';
+import { SuggestionModalComponent } from './pages/share/suggestion-modal/suggestion-modal.component';
 
 const lib = [
   QuillModule.forRoot(),
@@ -50,6 +51,7 @@ const lib = [
     QuestItemTypeModalComponent,
     AreaModalComponent,
     LocationModalComponent,
+    SuggestionModalComponent,
   ],
   imports: [
     BrowserModule,
