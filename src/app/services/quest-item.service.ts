@@ -36,9 +36,9 @@ export class QuestItemService extends BaseService {
     const query = stringify({
       name: search.keyword,
       questId: search.questId,
-      questItemTypeId: search?.questItemTypeIds,
+      questItemTypeId: search?.questItemTypeIds||0,
       pageNumber: isNaN(search?.currentPage!) ? 1 : search?.currentPage! + 1,
-      pagesize: 5,
+      pagesize: 20,
       orderby: `${sortBy} ${sortDir}`,
     });
     var result = this.http.get<Paging<QuestItemListItem>>(
@@ -100,6 +100,8 @@ export class QuestItemService extends BaseService {
   updateQuestItemById(
     questItemCreate: QuestItemCreate
   ): Observable<Result<QuestItem>> {
+    console.log(questItemCreate);
+    
     const { image, ...payload } = questItemCreate;
     return this.http.put<Result<QuestItem>>(
       `${environment.apiUrl}/api/v1/quest-items/`,
