@@ -109,4 +109,11 @@ export class QuestItemService extends BaseService {
       this.httpOptions
     );
   }
+
+  getListImage(questItemId: string): Observable<string[]> {
+    return this.http.get<string[]>(
+      `${environment.apiUrl}/api/v1/quest-items/images/${questItemId}`,
+      { headers: this._sharedHeaders }
+    );
+  }
 }
