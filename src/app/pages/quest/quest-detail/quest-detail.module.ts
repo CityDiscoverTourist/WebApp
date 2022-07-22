@@ -17,7 +17,6 @@ const lib = [
   NgSelectModule,
   NgxDatatableModule,
   HotToastModule.forRoot(),
-  ModalModule.forRoot(),
 ];
 @NgModule({
   declarations: [QuestDetailComponent],
@@ -26,6 +25,7 @@ const lib = [
     QuestDetailRoutingModule,
     FormsModule,
     ReactiveFormsModule,
+    ModalModule.forRoot(),
     ...lib,
   ],
   providers: [

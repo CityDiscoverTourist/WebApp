@@ -11,6 +11,7 @@ import { HotToastService } from '@ngneat/hot-toast';
 import { RxState } from '@rx-angular/state';
 import { DatatableComponent, TableColumn } from '@swimlane/ngx-datatable';
 import { BsModalService } from 'ngx-bootstrap/modal';
+import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import {
   BehaviorSubject,
   filter,
@@ -65,9 +66,19 @@ export class QuestDetailComponent implements OnInit {
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private areaService: AreaService,
-    private questTypeService: QuestTypeService
+    private questTypeService: QuestTypeService,
+    private modalService1: NgbModal
   ) {}
 
+  private getDismissReason(reason: any): string {
+    if (reason === ModalDismissReasons.ESC) {
+      return 'by pressing ESC';
+    } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
+      return 'by clicking on a backdrop';
+    } else {
+      return `with: ${reason}`;
+    }
+  }
   ngOnInit(): void {
     this.questItemState.connect(
       this.questItemTypeService.getQuestItemTypeIds(),
@@ -296,32 +307,13 @@ export class QuestDetailComponent implements OnInit {
   resetSearch$ = new Subject<void>();
 
   showAddSuggestion(questItemId: number) {
-    console.log("aajaja");
-    
-    const bsModalRef = this.modalService.show(SuggestionModalComponent, {
-      initialState: {
-        simpleForm: false,
-        title: 'gợi ý',
-        type: 'Thêm',
-        id: '0',
-        
-      },
+    const modalRef = this.modalService1.open(SuggestionModalComponent, {
+      centered: true,
+      windowClass: 'my-class',
     });
-    bsModalRef.onHide
-      ?.pipe(
-        take(1),
-        filter((s) => (s as any).success)
-      )
-      .subscribe({
-        next: (result) => {
-          const data = result as { id: number; content: string };
-          if (data.id > 0 && data.content.length > 0) {
-            this.toast.success('Tạo gợi ý thành công!', {
-              duration: 5000,
-              dismissible: true,
-            });
-          }
-        },
-      });
+
+    modalRef.componentInstance.questItemId = `${questItemId}`;
+    modalRef.componentInstance.title = `gợi ý`;
+    modalRef.componentInstance.type = `Tạo`;
   }
 }
