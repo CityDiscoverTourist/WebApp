@@ -49,7 +49,8 @@ import { QuestItemState, QUEST_ITEM_STATE } from './quest-item/states';
 })
 export class QuestDetailComponent implements OnInit {
   private id: string;
-  public questListItem: QuestListItem;
+  // public questListItem: QuestListItem;
+  listImages: string[] = [];
   constructor(
     @Inject(QUEST_ITEM_STATE) private questItemState: RxState<QuestItemState>,
     private readonly questItemTypeService: QuestItemTypeService,
@@ -109,32 +110,17 @@ export class QuestDetailComponent implements OnInit {
         filter((p) => p.has('id')),
         map((p) => Number(p.get('id'))),
         switchMap((s) => {
-          this.searchQuestItem$.next({ questId: s });
+          this.searchQuestItem$.next({ questId: s});
+          console.log("data");
+          localStorage.setItem("questId",s.toString());
+          
+          console.log(s);
+          
           return this.questItemService.getQuestItemsByQuestId({ questId: s });
         })
       ),
       (_, result) => ({
-        questitems: result.data.map(
-          (x, index) =>
-            ({
-              index: ++index,
-              id: x.id,
-              content: x.content,
-              description: x.description,
-              duration: x.duration,
-              createdDate: x.createdDate,
-              updatedDate: x.updatedDate,
-              qrCode: x.qrCode,
-              triggerMode: x.triggerMode,
-              rightAnswer: x.rightAnswer,
-              answerImageUrl: x.answerImageUrl,
-              status: x.status,
-              questItemTypeId: x.questItemTypeId,
-              locationId: x.locationId,
-              questId: x.questId,
-              itemId: x.itemId,
-            } as QuestItemListItem)
-        ),
+        questitems: result.data,
         metadata: { ...result.pagination },
         loading: false,
       })
@@ -145,27 +131,7 @@ export class QuestDetailComponent implements OnInit {
         switchMap((s) => this.questItemService.getQuestItemsByQuestId(s))
       ),
       (_, result) => ({
-        questitems: result.data.map(
-          (x, index) =>
-            ({
-              index: ++index,
-              id: x.id,
-              content: x.content,
-              description: x.description,
-              duration: x.duration,
-              createdDate: x.createdDate,
-              updatedDate: x.updatedDate,
-              qrCode: x.qrCode,
-              triggerMode: x.triggerMode,
-              rightAnswer: x.rightAnswer,
-              answerImageUrl: x.answerImageUrl,
-              status: x.status,
-              questItemTypeId: x.questItemTypeId,
-              locationId: x.locationId,
-              questId: x.questId,
-              itemId: x.itemId,
-            } as QuestItemListItem)
-        ),
+        questitems: result.data,
         metadata: { ...result.pagination },
         loading: false,
       })
@@ -178,13 +144,12 @@ export class QuestDetailComponent implements OnInit {
         ...this.searchQuestItem$.getValue(),
         ...form,
         currentPage: 0,
-      }),
-        (this.table.offset = 0);
+      })
+
     });
     this.questItemListState.hold(this.resetSearch$, () => {
       this.searchForm.reset();
       this.searchQuestItem$.next({ currentPage: 0 });
-      this.table.offset = 0;
     });
   }
 
@@ -246,10 +211,10 @@ export class QuestDetailComponent implements OnInit {
     ];
   }
 
-  onDelete(id: string) {
+  onDelete(id: number) {
     const bsModalRef = this.modalService.show(DeleteModalComponent, {
       initialState: {
-        id: id,
+        id: id+'',
         title: 'Quest Item',
       },
     });
@@ -281,17 +246,19 @@ export class QuestDetailComponent implements OnInit {
       });
   }
 
-  onUpdate(id: string) {
+  onUpdate(id: number) {
     this.router.navigate([`quest-item/${id}/edit`], {
       relativeTo: this.activatedRoute,
     });
   }
 
   get questItemTypeIds(): Observable<QuestItemType[]> {
-    return this.questItemState.select('questItemTypeIds');
+    return this.questItemState.select('questItemTypeIds')
   }
   get questItems$(): Observable<QuestItemListItem[]> {
-    return this.questItemListState.select('questitems');
+    setTimeout(() =>{}, 1000);
+    return this.questItemListState.select('questitems')
+    
   }
 
   get metadata$(): Observable<PagingMetadata> {
