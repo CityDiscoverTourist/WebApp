@@ -1,3 +1,8 @@
 .card-header{
     font-weight: 600;
 }
+
+
+.wrapper { display: flex; justify-content: center;}    
+.content { position: relative; width: max-content}
+.content img { display: block; }
