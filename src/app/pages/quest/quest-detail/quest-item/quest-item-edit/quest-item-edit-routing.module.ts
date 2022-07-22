@@ -6,6 +6,7 @@ const routes: Routes = [
   {
     path: '',
     component: QuestItemEditComponent,
+    data: { title: 'Quay lại chi tiết Quest', url: `./quest/${localStorage.getItem(`questId`)}` },
   },
 ]
 

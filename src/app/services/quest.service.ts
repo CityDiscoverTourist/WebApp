@@ -2,12 +2,14 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { stringify } from 'query-string';
 import { map, Observable } from 'rxjs';
-import { environment } from 'src/environments/environment';
+import { environment } from 'src/environments/environment.prod';
 import {
   Paging,
   Quest,
-  QuestCreate, QuestListItem,
-  QuestListSearch, Result
+  QuestCreate,
+  QuestListItem,
+  QuestListSearch,
+  Result,
 } from '../models';
 import { BaseService } from './base.service';
 
@@ -46,30 +48,47 @@ export class QuestService extends BaseService {
   }
 
   addQuest(quest: QuestCreate): Observable<Result<Quest>> {
-    let payload = new FormData();
-    payload.append('id', '0');
-    payload.append('id', quest.id.toString());
-    payload.append('title', quest.title);
-    payload.append('description', quest.description);
-    payload.append('price', quest.price.toString());
-    payload.append('estimatedTime', quest.estimatedTime);
-    payload.append('estimatedDistance', quest.estimatedDistance);
-    payload.append('image', quest.image);
-    payload.append('availableTime', quest.availableTime);
-    payload.append('createdDate', new Date().toDateString());
-    payload.append('updatedDate', '');
-    payload.append('status', quest.status);
-    payload.append('questTypeId', quest.questTypeId.toString());
-    payload.append('questOwnerId', quest.questOwnerId.toString());
-    payload.append('areaId', quest.areaId.toString());
+    // let payload = new FormData();
+    // payload.append('id', '0');
+    // payload.append('id', quest.id.toString());
+    // payload.append('title', quest.title);
+    // payload.append('description', quest.description);
+    // payload.append('price', quest.price.toString());
+    // payload.append('estimatedTime', quest.estimatedTime);
+    // payload.append('estimatedDistance', quest.estimatedDistance);
+    // payload.append('image', quest.image);
+    // payload.append('availableTime', quest.availableTime);
+    // payload.append('createdDate', new Date().toDateString());
+    // payload.append('updatedDate', '');
+    // payload.append('status', quest.status);
+    // payload.append('questTypeId', quest.questTypeId.toString());
+    // payload.append('questOwnerId', quest.questOwnerId.toString());
+    // payload.append('areaId', quest.areaId.toString());
 
+    const { image, ...payload } = quest;
     return this.http.post<Result<Quest>>(
       `${environment.apiUrl}/api/v1/quests/`,
-      payload,
+      this.toFormData(payload, image),
       this.httpOptions
     );
   }
+  toFormData(quest: Partial<QuestCreate>, image: File): FormData {
+    const formData = new FormData();
+    const payload = {
+      ...quest,
+      id: quest.id || 0,
+      createdate:quest.createdDate||'',
+      updatedDate: quest.updatedDate || '',
+    };
 
+    Object.keys(payload).forEach((key) =>
+      formData.append(key, (payload as any)[key])
+    );
+    if (image != null) {
+      formData.append('Image', image);
+    }
+    return formData;
+  }
   getQuestById(id: string | undefined): Observable<QuestListItem> {
     return this.http
       .get<Result<QuestListItem>>(
@@ -96,25 +115,27 @@ export class QuestService extends BaseService {
   }
 
   updateQuest(quest: QuestCreate): Observable<Result<Quest>> {
-    let payload = new FormData();
-    payload.append('id', quest.id.toString());
-    payload.append('title', quest.title);
-    payload.append('description', quest.description);
-    payload.append('price', quest.price.toString());
-    payload.append('estimatedTime', quest.estimatedTime);
-    payload.append('estimatedDistance', quest.estimatedDistance);
-    payload.append('image', quest.image);
-    payload.append('availableTime', quest.availableTime);
-    payload.append('createdDate', new Date().toDateString());
-    payload.append('updatedDate', '');
-    payload.append('status', quest.status);
-    payload.append('questTypeId', quest.questTypeId.toString());
+    // let payload = new FormData();
+    // payload.append('id', quest.id.toString());
+    // payload.append('title', quest.title);
+    // payload.append('description', quest.description);
+    // payload.append('price', quest.price.toString());
+    // payload.append('estimatedTime', quest.estimatedTime);
+    // payload.append('estimatedDistance', quest.estimatedDistance);
+    // payload.append('image', quest.image);
+    // payload.append('availableTime', quest.availableTime);
+    // payload.append('createdDate', new Date().toDateString());
+    // payload.append('updatedDate', '');
+    // payload.append('status', quest.status);
+    // payload.append('questTypeId', quest.questTypeId.toString());
     // payload.append('questOwnerId', quest.questOwnerId.toString());
-    payload.append('areaId', quest.areaId.toString());
+    // payload.append('areaId', quest.areaId.toString());
 
+    
+    const { image, ...payload } = quest;
     return this.http.put<Result<Quest>>(
       `${environment.apiUrl}/api/v1/quests/`,
-      payload,
+      this.toFormData(payload, image),
       this.httpOptions
     );
   }

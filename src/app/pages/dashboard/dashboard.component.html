@@ -34,5 +34,23 @@
       </div>
     </div>
   </div>
-  
+
+  <div class="row py-1 px-5">
+    <div class="col">
+      <span class="fw-bold fs-5 mb-4">Top người chơi</span>
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item" *ngFor="let item of listTopUserPoint">
+        And a fifth one
+        </li>
+      </ul>
+    </div>
+    <div class="col">
+      <span class="fw-bold fs-5 mb-4">Top Quest</span>
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item" *ngFor="let item of listTopQuest">
+          {{item}}
+        </li>
+      </ul>
+    </div>
+  </div>
 </div>

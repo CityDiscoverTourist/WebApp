@@ -16,7 +16,7 @@
   </div>
   <div class="row px-4 pt-2">
     <div class="card mb-1" style="border: 1px solid #fff">
-      <div class="card-header bg-white">Thông tin quest</div>
+      <div class="card-header bg-white" style=" font-weight: 600;">Thông tin quest</div>
       <div class="card-body" style="font-size: 0.8rem">
         <div
           class="row"
@@ -29,11 +29,11 @@
             <div class="row-2 nowrap">Thời gian ước lượng</div>
             <div class="row-2 nowrap">Khoảng cách ước lượng</div>
           </div>
-          <div class="col-2 mb-1" style="font-weight:400 ;">
+          <div class="col-2 mb-1" style="font-weight: 400">
             <div class="align-self-center row-2 nowrap">
               {{ vm.id }}
             </div>
-            <div class="align-self-center row-2 nowrap">{{ vm.price }} vnd</div>
+            <div class="align-self-center row-2 nowrap">{{ vm.price|number }} đ</div>
             <div class="align-self-center row-2 nowrap">
               {{ vm.status }}
             </div>
@@ -51,7 +51,7 @@
             <div class="row-2 nowrap">Ngày tạo</div>
             <div class="row-2 nowrap">Ngày cập nhật cuối cùng</div>
           </div>
-          <div class="col-2 mb-1"style="font-weight:400 ;">
+          <div class="col-2 mb-1" style="font-weight: 400">
             <div class="align-self-center row-2 nowrap">
               <!-- {{ vm.areaId }} -->
               {{ vm.areaName }}
@@ -117,7 +117,7 @@
   </div>
 </div>
 <div class="px-5">
-  <div class="d-flex align-items-center justify-content-between px-3">
+  <div class="d-flex align-items-center justify-content-between  mt-2 px-3">
     <div class="flex-fill"></div>
     <a
       routerLink="./quest-item/create"
@@ -129,7 +129,7 @@
   </div>
   <div class="bg-white mx-3 p-3 rounded mt-2">
     <div class="rounded bg-white">
-      <form class="mb-4" [formGroup]="searchForm">
+      <form [formGroup]="searchForm">
         <div class="d-flex">
           <div class="input-group me-3">
             <span
@@ -140,6 +140,7 @@
             <input
               type="text"
               class="border-start-0 form-control outline-none"
+              style="width: 50px"
               placeholder="Tìm kiếm"
               aria-label="Tìm kiếm"
               aria-describedby="search-icon"
@@ -152,11 +153,11 @@
             bindValue="id"
             bindLabel="name"
             placeholder="Chọn loại câu hỏi"
-            [clearable]="false"
+            [clearable]="true"
             [closeOnSelect]="true"
             style="min-width: 200px"
-            class="me-3"
             formControlName="questItemTypeIds"
+            class="me-3"
           ></ng-select>
           <div class="btn-group">
             <button
@@ -180,74 +181,90 @@
           </div>
         </div>
       </form>
-      <!-- table -->
-      <div class="border overflow-hidden rouded shadow-sm">
-        <ngx-datatable
-          class="material rounded"
-          [rows]="questItems$ | async"
-          [columns]="columns"
-          columnMode="force"
-          [headerHeight]="50"
-          [loadingIndicator]="(loading$ | async) === true"
-          [footerHeight]="50"
-          [rowHeight]="50"
-          [externalPaging]="true"
-          [externalSorting]="true"
-          [messages]="{
-            emptyMessage: 'Không có câu hỏi để hiển thị!',
-            totalMessage: 'câu hỏi'
-          }"
-          [count]="(metadata$ | async)?.totalCount || 0"
-          [offset]="((metadata$ | async)?.currentPage || 0) - 1"
-          [limit]="5"
-          (page)="onPage($event)"
-          (sort)="onSort($event)"
-        >
-          <ng-template
-            #actionTemplate
-            let-row="row"
-            let-value="value"
-            let-expanded="expanded"
-            ngx-datatable-cell-template
-          >
-            <button
-              class="btn btn-sm me-2"
-              style="
-                color: #fff;
-                background-color: #4caf50;
-                border-color: #4caf50;
-              "
-              type="button"
-              data-toggle="tooltip"
-              data-placement="top"
-              title="Edit"
-              (click)="onUpdate(row.id)"
-            >
-              <i class="bi bi-pencil"></i>
-            </button>
-            <button
-              class="btn btn-sm me-2"
-              type="button"
-              style="
-                color: #fff;
-                background-color: #f44335;
-                border-color: #f44335;
-              "
-              data-toggle="tooltip"
-              data-placement="top"
-              title="Delete"
-              (click)="onDelete(row.id)"
-            >
-              <i class="bi bi-trash3"></i>
-            </button>
-          </ng-template>
-        </ngx-datatable>
-      </div>
     </div>
-    <ng-template #colCreatedAt let-value="value">
-      {{ value | date: "dd/MM/yyyy" }}
-    </ng-template>
   </div>
 </div>
+<div class="px-5">
+  <div class="row pt-2 px-3 flex-wrap">
+    <div
+      class="col-sm-4"
+      *ngFor="let q of questItems$ | async; let index; let i=index"
+    >
+      <div class="card mb-3">
+        <div class="card-header bg-white py-3">
+          <span style=" font-weight: 600;">Câu hỏi {{i+1}}: </span>
+          <span>{{ q.content }}</span>
+        </div>
+        <div class="card-body">
+          <div class="row" *ngIf="q.questItemTypeId != 2">
+            <div class="col-4">Đáp án text:</div>
+            <div class="col-8">{{ q.rightAnswer }}</div>
+          </div>
 
-<router-outlet></router-outlet>
+          <div class="row" *ngIf="q.questItemTypeId == 2">
+            <div class="col-4">Đáp án ảnh:</div>
+            <div class="col-8">
+              <button class="btn btn-sm btn-primary">Xem ảnh</button>
+            </div>
+          </div>
+
+          <div class="row mt-3">
+            <div class="col-4">Trạng thái:</div>
+            <div class="col-8">
+              {{ q.status == "Active" ? "Hoạt động" : "Ngừng hoạt động" }}
+            </div>
+          </div>
+          <div class="row mt-3">
+            <div class="col-4">Ngày tạo:</div>
+            <div class="col-8">
+              {{ q.createdDate | date: "dd/MM/yyyy" }}
+            </div>
+          </div>
+          <div class="row mt-3">
+            <div class="col-4">Thao tác</div>
+            <div class="col-8">
+              <button
+                class="btn btn-sm me-2"
+                style="
+                  color: #fff;
+                  background-color: #4caf50;
+                  border-color: #4caf50;
+                "
+                type="button"
+                data-toggle="tooltip"
+                data-placement="top"
+                title="Edit"
+                (click)="onUpdate(q.id)"
+              >
+                <i class="bi bi-pencil"></i>
+              </button>
+              <button
+                class="btn btn-sm me-2"
+                type="button"
+                style="
+                  color: #fff;
+                  background-color: #f44335;
+                  border-color: #f44335;
+                "
+                data-toggle="tooltip"
+                data-placement="top"
+                title="Delete"
+                (click)="onDelete(q.id)"
+              >
+                <i class="bi bi-trash3"></i>
+              </button>
+            </div>
+          </div>
+
+          <div class="row mt-3">
+            <div class="col-4">Gợi ý:</div>
+            <div class="col-8">
+              <button class="btn btn-primary btn-sm" (click)="showAddSuggestion(q.id)">Thêm</button>
+            </div>
+          </div>
+          <router-outlet></router-outlet>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

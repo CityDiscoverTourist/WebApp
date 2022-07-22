@@ -1,15 +1,15 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { stringify } from 'query-string';
-import { map, of } from 'rxjs';
+import { map } from 'rxjs';
 import { Observable } from 'rxjs/internal/Observable';
-import { environment } from 'src/environments/environment';
-import { IdValue, Paging, Result, SearchInfo } from '../models';
+import { environment } from 'src/environments/environment.prod';
+import { IdValue, Paging, Result } from '../models';
 import {
   QuestType,
   QuestTypeCreate,
   QuestTypeListItem,
-  QuestTypeListSearch,
+  QuestTypeListSearch
 } from '../models/questtype.model';
 import { BaseService } from './base.service';
 

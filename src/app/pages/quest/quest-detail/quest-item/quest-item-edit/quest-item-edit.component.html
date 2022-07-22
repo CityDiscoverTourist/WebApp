@@ -117,12 +117,33 @@
                         cursor: pointer;
                       "
                     >
-                      <div *ngFor="let image of listImages; let i = index">
-                        <img
-                          style="width: 105px; height: 140px"
-                          class="me-2 "
-                          [src]="image"
-                        />
+                      <div class="wrapper" style="background-color: #000">
+                        <div
+                          class="content"
+                          *ngFor="let image of listImages; let i = index"
+                        >
+                          <img
+                            style="width: 105px; height: 140px"
+                            class="me-2 d-block"
+                            
+                            [src]="image"
+                          />
+                          <a
+                            style="
+                              font-size: 20px;
+                              position: absolute;
+                              top: 1px;
+                              right: 12px;
+                              cursor: pointer;
+                            "
+                            (click)="removeImage(image)"
+                          >
+                            <i
+                              class="bi bi-x-circle-fill"
+                              style="color: #fff"
+                            ></i>
+                          </a>
+                        </div>
                       </div>
                     </div>
                     <ngx-dropzone-label *ngIf="listImages.length <= 0">
@@ -136,17 +157,7 @@
                         >
                       </div>
                     </ngx-dropzone-label>
-                    <!-- <ngx-dropzone-label>
-                      <div>
-                        <i class="bi bi-plus"></i>
-                        <span>kéo và thả hình ảnh ở đây hoặc</span>
-                        <span
-                          class="ms-1 text-decoration-underline text-primary"
-                        >
-                          tải lên từ máy tính của bạn</span
-                        >
-                      </div>
-                    </ngx-dropzone-label> -->
+
                     <ngx-dropzone-image-preview
                       ngProjectAs="ngx-dropzone-preview"
                       *ngFor="let f of vm.image"

@@ -7,6 +7,7 @@ import {
 } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { HotToastService } from '@ngneat/hot-toast';
 import { RxState } from '@rx-angular/state';
 import { DatatableComponent, TableColumn } from '@swimlane/ngx-datatable';
 import { BsModalService } from 'ngx-bootstrap/modal';
@@ -36,7 +37,7 @@ import {
   QuestTypeService,
 } from 'src/app/services';
 import { PageInfo, SortInfo } from 'src/app/types';
-import { DeleteModalComponent } from '../../share';
+import { DeleteModalComponent, SuggestionModalComponent } from '../../share';
 import { QuestItemListState } from '../states';
 import { QuestDetailState } from '../states/questdetail.state';
 import { QuestItemState, QUEST_ITEM_STATE } from './quest-item/states';
@@ -49,13 +50,15 @@ import { QuestItemState, QUEST_ITEM_STATE } from './quest-item/states';
 })
 export class QuestDetailComponent implements OnInit {
   private id: string;
-  public questListItem: QuestListItem;
+  // public questListItem: QuestListItem;
+  listImages: string[] = [];
   constructor(
     @Inject(QUEST_ITEM_STATE) private questItemState: RxState<QuestItemState>,
     private readonly questItemTypeService: QuestItemTypeService,
     private questService: QuestService,
     private modalService: BsModalService,
     private questDetailState: RxState<QuestDetailState>,
+    private toast: HotToastService,
     //QuestItem
     private questItemService: QuestItemService,
     private questItemListState: RxState<QuestItemListState>,
@@ -110,31 +113,16 @@ export class QuestDetailComponent implements OnInit {
         map((p) => Number(p.get('id'))),
         switchMap((s) => {
           this.searchQuestItem$.next({ questId: s });
+          console.log('data');
+          localStorage.setItem('questId', s.toString());
+
+          console.log(s);
+
           return this.questItemService.getQuestItemsByQuestId({ questId: s });
         })
       ),
       (_, result) => ({
-        questitems: result.data.map(
-          (x, index) =>
-            ({
-              index: ++index,
-              id: x.id,
-              content: x.content,
-              description: x.description,
-              duration: x.duration,
-              createdDate: x.createdDate,
-              updatedDate: x.updatedDate,
-              qrCode: x.qrCode,
-              triggerMode: x.triggerMode,
-              rightAnswer: x.rightAnswer,
-              answerImageUrl: x.answerImageUrl,
-              status: x.status,
-              questItemTypeId: x.questItemTypeId,
-              locationId: x.locationId,
-              questId: x.questId,
-              itemId: x.itemId,
-            } as QuestItemListItem)
-        ),
+        questitems: result.data,
         metadata: { ...result.pagination },
         loading: false,
       })
@@ -145,27 +133,7 @@ export class QuestDetailComponent implements OnInit {
         switchMap((s) => this.questItemService.getQuestItemsByQuestId(s))
       ),
       (_, result) => ({
-        questitems: result.data.map(
-          (x, index) =>
-            ({
-              index: ++index,
-              id: x.id,
-              content: x.content,
-              description: x.description,
-              duration: x.duration,
-              createdDate: x.createdDate,
-              updatedDate: x.updatedDate,
-              qrCode: x.qrCode,
-              triggerMode: x.triggerMode,
-              rightAnswer: x.rightAnswer,
-              answerImageUrl: x.answerImageUrl,
-              status: x.status,
-              questItemTypeId: x.questItemTypeId,
-              locationId: x.locationId,
-              questId: x.questId,
-              itemId: x.itemId,
-            } as QuestItemListItem)
-        ),
+        questitems: result.data,
         metadata: { ...result.pagination },
         loading: false,
       })
@@ -178,13 +146,11 @@ export class QuestDetailComponent implements OnInit {
         ...this.searchQuestItem$.getValue(),
         ...form,
         currentPage: 0,
-      }),
-        (this.table.offset = 0);
+      });
     });
     this.questItemListState.hold(this.resetSearch$, () => {
       this.searchForm.reset();
       this.searchQuestItem$.next({ currentPage: 0 });
-      this.table.offset = 0;
     });
   }
 
@@ -246,10 +212,10 @@ export class QuestDetailComponent implements OnInit {
     ];
   }
 
-  onDelete(id: string) {
+  onDelete(id: number) {
     const bsModalRef = this.modalService.show(DeleteModalComponent, {
       initialState: {
-        id: id,
+        id: id + '',
         title: 'Quest Item',
       },
     });
@@ -281,7 +247,7 @@ export class QuestDetailComponent implements OnInit {
       });
   }
 
-  onUpdate(id: string) {
+  onUpdate(id: number) {
     this.router.navigate([`quest-item/${id}/edit`], {
       relativeTo: this.activatedRoute,
     });
@@ -291,6 +257,7 @@ export class QuestDetailComponent implements OnInit {
     return this.questItemState.select('questItemTypeIds');
   }
   get questItems$(): Observable<QuestItemListItem[]> {
+    setTimeout(() => {}, 1000);
     return this.questItemListState.select('questitems');
   }
 
@@ -327,4 +294,34 @@ export class QuestDetailComponent implements OnInit {
 
   submitSearch$ = new Subject<Partial<{ keyword: string }>>();
   resetSearch$ = new Subject<void>();
+
+  showAddSuggestion(questItemId: number) {
+    console.log("aajaja");
+    
+    const bsModalRef = this.modalService.show(SuggestionModalComponent, {
+      initialState: {
+        simpleForm: false,
+        title: 'gợi ý',
+        type: 'Thêm',
+        id: '0',
+        
+      },
+    });
+    bsModalRef.onHide
+      ?.pipe(
+        take(1),
+        filter((s) => (s as any).success)
+      )
+      .subscribe({
+        next: (result) => {
+          const data = result as { id: number; content: string };
+          if (data.id > 0 && data.content.length > 0) {
+            this.toast.success('Tạo gợi ý thành công!', {
+              duration: 5000,
+              dismissible: true,
+            });
+          }
+        },
+      });
+  }
 }

@@ -79,18 +79,24 @@ export class PaymentListComponent implements OnInit {
         prop: 'id',
         name: 'Mã thanh toán',
         sortable: false,
-        minWidth: 230,
+        minWidth: 180,
       },
       {
         prop: 'questName',
         name: 'Tên Quest',
         sortable: false,
-        minWidth: 250,
+        minWidth: 200,
+      },
+      {
+        prop: 'customerEmail',
+        name: 'Khách hàng',
+        sortable: false,
+        minWidth: 180,
       },
       {
         prop: 'quantity',
         name: 'Số lượng',
-        minWidth: 20,
+        minWidth: 18,
         sortable: false,
         cellClass:''
       },
@@ -107,12 +113,13 @@ export class PaymentListComponent implements OnInit {
         name: 'Ngày tạo',
         sortable: false,
         cellTemplate: this.colCreatedAt,
-        minWidth:180
+        minWidth:100,
+        headerClass:''
       },
       {
         prop: 'paymentMethod',
         name: 'Phương thức',
-        minWidth: 20,
+        minWidth: 100,
         sortable: false,
         canAutoResize: true,
       },
@@ -121,7 +128,7 @@ export class PaymentListComponent implements OnInit {
         prop: 'totalAmount',
         name: 'Tổng',
         sortable: false,
-        minWidth:150,
+        minWidth:140,
         cellTemplate:this.formatPrice
       },
     ];

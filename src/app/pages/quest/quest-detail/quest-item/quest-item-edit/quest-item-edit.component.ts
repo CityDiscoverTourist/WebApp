@@ -41,6 +41,7 @@ export class QuestItemEditComponent implements OnInit {
   id: string = '';
   questItemType: number;
   listImages: string[] = [];
+  listImage:string[] = [];
   status: { id: number; value: string }[] = [];
   constructor(
     @Inject(QUEST_ITEM_STATE) private questItemState: RxState<QuestItemState>,
@@ -51,7 +52,7 @@ export class QuestItemEditComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     private router: Router,
     private questItemDetailState: RxState<QuestItemDetailState>,
-    private cd: ChangeDetectorRef,
+    private cd: ChangeDetectorRef
   ) {
     this.state.set({
       showQuestDescription: false,
@@ -74,6 +75,9 @@ export class QuestItemEditComponent implements OnInit {
             this.id = data.id.toString();
             this.questItemType = data.questItemTypeId;
             this.listImages = data.listImages;
+            console.log('data');
+            console.log(data.listImages);
+
             if (this.questItemType == 2) {
               this.toggleIsType$.next(2);
             }
@@ -137,6 +141,7 @@ export class QuestItemEditComponent implements OnInit {
               description = arrDescription[0] + '()' + arrDescription[1];
             }
             form.value['description'] = description;
+            form.value['listImages'] = this.listImage;
             return form;
           })
         ),
@@ -208,6 +213,7 @@ export class QuestItemEditComponent implements OnInit {
       questId: [],
       itemId: [],
       image: [],
+      listImages: [],
     });
   }
   get vm$(): Observable<QuestItemEditState> {
@@ -233,5 +239,12 @@ export class QuestItemEditComponent implements OnInit {
     this.router.navigate(['../../../../../location/create', 'redirect'], {
       relativeTo: this.activatedRoute,
     });
+  }
+
+  removeImage(url: string) {
+    this.listImages = this.listImages.filter((x) => x != url);
+    this.listImage.map(item=>"'" + item + "'")
+    console.log(this.listImage);
+    
   }
 }
