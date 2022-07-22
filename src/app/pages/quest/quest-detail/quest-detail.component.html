@@ -204,7 +204,7 @@
           <div class="row" *ngIf="q.questItemTypeId == 2">
             <div class="col-4">Đáp án ảnh:</div>
             <div class="col-8">
-              <button class="btn btn-sm btn-primary">Xem ảnh</button>
+              <button class="btn btn-sm btn-primary" (click)="showImage(q.id)">Xem ảnh</button>
             </div>
           </div>
 

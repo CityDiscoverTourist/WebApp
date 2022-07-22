@@ -42,6 +42,7 @@ import { DeleteModalComponent, SuggestionModalComponent } from '../../share';
 import { QuestItemListState } from '../states';
 import { QuestDetailState } from '../states/questdetail.state';
 import { QuestItemState, QUEST_ITEM_STATE } from './quest-item/states';
+import { ImageModalComponent } from './image-modal/image-modal.component';
 
 @Component({
   selector: 'app-quest-detail',
@@ -308,12 +309,19 @@ export class QuestDetailComponent implements OnInit {
 
   showAddSuggestion(questItemId: number) {
     const modalRef = this.modalService1.open(SuggestionModalComponent, {
-      centered: true,
       windowClass: 'my-class',
     });
 
     modalRef.componentInstance.questItemId = `${questItemId}`;
     modalRef.componentInstance.title = `gợi ý`;
     modalRef.componentInstance.type = `Tạo`;
+  }
+
+  showImage(questItemId: number) {
+    const modalRef = this.modalService1.open(ImageModalComponent, {
+      size: 'lg',
+      // scrollable:true,
+    });
+    modalRef.componentInstance.questItemId = `${questItemId}`;
   }
 }

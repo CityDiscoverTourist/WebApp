@@ -11,6 +11,7 @@ import { ModalModule } from 'ngx-bootstrap/modal';
 import { QuestItemState, QUEST_ITEM_STATE } from './quest-item/states';
 import { RxState } from '@rx-angular/state';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ImageModalComponent } from './image-modal/image-modal.component';
 
 const lib = [
   LetModule,
@@ -19,7 +20,7 @@ const lib = [
   HotToastModule.forRoot(),
 ];
 @NgModule({
-  declarations: [QuestDetailComponent],
+  declarations: [QuestDetailComponent, ImageModalComponent],
   imports: [
     CommonModule,
     QuestDetailRoutingModule,

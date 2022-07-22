@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { HotToastService } from '@ngneat/hot-toast';
 import { RxState } from '@rx-angular/state';
 // import { BsModalRef } from 'ngx-bootstrap/modal';
 import {
@@ -40,16 +41,11 @@ export class SuggestionModalComponent implements OnInit {
     public activeModal: NgbActiveModal,
     private fb: FormBuilder,
     private state: RxState<SuggestionState>,
-    private suggestioService: SuggestionService
+    private suggestioService: SuggestionService,
+    private toast: HotToastService,
   ) {}
 
-  ngOnInit(): void {
-
-    
-
-console.log(this.questItemId);
-
-    
+  ngOnInit(): void {   
     this.initForm();
     this.status = this.suggestioService.status;
 
@@ -100,12 +96,8 @@ console.log(this.questItemId);
         .pipe(
           filter((result) => (result.status == 'data modified' ? true : false)),
           tap((result) => {
-            // this.bsModalRef.onHide?.emit({
-            //   id: result?.data?.id,
-            //   content: result?.data?.content,
-            //   success: true,
-            // });
-            // this.bsModalRef.hide();
+            this.activeModal.close();
+            this.toast.success("Tạo gợi ý thành công!");
           })
         ),
       (_prev, curr) => ({
