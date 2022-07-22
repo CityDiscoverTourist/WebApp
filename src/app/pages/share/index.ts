@@ -4,3 +4,4 @@ export  * from './quest-type-modal/quest-type-modal.component';
 export  * from './location-modal/location-modal.component';
 export  * from './location-type-modal/location-type-modal.component';
 export  * from './is-block-customer-modal/is-block-customer-modal.component';
+export  * from './suggestion-modal/suggestion-modal.component';
