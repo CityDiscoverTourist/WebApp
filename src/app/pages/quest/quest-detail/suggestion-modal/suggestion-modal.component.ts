@@ -33,7 +33,6 @@ export class SuggestionModalComponent implements OnInit {
   title: string = '';
   type: string = '';
   questItemId: string = '';
-  
 
   status: { id: number; value: string }[] = [];
   constructor(
@@ -42,17 +41,19 @@ export class SuggestionModalComponent implements OnInit {
     private fb: FormBuilder,
     private state: RxState<SuggestionState>,
     private suggestioService: SuggestionService,
-    private toast: HotToastService,
+    private toast: HotToastService
   ) {}
 
-  ngOnInit(): void {   
+  ngOnInit(): void {
     this.initForm();
     this.status = this.suggestioService.status;
+
+    console.log(this.id);
 
     if (Number(this.id) > 0) {
       this.suggestioService.getSuggesionById(this.id).subscribe((data) => {
         console.log(data);
-        
+
         this.form.patchValue({
           id: data.id,
           content: data.content,
@@ -62,7 +63,7 @@ export class SuggestionModalComponent implements OnInit {
       });
     } else {
       this.form.patchValue({
-        id:0,
+        id: 0,
         questItemId: this.questItemId,
       });
     }
@@ -97,7 +98,11 @@ export class SuggestionModalComponent implements OnInit {
           filter((result) => (result.status == 'data modified' ? true : false)),
           tap((result) => {
             this.activeModal.close();
-            this.toast.success("Tạo gợi ý thành công!");
+            if (Number(this.id) > 0) {
+              this.toast.success('Cập nhật gợi ý thành công!');
+            } else {
+              this.toast.success('Tạo gợi ý thành công!');
+            }
           })
         ),
       (_prev, curr) => ({

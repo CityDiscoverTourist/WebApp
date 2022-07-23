@@ -16,7 +16,9 @@
   </div>
   <div class="row px-4 pt-2">
     <div class="card mb-1" style="border: 1px solid #fff">
-      <div class="card-header bg-white" style=" font-weight: 600;">Thông tin quest</div>
+      <div class="card-header bg-white" style="font-weight: 600">
+        Thông tin quest
+      </div>
       <div class="card-body" style="font-size: 0.8rem">
         <div
           class="row"
@@ -33,7 +35,9 @@
             <div class="align-self-center row-2 nowrap">
               {{ vm.id }}
             </div>
-            <div class="align-self-center row-2 nowrap">{{ vm.price|number }} đ</div>
+            <div class="align-self-center row-2 nowrap">
+              {{ vm.price | number }} đ
+            </div>
             <div class="align-self-center row-2 nowrap">
               {{ vm.status }}
             </div>
@@ -117,7 +121,7 @@
   </div>
 </div>
 <div class="px-5">
-  <div class="d-flex align-items-center justify-content-between  mt-2 px-3">
+  <div class="d-flex align-items-center justify-content-between mt-2 px-3">
     <div class="flex-fill"></div>
     <a
       routerLink="./quest-item/create"
@@ -188,11 +192,11 @@
   <div class="row pt-2 px-3 flex-wrap">
     <div
       class="col-sm-4"
-      *ngFor="let q of questItems$ | async; let index; let i=index"
+      *ngFor="let q of questItems$ | async; let index; let i = index"
     >
       <div class="card mb-3">
         <div class="card-header bg-white py-3">
-          <span style=" font-weight: 600;">Câu hỏi {{i+1}}: </span>
+          <span style="font-weight: 600">Câu hỏi {{ i + 1 }}: </span>
           <span>{{ q.content }}</span>
         </div>
         <div class="card-body">
@@ -204,7 +208,9 @@
           <div class="row" *ngIf="q.questItemTypeId == 2">
             <div class="col-4">Đáp án ảnh:</div>
             <div class="col-8">
-              <button class="btn btn-sm btn-primary" (click)="showImage(q.id)">Xem ảnh</button>
+              <button class="btn btn-sm btn-primary" (click)="showImage(q.id)">
+                Xem ảnh
+              </button>
             </div>
           </div>
 
@@ -259,7 +265,20 @@
           <div class="row mt-3">
             <div class="col-4">Gợi ý:</div>
             <div class="col-8">
-              <button class="btn btn-primary btn-sm" (click)="showAddSuggestion(q.id)">Thêm</button>
+              <button
+                *ngIf="q.suggestions?.length != 0"
+                class="btn btn-primary btn-sm"
+                (click)="editSuggestion(q.suggestions[0].id)"
+              >
+                Sửa
+              </button>
+              <button
+                *ngIf="q.suggestions?.length == 0"
+                class="btn btn-primary btn-sm"
+                (click)="showAddSuggestion(q.id)"
+              >
+                Thêm
+              </button>
             </div>
           </div>
           <router-outlet></router-outlet>

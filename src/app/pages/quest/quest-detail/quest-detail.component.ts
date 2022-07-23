@@ -317,10 +317,21 @@ export class QuestDetailComponent implements OnInit {
     modalRef.componentInstance.type = `Tạo`;
   }
 
+  editSuggestion(suggestionId: number) {
+    console.log(suggestionId);
+    
+    const modalRef = this.modalService1.open(SuggestionModalComponent, {
+      windowClass: 'my-class',
+    });
+
+    modalRef.componentInstance.id = `${suggestionId}`;
+    modalRef.componentInstance.title = `gợi ý`;
+    modalRef.componentInstance.type = `Sửa`;
+  }
+
   showImage(questItemId: number) {
     const modalRef = this.modalService1.open(ImageModalComponent, {
       size: 'lg',
-      // scrollable:true,
     });
     modalRef.componentInstance.questItemId = `${questItemId}`;
   }
