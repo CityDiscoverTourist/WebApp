@@ -1,4 +1,5 @@
 import { SearchInfo } from "./common.model";
+import { Suggestion } from "./suggestion.model";
 
 export interface QuestItem {
   id: number;
@@ -60,6 +61,7 @@ export interface QuestItemListItem {
   questId: number;
   itemId: number;
   listImages:[];
+  suggestions:Suggestion[];
 }
 
 export interface QuestItemCreateResult{

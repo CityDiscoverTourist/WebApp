@@ -41,7 +41,7 @@ export class QuestItemEditComponent implements OnInit {
   id: string = '';
   questItemType: number;
   listImages: string[] = [];
-  listImage:string[] = [];
+  listImage: string[] = [];
   status: { id: number; value: string }[] = [];
   constructor(
     @Inject(QUEST_ITEM_STATE) private questItemState: RxState<QuestItemState>,
@@ -74,7 +74,7 @@ export class QuestItemEditComponent implements OnInit {
           tap((data) => {
             this.id = data.id.toString();
             this.questItemType = data.questItemTypeId;
-            this.listImages = data.listImages;
+            // this.listImages = data.listImages;
             console.log('data');
             console.log(data.listImages);
 
@@ -141,7 +141,10 @@ export class QuestItemEditComponent implements OnInit {
               description = arrDescription[0] + '()' + arrDescription[1];
             }
             form.value['description'] = description;
-            form.value['listImages'] = this.listImage;
+            var ssss = this.listImages;
+
+            console.log(ssss);
+            form.value['listImages'] = this.listImages;
             return form;
           })
         ),
@@ -243,8 +246,7 @@ export class QuestItemEditComponent implements OnInit {
 
   removeImage(url: string) {
     this.listImages = this.listImages.filter((x) => x != url);
-    this.listImage.map(item=>"'" + item + "'")
+    this.listImage.map((item) => "'" + item + "'");
     console.log(this.listImage);
-    
   }
 }

@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { HotToastService } from '@ngneat/hot-toast';
 import { RxState } from '@rx-angular/state';
-import { BsModalRef } from 'ngx-bootstrap/modal';
+// import { BsModalRef } from 'ngx-bootstrap/modal';
 import {
   catchError,
   filter,
@@ -30,23 +32,28 @@ export class SuggestionModalComponent implements OnInit {
   id: string = '';
   title: string = '';
   type: string = '';
-  // questItemId: string = '';
-  // questItemId: questItemId + '',
+  questItemId: string = '';
 
   status: { id: number; value: string }[] = [];
   constructor(
-    public bsModalRef: BsModalRef,
+    // public bsModalRef: BsModalRef,
+    public activeModal: NgbActiveModal,
     private fb: FormBuilder,
     private state: RxState<SuggestionState>,
-    private suggestioService: SuggestionService
+    private suggestioService: SuggestionService,
+    private toast: HotToastService
   ) {}
 
   ngOnInit(): void {
     this.initForm();
     this.status = this.suggestioService.status;
 
+    console.log(this.id);
+
     if (Number(this.id) > 0) {
       this.suggestioService.getSuggesionById(this.id).subscribe((data) => {
+        console.log(data);
+
         this.form.patchValue({
           id: data.id,
           content: data.content,
@@ -55,11 +62,10 @@ export class SuggestionModalComponent implements OnInit {
         });
       });
     } else {
-      console.log("sjjsjsjs");
-      
-      // this.form.patchValue({
-      //   questItemId: this.questItemId,
-      // });
+      this.form.patchValue({
+        id: 0,
+        questItemId: this.questItemId,
+      });
     }
 
     const [$valid, $invalid] = partition(this.submit$, (f) => f.valid);
@@ -91,12 +97,12 @@ export class SuggestionModalComponent implements OnInit {
         .pipe(
           filter((result) => (result.status == 'data modified' ? true : false)),
           tap((result) => {
-            this.bsModalRef.onHide?.emit({
-              id: result?.data?.id,
-              content: result?.data?.content,
-              success: true,
-            });
-            this.bsModalRef.hide();
+            this.activeModal.close();
+            if (Number(this.id) > 0) {
+              this.toast.success('Cập nhật gợi ý thành công!');
+            } else {
+              this.toast.success('Tạo gợi ý thành công!');
+            }
           })
         ),
       (_prev, curr) => ({
@@ -118,10 +124,10 @@ export class SuggestionModalComponent implements OnInit {
 
   initForm() {
     this.form = this.fb.group({
-      id: [0],
+      id: [],
       content: ['', [Validators.required]],
       status: ['', [Validators.required]],
-      questItemId: ['', [Validators.required]],
+      questItemId: [''],
     });
   }
 

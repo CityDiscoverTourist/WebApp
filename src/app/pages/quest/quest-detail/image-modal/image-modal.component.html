@@ -1,0 +1,21 @@
+<div class="modal-header d-block m-4">
+  <div class="d-flex">
+    <h4 class="modal-title">Hình ảnh</h4>
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      (click)="activeModal.dismiss('Cross click')"
+    ></button>
+  </div>
+
+  <div class="modal-body">
+    <div class="d-lg-inline-flex flex-wrap">
+      <div *ngFor="let image of listImages" class="row row-cols-2">
+        <div class="col m-1">
+          <img style="width: 120px; height: 160px"  [src]="image" />
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

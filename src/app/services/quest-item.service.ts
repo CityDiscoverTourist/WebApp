@@ -2,7 +2,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { stringify } from 'query-string';
 import { map, Observable } from 'rxjs';
-import { environment } from 'src/environments/environment.prod';
+import { environment } from 'src/environments/environment';
 
 import {
   Paging,
@@ -107,6 +107,13 @@ export class QuestItemService extends BaseService {
       `${environment.apiUrl}/api/v1/quest-items/`,
       this.toFormData(payload, image),
       this.httpOptions
+    );
+  }
+
+  getListImage(questItemId: string): Observable<string[]> {
+    return this.http.get<string[]>(
+      `${environment.apiUrl}/api/v1/quest-items/images/${questItemId}`,
+      { headers: this._sharedHeaders }
     );
   }
 }

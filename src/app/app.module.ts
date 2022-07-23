@@ -28,7 +28,8 @@ import { CityModalComponent } from './pages/share/city-modal/city-modal.componen
 import { LocationModalComponent } from './pages/share/location-modal/location-modal.component';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { AuthorizeInterceptor } from './interceptors';
-import { SuggestionModalComponent } from './pages/share/suggestion-modal/suggestion-modal.component';
+import { SuggestionModalComponent } from './pages/quest/quest-detail/suggestion-modal/suggestion-modal.component';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 const lib = [
   QuillModule.forRoot(),
@@ -63,6 +64,7 @@ const lib = [
     NgxSpinnerModule,
     NgxDropzoneModule,
     ...lib,
+    NgbModule,
   ],
   providers: [
     {
