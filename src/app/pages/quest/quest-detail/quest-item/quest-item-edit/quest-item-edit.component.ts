@@ -74,7 +74,7 @@ export class QuestItemEditComponent implements OnInit {
           tap((data) => {
             this.id = data.id.toString();
             this.questItemType = data.questItemTypeId;
-            // this.listImages = data.listImages;
+            this.listImages = data.listImages;
             console.log('data');
             console.log(data.listImages);
 

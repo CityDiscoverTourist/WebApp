@@ -41,7 +41,7 @@
                 id="content"
                 rows="2"
                 formControlName="content"
-                [ngClass]="{ 'is-invalid': form?.hasError('content') }"
+                [ngClass]="{ 'is-invalid': form.hasError('content') }"
               ></textarea>
               <div
                 class="invalid-feedback"
@@ -109,7 +109,7 @@
                     (change)="selectedFile$.next($event.addedFiles)"
                   >
                     <div
-                      *ngIf="listImages.length > 0"
+                      *ngIf="listImages.length !=0"
                       style="
                         display: flex;
                         justify-content: center;
@@ -168,7 +168,7 @@
                     </ngx-dropzone-image-preview>
                   </div>
                 </div>
-                <input type="hidden" formControlName="listImages">
+                <!-- <input type="hidden" formControlName="listImages"> -->
               </div>
             </div>
           </div>

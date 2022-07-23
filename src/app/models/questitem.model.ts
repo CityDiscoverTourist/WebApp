@@ -35,7 +35,9 @@ export interface QuestItemCreate{
   locationId: number;
   questId: number;
   itemId: number;
-  image:File[]
+  image:File[];
+  listImages:[];
+
 }
 
 export interface QuestItemListSearch extends SearchInfo {
