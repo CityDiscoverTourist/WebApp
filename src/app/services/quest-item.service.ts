@@ -36,7 +36,7 @@ export class QuestItemService extends BaseService {
     const query = stringify({
       name: search.keyword,
       questId: search.questId,
-      questItemTypeId: search?.questItemTypeIds||0,
+      questItemTypeId: search?.questItemTypeIds || 0,
       pageNumber: isNaN(search?.currentPage!) ? 1 : search?.currentPage! + 1,
       pagesize: 20,
       orderby: `${sortBy} ${sortDir}`,
@@ -51,16 +51,20 @@ export class QuestItemService extends BaseService {
   addQuestItem(
     questItemCreate: QuestItemCreate
   ): Observable<Result<QuestItem>> {
-    const { image, ...payload } = questItemCreate;
+    const { image, listImages, ...payload } = questItemCreate;
 
     return this.http.post<Result<QuestItem>>(
       `${environment.apiUrl}/api/v1/quest-items/`,
-      this.toFormData(payload, image),
+      this.toFormData(payload, image, listImages),
       this.httpOptions
     );
   }
 
-  toFormData(questItem: Partial<QuestItem>, image: File[]): FormData {
+  toFormData(
+    questItem: Partial<QuestItem>,
+    image: File[],
+    listImages: string[]
+  ): FormData {
     const formData = new FormData();
     const payload = {
       ...questItem,
@@ -75,6 +79,11 @@ export class QuestItemService extends BaseService {
     if (image?.length > 0) {
       for (let f of image) {
         formData.append('Image', f, f.name);
+      }
+    }
+    if (listImages?.length > 0) {
+      for (let f of listImages) {
+        formData.append('listImages', f);
       }
     }
     return formData;
@@ -101,11 +110,11 @@ export class QuestItemService extends BaseService {
     questItemCreate: QuestItemCreate
   ): Observable<Result<QuestItem>> {
     console.log(questItemCreate);
-    
-    const { image, ...payload } = questItemCreate;
+
+    const { image, listImages, ...payload } = questItemCreate;
     return this.http.put<Result<QuestItem>>(
       `${environment.apiUrl}/api/v1/quest-items/`,
-      this.toFormData(payload, image),
+      this.toFormData(payload, image, listImages),
       this.httpOptions
     );
   }
