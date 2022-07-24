@@ -245,7 +245,7 @@ export class QuestEditComponent implements OnInit {
       ],
       questTypeId: ['', [Validators.required]],
       image: [''],
-      questOwnerId: [2],
+      // questOwnerId: [2],
       areaId: ['', [Validators.required]],
       status: ['', [Validators.required]],
     });

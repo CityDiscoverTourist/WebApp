@@ -125,10 +125,7 @@ export class QuestDetailComponent implements OnInit {
         map((p) => Number(p.get('id'))),
         switchMap((s) => {
           this.searchQuestItem$.next({ questId: s });
-          console.log('data');
           localStorage.setItem('questId', s.toString());
-
-          console.log(s);
 
           return this.questItemService.getQuestItemsByQuestId({ questId: s });
         })
@@ -269,7 +266,6 @@ export class QuestDetailComponent implements OnInit {
     return this.questItemState.select('questItemTypeIds');
   }
   get questItems$(): Observable<QuestItemListItem[]> {
-    setTimeout(() => {}, 1000);
     return this.questItemListState.select('questitems');
   }
 
@@ -319,7 +315,7 @@ export class QuestDetailComponent implements OnInit {
 
   editSuggestion(suggestionId: number) {
     console.log(suggestionId);
-    
+
     const modalRef = this.modalService1.open(SuggestionModalComponent, {
       windowClass: 'my-class',
     });
