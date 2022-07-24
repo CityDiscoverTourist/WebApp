@@ -3,7 +3,10 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment.prod';
 import { BaseService } from './base.service';
-
+declare type Player = {
+  email: string;
+  point: string;
+};
 @Injectable({
   providedIn: 'root',
 })
@@ -35,11 +38,10 @@ export class DashboardService extends BaseService {
       { headers: this._sharedHeaders }
     );
   }
-  getTopPlayer(): Observable<string[]> {
-    return this.http.get<string[]>(
-      `${environment.apiUrl}/api/v1/dashboards/`,
-      { headers: this._sharedHeaders }
-    );
+  getTopPlayer(): Observable<Player[]> {
+    return this.http.get<Player[]>(`${environment.apiUrl}/api/v1/dashboards/`, {
+      headers: this._sharedHeaders,
+    });
   }
   getTopQuestPlay(): Observable<string[]> {
     return this.http.get<string[]>(
