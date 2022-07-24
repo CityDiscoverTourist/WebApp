@@ -14,6 +14,8 @@ boostrap 5, ngxdropzone lib for drop and drag image, ngx quill for editor, ngxse
 
 git clone https://github.com/CityDiscoverTourist/WebApp.git
 
-
+#Yarn 
+npm install -g yarn
+yarn
 
 
