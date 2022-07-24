@@ -123,7 +123,6 @@ export class CustomerListComponent implements OnInit {
         name: 'Xác thực',
         width: 50,
         sortable: false,
-        cellClass(data) {},
         cellTemplate: this.confirmTemplate,
       },
       {

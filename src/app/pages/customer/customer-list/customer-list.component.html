@@ -117,7 +117,6 @@
             </div>
           </ng-template>
           <ng-template #genderTemplate let-value="value" let-row="row">
-            <!-- <p>{{ row.gender == true ? "Nam" : "Nữ" }}</p> -->
             <span
               style="
                 background-color: #cb2027;
@@ -133,7 +132,6 @@
             >
           </ng-template>
           <ng-template #confirmTemplate let-value="value" let-row="row">
-            <!-- {{ row.emailConfirmed == true ? "Đã xác thực" : "Chưa xác thực" }} -->
             <span
                [ngStyle]="{'background-color': row.emailConfirmed == true ?'#4caf50':'#ff7221', 
                'color': '#fff',
