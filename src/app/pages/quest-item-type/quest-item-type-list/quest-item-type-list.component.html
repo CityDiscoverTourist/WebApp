@@ -22,8 +22,8 @@
             <input
               type="text"
               class="border-start-0 form-control outline-none"
-              placeholder="Tìm kiếm loại Quest Item"
-              aria-label="Tìm kiếm loại Quest Item"
+              placeholder="Tìm kiếm loại câu hỏi"
+              aria-label="Tìm kiếm loại câu hỏi"
               aria-describedby="search-icon"
               formControlName="keyword"
               (keyup.enter)="search$.next(searchForm.value)"
@@ -72,8 +72,8 @@
           [externalPaging]="true"
           [externalSorting]="true"
           [messages]="{
-            emptyMessage: 'Không có loại Quest Item để hiển thị!',
-            totalMessage: 'Quest Item'
+            emptyMessage: 'Không có loại câu hỏi để hiển thị!',
+            totalMessage: 'loại câu hỏi'
           }"
           [count]="(metadata$ | async)?.totalCount || 0"
           [offset]="((metadata$ | async)?.currentPage || 0) - 1"

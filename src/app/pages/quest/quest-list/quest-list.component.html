@@ -18,8 +18,8 @@
             <input
               type="text"
               class="border-start-0 form-control outline-none"
-              placeholder="Tìm kiếm khu vực"
-              aria-label="Tìm kiếm khu vực"
+              placeholder="Tìm kiếm quest"
+              aria-label="Tìm kiếm quest"
               aria-describedby="search-icon"
               formControlName="keyword"
               (keyup.enter)="search$.next(searchForm.value)"
@@ -35,16 +35,6 @@
             style="min-width: 200px"
             class="me-3"
             formControlName="questTypeIds"
-          ></ng-select>
-          <ng-select
-            [items]="language"
-            bindValue="id"
-            bindLabel="value"
-            [closeOnSelect]="true"
-            style="min-width: 200px"
-            placeholder="Chọn tên phiên bản"
-            class="me-3"
-            formControlName="language"
           ></ng-select>
           <div class="btn-group">
             <button
@@ -93,13 +83,41 @@
           [limit]="10"
           (page)="onPage($event)"
           (sort)="onSort($event)"
-          (activate)="onActivate($event)"
         >
-          <!-- <ngx-datatable-column
-            [headerCheckboxable]="true"
-            [checkboxable]="true"
-          >
-          </ngx-datatable-column> -->
+          <ng-template #formatStatus let-value="value" let-row="row">
+            <ng-container *ngIf="value == 'Inactive'">
+              <span
+                [ngStyle]="{
+                  'background-color':
+                    value == 'Inactive' ? '#cb2027' : '#4caf50',
+                  color: '#fff',
+                  transition: '200ms',
+                  padding: '5px 0px',
+                  display: 'inline-block',
+                  'text-align': 'center',
+                  width: '120px',
+                  'border-radius': '9px'
+                }"
+              >
+                Ngừng hoạt động
+              </span>
+            </ng-container>
+            <ng-container *ngIf="value == 'Active'">
+              <span
+                [ngStyle]="{
+                  'background-color': value == 'Active' ? '#4caf50' : '#cb2027',
+                  color: '#fff',
+                  transition: '200ms',
+                  padding: '5px 0px',
+                  display: 'inline-block',
+                  'text-align': 'center',
+                  width: '120px',
+                  'border-radius': '9px'
+                }"
+                >Hoạt động
+              </span>
+            </ng-container>
+          </ng-template>
         </ngx-datatable>
       </div>
     </div>
@@ -119,70 +137,12 @@
     </ng-template>
   </div>
 </div>
-<ng-template #formatPrice let-value="value"> {{ value }} vnđ </ng-template>
+<ng-template #formatPrice let-value="value">
+  {{ value | number }} đ
+</ng-template>
 <ng-template #formatestimatedTime let-value="value">
   {{ value }} phút
 </ng-template>
-<ng-template #formatStatus let-value="value">
-  <ng-container *ngIf="value == 'Inactive'">
-    <!-- <i class="bi bi-x-circle" style="color: red; font-size: 18px"></i> -->
-    <span
-      style="
-        background-color: #cb2027;
-        color: #fff;
-        transition: 200ms;
-        padding: 0px 0px;
-        border-radius: 4px;
-        display: inline-block;
-        text-align: center;
-        width: 100px;
-      "
-    >
-      <!-- style="
-        border: 1px solid #dc143c;
-        padding: 5px 18px;
-        color: #fff;
-        border-radius: 5px;
-        background-color: #dc143c;
-        display: inline-block;
-        min-width: 85px !important;
-        min-height: 30px !important;
-        text-align: center;
-        margin: -5px 1px;
-      "
-    > -->
-      InActive
-    </span>
-  </ng-container>
-  <ng-container *ngIf="value == 'Active'">
-    <!-- <i class="bi bi-check2" style="color: '#0EBF00'; font-size: 18px"></i> -->
-    <span
-      style="
-        background: #c2fbd7;
-        color: green;
-        transition: 200ms;
-        padding: 0px 0px;
-        border-radius: 4px;
-        display: inline-block;
-        text-align: center;
-        width: 100px;
-      "
-    >
-      <!-- <span
-      style="
-        border: 1px solid #07bc0c;
-        padding: 5px 18px;
-        color: #fff;
-        border-radius: 5px;
-        background-color: #07bc0c;
-        display: inline-block;
-        min-width: 85px !important;
-        min-height: 30px !important;
-        text-align: center;
-        margin: -5px 1px;
-      "
-    > -->
-      Active
-    </span>
-  </ng-container>
+<ng-template #nameProduct let-value="value" let-row="row">
+  <a [routerLink]="['./', row.id]">{{ value }}</a>
 </ng-template>

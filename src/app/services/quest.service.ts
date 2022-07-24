@@ -30,15 +30,13 @@ export class QuestService extends BaseService {
       `${search.sort?.sortBy}` === 'undefined' ? '' : search.sort?.sortBy;
     var sortDir =
       `${search?.sort?.dir}` === 'undefined' ? '' : search.sort?.dir;
-    var language =
-      `${search?.language}` === 'undefined' ? '1' : search?.language;
+
     const query = stringify({
       name: search.keyword,
       questTypeId: search?.questTypeIds == null ? 0 : search?.questTypeIds,
       pageNumber: isNaN(search?.currentPage!) ? 1 : search?.currentPage! + 1,
       pagesize: 10,
       orderby: `${sortBy} ${sortDir}`,
-      language: language ? language : 0,
     });
     var result = this.http.get<Paging<QuestListItem>>(
       `${environment.apiUrl}/api/v1/quests?` + query,

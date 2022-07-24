@@ -94,7 +94,7 @@ export class QuestItemTypeListComponent implements OnInit {
       },
       {
         prop: 'name',
-        name: 'Tên loại Quest Item',
+        name: 'Tên loại câu hỏi',
         sortable: true,
         minWidth: 300,
       },

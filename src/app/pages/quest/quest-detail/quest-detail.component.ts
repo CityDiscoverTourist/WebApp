@@ -70,16 +70,6 @@ export class QuestDetailComponent implements OnInit {
     private questTypeService: QuestTypeService,
     private modalService1: NgbModal
   ) {}
-
-  private getDismissReason(reason: any): string {
-    if (reason === ModalDismissReasons.ESC) {
-      return 'by pressing ESC';
-    } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
-      return 'by clicking on a backdrop';
-    } else {
-      return `with: ${reason}`;
-    }
-  }
   ngOnInit(): void {
     this.questItemState.connect(
       this.questItemTypeService.getQuestItemTypeIds(),
@@ -180,7 +170,6 @@ export class QuestDetailComponent implements OnInit {
         sortable: false,
         canAutoResize: true,
         maxWidth: 75,
-        // checkboxable: true,
       },
       {
         prop: 'content',

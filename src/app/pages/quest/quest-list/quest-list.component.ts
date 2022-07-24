@@ -1,10 +1,10 @@
 import {
-  AfterViewInit,
   Component,
   Inject,
   OnInit,
   TemplateRef,
   ViewChild,
+  ViewEncapsulation,
 } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -31,6 +31,7 @@ declare type language = {
   selector: 'app-quest-list',
   templateUrl: './quest-list.component.html',
   styleUrls: ['./quest-list.component.scss'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class QuestListComponent implements OnInit {
   language: language[] = [
@@ -60,25 +61,7 @@ export class QuestListComponent implements OnInit {
         switchMap((s) => this.questService.getQuests(s))
       ),
       (_, result) => ({
-        quests: result.data.map(
-          (x, index) =>
-            ({
-              index: ++index,
-              id: x.id,
-              title: x.title,
-              description: x.description,
-              price: x.price,
-              estimatedTime: x.estimatedTime,
-              estimatedDistance: x.estimatedDistance,
-              availableTime: x.availableTime,
-              createdDate: x.createdDate,
-              updatedDate: x.updatedDate,
-              status: x.status,
-              questTypeId: x.questTypeId,
-              // questOwnerId: x.questOwnerId,
-              areaId: x.areaId,
-            } as QuestListItem)
-        ),
+        quests: result.data,
         metadata: { ...result.pagination },
         loading: false,
       })
@@ -105,28 +88,23 @@ export class QuestListComponent implements OnInit {
     });
   }
 
+  
+  @ViewChild('edit', { static: true }) edit!: TemplateRef<any>;
+  @ViewChild('formatPrice', { static: true }) formatPrice!: TemplateRef<any>;
+  @ViewChild('formatStatus', { static: true }) formatStatus!: TemplateRef<any>;
+  @ViewChild('formatestimatedTime', { static: true }) formatestimatedTime!: TemplateRef<any>;
+  @ViewChild('nameProduct', { static: true }) nameProduct!: TemplateRef<any>;
+
   initTable() {
     this.columns = [
-      // {
-      //   prop: 'index',
-      //   name: 'STT',
-      //   sortable: true,
-      //   canAutoResize: true,
-      //   maxWidth: 75,
-      // },
       {
         prop: 'title',
         name: 'Tên Quest',
         sortable: true,
         canAutoResize: true,
+        cellTemplate:this.nameProduct
       },
-      // {
-      //   prop: 'description',
-      //   name: 'Mô tả',
-      //   sortable: true,
-      //   minWidth: 600,
-      //   cellClass: '',
-      // },
+      
       {
         prop: 'price',
         name: 'Giá',
@@ -141,69 +119,33 @@ export class QuestListComponent implements OnInit {
         maxWidth: 150,
         cellTemplate: this.formatestimatedTime,
       },
-      // {
-      //   prop: 'estimatedDistance',
-      //   name: 'Khoảng cách',
-      //   sortable: true,
-      //   canAutoResize: true,
-      // },
-      // {
-      //   prop: 'availableTime',
-      //   name: 'Khả dụng',
-      //   sortable: true,
-      //   canAutoResize: true,
-      // },
-      // {
-      //   prop: 'createdDate',
-      //   name: 'Ngày tạo',
-      //   sortable: true,
-      //   canAutoResize: true,
-      //   cellTemplate: this.colCreatedAt,
-      // },
-      // {
-      //   prop: 'updatedDate',
-      //   name: 'Ngày sửa',
-      //   sortable: true,
-      //   canAutoResize: true,
-      //   cellTemplate: this.colCreatedAt,
-      // },
+      {
+        prop: 'createdDate',
+        name: 'Ngày tạo',
+        sortable: true,
+        maxWidth: 100,
+        cellTemplate: this.colCreatedAt,
+      }, 
       {
         prop: 'status',
         name: 'Trạng Thái',
         sortable: true,
-        maxWidth: 150,
+        maxWidth: 160,
         cellTemplate: this.formatStatus,
       },
-      // {
-      //   prop: 'questOwnerId',
-      //   maxWidth: 350,
-      //   name: 'Quest owner',
-      //   sortable: true,
-      // },
-      // {
-      //   prop: 'areaId',
-      //   maxWidth: 200,
-      //   name: 'Khu vực',
-      //   sortable: true,
-      // },
+      
     ];
   }
 
-  @ViewChild('edit', { static: true }) edit!: TemplateRef<any>;
-  @ViewChild('formatPrice', { static: true }) formatPrice!: TemplateRef<any>;
-  @ViewChild('formatStatus', { static: true }) formatStatus!: TemplateRef<any>;
-  @ViewChild('formatestimatedTime', { static: true })
-  formatestimatedTime!: TemplateRef<any>;
 
-  onActivate(event: any) {
-    // console.log('Activate Event', event);
-    if (event.type == 'click') {
-      console.log(event.row);
-      this.router.navigate(['./', event.row.id], {
-        relativeTo: this.activatedRoute,
-      });
-    }
-  }
+  // onActivate(event: any) {
+  //   if (event.type == 'click') {
+  //     console.log(event.row);
+  //     this.router.navigate(['./', event.row.id], {
+  //       relativeTo: this.activatedRoute,
+  //     });
+  //   }
+  // }
   onPage(paging: PageInfo) {
     this.search$.next({
       ...this.search$.getValue(),
@@ -219,14 +161,12 @@ export class QuestListComponent implements OnInit {
   }
   get questTypeIds(): Observable<IdValue[]> {
     return this.questState
-      .select('questTypeIds')
-      .pipe(tap((data) => console.log(data)));
+      .select('questTypeIds');
   }
 
   searchForm = new FormGroup({
     keyword: new FormControl(),
     questTypeIds: new FormControl(),
-    language: new FormControl(),
   });
   search$ = new BehaviorSubject<QuestListSearch>({});
 
@@ -246,5 +186,4 @@ export class QuestListComponent implements OnInit {
 declare type FromType = {
   keyword: string;
   questTypeIds: number[];
-  language: string;
 };
