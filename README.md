@@ -18,4 +18,6 @@ git clone https://github.com/CityDiscoverTourist/WebApp.git
 npm install -g yarn
 yarn
 
+yarn start to compier project.
+
 
