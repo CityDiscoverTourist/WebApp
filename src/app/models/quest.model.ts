@@ -12,7 +12,7 @@ export interface Quest {
   updatedDate: Date;
   status: string;
   questTypeId: number;
-  questOwnerId: number;
+  // questOwnerId: number;
   areaId: number;
   imagePath: string;
 }
@@ -30,7 +30,7 @@ export interface QuestListItem {
   updatedDate: Date;
   status: string;
   questTypeId: number;
-  questOwnerId: number;
+  // questOwnerId: number;
   areaId: number;
   imagePath: string;
   areaName:string;
@@ -56,7 +56,7 @@ export interface QuestCreate {
   updatedDate: Date;
   status: string;
   questTypeId: number;
-  questOwnerId: number;
+  // questOwnerId: number;
   areaId: number;
 }
 

@@ -75,7 +75,7 @@ export class QuestListComponent implements OnInit {
               updatedDate: x.updatedDate,
               status: x.status,
               questTypeId: x.questTypeId,
-              questOwnerId: x.questOwnerId,
+              // questOwnerId: x.questOwnerId,
               areaId: x.areaId,
             } as QuestListItem)
         ),

@@ -40,7 +40,10 @@
       <span class="fw-bold fs-5 mb-4">Top người chơi</span>
       <ul class="list-group list-group-flush">
         <li class="list-group-item" *ngFor="let item of listTopUserPoint">
-        And a fifth one
+          <div class="row">
+            <div class="col 6">Mail: {{ item.email }}</div>
+            <div class="col 4">Điểm: {{ item.point }}</div>
+          </div>
         </li>
       </ul>
     </div>
@@ -48,7 +51,7 @@
       <span class="fw-bold fs-5 mb-4">Top Quest</span>
       <ul class="list-group list-group-flush">
         <li class="list-group-item" *ngFor="let item of listTopQuest">
-          {{item}}
+          {{ item }}
         </li>
       </ul>
     </div>
