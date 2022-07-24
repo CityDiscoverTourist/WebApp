@@ -40,7 +40,6 @@ export interface QuestListItem {
 
 export interface QuestListSearch extends SearchInfo {
   questTypeIds?: number[];
-  language?: string;
 }
 
 export interface QuestCreate {
