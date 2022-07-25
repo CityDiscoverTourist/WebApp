@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { HotToastService } from '@ngneat/hot-toast';
 import { RxState } from '@rx-angular/state';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import {
@@ -32,12 +33,13 @@ export class CityModalComponent implements OnInit {
   id: string = '';
   title: string = '';
   type: string = '';
-  status: { id: number; value: string }[] = [];
+  status: { id: string; value: string }[] = [];
   constructor(
     public bsModalRef: BsModalRef,
     private fb: FormBuilder,
     private state: RxState<CityState>,
-    private cityService: CityService
+    private cityService: CityService,
+    private toast: HotToastService
   ) {}
 
   ngOnInit(): void {
@@ -75,21 +77,19 @@ export class CityModalComponent implements OnInit {
           tap(() => this.state.set({ submitting: true })),
           switchMap((form) => {
             if (+this.id > 0) {
-              return this.cityService
-                .updateCity(form.value)
-                .pipe(
-                  catchError(() =>
-                    of({ status: 'data not modified', data: null })
-                  )
-                );
+              return this.cityService.updateCity(form.value).pipe(
+                catchError(() => {
+                  this.toast.error('Có lỗi hãy kiểm tra lại!');
+                  return of({ status: 'data not modified', data: null });
+                })
+              );
             } else {
-              return this.cityService
-                .addCity(form.value)
-                .pipe(
-                  catchError(() =>
-                    of({ status: 'data not modified', data: null })
-                  )
-                );
+              return this.cityService.addCity(form.value).pipe(
+                catchError(() => {
+                  this.toast.error('Có lỗi hãy kiểm tra lại!');
+                  return of({ status: 'data not modified', data: null });
+                })
+              );
             }
           })
         )
