@@ -25,7 +25,6 @@ import { NgSelectModule } from '@ng-select/ng-select';
 import { NgxDropzoneModule } from 'ngx-dropzone';
 import { LetModule } from '@rx-angular/template';
 import { CityModalComponent } from './pages/share/city-modal/city-modal.component';
-import { LocationModalComponent } from './pages/share/location-modal/location-modal.component';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { AuthorizeInterceptor } from './interceptors';
 import { SuggestionModalComponent } from './pages/quest/quest-detail/suggestion-modal/suggestion-modal.component';
@@ -51,7 +50,6 @@ const lib = [
     DeleteModalComponent,
     QuestItemTypeModalComponent,
     AreaModalComponent,
-    LocationModalComponent,
     SuggestionModalComponent,
   ],
   imports: [

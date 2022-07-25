@@ -103,20 +103,42 @@ export class DeleteModalComponent implements OnInit {
       case 'loại địa điểm':
         {
           this.locationTypeService
-            .deleteLocationTypeById(id)
+            .updateStatus(id, status)
             .subscribe((data) => {
-              if (data?.locations?.length) {
-                this.bsModalRef.hide();
-                this.toast.error(`Xóa ${this.title} không thành công`);
-                this.toast.info(
-                  `Loại địa điểm này đang chứa các địa điểm khác nên không xóa được`
-                );
-              } else {
-                this.bsModalRef.onHide?.emit({
-                  data: data,
-                });
-                this.bsModalRef.hide();
-                this.toast.success(`Xóa ${this.title} thành công`);
+              try {
+                if (data?.locations?.length) {
+                  this.bsModalRef.hide();
+                  var title = data.locations.map((x) => x.name).join(', ');
+                  this.toast.error(
+                    `${
+                      status == 'Active'
+                        ? 'Hoạt động lại'
+                        : 'Không thể ngừng hoạt động'
+                    } ${this.title} ${data.name}!
+                  <br> 
+                  Loại địa này này đang chứa địa điểm khác nên không thể ngừng hoạt động!
+                `,
+                    {
+                      autoClose: false,
+                      dismissible: true,
+                    }
+                  );
+                } else {
+                  this.bsModalRef.onHide?.emit({
+                    data: data,
+                  });
+                  this.bsModalRef.hide();
+                  this.toast.success(
+                    `${
+                      status == 'Active' ? 'Hoạt động lại' : 'Ngừng hoạt động'
+                    } ${this.title} ${data?.name} thành công!`,
+                    {
+                      duration: 5000,
+                    }
+                  );
+                }
+              } catch (error) {
+                this.toast.error('Có lỗi hãy kiểm tra lại!');
               }
             });
         }

@@ -1,4 +1,4 @@
-import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Component, OnInit, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { HotToastService } from '@ngneat/hot-toast';
 import { RxState } from '@rx-angular/state';
@@ -29,6 +29,7 @@ import { LocationTypeListState } from '../states';
   templateUrl: './location-type-list.component.html',
   styleUrls: ['./location-type-list.component.scss'],
   providers: [RxState],
+  encapsulation: ViewEncapsulation.None,
 })
 export class LocationTypeListComponent implements OnInit {
   @ViewChild(DatatableComponent) table!: DatatableComponent;
@@ -87,6 +88,8 @@ export class LocationTypeListComponent implements OnInit {
   }
   @ViewChild('actionTemplate', { static: true })
   public actionTemplate: TemplateRef<any>;
+  @ViewChild('statusTemplate', { static: true })
+  public statusTemplate: TemplateRef<any>;
   initTable() {
     this.columns = [
       {
@@ -108,6 +111,7 @@ export class LocationTypeListComponent implements OnInit {
         name: 'Trạng thái',
         sortable: true,
         canAutoResize: true,
+        cellTemplate:this.statusTemplate
       },
       {
         prop: 'action',
@@ -183,25 +187,21 @@ export class LocationTypeListComponent implements OnInit {
         },
       });
   }
-  onDelete(id: string) {
+  onUpdateStatus(id: string, status:string) {
     const bsModalRef = this.modalService.show(DeleteModalComponent, {
       initialState: {
         id: id,
         title: 'loại địa điểm',
+        status: status
       },
     });
-    bsModalRef.onHide
-      ?.pipe(
-        take(1),
-        filter((s) => (s as any).data)
-      )
-      .subscribe({
-        next: (result) => {
-          this.search$.next({
-            ...this.search$.getValue(),
-          });
-        },
-      });
+    bsModalRef.onHide?.pipe(take(1),filter((s)=>(s as any).data)).subscribe({
+      next: (result) => {
+        this.search$.next({
+          ...this.search$.getValue(),
+        });
+      },
+    });
   }
 
   onUpdate(id: string) {
@@ -221,7 +221,7 @@ export class LocationTypeListComponent implements OnInit {
         next: (result) => {
           const data = result as { id: number; name: string };
           if (data.id > 0 && data.name !== undefined) {
-            this.toast.success('Cập nhật loại vị trí thành công!');
+            this.toast.success('Cập nhật loại địa điểm thành công!');
             this.search$.next({
               ...this.search$.getValue(),
             });
