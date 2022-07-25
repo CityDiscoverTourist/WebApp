@@ -6,11 +6,11 @@ import { Injectable } from '@angular/core';
 export class BaseService {
   status = [
     {
-      id: 1,
+      id: 'Hoạt động',
       value: 'Active',
     },
     {
-      id: 2,
+      id: 'Ngừng hoạt động',
       value: 'Inactive',
     },
   ];
