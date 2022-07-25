@@ -138,7 +138,7 @@ export class AreaModalComponent implements OnInit {
         [isExistedNameValidatorArea(this.areaSerice, this.type)],
       ],
       status: ['', [Validators.required]],
-      cityId: [0, [Validators.required]],
+      cityId: ['', [Validators.required]],
     });
   }
 

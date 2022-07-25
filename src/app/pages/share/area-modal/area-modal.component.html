@@ -52,7 +52,7 @@
         class="invalid-feedback"
         *ngIf="form.hasErrorOf('status', 'required')"
       >
-        Vui lòng chọn trạng thái
+        Trạng thái bắt buộc
       </div>
       <div
         class="form-group mt-2 mb-2"
@@ -67,13 +67,14 @@
           style="min-width: 200px"
           placeholder="Thành phố"
           formControlName="cityId"
+          [ngClass]="{ 'is-invalid': form.hasError('cityId') }"
         ></ng-select>
       </div>
       <div
         class="invalid-feedback"
         *ngIf="form.hasErrorOf('cityId', 'required')"
       >
-        Vui lòng chọn thành phố
+        Thành phố bắt buộc
       </div>
     </div>
 
