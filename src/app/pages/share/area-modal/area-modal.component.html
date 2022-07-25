@@ -19,17 +19,17 @@
         type="text"
         class="form-control"
         formControlName="name"
-        [ngClass]="{ 'is-invalid': form?.hasError('name') }"
+        [ngClass]="{ 'is-invalid': form.hasError('name') }"
       />
       <div class="invalid-feedback" *ngIf="form.hasErrorOf('name', 'required')">
-        Tên của {{ title }} không được để trống
+        Tên khu vực bắt buộc
       </div>
-      <ng-container *ngIf="!id">
+      <ng-container>
         <div
           class="invalid-feedback"
           *ngIf="name?.errors?.['nameAlreadyExists']"
         >
-          Tên của khu vực đã tồn tại.
+          Tên khu vực đã tồn tại!
         </div>
       </ng-container>
     </div>
@@ -42,11 +42,11 @@
       <ng-select
         [items]="status"
         bindValue="value"
-        bindLabel="value"
+        bindLabel="id"
         placeholder="Chọn trạng thái"
         [clearable]="false"
         formControlName="status"
-        [ngClass]="{ 'is-invalid': form?.hasError('status') }"
+        [ngClass]="{ 'is-invalid': form.hasError('status') }"
       ></ng-select>
       <div
         class="invalid-feedback"

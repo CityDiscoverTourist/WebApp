@@ -1,5 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { HotToastService } from '@ngneat/hot-toast';
 import { RxState } from '@rx-angular/state';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import {
@@ -40,7 +41,8 @@ export class AreaModalComponent implements OnInit {
     private state: RxState<AreaDetailState>,
     private areaSerice: AreaService,
     @Inject(AREA_STATE) private areaState: RxState<AreaState>,
-    private readonly cityService: CityService
+    private readonly cityService: CityService,
+    private toast: HotToastService
   ) {
     areaState.connect(cityService.getCityIdValue(), (_, curr) => ({
       cityIds: curr,
@@ -84,17 +86,19 @@ export class AreaModalComponent implements OnInit {
               return this.areaSerice
                 .updateAreaById(form.value)
                 .pipe(
-                  catchError(() =>
-                    of({ status: 'data not modified', data: null })
-                  )
+                  catchError(() => {
+                    this.toast.error('Có lỗi hãy kiểm tra lại!');
+                    return of({ status: 'data not modified', data: null });
+                  })
                 );
             } else {
               return this.areaSerice
                 .addArea(form.value)
                 .pipe(
-                  catchError(() =>
-                    of({ status: 'data not modified', data: null })
-                  )
+                  catchError(() => {
+                    this.toast.error('Có lỗi hãy kiểm tra lại!');
+                    return of({ status: 'data not modified', data: null });
+                  })
                 );
             }
           })
