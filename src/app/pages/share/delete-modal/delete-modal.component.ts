@@ -76,7 +76,7 @@ export class DeleteModalComponent implements OnInit {
                   Thành phồ này đang chứa khu vực ${title} nên không thể ngừng hoạt động!
                 `,
                   {
-                    autoClose: true,
+                    autoClose: false,
                     dismissible: true,
                   }
                 );
@@ -123,19 +123,40 @@ export class DeleteModalComponent implements OnInit {
         break;
       case 'địa điểm':
         {
-          this.locationService.deleteLocationById(id).subscribe((data) => {
-            if (data?.questItems) {
-              this.bsModalRef.hide();
-              this.toast.error(`Xóa ${this.title} không thành công`);
-              this.toast.info(
-                `QuestItem khác đang sử dụng địa điểm nên không xóa được`
-              );
-            } else {
-              this.bsModalRef.onHide?.emit({
-                data: data,
-              });
-              this.bsModalRef.hide();
-              this.toast.success(`Xóa ${this.title} thành công`);
+          this.locationService.updateStatus(id, status).subscribe((data) => {
+            try {
+              if (data?.questItems?.length) {
+                this.bsModalRef.hide();
+                this.toast.error(
+                  `${
+                    status == 'Active'
+                      ? 'Hoạt động lại'
+                      : 'Không thể ngừng hoạt động'
+                  } ${this.title} ${data.name}!
+                  <br> 
+                  Địa điểm này có các câu hỏi đang sử dụng nên không thể ngừng hoạt động!
+                `,
+                  {
+                    autoClose: false,
+                    dismissible: true,
+                  }
+                );
+              } else {
+                this.bsModalRef.onHide?.emit({
+                  data: data,
+                });
+                this.bsModalRef.hide();
+                this.toast.success(
+                  `${
+                    status == 'Active' ? 'Hoạt động lại' : 'Ngừng hoạt động'
+                  } ${this.title} ${data?.name} thành công!`,
+                  {
+                    duration: 5000,
+                  }
+                );
+              }
+            } catch (error) {
+              this.toast.error('Có lỗi hãy kiểm tra lại!');
             }
           });
         }
@@ -157,7 +178,7 @@ export class DeleteModalComponent implements OnInit {
                   Khu vực này đang chứa địa điểm ${title} nên không thể ngừng hoạt động!
                 `,
                   {
-                    autoClose: true,
+                    autoClose: false,
                     dismissible: true,
                   }
                 );
