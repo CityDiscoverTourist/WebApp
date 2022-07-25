@@ -10,7 +10,7 @@ import {
   CityListSearch,
   IdValue,
   Paging,
-  Result,
+  Result
 } from '../models';
 import { BaseService } from './base.service';
 
@@ -107,11 +107,27 @@ export class CityService extends BaseService {
 
   checkNameExisted(name: string): Observable<boolean> {
     const query = stringify({
-      name,
+      name: name.trim(),
     });
     return this.http.get<boolean>(
-      `${environment.apiUrl}/api/v1/cites/check?` + query,
+      `${environment.apiUrl}/api/v1/cites/check?${query}`,
       { headers: this._sharedHeaders }
     );
+  }
+
+  updateStatus(
+    id: string,
+    status: string
+  ): Observable<CityListItem | undefined> {
+    return this.http
+      .put<Result<CityListItem>>(
+        `${environment.apiUrl}/api/v1/cites/${
+          status == 'Active' ? 'enable' : 'disable'
+        }/${id}`,
+        {
+          headers: this._sharedHeaders,
+        }
+      )
+      .pipe(map((response: Result<CityListItem>) => response.data));
   }
 }
