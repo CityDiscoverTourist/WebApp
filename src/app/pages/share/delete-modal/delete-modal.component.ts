@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
 import { HotToastService } from '@ngneat/hot-toast';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import {
@@ -10,7 +9,7 @@ import {
   QuestItemService,
   QuestItemTypeService,
   QuestService,
-  QuestTypeService,
+  QuestTypeService
 } from 'src/app/services';
 
 @Component({
@@ -21,6 +20,7 @@ import {
 export class DeleteModalComponent implements OnInit {
   id: string = '';
   title: string = '';
+  status: string = '';
 
   constructor(
     public bsModalRef: BsModalRef,
@@ -32,11 +32,11 @@ export class DeleteModalComponent implements OnInit {
     private questTypeService: QuestTypeService,
     private locationService: LocationService,
     private questItemService: QuestItemService,
-    private questService:QuestService,
+    private questService: QuestService
   ) {}
 
   ngOnInit(): void {}
-  delete(id: string) {
+  updateStatus(id: string, status: string) {
     switch (this.title) {
       case 'loại Quest Item':
         {
@@ -61,20 +61,42 @@ export class DeleteModalComponent implements OnInit {
         break;
       case 'thành phố':
         {
-          this.cityService.deleteCityById(id).subscribe((data) => {
-            if (data?.areas?.length) {
-              this.bsModalRef.hide();
-              this.toast.error(`Xóa ${this.title} không thành công`);
-              var title = data.areas.map((x) => x.name).join(', ');
-              this.toast.info(
-                `Thành phồ này đang chứa các khu vực ${title} nên không xóa được`
-              );
-            } else {
-              this.bsModalRef.onHide?.emit({
-                data: data,
-              });
-              this.bsModalRef.hide();
-              this.toast.success(`Xóa ${this.title} thành công`);
+          this.cityService.updateStatus(id, status).subscribe((data) => {
+            try {
+              if (data?.areas?.length) {
+                this.bsModalRef.hide();
+                var title = data.areas.map((x) => x.name).join(', ');
+                this.toast.error(
+                  `${
+                    status == 'Active'
+                      ? 'Hoạt động lại'
+                      : 'Không thể ngừng hoạt động'
+                  } ${this.title} ${data.name}!
+                  <br> 
+                  Thành phồ này đang chứa khu vực ${title} nên không thể ngừng hoạt động!
+                `,
+                  {
+                    autoClose: true,
+                    dismissible: true,
+                    duration: 10000,
+                  }
+                );
+              } else {
+                this.bsModalRef.onHide?.emit({
+                  data: data,
+                });
+                this.bsModalRef.hide();
+                this.toast.success(
+                  `${
+                    status == 'Active' ? 'Hoạt động lại' : 'Ngừng hoạt động'
+                  } ${this.title} ${data?.name} thành công!`,
+                  {
+                    duration: 5000,
+                  }
+                );
+              }
+            } catch (error) {
+              this.toast.error('Có lỗi hãy kiểm tra lại!');
             }
           });
         }
