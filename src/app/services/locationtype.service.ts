@@ -121,4 +121,20 @@ export class LocationtypeService extends BaseService {
       { headers: this._sharedHeaders }
     );
   }
+
+  updateStatus(
+    id: string,
+    status: string
+  ): Observable<LocationTypeListItem | undefined> {
+    return this.http
+      .put<Result<LocationTypeListItem>>(
+        `${environment.apiUrl}/api/v1/location-types/${
+          status == 'Active' ? 'enable' : 'disable'
+        }/${id}`,
+        {
+          headers: this._sharedHeaders,
+        }
+      )
+      .pipe(map((response: Result<LocationTypeListItem>) => response.data));
+  }
 }
