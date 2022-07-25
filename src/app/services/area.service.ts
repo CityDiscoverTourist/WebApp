@@ -120,4 +120,20 @@ export class AreaService extends BaseService {
       { headers: this._sharedHeaders }
     );
   }
+
+  updateStatus(
+    id: string,
+    status: string
+  ): Observable<AreaListItem | undefined> {
+    return this.http
+      .put<Result<AreaListItem>>(
+        `${environment.apiUrl}/api/v1/areas/${
+          status == 'Active' ? 'enable' : 'disable'
+        }/${id}`,
+        {
+          headers: this._sharedHeaders,
+        }
+      )
+      .pipe(map((response: Result<AreaListItem>) => response.data));
+  }
 }
