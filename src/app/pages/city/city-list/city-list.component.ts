@@ -1,4 +1,4 @@
-import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Component, OnInit, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { HotToastService } from '@ngneat/hot-toast';
 import { RxState } from '@rx-angular/state';
@@ -11,7 +11,7 @@ import {
   Subject,
   switchMap,
   take,
-  tap,
+  tap
 } from 'rxjs';
 import { CityListItem, PagingMetadata, SearchInfo } from 'src/app/models';
 import { CityService } from 'src/app/services';
@@ -24,12 +24,13 @@ import { CityListState } from '../states';
   templateUrl: './city-list.component.html',
   styleUrls: ['./city-list.component.scss'],
   providers: [RxState],
+  encapsulation: ViewEncapsulation.None,
 })
 export class CityListComponent implements OnInit {
   records: CityListItem[] = [];
   @ViewChild(DatatableComponent) table!: DatatableComponent;
   columns: TableColumn[] = [];
-  status: { id: number; value: string }[] = [];
+  status: { id: string; value: string }[] = [];
 
   constructor(
     private cityListState: RxState<CityListState>,
@@ -80,16 +81,10 @@ export class CityListComponent implements OnInit {
       this.table.offset = 0;
     });
   }
-  @ViewChild('actionTemplate', { static: true })
-  public actionTemplate: TemplateRef<any>;
+  @ViewChild('actionTemplate', { static: true })  public actionTemplate: TemplateRef<any>;
+  @ViewChild('statusTemplate', { static: true })  public statusTemplate: TemplateRef<any>;
   initTable() {
     this.columns = [
-      {
-        prop: 'index',
-        name: 'STT',
-        sortable: true,
-        width: 50,
-      },
       {
         prop: 'name',
         name: 'Tên thành phố',
@@ -103,12 +98,13 @@ export class CityListComponent implements OnInit {
         name: 'Trạng thái',
         sortable: true,
         canAutoResize: true,
+        cellTemplate:this.statusTemplate
       },
       {
         prop: 'action',
         minWidth: 180,
-        name: 'Hành động',
-        maxWidth: 200,
+        name: 'Thao tác',
+        maxWidth: 150,
         canAutoResize: true,
         cellTemplate: this.actionTemplate,
       },
@@ -164,8 +160,10 @@ export class CityListComponent implements OnInit {
       )
       .subscribe({
         next: (result) => {
-          const data = result as { id: number; name: string };
-          if (data.id > 0 && data.name.length > 0) {
+          const data = result as { id: string; name: string };
+          console.log(data);
+          
+          if (Number(data.id) > 0 && data.name.length > 0) {
             this.toast.success('Tạo thành phố thành công!', {
               duration: 5000,
               dismissible: true,
@@ -174,14 +172,19 @@ export class CityListComponent implements OnInit {
           this.search$.next({
             ...this.search$.getValue(),
           });
-        },
+        }
       });
   }
-  onDelete(id: string) {
+  onUpdateStatus(id: string, status:string) {
+    console.log("sjs");
+    console.log(status);
+    
+    
     const bsModalRef = this.modalService.show(DeleteModalComponent, {
       initialState: {
         id: id,
         title: 'thành phố',
+        status: status
       },
     });
     bsModalRef.onHide?.pipe(take(1),filter((s)=>(s as any).data)).subscribe({

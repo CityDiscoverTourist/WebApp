@@ -2,7 +2,7 @@
   <div class="d-flex align-items-center justify-content-between">
     <div class="flex-fill"></div>
     <a class="btn btn-primary" style="min-width: 120px" (click)="showAddCity()">
-      <i class="bi bi-plus"></i> Thêm thành phố
+      <i class="bi bi-plus"></i> Thêm
     </a>
   </div>
   <div class="bg-white my-3 p-3 rounded">
@@ -28,7 +28,7 @@
           <ng-select
             [items]="status"
             bindValue="value"
-            bindLabel="value"
+            bindLabel="id"
             style="min-width: 200px"
             placeholder="Chọn trạng thái"
             class="me-3"
@@ -55,7 +55,6 @@
           </button>
         </div>
       </form>
-      <!-- table -->
       <div class="border overflow-hidden rouded shadow-sm">
         <ngx-datatable
           class="material rounded"
@@ -78,13 +77,36 @@
           (page)="onPage($event)"
           (sort)="onSort($event)"
         >
-          <ng-template
-            #actionTemplate
-            let-row="row"
-            let-value="value"
-            let-expanded="expanded"
-            ngx-datatable-cell-template
+        <ng-template #statusTemplate let-value="value" let-row="row">
+          <span
+             [ngStyle]="{'background-color': row.status == 'Active' ?'#4caf50':'#cb2027', 
+             'color': '#fff',
+              'transition':'200ms',
+              'padding':'5px 0px',
+              'display': 'inline-block',
+              'text-align':'center',
+              'width': '120px',
+              'border-radius': '9px'
+            }"
+            >{{ row.status == 'Active' ? "Hoạt động" : "Ngừng hoạt động"  }}</span
           >
+        </ng-template>
+          <ng-template #actionTemplate let-row="row" let-value="value">
+            <button
+              class="btn btn-sm me-2"
+              style="
+                color: #fff;
+                background-color: #4c0bce;
+                border-color: #4c0bce;
+              "
+              type="button"
+              data-toggle="tooltip"
+              data-placement="top"
+              [tooltip]="'Nhấp chuột để cập nhật thành phố'"
+              (click)="onUpdate(row.id)"
+            >
+              <i class="bi bi-pencil"></i>
+            </button>
             <button
               class="btn btn-sm me-2"
               style="
@@ -95,17 +117,18 @@
               type="button"
               data-toggle="tooltip"
               data-placement="top"
-              [tooltip]="'Nhấp chuột để cập nhật thành phố'"
-              title="Edit"
-              (click)="onUpdate(row.id)"
+              [tooltip]="'Nhấp chuột để thành phố hoạt động'"
+              placement="left"
+              [disabled]="row.status=='Active' ? true : false"
+              (click)="onUpdateStatus(row.id,'Active')"
             >
-              <i class="bi bi-pencil"></i>
+              <i class="bi bi-arrow-counterclockwise"></i>
             </button>
             <button
               class="btn btn-sm me-2"
               type="button"
               [ngStyle]="
-                row.status == 'Deleted'
+                row.status == 'InActive'
                   ? {
                       color: '#fff',
                       backgroundColor: '#f44335',
@@ -118,16 +141,13 @@
                     }
               "
               data-toggle="tooltip"
-              data-placement="top"
-              [tooltip]="
-                row.status == 'Deleted'
-                  ? 'Bạn không thể xóa vì thành phố này đã được xóa trước đây'
-                  : 'Nhấp chuột để xóa thành phố'
-              "
-              (click)="onDelete(row.id)"
-              [disabled]="row.status == 'Deleted' ? true : false"
+              data-placement="top" 
+              [tooltip]="'Nhấp chuột để ngừng hoạt động thành phố'"
+              placement="left"
+              [disabled]="row.status=='Inactive'? true : false"
+              (click)="onUpdateStatus(row.id,'Inactive')"
             >
-              <i class="bi bi-trash3"></i>
+              <i class="bi bi-dash-circle-fill"></i>
             </button>
           </ng-template>
         </ngx-datatable>
