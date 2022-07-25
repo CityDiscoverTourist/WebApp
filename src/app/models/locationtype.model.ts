@@ -1,4 +1,5 @@
 import { SearchInfo } from "./common.model";
+import { Location } from "./location.model";
 
 export interface LocationType {
   id: number;
