@@ -11,7 +11,7 @@ import { HotToastService } from '@ngneat/hot-toast';
 import { RxState } from '@rx-angular/state';
 import { DatatableComponent, TableColumn } from '@swimlane/ngx-datatable';
 import { BsModalService } from 'ngx-bootstrap/modal';
-import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import {
   BehaviorSubject,
   filter,
@@ -44,6 +44,10 @@ import { QuestDetailState } from '../states/questdetail.state';
 import { QuestItemState, QUEST_ITEM_STATE } from './quest-item/states';
 import { ImageModalComponent } from './image-modal/image-modal.component';
 
+interface QuestDetailDescription {
+  showQuestDescription: boolean;
+}
+
 @Component({
   selector: 'app-quest-detail',
   templateUrl: './quest-detail.component.html',
@@ -52,7 +56,6 @@ import { ImageModalComponent } from './image-modal/image-modal.component';
 })
 export class QuestDetailComponent implements OnInit {
   private id: string;
-  // public questListItem: QuestListItem;
   listImages: string[] = [];
   constructor(
     @Inject(QUEST_ITEM_STATE) private questItemState: RxState<QuestItemState>,
@@ -68,9 +71,15 @@ export class QuestDetailComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     private areaService: AreaService,
     private questTypeService: QuestTypeService,
-    private modalService1: NgbModal
+    private modalService1: NgbModal,
+    private state: RxState<QuestDetailDescription>,
   ) {}
   ngOnInit(): void {
+
+    this.state.connect(this.toggleDescription$, (prev, _) => ({
+      showQuestDescription: !prev.showQuestDescription,
+    }));
+
     this.questItemState.connect(
       this.questItemTypeService.getQuestItemTypeIds(),
       (_, curr) => ({
@@ -269,7 +278,6 @@ export class QuestDetailComponent implements OnInit {
   @ViewChild(DatatableComponent) table!: DatatableComponent;
 
   onPage(paging: PageInfo) {
-    console.log(this.searchQuestItem$.getValue());
     this.searchQuestItem$.next({
       ...this.searchQuestItem$.getValue(),
       currentPage: paging.offset,
@@ -303,8 +311,6 @@ export class QuestDetailComponent implements OnInit {
   }
 
   editSuggestion(suggestionId: number) {
-    console.log(suggestionId);
-
     const modalRef = this.modalService1.open(SuggestionModalComponent, {
       windowClass: 'my-class',
     });
@@ -319,5 +325,10 @@ export class QuestDetailComponent implements OnInit {
       size: 'lg',
     });
     modalRef.componentInstance.questItemId = `${questItemId}`;
+  }
+
+  toggleDescription$ = new Subject<void>();
+  get description$(): Observable<QuestDetailDescription> {
+    return this.state.select();
   }
 }

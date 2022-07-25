@@ -12,15 +12,18 @@ import { QuestItemState, QUEST_ITEM_STATE } from './quest-item/states';
 import { RxState } from '@rx-angular/state';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ImageModalComponent } from './image-modal/image-modal.component';
+import { QuillModule } from 'ngx-quill';
+import { DescriptionPipe } from './pipes/description.pipe';
 
 const lib = [
   LetModule,
   NgSelectModule,
   NgxDatatableModule,
   HotToastModule.forRoot(),
+  QuillModule.forRoot(),
 ];
 @NgModule({
-  declarations: [QuestDetailComponent, ImageModalComponent],
+  declarations: [QuestDetailComponent, ImageModalComponent, DescriptionPipe,],
   imports: [
     CommonModule,
     QuestDetailRoutingModule,

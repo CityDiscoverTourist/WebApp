@@ -72,7 +72,6 @@ const lib = [
       useClass: AuthorizeInterceptor,
       multi: true,
     },
-    // NotificationService
     HttpClient,
   ],
   bootstrap: [AppComponent],
