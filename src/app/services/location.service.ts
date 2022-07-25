@@ -127,4 +127,21 @@ export class LocationService extends BaseService {
   }
 
   locationAdded$ = new Subject<{ id: number; name: string }>();
+
+
+  updateStatus(
+    id: string,
+    status: string
+  ): Observable<LocationListItem | undefined> {
+    return this.http
+      .put<Result<LocationListItem>>(
+        `${environment.apiUrl}/api/v1/locations/${
+          status == 'Active' ? 'enable' : 'disable'
+        }/${id}`,
+        {
+          headers: this._sharedHeaders,
+        }
+      )
+      .pipe(map((response: Result<LocationListItem>) => response.data));
+  }
 }
