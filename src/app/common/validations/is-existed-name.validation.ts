@@ -16,7 +16,7 @@ export function isExistedNameValidatorCity(
   value: string
 ): AsyncValidatorFn {
   return (control: AbstractControl): Observable<ValidationErrors | null> => {
-    if (value === 'Cập nhật') return of(null);
+    if (value === 'Cập nhật') return of(null);    
     return cityService.checkNameExisted(control.value).pipe(
       map((result: boolean) => {
         return result ? { nameAlreadyExists: true } : null;
