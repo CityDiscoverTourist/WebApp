@@ -28,7 +28,7 @@ export class LocationModalComponent implements OnInit {
   id: string = '';
   title: string = '';
   type: string = '';
-  status: { id: number; value: string }[] = [];
+ status: { id: string; value: string }[] = [];
   constructor(
     public bsModalRef: BsModalRef,
     private fb: FormBuilder,

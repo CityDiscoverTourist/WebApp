@@ -43,7 +43,7 @@ interface QuestCreateState {
   providers: [RxState],
 })
 export class QuestCreateComponent implements OnInit {
-  status: { id: number; value: string }[] = [];
+ status: { id: string; value: string }[] = [];
   constructor(
     @Inject(QUEST_STATE) private questState: RxState<QuestState>,
     private state: RxState<QuestCreateState>,

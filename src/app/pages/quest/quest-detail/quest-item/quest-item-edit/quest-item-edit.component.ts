@@ -42,7 +42,7 @@ export class QuestItemEditComponent implements OnInit {
   questItemType: number;
   listImages: string[] = [];
   listImage: string[] = [];
-  status: { id: number; value: string }[] = [];
+ status: { id: string; value: string }[] = [];
   constructor(
     @Inject(QUEST_ITEM_STATE) private questItemState: RxState<QuestItemState>,
     private fb: FormBuilder,

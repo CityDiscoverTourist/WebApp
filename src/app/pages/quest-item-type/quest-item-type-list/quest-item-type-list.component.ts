@@ -32,7 +32,7 @@ import { QuestItemTypeListState } from '../states';
 export class QuestItemTypeListComponent implements OnInit {
   @ViewChild(DatatableComponent) table!: DatatableComponent;
   columns: TableColumn[] = [];
-  status: { id: number; value: string }[] = [];
+ status: { id: string; value: string }[] = [];
   constructor(
     private questItemTypeListState: RxState<QuestItemTypeListState>,
     private questItemTypeService: QuestItemTypeService,

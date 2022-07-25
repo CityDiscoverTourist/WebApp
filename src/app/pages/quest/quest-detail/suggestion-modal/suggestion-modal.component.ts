@@ -34,7 +34,7 @@ export class SuggestionModalComponent implements OnInit {
   type: string = '';
   questItemId: string = '';
 
-  status: { id: number; value: string }[] = [];
+ status: { id: string; value: string }[] = [];
   constructor(
     // public bsModalRef: BsModalRef,
     public activeModal: NgbActiveModal,

@@ -34,7 +34,7 @@ interface QuestItemCreateState {
 })
 export class QuestItemCreateComponent implements OnInit {
   public href: string = '';
-  status: { id: number; value: string }[] = [];
+ status: { id: string; value: string }[] = [];
   constructor(
     @Inject(QUEST_ITEM_STATE) private questItemState: RxState<QuestItemState>,
     private fb: FormBuilder,

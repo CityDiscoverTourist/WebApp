@@ -43,7 +43,7 @@ interface QuestEditState {
   providers: [RxState],
 })
 export class QuestEditComponent implements OnInit {
-  status: { id: number; value: string }[] = [];
+ status: { id: string; value: string }[] = [];
   private id: string;
   public questListItem: QuestListItem;
   public img: string = '';
