@@ -41,6 +41,8 @@ export class CustomerService extends BaseService {
   }
 
   isBlockCustomer(id: string, isBlock: boolean): Observable<Customer | undefined> {
+    console.log(isBlock);
+    
     return this.http
       .put<Result<Customer>>(
         `${environment.apiUrl}/api/v1/customers/${id}/${isBlock}`,
