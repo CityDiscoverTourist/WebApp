@@ -3,7 +3,8 @@ import {
   Inject,
   OnInit,
   TemplateRef,
-  ViewChild
+  ViewChild,
+  ViewEncapsulation,
 } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { HotToastService } from '@ngneat/hot-toast';
@@ -17,14 +18,14 @@ import {
   Subject,
   switchMap,
   take,
-  tap
+  tap,
 } from 'rxjs';
 
 import {
   AreaListItem,
   AreaListSearch,
   IdValue,
-  PagingMetadata
+  PagingMetadata,
 } from 'src/app/models';
 import { AreaService } from 'src/app/services/area.service';
 import { PageInfo, SortInfo } from 'src/app/types';
@@ -36,6 +37,7 @@ import { AreaState, AREA_STATE } from '../states/area.state';
   selector: 'app-area-list',
   templateUrl: './area-list.component.html',
   styleUrls: ['./area-list.component.scss'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class AreaListComponent implements OnInit {
   @ViewChild(DatatableComponent) table!: DatatableComponent;
@@ -92,15 +94,10 @@ export class AreaListComponent implements OnInit {
   }
   @ViewChild('actionTemplate', { static: true })
   public actionTemplate: TemplateRef<any>;
+  @ViewChild('statusTemplate', { static: true })
+  public statusTemplate: TemplateRef<any>;
   initTable() {
     this.columns = [
-      {
-        prop: 'index',
-        name: 'STT',
-        maxWidth: 300,
-        sortable: true,
-        canAutoResize: true,
-      },
       {
         prop: 'name',
         name: 'Tên khu vực',
@@ -109,10 +106,12 @@ export class AreaListComponent implements OnInit {
       },
       {
         prop: 'status',
-        // canAutoResize: true,
-        maxWidth: 300,
+        maxWidth: 350,
+        minWidth: 200,
         name: 'Trạng thái',
         sortable: true,
+        canAutoResize: true,
+        cellTemplate: this.statusTemplate,
       },
       {
         prop: 'cityId',
@@ -177,33 +176,25 @@ export class AreaListComponent implements OnInit {
         simpleForm: false,
         title: 'khu vực',
         type: 'Thêm',
-        id:'0'
+        id: '0',
       },
     });
-    bsModalRef.onHide?.pipe(take(1), filter((s) => (s as any).success)).subscribe({
-      next: (result) => {
-        const data = result as { id: number; name: string };
-        if (data.id > 0 && data.name.length > 0) {
-          this.toast.success('Tạo khu vực thành công!', {
-            position: 'top-center',
-            duration: 5000,
-            style: {
-              border: '1px solid #0a0',
-              padding: '16px',
-            },
-            iconTheme: {
-              primary: '#0a0',
-              secondary: '#fff',
-            },
-            role: 'status',
-            ariaLive: 'polite',
+    bsModalRef.onHide
+      ?.pipe(
+        take(1),
+        filter((s) => (s as any).success)
+      )
+      .subscribe({
+        next: (result) => {
+          const data = result as { id: number; name: string };
+          if (Number(data.id) > 0 && data.name.length > 0) {
+            this.toast.success('Tạo khu vực thành công!');
+          }
+          this.search$.next({
+            ...this.search$.getValue(),
           });
-        }
-        this.search$.next({
-          ...this.search$.getValue(),
-        });
-      },
-    });
+        },
+      });
   }
   onDelete(id: string) {
     const bsModalRef = this.modalService.show(DeleteModalComponent, {
@@ -212,15 +203,41 @@ export class AreaListComponent implements OnInit {
         title: 'khu vực',
       },
     });
-    bsModalRef.onHide?.pipe(take(1),filter((s)=>(s as any).data)).subscribe({
-      next: (result) => {
-        this.search$.next({
-          ...this.search$.getValue(),
-        });
-      },
-    });
+    bsModalRef.onHide
+      ?.pipe(
+        take(1),
+        filter((s) => (s as any).data)
+      )
+      .subscribe({
+        next: (result) => {
+          this.search$.next({
+            ...this.search$.getValue(),
+          });
+        },
+      });
   }
 
+  onUpdateStatus(id: string, status: string) {
+    const bsModalRef = this.modalService.show(DeleteModalComponent, {
+      initialState: {
+        id: id,
+        title: 'khu vực',
+        status: status,
+      },
+    });
+    bsModalRef.onHide
+      ?.pipe(
+        take(1),
+        filter((s) => (s as any).data)
+      )
+      .subscribe({
+        next: (result) => {
+          this.search$.next({
+            ...this.search$.getValue(),
+          });
+        },
+      });
+  }
   onUpdate(id: string) {
     const bsModalRef = this.modalService.show(AreaModalComponent, {
       initialState: {
@@ -229,30 +246,22 @@ export class AreaListComponent implements OnInit {
         type: 'Cập nhật',
       },
     });
-    bsModalRef.onHide?.pipe(take(1),filter((s) => (s as any).success)).subscribe({
-      next: (result) => {
-        const data = result as { id: number; name: string };
-        if (data.id > 0 && data.name !== undefined) {
-          this.toast.success('Cập nhật khu vực thành công!', {
-            position: 'top-center',
-            duration: 2000,
-            style: {
-              border: '1px solid #0a0',
-              padding: '16px',
-            },
-            iconTheme: {
-              primary: '#0a0',
-              secondary: '#fff',
-            },
-            role: 'status',
-            ariaLive: 'polite',
-          });
-          this.search$.next({
-            ...this.search$.getValue(),
-          });
-        }
-      },
-    });
+    bsModalRef.onHide
+      ?.pipe(
+        take(1),
+        filter((s) => (s as any).success)
+      )
+      .subscribe({
+        next: (result) => {
+          const data = result as { id: number; name: string };
+          if (data.id > 0 && data.name !== undefined) {
+            this.toast.success('Cập nhật khu vực thành công!');
+            this.search$.next({
+              ...this.search$.getValue(),
+            });
+          }
+        },
+      });
   }
 }
 
