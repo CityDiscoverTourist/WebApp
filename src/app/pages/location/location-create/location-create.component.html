@@ -14,19 +14,19 @@
                     class="form-control"
                     id="name"
                     formControlName="name"
-                    [ngClass]="{ 'is-invalid': form?.hasError('name') }"
+                    [ngClass]="{ 'is-invalid': form.hasError('name') }"
                   />
                   <div
                     class="invalid-feedback"
                     *ngIf="form.hasErrorOf('name', 'required')"
                   >
-                    Tên của địa điểm không được để trống
+                    Tên của địa điểm bắt buộc
                   </div>
                   <div
                     class="invalid-feedback"
                     *ngIf="name?.errors?.['nameAlreadyExists']"
                   >
-                    Tên của địa điểm đã tồn tại.
+                    Tên địa điểm đã tồn tại!
                   </div>
                 </div>
               </div>
@@ -41,13 +41,13 @@
                       aria-label="address"
                       id="address"
                       formControlName="address"
-                      [ngClass]="{ 'is-invalid': form?.hasError('address') }"
+                      [ngClass]="{ 'is-invalid': form.hasError('address') }"
                     />
                     <div
                       class="invalid-feedback"
                       *ngIf="form.hasErrorOf('address', 'required')"
                     >
-                      Địa chỉ không được để trống
+                      Địa chỉ bắt buộc
                     </div>
                   </div>
                 </div>
@@ -60,7 +60,6 @@
               <div id="map" class="col-8" style="height: 400px"></div>
               <div class="col-4">
                 <div class="card mb-3">
-                  <!-- <div class="card-header bg-white py-3">Thông tin thêm</div> -->
                   <div class="card-body">
                     <div class="form-group mb-3">
                       <label for="locationTypeId" class="form-label"
@@ -73,7 +72,7 @@
                         class="header-p-0"
                         formControlName="locationTypeId"
                         [ngClass]="{
-                          'is-invalid': form?.hasError('locationTypeId')
+                          'is-invalid': form.hasError('locationTypeId')
                         }"
                       >
                         <ng-template ng-header-tmp>
@@ -93,12 +92,7 @@
                         Vui lòng chọn loại địa điểm
                       </div>
                     </div>
-                    <div
-                      class="invalid-feedback"
-                      *ngIf="form.hasErrorOf('status', 'required')"
-                    >
-                      Vui lòng chọn trạng thái
-                    </div>
+                    
                     <div class="form-group mb-3">
                       <label for="areaId" class="form-label"
                         >Chọn khu vực</label
@@ -109,7 +103,7 @@
                         bindLabel="value"
                         class="header-p-0"
                         formControlName="areaId"
-                        [ngClass]="{ 'is-invalid': form?.hasError('areaId') }"
+                        [ngClass]="{ 'is-invalid': form.hasError('areaId') }"
                       >
                         <ng-template ng-header-tmp>
                           <button
@@ -132,38 +126,22 @@
                 </div>
                 <div class="card mb-3">
                   <div class="card-body">
-                    <!-- <div class="d-flex align-items-end justify-content-between"> -->
-                    <!-- <div>
-                        <span>Trạng thái</span>
-                        <div>Áp dụng</div>
-                      </div>
-                      <div class="form-check form-switch mb-0">
-                        <input
-                          class="form-check-input"
-                          type="checkbox"
-                          role="switch"
-                          id="status"
-                          formControlName="status"
-                        />
-                        <label class="form-check-label" for="status"></label>
-                      </div> -->
                     <label for="status" class="form-label">Trạng thái</label>
                     <ng-select
                       [items]="status"
                       bindValue="value"
-                      bindLabel="value"
+                      bindLabel="id"
                       placeholder="Chọn trạng thái"
                       [clearable]="false"
                       formControlName="status"
-                      [ngClass]="{ 'is-invalid': form?.hasError('status') }"
+                      [ngClass]="{ 'is-invalid': form.hasError('status') }"
                     ></ng-select>
                     <div
                       class="invalid-feedback"
                       *ngIf="form.hasErrorOf('status', 'required')"
                     >
-                      Vui lòng chọn trạng thái
+                    Trạng thái bắt buộc
                     </div>
-                    <!-- </div> -->
                   </div>
                 </div>
               </div>

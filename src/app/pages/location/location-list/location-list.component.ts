@@ -3,13 +3,14 @@ import {
   Component,
   Inject, OnInit,
   TemplateRef,
-  ViewChild
+  ViewChild,
+  ViewEncapsulation
 } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { RxState } from '@rx-angular/state';
 import { DatatableComponent, TableColumn } from '@swimlane/ngx-datatable';
 import {
-  BehaviorSubject, Observable, Subject,
+  BehaviorSubject, filter, Observable, Subject,
   switchMap,
   take,
   tap
@@ -32,6 +33,7 @@ import { LocationListState } from '../states/locationlist.state';
   styleUrls: ['./location-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [RxState],
+  encapsulation: ViewEncapsulation.None,
 })
 export class LocationListComponent implements OnInit {
   columns: TableColumn[];
@@ -99,6 +101,8 @@ export class LocationListComponent implements OnInit {
   }
   @ViewChild('actionTemplate', { static: true })
   public actionTemplate: TemplateRef<any>;
+  @ViewChild('statusTemplate', { static: true })
+  public statusTemplate: TemplateRef<any>;
   initTable() {
     this.columns = [
       {
@@ -137,6 +141,7 @@ export class LocationListComponent implements OnInit {
         minWidth: 150,
         name: 'Trạng thái',
         sortable: true,
+        cellTemplate:this.statusTemplate
       },
       // {
       //   prop: 'areaId',
@@ -207,14 +212,15 @@ export class LocationListComponent implements OnInit {
 
   @ViewChild(DatatableComponent) table!: DatatableComponent;
 
-  onDelete(id: string) {
+  onUpdateStatus(id: string, status:string) {
     const bsModalRef = this.modalService.show(DeleteModalComponent, {
       initialState: {
         id: id,
         title: 'địa điểm',
+        status: status
       },
     });
-    bsModalRef.onHide?.pipe(take(1)).subscribe({
+    bsModalRef.onHide?.pipe(take(1),filter((s)=>(s as any).data)).subscribe({
       next: (result) => {
         this.search$.next({
           ...this.search$.getValue(),

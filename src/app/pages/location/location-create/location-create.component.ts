@@ -132,7 +132,7 @@ export class LocationCreateComponent implements OnInit, AfterViewChecked {
         ),
         tap((result) => {
           if (result.data?.id) {
-            this.toast.success(`Tạo ${result.data.name} thành công`);
+            this.toast.success(`Tạo địa điểm ${result.data.name} thành công`);
             if (this.router.url.endsWith('redirect')) {
               this.locationService.locationAdded$.next({
                 id: result.data.id,

@@ -2,9 +2,6 @@
 <div class="bg-white m-3 p-3 rounded">
   <div class="d-flex align-items-center justify-content-between mb-3">
     <div class="flex-fill"></div>
-    <!-- <button type="button" class="btn btn-primary" style="min-width:120px;">
-      <i class="bi bi-plus"></i> Thêm vị trí
-    </button> -->
     <a
       [routerLink]="['./create']"
       class="btn btn-primary"
@@ -97,58 +94,79 @@
         (page)="onPage($event)"
         (sort)="onSort($event)"
       >
-      <ng-template
-      #actionTemplate
-      let-row="row"
-      let-value="value"
-      let-expanded="expanded"
-      ngx-datatable-cell-template
-    >
-      <button
-        class="btn btn-sm me-2"
-        style="
-          color: #fff;
-          background-color: #4caf50;
-          border-color: #4caf50;
-        "
-        type="button"
-        data-toggle="tooltip"
-        data-placement="top"
-        [tooltip]="'Nhấp chuột để cập nhật địa điểm'"
-        title="Edit"
-        (click)="onUpdate(row.id)"
-      >
-        <i class="bi bi-pencil"></i>
-      </button>
-      <button
-        class="btn btn-sm me-2"
-        type="button"
-        [ngStyle]="
-          row.status == 'Deleted'
-            ? {
-                color: '#fff',
-                backgroundColor: '#f44335',
-                borderColor: '#f44335'
-              }
-            : {
-                color: '#fff',
-                backgroundColor: '#f44335',
-                borderColor: '#f44335'
-              }
-        "
-        data-toggle="tooltip"
-        data-placement="top"
-        [tooltip]="
-          row.status == 'Deleted'
-            ? 'Bạn không thể xóa vì địa điểm này đã được xóa trước đây'
-            : 'Nhấp chuột để xóa địa điểm'
-        "
-        (click)="onDelete(row.id)"
-        [disabled]="row.status == 'Deleted' ? true : false"
-      >
-        <i class="bi bi-trash3"></i>
-      </button>
-    </ng-template>
+      <ng-template #statusTemplate let-value="value" let-row="row">
+        <span
+           [ngStyle]="{'background-color': row.status == 'Active' ?'#4caf50':'#cb2027', 
+           'color': '#fff',
+            'transition':'200ms',
+            'padding':'5px 0px',
+            'display': 'inline-block',
+            'text-align':'center',
+            'width': '120px',
+            'border-radius': '9px'
+          }"
+          >{{ row.status == 'Active' ? "Hoạt động" : "Ngừng hoạt động"  }}</span
+        >
+      </ng-template>
+        <ng-template #actionTemplate let-row="row" let-value="value">
+          <button
+            class="btn btn-sm me-2"
+            style="
+              color: #fff;
+              background-color: #4c0bce;
+              border-color: #4c0bce;
+            "
+            type="button"
+            data-toggle="tooltip"
+            data-placement="top"
+            [tooltip]="'Nhấp chuột để cập nhật Địa điểm'"
+            (click)="onUpdate(row.id)"
+          >
+            <i class="bi bi-pencil"></i>
+          </button>
+          <button
+            class="btn btn-sm me-2"
+            style="
+              color: #fff;
+              background-color: #4caf50;
+              border-color: #4caf50;
+            "
+            type="button"
+            data-toggle="tooltip"
+            data-placement="top"
+            [tooltip]="'Nhấp chuột để địa điểm hoạt động'"
+            placement="left"
+            [disabled]="row.status=='Active' ? true : false"
+            (click)="onUpdateStatus(row.id,'Active')"
+          >
+            <i class="bi bi-arrow-counterclockwise"></i>
+          </button>
+          <button
+            class="btn btn-sm me-2"
+            type="button"
+            [ngStyle]="
+              row.status == 'InActive'
+                ? {
+                    color: '#fff',
+                    backgroundColor: '#f44335',
+                    borderColor: '#f44335'
+                  }
+                : {
+                    color: '#fff',
+                    backgroundColor: '#f44335',
+                    borderColor: '#f44335'
+                  }
+            "
+            data-toggle="tooltip"
+            data-placement="top" 
+            [tooltip]="'Nhấp chuột để ngừng hoạt động địa điểm'"
+            placement="left"
+            [disabled]="row.status=='Inactive'? true : false"
+            (click)="onUpdateStatus(row.id,'Inactive')"
+          >
+            <i class="bi bi-dash-circle-fill"></i>
+          </button>
+        </ng-template>
       </ngx-datatable>
     </div>
   </div>

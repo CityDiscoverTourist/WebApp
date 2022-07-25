@@ -1,9 +1,9 @@
+import { Location } from '@angular/common';
 import {
-  AfterContentInit,
   AfterViewChecked,
   Component,
   Inject,
-  OnInit,
+  OnInit
 } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -11,14 +11,9 @@ import { HotToastService } from '@ngneat/hot-toast';
 import { RxState } from '@rx-angular/state';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import {
-  BehaviorSubject,
-  filter,
-  Observable,
-  partition,
+  BehaviorSubject, catchError, filter, map, Observable, of, partition,
   Subject,
-  switchMap,
-  tap,
-  take,
+  switchMap, take, tap
 } from 'rxjs';
 import { IdValue, LocationCreate } from 'src/app/models';
 import { LocationService } from 'src/app/services';
@@ -52,7 +47,8 @@ export class LocationEditComponent implements OnInit, AfterViewChecked {
     @Inject(LOCATION_STATE) private locationState: RxState<LocationState>,
     private modalService: BsModalService,
     private state: RxState<LocationEditState>,
-    private toast: HotToastService
+    private toast: HotToastService,
+    private location: Location
   ) {
     this.state.set({
       showLocationDescription: false,
@@ -142,14 +138,28 @@ export class LocationEditComponent implements OnInit, AfterViewChecked {
       valid$.pipe(
         tap(() => this.state.set({ submitting: true })),
         switchMap(({ form, redirect }) =>
-          this.locationService.updateLocationById(form.value as LocationCreate)
+          this.locationService.updateLocationById(form.value as LocationCreate).pipe(
+            catchError(() => {
+              this.toast.error('Có lỗi hãy kiểm tra lại!');
+              return of({ status: 'data not modified', data: null });
+            }),
+            map((r) => ({ ...r, redirect }))
+          )
         ),
         tap((result) => {
           if (result.data?.id) {
-            this.toast.success(`Tạo ${result.data.name} thành công`);
-            this.router.navigate(['../'], {
-              relativeTo: this.activatedRoute,
-            });
+            this.toast.success(`Cập nhật địa điểm ${result.data.name} thành công`);
+            if (this.router.url.endsWith('redirect')) {
+              this.locationService.locationAdded$.next({
+                id: result.data.id,
+                name: result.data!.name!,
+              });
+              this.location.back();
+            } else {
+              this.router.navigate(['../'], {
+                relativeTo: this.activatedRoute,
+              });
+            }
           } else {
             return;
           }
