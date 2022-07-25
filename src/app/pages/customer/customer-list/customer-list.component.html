@@ -133,30 +133,36 @@
           </ng-template>
           <ng-template #confirmTemplate let-value="value" let-row="row">
             <span
-               [ngStyle]="{'background-color': row.emailConfirmed == true ?'#4caf50':'#ff7221', 
-               'color': '#fff',
-                'transition':'200ms',
-                'padding':'5px 0px',
-                'display': 'inline-block',
-                'text-align':'center',
-                'width':'100px',
+              [ngStyle]="{
+                'background-color':
+                  row.emailConfirmed == true ? '#4caf50' : '#ff7221',
+                color: '#fff',
+                transition: '200ms',
+                padding: '5px 0px',
+                display: 'inline-block',
+                'text-align': 'center',
+                width: '100px',
                 'border-radius': '9px'
               }"
-              >{{ row.emailConfirmed == true ? "Đã xác thực" : "Chưa xác thực"  }}</span
+              >{{
+                row.emailConfirmed == true ? "Đã xác thực" : "Chưa xác thực"
+              }}</span
             >
           </ng-template>
           <ng-template #isBlockTemplate let-value="value" let-row="row">
             <span
-               [ngStyle]="{'background-color': row.lockoutEnabled == true ?'#cb2027':'#4caf50', 
-               'color': '#fff',
-                'transition':'200ms',
-                'padding':'5px 0px',
-                'display': 'inline-block',
-                'text-align':'center',
-                'width':'100px',
+              [ngStyle]="{
+                'background-color':
+                  row.lockoutEnabled == true ? '#4caf50' : '#cb2027',
+                color: '#fff',
+                transition: '200ms',
+                padding: '5px 0px',
+                display: 'inline-block',
+                'text-align': 'center',
+                width: '100px',
                 'border-radius': '9px'
               }"
-              >{{ row.lockoutEnabled == true ? "Đã khóa" : "Hoạt đông" }}</span
+              >{{ row.lockoutEnabled == true ? "Hoạt động" : "Đã khóa" }}</span
             >
           </ng-template>
           <ng-template #actionTemplate let-row="row" let-value="value">
@@ -172,7 +178,7 @@
               data-placement="top"
               title="unlock"
               (click)="isBlock(row.id, row.userName)"
-              [disabled]="!row.lockoutEnabled ? true : false"
+              [disabled]="row.lockoutEnabled ? true : false"
             >
               <i class="bi bi-arrow-counterclockwise"></i>
             </button>
@@ -196,7 +202,7 @@
               data-placement="top"
               title="block"
               (click)="block(row.id, row.userName)"
-              [disabled]="row.lockoutEnabled ? true : false"
+              [disabled]="!row.lockoutEnabled ? true : false"
             >
               <i class="bi bi-dash-circle-fill"></i>
             </button>

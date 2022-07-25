@@ -191,7 +191,7 @@ export class CustomerListComponent implements OnInit {
       initialState: {
         id: id,
         title: 'khách hàng',
-        status: false,
+        status: true,
         mail: mail,
       },
     });
@@ -214,7 +214,7 @@ export class CustomerListComponent implements OnInit {
       initialState: {
         id: id,
         title: 'khách hàng',
-        status: true,
+        status: false,
         mail: mail,
       },
     });
