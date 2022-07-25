@@ -106,7 +106,7 @@ export class AreaListComponent implements OnInit {
       },
       {
         prop: 'status',
-        maxWidth: 350,
+        maxWidth: 150,
         minWidth: 200,
         name: 'Trạng thái',
         sortable: true,
@@ -115,14 +115,14 @@ export class AreaListComponent implements OnInit {
       },
       {
         prop: 'cityId',
-        maxWidth: 350,
+        maxWidth: 150,
         name: 'Thành phố',
         sortable: false,
       },
 
       {
         prop: 'action',
-        minWidth: 180,
+        minWidth: 200,
         name: 'Hành động',
         sortable: false,
         maxWidth: 200,
