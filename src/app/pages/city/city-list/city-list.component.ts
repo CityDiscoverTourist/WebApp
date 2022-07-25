@@ -176,10 +176,6 @@ export class CityListComponent implements OnInit {
       });
   }
   onUpdateStatus(id: string, status:string) {
-    console.log("sjs");
-    console.log(status);
-    
-    
     const bsModalRef = this.modalService.show(DeleteModalComponent, {
       initialState: {
         id: id,
@@ -211,9 +207,13 @@ export class CityListComponent implements OnInit {
       )
       .subscribe({
         next: (result) => {
-          this.search$.next({
-            ...this.search$.getValue(),
-          });
+          const data = result as { id: number; name: string };
+          if (data.id > 0 && data.name !== undefined) {
+            this.toast.success('Cập nhật thành phố thành công!');
+            this.search$.next({
+              ...this.search$.getValue(),
+            });
+          }
         },
       });
   }
