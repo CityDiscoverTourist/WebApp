@@ -108,7 +108,7 @@
               type="button"
               data-toggle="tooltip"
               data-placement="top"
-              [tooltip]="'Nhấp chuột để cập nhật thành phố'"
+              [tooltip]="'Nhấp chuột để cập nhật khu vực'"
               (click)="onUpdate(row.id)"
             >
               <i class="bi bi-pencil"></i>
@@ -123,7 +123,7 @@
               type="button"
               data-toggle="tooltip"
               data-placement="top"
-              [tooltip]="'Nhấp chuột để thành phố hoạt động'"
+              [tooltip]="'Nhấp chuột để khu vực hoạt động'"
               placement="left"
               [disabled]="row.status == 'Active' ? true : false"
               (click)="onUpdateStatus(row.id, 'Active')"
@@ -148,7 +148,7 @@
               "
               data-toggle="tooltip"
               data-placement="top"
-              [tooltip]="'Nhấp chuột để ngừng hoạt động thành phố'"
+              [tooltip]="'Nhấp chuột để ngừng hoạt động khu vực'"
               placement="left"
               [disabled]="row.status == 'Inactive' ? true : false"
               (click)="onUpdateStatus(row.id, 'Inactive')"
