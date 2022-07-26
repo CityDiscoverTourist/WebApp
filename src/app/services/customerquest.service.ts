@@ -1,11 +1,14 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { stringify } from 'query-string';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
+import { environment } from 'src/environments/environment.prod';
 import {
+  CustomerQuest,
   CustomerQuestListItem,
   CustomerQuestListSearch,
   Paging,
+  Result,
 } from '../models';
 import { BaseService } from './base.service';
 
@@ -22,7 +25,7 @@ export class CustomerquestService extends BaseService {
     );
   }
 
-  getQuestTypes(
+  getCustomerQuest(
     search: CustomerQuestListSearch
   ): Observable<Paging<CustomerQuestListItem>> {
     var sortBy =
@@ -37,8 +40,16 @@ export class CustomerquestService extends BaseService {
       isFinished: search?.isFinished,
     });
     return this.http.get<Paging<CustomerQuestListItem>>(
-      'https://citytourist.azurewebsites.net/api/v1/customer-quests?' + query,
+      `${environment.apiUrl}/api/v1/customer-quests?` + query,
       { headers: this._sharedHeaders }
     );
+  }
+
+  getCustomerQuestById(id: string | undefined): Observable<CustomerQuest> {
+    return this.http
+      .get<Result<CustomerQuest>>(`${environment.apiUrl}/api/v1/customer-quests/${id}`, {
+        headers: this._sharedHeaders,
+      })
+      .pipe(map((response: Result<CustomerQuest>) => response.data));
   }
 }

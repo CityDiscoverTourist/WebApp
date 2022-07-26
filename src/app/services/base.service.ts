@@ -14,6 +14,16 @@ export class BaseService {
       value: 'Inactive',
     },
   ];
+  isFinishes = [
+    {
+      id: 'Đã kết thúc',
+      value: true,
+    },
+    {
+      id: 'Đang hoạt động',
+      value: false,
+    },
+  ];
 
   constructor() {}
 }
