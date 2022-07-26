@@ -5,7 +5,6 @@ import {
   PathLocationStrategy,
 } from '@angular/common';
 import { NavigationEnd, Router } from '@angular/router';
-import { ROUTES } from '../sidebar/sidebar.component';
 import { Title } from '@angular/platform-browser';
 import { AuthenticateService } from 'src/app/services';
 
