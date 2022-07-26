@@ -9,157 +9,171 @@
       </a>
     </h2>
     <aside id="sidebar" class="sidebar">
-      <ul class="sidebar-nav" id="sidebar-nav">
-        <li class="nav-item">
-          <a
-            class="nav-link collapsed d-flex px-4 py-3"
-            href="./dashboard"
-            routerLink="./dashboard"
-          >
-            <i class="bi bi-grid me-2"></i>
-            <span>Bảng điều khiển</span>
-          </a>
-        </li>
-        <li class="nav-item">
-          <a
-            class="nav-link collapsed d-flex px-4 py-3"
-            data-bs-target="#components-nav"
-            data-bs-toggle="collapse"
-            style="cursor: pointer"
-            (click)="changeShow()"
-          >
-            <i class="bi bi-menu-button-wide me-2"></i><span>Quản lý Quest</span
-            ><i class="bi bi-chevron-down ms-auto"></i>
-          </a>
-          <ul
-            id="components-nav"
-            class="nav-content collapse"
-            [ngClass]="{ show: isClose }"
-            data-bs-parent="#sidebar-nav"
-          >
-            <li>
-              <a class="d-flex px-5 py-2" href="./quest" routerLink="./quest">
-                <span>Quest</span>
-              </a>
-            </li>
-            <li>
-              <a
-                class="d-flex px-5 py-2"
-                href="./quest-type"
-                routerLink="./quest-type"
-              >
-                <span>Loại Quest</span>
-              </a>
-            </li>
-            <li>
-              <a
-                class="d-flex px-5 py-2"
-                href="./quest-item-type"
-                routerLink="./quest-item-type"
-              >
-                <span>Loại câu hỏi</span>
-              </a>
-            </li>
-          </ul>
-        </li>
+      <div>
+        <ul class="sidebar-nav" id="sidebar-nav">
+          <li class="nav-item">
+            <a
+              class="nav-link collapsed d-flex px-4 py-3"
+              href="./dashboard"
+              routerLink="./dashboard"
+            >
+              <i class="bi bi-grid me-2"></i>
+              <span>Bảng điều khiển</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a
+              class="nav-link collapsed d-flex px-4 py-3"
+              data-bs-target="#components-nav"
+              data-bs-toggle="collapse"
+              style="cursor: pointer"
+              (click)="changeShow()"
+            >
+              <i class="bi bi-menu-button-wide me-2"></i
+              ><span>Quản lý Quest</span
+              ><i class="bi bi-chevron-down ms-auto"></i>
+            </a>
+            <ul
+              id="components-nav"
+              class="nav-content collapse"
+              [ngClass]="{ show: isClose }"
+              data-bs-parent="#sidebar-nav"
+            >
+              <li>
+                <a class="d-flex px-5 py-2" href="./quest" routerLink="./quest">
+                  <span>Quest</span>
+                </a>
+              </li>
+              <li>
+                <a
+                  class="d-flex px-5 py-2"
+                  href="./quest-type"
+                  routerLink="./quest-type"
+                >
+                  <span>Loại Quest</span>
+                </a>
+              </li>
+              <li>
+                <a
+                  class="d-flex px-5 py-2"
+                  href="./quest-item-type"
+                  routerLink="./quest-item-type"
+                >
+                  <span>Loại câu hỏi</span>
+                </a>
+              </li>
+            </ul>
+          </li>
 
-        <li class="nav-item">
-          <a
-            class="nav-link collapsed d-flex px-4 py-3"
-            data-bs-target="#components-nav"
-            data-bs-toggle="collapse"
-            style="cursor: pointer"
-            (click)="changeShow1()"
-          >
-            <i class="bi bi-geo-alt me-2"></i
-            ><span>Quản lý địa điểm</span
-            ><i class="bi bi-chevron-down ms-auto"></i>
+          <li class="nav-item">
+            <a
+              class="nav-link collapsed d-flex px-4 py-3"
+              data-bs-target="#components-nav"
+              data-bs-toggle="collapse"
+              style="cursor: pointer"
+              (click)="changeShow1()"
+            >
+              <i class="bi bi-geo-alt me-2"></i><span>Quản lý địa điểm</span
+              ><i class="bi bi-chevron-down ms-auto"></i>
+            </a>
+            <ul
+              id="components-nav"
+              class="nav-content collapse"
+              [ngClass]="{ show: isClose1 }"
+              data-bs-parent="#sidebar-nav"
+            >
+              <li>
+                <a class="d-flex px-5 py-2" href="./city" routerLink="./city">
+                  <span>Thành phố</span>
+                </a>
+              </li>
+              <li>
+                <a class="d-flex px-5 py-2" href="./area" routerLink="./area">
+                  <span>Khu vực</span>
+                </a>
+              </li>
+              <li>
+                <a
+                  class="d-flex px-5 py-2"
+                  href="./location"
+                  routerLink="./location"
+                >
+                  <span>Địa điểm</span>
+                </a>
+              </li>
+              <li>
+                <a
+                  class="d-flex px-5 py-2"
+                  href="./location-type"
+                  routerLink="./location-type"
+                >
+                  <span>Loại địa điểm</span>
+                </a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-item">
+            <a
+              class="nav-link collapsed d-flex px-4 py-3"
+              data-bs-target="#components-nav"
+              data-bs-toggle="collapse"
+              style="cursor: pointer"
+              (click)="changeShow2()"
+            >
+              <i class="bi bi-person me-2"></i><span>Quản lý tài khoản</span
+              ><i class="bi bi-chevron-down ms-auto"></i>
+            </a>
+            <ul
+              id="components-nav"
+              class="nav-content collapse"
+              [ngClass]="{ show: isClose2 }"
+              data-bs-parent="#sidebar-nav"
+            >
+              <li>
+                <a
+                  class="d-flex px-5 py-2"
+                  href="./customer"
+                  routerLink="./customer"
+                >
+                  <span>Khách hàng</span>
+                </a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-item">
+            <a
+              class="nav-link collapsed d-flex px-4 py-3"
+              href="./customer-quest"
+              routerLink="./customer-quest"
+            >
+              <i class="bi bi-grid me-2"></i>
+              <span>Customer Quest</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a
+              class="nav-link collapsed d-flex px-4 py-3"
+              href="./payment"
+              routerLink="./payment"
+            >
+              <i class="bi bi-credit-card-fill me-2"></i>
+              <span>Thanh toán</span>
+            </a>
+          </li>
+          <li class="nav-item" (click)="exit()">
+            <a
+              class="nav-link collapsed d-flex px-4 py-3"
+             
+              style="cursor: pointer"
+            >
+              <i class="bi bi-box-arrow-in-left me-2"></i>
+              <span>Thoát</span>
           </a>
-          <ul
-            id="components-nav"
-            class="nav-content collapse"
-            [ngClass]="{ show: isClose1 }"
-            data-bs-parent="#sidebar-nav"
-          >
-            <li>
-              <a class="d-flex px-5 py-2" href="./city" routerLink="./city">
-                <span>Thành phố</span>
-              </a>
-            </li>
-            <li>
-              <a class="d-flex px-5 py-2" href="./area" routerLink="./area">
-                <span>Khu vực</span>
-              </a>
-            </li>
-            <li>
-              <a
-                class="d-flex px-5 py-2"
-                href="./location"
-                routerLink="./location"
-              >
-                <span>Địa điểm</span>
-              </a>
-            </li>
-            <li>
-              <a
-                class="d-flex px-5 py-2"
-                href="./location-type"
-                routerLink="./location-type"
-              >
-                <span>Loại địa điểm</span>
-              </a>
-            </li>
-          </ul>
-        </li>
-        <li class="nav-item">
-          <a
-            class="nav-link collapsed d-flex px-4 py-3"
-            data-bs-target="#components-nav"
-            data-bs-toggle="collapse"
-            style="cursor: pointer"
-            (click)="changeShow2()"
-          >
-            <i class="bi bi-person me-2"></i><span>Quản lý tài khoản</span
-            ><i class="bi bi-chevron-down ms-auto"></i>
-          </a>
-          <ul
-            id="components-nav"
-            class="nav-content collapse"
-            [ngClass]="{ show: isClose2 }"
-            data-bs-parent="#sidebar-nav"
-          >
-            <li>
-              <a
-                class="d-flex px-5 py-2"
-                href="./customer"
-                routerLink="./customer"
-              >
-                <span>Khách hàng</span>
-              </a>
-            </li>
-          </ul>
-        </li>
-        <li class="nav-item">
-          <a
-            class="nav-link collapsed d-flex px-4 py-3"
-            href="./customer-quest"
-            routerLink="./customer-quest"
-          >
-            <i class="bi bi-grid me-2"></i>
-            <span>Customer Quest</span>
-          </a>
-        </li>
-        <li class="nav-item">
-          <a
-            class="nav-link collapsed d-flex px-4 py-3"
-            href="./payment"
-            routerLink="./payment"
-          >
-            <i class="bi bi-credit-card-fill me-2"></i>
-            <span>Thanh toán</span>
-          </a>
-        </li>
-      </ul>
+          </li>
+        </ul>
+      </div>
+
+      <!-- <div class="px-4"><i class="bi bi-box-arrow-in-left me-2"></i>Thoát</div> -->
     </aside>
     <!-- End Sidebar-->
   </aside>

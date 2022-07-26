@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { AuthenticateService } from 'src/app/services';
 
 @Component({
   selector: 'app-admin-layout',
@@ -9,7 +11,11 @@ export class AdminLayoutComponent implements OnInit {
   isClose = false;
   isClose1 = false;
   isClose2 = false;
-  constructor() {}
+  constructor(
+    private authService: AuthenticateService,
+    private router: Router,
+    private activatedRoute: ActivatedRoute
+  ) {}
   ngOnInit(): void {}
   changeShow() {
     if (this.isClose) {
@@ -25,5 +31,11 @@ export class AdminLayoutComponent implements OnInit {
     if (this.isClose2) {
       this.isClose2 = false;
     } else this.isClose2 = true;
+  }
+  exit() {
+    this.authService.clearToken();
+    this.router.navigate(['../login'], {
+      relativeTo: this.activatedRoute,
+    });
   }
 }
