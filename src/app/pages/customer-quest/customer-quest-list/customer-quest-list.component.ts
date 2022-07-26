@@ -1,4 +1,10 @@
-import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  TemplateRef,
+  ViewChild,
+  ViewEncapsulation
+} from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RxState } from '@rx-angular/state';
@@ -7,14 +13,12 @@ import {
   BehaviorSubject,
   Observable,
   Subject,
-  switchMap,
-  take,
-  tap,
+  switchMap, tap
 } from 'rxjs';
 import {
   CustomerQuestListItem,
   PagingMetadata,
-  SearchInfo,
+  SearchInfo
 } from 'src/app/models';
 import { CustomerquestService } from 'src/app/services';
 import { PageInfo, SortInfo } from 'src/app/types';
@@ -25,43 +29,31 @@ import { CustomerQuestListState } from '../states';
   templateUrl: './customer-quest-list.component.html',
   styleUrls: ['./customer-quest-list.component.scss'],
   providers: [RxState],
+  encapsulation: ViewEncapsulation.None,
 })
 export class CustomerQuestListComponent implements OnInit {
   @ViewChild(DatatableComponent) table!: DatatableComponent;
   columns: TableColumn[] = [];
-  isFinishes = [true, false];
+  isFinishes: { id: string; value: boolean }[] = [];
   constructor(
     private customerQuestListState: RxState<CustomerQuestListState>,
-    private questQuestService: CustomerquestService,
+    private customerQuestService: CustomerquestService,
     private router: Router,
     private activatedRoute: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
     this.initTable();
+    this.isFinishes = this.customerQuestService.isFinishes;
     this.customerQuestListState.connect(
       this.search$
         .pipe(
           tap(() => this.customerQuestListState.set({ loading: true })),
-          switchMap((s) => this.questQuestService.getQuestTypes(s))
+          switchMap((s) => this.customerQuestService.getCustomerQuest(s))
         )
         .pipe(tap((data) => console.log(data))),
       (_, result) => ({
         customerquests: result.data,
-        // .map(
-        //   (x, i) =>
-        //     ({
-        //       beginPoint: x.beginPoint,
-        //       endPoint: x.endPoint,
-        //       createdDate: x.createdDate,
-        //       rating: x.rating,
-        //       feedBack: x.feedBack,
-        //       customerId: x.customerId,
-        //       isFinished: x.isFinished,
-        //       questId: x.questId,
-        //       status: x.status,
-        //     } as CustomerQuestListItem)
-        // )
         metadata: { ...result.pagination },
         loading: false,
       })
@@ -87,55 +79,68 @@ export class CustomerQuestListComponent implements OnInit {
   }
 
   @ViewChild('colCreatedAt', { static: true }) colCreatedAt!: TemplateRef<any>;
+  @ViewChild('statusTemplate', { static: true })
+  statusTemplate!: TemplateRef<any>;
+  @ViewChild('isFinishedTemplate', { static: true })
+  isFinishedTemplate!: TemplateRef<any>;
 
   initTable() {
     this.columns = [
       {
-        prop: 'customerId',
+        prop: 'customerName',
         name: 'Khách hàng',
         sortable: false,
+        minWidth: 230,
       },
-      // {
-      //   prop: 'beginPoint',
-      //   name: 'Số điểm bắt đầu',
-      //   sortable: false,
-      // },
-      // {
-      //   prop: 'endPoint',
-      //   name: 'Số điểm kết thúc',
-      //   sortable: false,
-      // },
+      {
+        prop: 'beginPoint',
+        headerClass: 'd-flex justify-content-center',
+        name: 'Điểm bắt đầu',
+        sortable: false,
+        minWidth: 40,
+        cellClass: 'd-flex justify-content-center',
+      },
+      {
+        prop: 'endPoint',
+        name: 'Điểm kết thúc',
+        sortable: false,
+        minWidth: 40,
+        headerClass: 'd-flex justify-content-center',
+        cellClass: 'd-flex justify-content-center',
+      },
       {
         prop: 'createdDate',
         name: 'Ngày tạo',
         cellTemplate: this.colCreatedAt,
         sortable: false,
-        maxWidth: 150,
+        minWidth: 150,
+        cellClass: 'd-flex justify-content-center',
       },
       {
         prop: 'rating',
         name: 'Số điểm đánh giá',
         sortable: false,
         canAutoResize: true,
-      },
-      {
-        prop: 'feedBack',
-        name: 'Đánh giá',
-        sortable: false,
-        canAutoResize: true,
+        cellClass: 'd-flex justify-content-center',
       },
       {
         prop: 'isFinished',
         name: 'Kết thúc',
         sortable: false,
+        minWidth: 90,
+        headerClass: 'd-flex justify-content-center',
         canAutoResize: true,
+        cellTemplate: this.isFinishedTemplate,
+        cellClass: 'd-flex justify-content-center',
       },
-      {
-        prop: 'status',
-        name: 'Trạng thái',
-        sortable: false,
-        canAutoResize: true,
-      },
+      // {
+      //   prop: 'status',
+      //   name: 'Trạng thái',
+      //   sortable: false,
+      //   canAutoResize: true,
+      //   minWidth:90,
+      //   cellTemplate:this.statusTemplate
+      // },
     ];
   }
 
@@ -147,7 +152,9 @@ export class CustomerQuestListComponent implements OnInit {
     isFinished: new FormControl(),
   });
   get questtypes$(): Observable<CustomerQuestListItem[]> {
-    return this.customerQuestListState.select('customerquests');
+    return this.customerQuestListState
+      .select('customerquests')
+      .pipe(tap((data) => console.log(data)));
   }
   get metadata$(): Observable<PagingMetadata> {
     return this.customerQuestListState.select('metadata');
@@ -169,7 +176,6 @@ export class CustomerQuestListComponent implements OnInit {
     });
   }
   onActivate(event: any) {
-    // console.log('Activate Event', event);
     if (event.type == 'click') {
       console.log(event.row);
       this.router.navigate(['./', event.row.id, 'customer-tasks'], {

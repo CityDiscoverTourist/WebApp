@@ -21,8 +21,8 @@
           </div>
           <ng-select
             [items]="isFinishes"
-            bindLabel="name"
-            placeholder="Chọn IsFinished"
+            bindValue="value"
+            bindLabel="id"
             style="min-width: 200px"
             class="me-3"
             formControlName="isFinished"
@@ -70,6 +70,34 @@
           (sort)="onSort($event)"
           (activate)="onActivate($event)"
         >
+        <ng-template #statusTemplate let-value="value" let-row="row">
+          <span
+             [ngStyle]="{'background-color': row.status == 'Done' ?'#4caf50':'#cb2027', 
+             'color': '#fff',
+              'transition':'200ms',
+              'padding':'5px 0px',
+              'display': 'inline-block',
+              'text-align':'center',
+              'width': '120px',
+              'border-radius': '9px'
+            }"
+            >{{ row.status == 'Done' ? "Hoạt động" : "Ngừng hoạt động"  }}</span
+          >
+        </ng-template>
+        <ng-template #isFinishedTemplate let-value="value" let-row="row">
+          <span
+             [ngStyle]="{'background-color': row.isFinished == true ?'#4caf50':'#0d6efd', 
+             'color': '#fff',
+              'transition':'200ms',
+              'padding':'5px 0px',
+              'display': 'inline-block',
+              'text-align':'center',
+              'width': '120px',
+              'border-radius': '9px'
+            }"
+            >{{ row.isFinished == true ? "Đã kết thúc" : "Đang hoạt động"  }}</span
+          >
+        </ng-template>
           <ng-template
             #actionTemplate
             let-row="row"
