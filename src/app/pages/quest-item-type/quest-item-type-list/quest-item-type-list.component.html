@@ -6,7 +6,7 @@
       style="min-width: 100px"
       (click)="showAddQuestItemType()"
     >
-      <i class="bi bi-plus"></i> Thêm
+      <i class="bi bi-plus"></i> Thêm loại câu hỏi
     </a>
   </div>
   <div class="bg-white my-3 p-3 rounded">
@@ -32,7 +32,7 @@
           <ng-select
           [items]="status"
           bindValue="value"
-          bindLabel="value"
+          bindLabel="id"
           style="min-width: 200px"
           placeholder="Chọn trạng thái"
           class="me-3"
@@ -58,7 +58,6 @@
           </button>
         </div>
       </form>
-      <!-- table -->
       <div class="border overflow-hidden rouded shadow-sm">
         <ngx-datatable
           class="material rounded"
@@ -81,44 +80,79 @@
           (page)="onPage($event)"
           (sort)="onSort($event)"
         >
-          <ng-template
-            #actionTemplate
-            let-row="row"
-            let-value="value"
-            let-expanded="expanded"
-            ngx-datatable-cell-template
+        <ng-template #statusTemplate let-value="value" let-row="row">
+          <span
+             [ngStyle]="{'background-color': row.status == 'Active' ?'#4caf50':'#cb2027', 
+             'color': '#fff',
+              'transition':'200ms',
+              'padding':'5px 0px',
+              'display': 'inline-block',
+              'text-align':'center',
+              'width': '120px',
+              'border-radius': '9px'
+            }"
+            >{{ row.status == 'Active' ? "Hoạt động" : "Ngừng hoạt động"  }}</span
           >
-            <button
-              class="btn btn-sm me-2"
-              style="
-                color: #fff;
-                background-color: #4caf50;
-                border-color: #4caf50;
-              "
-              type="button"
-              data-toggle="tooltip"
-              data-placement="top"
-              title="Edit"
-              (click)="onUpdate(row.id)"
-            >
-              <i class="bi bi-pencil"></i>
-            </button>
-            <button
-              class="btn btn-sm me-2"
-              type="button"
-              style="
-                color: #fff;
-                background-color: #f44335;
-                border-color: #f44335;
-              "
-              data-toggle="tooltip"
-              data-placement="top"
-              title="Delete"
-              (click)="onDelete(row.id)"
-            >
-              <i class="bi bi-trash3"></i>
-            </button>
-          </ng-template>
+        </ng-template>
+        <ng-template #actionTemplate let-row="row" let-value="value">
+          <button
+            class="btn btn-sm me-2"
+            style="
+              color: #fff;
+              background-color: #127eff;
+              border-color: #127eff;
+            "
+            type="button"
+            data-toggle="tooltip"
+            data-placement="top"
+            [tooltip]="'Nhấp chuột để cập nhật loại câu hỏi'"
+            (click)="onUpdate(row.id)"
+          >
+            <i class="bi bi-pencil"></i>
+          </button>
+          <button
+            class="btn btn-sm me-2"
+            style="
+              color: #fff;
+              background-color: #4caf50;
+              border-color: #4caf50;
+            "
+            type="button"
+            data-toggle="tooltip"
+            data-placement="top"
+            [tooltip]="'Nhấp chuột để loại câu hỏi hoạt động'"
+            placement="left"
+            [disabled]="row.status=='Active' ? true : false"
+            (click)="onUpdateStatus(row.id,'Active')"
+          >
+            <i class="bi bi-arrow-counterclockwise"></i>
+          </button>
+          <button
+            class="btn btn-sm me-2"
+            type="button"
+            [ngStyle]="
+              row.status == 'InActive'
+                ? {
+                    color: '#fff',
+                    backgroundColor: '#f44335',
+                    borderColor: '#f44335'
+                  }
+                : {
+                    color: '#fff',
+                    backgroundColor: '#f44335',
+                    borderColor: '#f44335'
+                  }
+            "
+            data-toggle="tooltip"
+            data-placement="top" 
+            [tooltip]="'Nhấp chuột để ngừng hoạt động loại câu hỏi'"
+            placement="left"
+            [disabled]="row.status=='Inactive'? true : false"
+            (click)="onUpdateStatus(row.id,'Inactive')"
+          >
+            <i class="bi bi-dash-circle-fill"></i>
+          </button>
+        </ng-template>
         </ngx-datatable>
       </div>
     </div>

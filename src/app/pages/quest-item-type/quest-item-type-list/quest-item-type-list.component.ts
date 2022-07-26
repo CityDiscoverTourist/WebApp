@@ -1,4 +1,4 @@
-import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Component, OnInit, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { HotToastService } from '@ngneat/hot-toast';
 import { RxState } from '@rx-angular/state';
@@ -6,6 +6,7 @@ import { DatatableComponent, TableColumn } from '@swimlane/ngx-datatable';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import {
   BehaviorSubject,
+  filter,
   Observable,
   Subject,
   switchMap,
@@ -28,6 +29,7 @@ import { QuestItemTypeListState } from '../states';
   templateUrl: './quest-item-type-list.component.html',
   styleUrls: ['./quest-item-type-list.component.scss'],
   providers: [RxState],
+  encapsulation: ViewEncapsulation.None,
 })
 export class QuestItemTypeListComponent implements OnInit {
   @ViewChild(DatatableComponent) table!: DatatableComponent;
@@ -84,14 +86,9 @@ export class QuestItemTypeListComponent implements OnInit {
   }
   @ViewChild('actionTemplate', { static: true })
   public actionTemplate: TemplateRef<any>;
+  @ViewChild('statusTemplate', { static: true })  public statusTemplate: TemplateRef<any>;
   initTable() {
     this.columns = [
-      {
-        prop: 'index',
-        name: 'STT',
-        sortable: false,
-        width: 50,
-      },
       {
         prop: 'name',
         name: 'Tên loại câu hỏi',
@@ -105,6 +102,7 @@ export class QuestItemTypeListComponent implements OnInit {
         name: 'Trạng thái',
         sortable: true,
         canAutoResize: true,
+        cellTemplate:this.statusTemplate
       },
       {
         prop: 'action',
@@ -157,7 +155,7 @@ export class QuestItemTypeListComponent implements OnInit {
     const bsModalRef = this.modalService.show(QuestItemTypeModalComponent, {
       initialState: {
         simpleForm: false,
-        title: 'loại Quest Item',
+        title: 'loại câu hỏi',
         type: 'Thêm',
         id:'0'
       },
@@ -166,20 +164,7 @@ export class QuestItemTypeListComponent implements OnInit {
       next: (result) => {
         const data = result as { id: number; name: string };
         if (data.id > 0 && data.name.length > 0) {
-          this.toast.success('Tạo loại Quest Item thành công!', {
-            position: 'top-center',
-            duration: 5000,
-            style: {
-              border: '1px solid #0a0',
-              padding: '16px',
-            },
-            iconTheme: {
-              primary: '#0a0',
-              secondary: '#fff',
-            },
-            role: 'status',
-            ariaLive: 'polite',
-          });
+          this.toast.success('Tạo loại câu hỏi thành công!');
         }
         this.search$.next({
           ...this.search$.getValue(),
@@ -187,14 +172,15 @@ export class QuestItemTypeListComponent implements OnInit {
       },
     });
   }
-  onDelete(id: string) {
+  onUpdateStatus(id: string, status:string) {
     const bsModalRef = this.modalService.show(DeleteModalComponent, {
       initialState: {
         id: id,
-        title: 'loại Quest Item',
+        title: 'loại câu hỏi',
+        status: status
       },
     });
-    bsModalRef.onHide?.pipe(take(1)).subscribe({
+    bsModalRef.onHide?.pipe(take(1),filter((s)=>(s as any).data)).subscribe({
       next: (result) => {
         this.search$.next({
           ...this.search$.getValue(),
@@ -202,12 +188,11 @@ export class QuestItemTypeListComponent implements OnInit {
       },
     });
   }
-
   onUpdate(id: string) {
     const bsModalRef = this.modalService.show(QuestItemTypeModalComponent, {
       initialState: {
         id: id,
-        title: 'loại Quest Item',
+        title: 'loại câu hỏi',
         type: 'Cập nhật',
       },
     });
@@ -215,7 +200,7 @@ export class QuestItemTypeListComponent implements OnInit {
       next: (result) => {
         const data = result as { id: number; name: string };
         if (data.id > 0 && data.name !== undefined) {
-          this.toast.success('Cập nhật Quest Item thành công!', {
+          this.toast.success('Cập nhật loại câu hỏi thành công!', {
             position: 'top-center',
             duration: 2000,
             style: {

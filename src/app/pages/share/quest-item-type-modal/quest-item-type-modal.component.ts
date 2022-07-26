@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { HotToastService } from '@ngneat/hot-toast';
 import { RxState } from '@rx-angular/state';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import {
@@ -38,7 +39,8 @@ export class QuestItemTypeModalComponent implements OnInit {
     public bsModalRef: BsModalRef,
     private fb: FormBuilder,
     private state: RxState<QuestItemTypeState>,
-    private questItemTypeService: QuestItemTypeService
+    private questItemTypeService: QuestItemTypeService,
+    private toast: HotToastService
   ) {}
 
   ngOnInit(): void {
@@ -80,7 +82,8 @@ export class QuestItemTypeModalComponent implements OnInit {
                 .updateQuestItemTypeById(form.value)
                 .pipe(
                   catchError(() =>
-                    of({ status: 'data not modified', data: null })
+                { this.toast.error('Có lỗi hãy kiểm tra lại!');
+                return of({ status: 'data not modified', data: null });}
                   )
                 );
             } else {
@@ -88,7 +91,8 @@ export class QuestItemTypeModalComponent implements OnInit {
                 .addQuestItemType(form.value)
                 .pipe(
                   catchError(() =>
-                    of({ status: 'data not modified', data: null })
+                   { this.toast.error('Có lỗi hãy kiểm tra lại!');
+                   return of({ status: 'data not modified', data: null });}
                   )
                 );
             }

@@ -4,7 +4,6 @@ import { stringify } from 'query-string';
 import { map, Observable } from 'rxjs';
 import { environment } from 'src/environments/environment.prod';
 import {
-  IdValue,
   Paging,
   QuestItemType,
   QuestItemTypeCreate,
@@ -114,5 +113,21 @@ export class QuestItemTypeService extends BaseService {
       payload,
       { headers: this._sharedHeaders }
     );
+  }
+
+  updateStatus(
+    id: string,
+    status: string
+  ): Observable<QuestItemTypeListItem | undefined> {
+    return this.http
+      .put<Result<QuestItemTypeListItem>>(
+        `${environment.apiUrl}/api/v1/quest-item-types/${
+          status == 'Active' ? 'enable' : 'disable'
+        }/${id}`,
+        {
+          headers: this._sharedHeaders,
+        }
+      )
+      .pipe(map((response: Result<QuestItemTypeListItem>) => response.data));
   }
 }
