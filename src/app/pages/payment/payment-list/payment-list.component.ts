@@ -98,15 +98,18 @@ export class PaymentListComponent implements OnInit {
         name: 'Số lượng',
         minWidth: 18,
         sortable: false,
-        cellClass:''
+        headerClass: 'd-flex justify-content-center',
+        cellClass: 'd-flex justify-content-center',
+        
       },
       {
         prop: 'status',
         name: 'Trạng thái',
-        minWidth: 120,
+        minWidth: 90,
         sortable: false,
         cellTemplate:this.statusTemplate,
-        cellClass:'d-flex '
+        headerClass: 'd-flex justify-content-center',
+        cellClass: 'd-flex justify-content-center',
       },
       {
         prop: 'createdDate',
@@ -114,14 +117,17 @@ export class PaymentListComponent implements OnInit {
         sortable: false,
         cellTemplate: this.colCreatedAt,
         minWidth:100,
-        headerClass:''
+        headerClass: 'd-flex justify-content-center',
+        cellClass: 'd-flex justify-content-center',
       },
       {
         prop: 'paymentMethod',
         name: 'Phương thức',
-        minWidth: 100,
+        minWidth: 90,
         sortable: false,
         canAutoResize: true,
+        headerClass: 'd-flex justify-content-center',
+        cellClass: 'd-flex justify-content-center',
       },
 
       {
@@ -129,7 +135,9 @@ export class PaymentListComponent implements OnInit {
         name: 'Tổng',
         sortable: false,
         minWidth:140,
-        cellTemplate:this.formatPrice
+        cellTemplate:this.formatPrice,
+        headerClass: 'd-flex justify-content-center',
+        cellClass: 'd-flex justify-content-center',
       },
     ];
   }
