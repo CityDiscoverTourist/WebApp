@@ -25,7 +25,7 @@ export class CustomertaskService extends BaseService {
       `${search?.sort?.dir}` === 'undefined' ? '' : search.sort?.dir;
     const query = stringify({
       name: search.keyword,
-      status: search.status,
+      isFinished: search?.isFinished,
       pageNumber: isNaN(search?.currentPage!) ? 1 : search?.currentPage! + 1,
       pagesize: 10,
       orderby: `${sortBy} ${sortDir}`,

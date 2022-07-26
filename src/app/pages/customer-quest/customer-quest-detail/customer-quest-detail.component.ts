@@ -4,29 +4,22 @@ import {
   ChangeDetectorRef,
   Component,
   OnInit,
+  TemplateRef,
   ViewChild,
 } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RxState } from '@rx-angular/state';
 import { DatatableComponent, TableColumn } from '@swimlane/ngx-datatable';
+import { BehaviorSubject, Observable, Subject, switchMap, tap } from 'rxjs';
 import {
-  BehaviorSubject,
-  map,
-  merge,
-  Observable,
-  pipe,
-  Subject,
-  switchMap,
-  tap,
-} from 'rxjs';
-import {
+  CustomerQuest,
   CustomerTask,
   CustomerTaskListItem,
   Paging,
   PagingMetadata,
 } from 'src/app/models';
-import { SignalrService } from 'src/app/services';
+import { CustomerquestService, SignalrService } from 'src/app/services';
 import { CustomerTaskListState } from '../states';
 
 @Component({
@@ -38,6 +31,21 @@ import { CustomerTaskListState } from '../states';
 })
 export class CustomerQuestDetailComponent implements OnInit {
   private id: string;
+  isFinishes: { id: string; value: boolean }[] = [];
+  customerQuest: CustomerQuest = {
+    id: 0,
+    beginPoint: '',
+    endPoint: '',
+    createdDate: new Date(),
+    rating: 0,
+    feedBack: '',
+    customerId: '',
+    customerName: '',
+    isFinished: false,
+    questId: 0,
+    paymentId: '',
+    status: '',
+  };
 
   @ViewChild(DatatableComponent) table!: DatatableComponent;
   columns: TableColumn[] = [];
@@ -48,12 +56,22 @@ export class CustomerQuestDetailComponent implements OnInit {
     private customerTaskListState: RxState<CustomerTaskListState>,
     private router: Router,
     private route: ActivatedRoute,
-    private cd: ChangeDetectorRef
+    private cd: ChangeDetectorRef,
+    private customerQuestService: CustomerquestService
   ) {}
 
   ngOnInit(): void {
+    this.isFinishes = this.customerQuestService.isFinishes;
     this.id = this.route.snapshot.params['id'];
-    console.log(this.id);
+    if (Number(this.id) > 0) {
+      this.customerQuestService
+        .getCustomerQuestById(this.id)
+        .subscribe((data) => {
+          console.log(data);
+
+          this.customerQuest = data;
+        });
+    }
     this.initTable();
     this.signalRService.startConnection();
     this.signalRService.addTranferDataListener();
@@ -109,43 +127,12 @@ export class CustomerQuestDetailComponent implements OnInit {
       this.signalRService.subjectUpdateCustomerTask$.pipe(
         tap((data) => data as CustomerTask)
       ),
-      (prev, result) =>
-        // {
-        //   var data = prev.customertasks;
-        //  var bc= data.find((x) => {
-        //     if (x.questItemId === result.questItemId) {
-        //       x.currentPoint = result.currentPoint;
-        //       x.status = result.status;
-        //       x.countWrongAnswer = result.countWrongAnswer;
-        //       x.countSuggestion = result.countSuggestion;
-        //       x.isFinished = result.isFinished;
-        //     }
-        //   });
-        //   console.log("ddddddddddd");
-        //   console.log(bc);
-        //   prev.customertasks = data;
-        //   console.log("hehe");
-        //   console.log({...prev});
-        //   return {...prev};
-        // var data = prev.customertasks;
-        // data.forEach((x) => {
-        //   if (x.questItemId === result.questItemId) {
-        //     x.currentPoint = result.currentPoint;
-        //     x.status = result.status;
-        //     x.countWrongAnswer = result.countWrongAnswer;
-        //     x.countSuggestion = result.countSuggestion;
-        //     x.isFinished = result.isFinished;
-        //   }
-        // });
-        // prev.customertasks = data;
-        // return {...prev};
-        // }
-        ({
-          customertasks: [
-            ...prev.customertasks.slice(0, prev.customertasks.length - 1),
-            result,
-          ],
-        })
+      (prev, result) => ({
+        customertasks: [
+          ...prev.customertasks.slice(0, prev.customertasks.length - 1),
+          result,
+        ],
+      })
     );
   }
 
@@ -162,7 +149,9 @@ export class CustomerQuestDetailComponent implements OnInit {
   //     .get(`https://citytourist.azurewebsites.net/api/v1/customer-tasks`)
   //     .subscribe((data) => console.log(data));
   // };
-
+  @ViewChild('colCreatedAt', { static: true }) colCreatedAt!: TemplateRef<any>;
+  @ViewChild('isFinishedTemplate', { static: true })
+  isFinishedTemplate!: TemplateRef<any>;
   initTable() {
     this.columns = [
       // {
@@ -174,69 +163,74 @@ export class CustomerQuestDetailComponent implements OnInit {
       {
         prop: 'currentPoint',
         canAutoResize: true,
-        // name: 'Địa chỉ',
+        name: 'Điểm hiện tại',
         sortable: true,
-        cellClass: 'text-overflow: ellipsis;',
+        minWidth: 50,
+        headerClass: 'd-flex justify-content-center',
+        cellClass: 'd-flex justify-content-center',
       },
-      {
-        prop: 'status',
-        maxWidth: 100,
-        minWidth: 150,
-        // name: 'Trạng thái',
-        sortable: true,
-      },
+      // {
+      //   prop: 'status',
+      //   maxWidth: 100,
+      //   minWidth: 150,
+      //   // name: 'Trạng thái',
+      //   sortable: true,
+      // },
       {
         prop: 'createdDate',
-        maxWidth: 100,
         minWidth: 150,
-        // name: 'Trạng thái',
+        name: 'Ngày tạo',
         sortable: true,
+        cellTemplate: this.colCreatedAt,
+        headerClass: 'd-flex justify-content-center',
+        cellClass: 'd-flex justify-content-center',
       },
       {
         prop: 'questItemId',
-        maxWidth: 100,
         minWidth: 150,
+        name: 'Câu hỏi',
         // name: 'Trạng thái',
         sortable: true,
-      },
-      {
-        prop: 'customerQuestId',
-        maxWidth: 100,
-        minWidth: 150,
-        // name: 'Trạng thái',
-        sortable: true,
+        headerClass: 'd-flex justify-content-center',
+        cellClass: 'd-flex justify-content-center',
       },
       {
         prop: 'countWrongAnswer',
-        maxWidth: 100,
+        name: 'Số lần sai',
+
         minWidth: 150,
-        // name: 'Trạng thái',
         sortable: true,
+        headerClass: 'd-flex justify-content-center',
+        cellClass: 'd-flex justify-content-center',
       },
       {
         prop: 'countSuggestion',
-        maxWidth: 100,
+        name: 'Số lần gợi ý',
         minWidth: 150,
-        // name: 'Trạng thái',
         sortable: true,
+        headerClass: 'd-flex justify-content-center',
+        cellClass: 'd-flex justify-content-center',
       },
       {
         prop: 'isFinished',
-        maxWidth: 100,
-        minWidth: 150,
-        // name: 'Trạng thái',
-        sortable: true,
+        name: 'Kết thúc',
+        sortable: false,
+        minWidth: 90,
+        headerClass: 'd-flex justify-content-center',
+        canAutoResize: true,
+        cellTemplate: this.isFinishedTemplate,
+        cellClass: 'd-flex justify-content-center',
       },
     ];
   }
   submitSearch$ = new Subject<
-    Partial<{ keyword: string; cityIds: number[] }>
+    Partial<{ keyword: string; isFinished: string }>
   >();
   search$ = new BehaviorSubject<{}>({});
   resetSearch$ = new Subject<void>();
   searchForm = new FormGroup({
     keyword: new FormControl(),
-    status: new FormControl(),
+    isFinished: new FormControl(),
   });
 
   onUpdate(id: string) {}

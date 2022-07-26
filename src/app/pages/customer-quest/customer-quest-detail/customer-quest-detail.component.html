@@ -1,122 +1,114 @@
-<div class="pt-3 px-5">
-    <!-- <div class="d-flex align-items-center justify-content-between">
+<div class="pt-1 px-5">
+  <!-- <div class="d-flex align-items-center justify-content-between">
         <div class="flex-fill"></div>
         <a class="btn btn-primary" style="min-width: 120px">
           <i class="bi bi-plus"></i> Thêm khu vực
         </a>
       </div> -->
-    <div class="bg-white my-3 p-3 rounded">
-      <div class="rounded bg-white">
-        <form class="mb-4" [formGroup]="searchForm">
-          <div class="d-flex">
-            <div class="input-group me-3">
-              <span
-                class="input-group-text bg-white border-end-0"
-                id="search-icon"
-                ><i class="bi bi-search"></i
-              ></span>
-              <input
-                type="text"
-                class="border-start-0 form-control outline-none"
-                placeholder="Tìm kiếm customer task"
-                aria-label="Tìm kiếm customer task"
-                aria-describedby="search-icon"
-                formControlName="keyword"
-                (keyup.enter)="search$.next(searchForm.value)"
-              />
-            </div>
-            <!-- bindValue="id"
-              bindLabel="value" -->
-            <!-- placeholder="Thành phố" -->
-            <ng-select
-              [items]="['ok', 'ko ok']"
-              [closeOnSelect]="true"
-              style="min-width: 200px"
-              class="me-3"
-              formControlName="status"
-            ></ng-select>
-            <button
-              type="button"
-              class="btn btn-primary"
-              style="min-width: 120px"
-              (click)="submitSearch$.next(searchForm.value)"
-            >
-              <i class="bi bi-search"></i>
-              Tìm kiếm
-            </button>
-            <button
-              type="button"
-              class="btn btn-default"
-              style="min-width: 100px"
-              (click)="resetSearch$.next()"
-            >
-              <i class="bi bi-x-lg"></i>
-              Reset
-            </button>
+
+  <div class="bd-example bg-white rounded">
+    <ul class="list-group list-group-flush">
+      <li class="list-group-item">
+        Khách hàng: {{ customerQuest.customerName }}
+      </li>
+      <li class="list-group-item">
+        Mã thanh toán: {{ customerQuest.paymentId }}
+      </li>
+      <li class="list-group-item">
+        Phản hồi:
+        {{ customerQuest.feedBack }}
+      </li>
+    </ul>
+  </div>
+  <div class="bg-white my-3 p-3 rounded">
+    <div class="rounded bg-white">
+      <!-- <form class="mb-4" [formGroup]="searchForm">
+        <div class="d-flex">
+          <div class="input-group me-3">
+            <span
+              class="input-group-text bg-white border-end-0"
+              id="search-icon"
+              ><i class="bi bi-search"></i
+            ></span>
+            <input
+              type="text"
+              class="border-start-0 form-control outline-none"
+              placeholder="Tìm kiếm customer task"
+              aria-label="Tìm kiếm customer task"
+              aria-describedby="search-icon"
+              formControlName="keyword"
+              (keyup.enter)="search$.next(searchForm.value)"
+            />
           </div>
-        </form>
-        <!-- table -->
-        <div class="border overflow-hidden rouded shadow-sm">
-          <ngx-datatable
-            class="material rounded"
-            [rows]="customerTasks$ | async"
-            [columns]="columns"
-            columnMode="force"
-            [headerHeight]="50"
-            [footerHeight]="50"
-            [rowHeight]="50"
-            [trackByProp]="'updated'"
-            [offset]="((metadata$ | async)?.currentPage || 0) - 1"
-            [limit]="20"
+          <ng-select
+            [items]="isFinishes"
+            bindValue="value"
+            bindLabel="id"
+            style="min-width: 200px"
+            class="me-3"
+            formControlName="isFinished"
+          ></ng-select>
+          <button
+            type="button"
+            class="btn btn-primary"
+            style="min-width: 120px"
+            (click)="submitSearch$.next(searchForm.value)"
           >
-          <!-- [externalPaging]="true"
-            [externalSorting]="true"
-            [count]="(metadata$ | async)?.totalCount || 0" -->
-          <!-- [messages]="{
-            emptyMessage: 'Không có customer task để hiển thị!',
-            totalMessage: 'customer task'
-          }" -->
-            <ng-template
-              #actionTemplate
-              let-row="row"
-              let-value="value"
-              let-expanded="expanded"
-              ngx-datatable-cell-template
-            >
-              <!-- <button
-                  class="btn btn-sm me-2"
-                  style="
-                    color: #fff;
-                    background-color: #4caf50;
-                    border-color: #4caf50;
-                  "
-                  type="button"
-                  data-toggle="tooltip"
-                  data-placement="top"
-                  title="Edit"
-                  (click)="onUpdate(row.id)"
-                >
-                  <i class="bi bi-pencil"></i>
-                </button> -->
-              <button
-                class="btn btn-sm me-2"
-                type="button"
-                style="
-                  color: #fff;
-                  background-color: #f44335;
-                  border-color: #f44335;
-                "
-                data-toggle="tooltip"
-                data-placement="top"
-                title="Delete"
-                (click)="onDelete(row.id)"
-              >
-                <i class="bi bi-trash3"></i>
-              </button>
-            </ng-template>
-          </ngx-datatable>
+            <i class="bi bi-search"></i>
+            Tìm kiếm
+          </button>
+          <button
+            type="button"
+            class="btn btn-default"
+            style="min-width: 100px"
+            (click)="resetSearch$.next()"
+          >
+            <i class="bi bi-x-lg"></i>
+            Reset
+          </button>
         </div>
+      </form> -->
+      <!-- table -->
+      <div class="border overflow-hidden rouded shadow-sm">
+        <ngx-datatable
+          class="material rounded"
+          [rows]="customerTasks$ | async"
+          [columns]="columns"
+          columnMode="force"
+          [headerHeight]="50"
+          [footerHeight]="50"
+          [rowHeight]="50"
+          [trackByProp]="'updated'"
+          [offset]="((metadata$ | async)?.currentPage || 0) - 1"
+          [limit]="20"
+          [messages]="{
+            emptyMessage: 'Không có customer task hiển thị!',
+            totalMessage: 'customer task'
+          }"
+        >
+          <ng-template #isFinishedTemplate let-value="value" let-row="row">
+            <span
+              [ngStyle]="{
+                'background-color':
+                  row.isFinished == true ? '#4caf50' : '#0d6efd',
+                color: '#fff',
+                transition: '200ms',
+                padding: '5px 0px',
+                display: 'inline-block',
+                'text-align': 'center',
+                width: '120px',
+                'border-radius': '9px'
+              }"
+              >{{
+                row.isFinished == true ? "Đã kết thúc" : "Đang hoạt động"
+              }}</span
+            >
+          </ng-template>
+        </ngx-datatable>
       </div>
     </div>
   </div>
-  
+  <ng-template #colCreatedAt let-value="value">
+    {{ value | date: "dd/MM/yyyy, h:mm a" }}
+  </ng-template>
+</div>

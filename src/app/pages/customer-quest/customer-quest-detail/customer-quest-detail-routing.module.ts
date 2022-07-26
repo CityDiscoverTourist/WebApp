@@ -5,11 +5,13 @@ import { CustomerQuestDetailComponent } from './customer-quest-detail.component'
 const routes: Routes = [
   {
     path: '',
-    component: CustomerQuestDetailComponent,
+  component: CustomerQuestDetailComponent,
+    data: { title: 'Quay lại danh sách customer quest', url: 'customer-quest' },
   },
   {
     path: 'list',
-    component: CustomerQuestDetailComponent,
+  component: CustomerQuestDetailComponent,
+    data: { title: 'Quay lại danh sách customer quest', url: 'customer-quest' },
   },
 ];
 

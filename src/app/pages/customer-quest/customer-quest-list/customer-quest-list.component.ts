@@ -144,7 +144,7 @@ export class CustomerQuestListComponent implements OnInit {
     ];
   }
 
-  submitSearch$ = new Subject<Partial<{ keyword: string; status: string }>>();
+  submitSearch$ = new Subject<Partial<{ keyword: string; isFinished: string }>>();
   resetSearch$ = new Subject<void>();
   search$ = new BehaviorSubject<SearchInfo>({});
   searchForm = new FormGroup({
@@ -153,8 +153,7 @@ export class CustomerQuestListComponent implements OnInit {
   });
   get questtypes$(): Observable<CustomerQuestListItem[]> {
     return this.customerQuestListState
-      .select('customerquests')
-      .pipe(tap((data) => console.log(data)));
+      .select('customerquests');
   }
   get metadata$(): Observable<PagingMetadata> {
     return this.customerQuestListState.select('metadata');
