@@ -1,4 +1,4 @@
-import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Component, OnInit, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { HotToastService } from '@ngneat/hot-toast';
 import { RxState } from '@rx-angular/state';
@@ -24,6 +24,7 @@ import { QuestTypeListState } from '../states';
   templateUrl: './quest-type-list.component.html',
   styleUrls: ['./quest-type-list.component.scss'],
   providers: [RxState],
+  encapsulation: ViewEncapsulation.None,
 })
 export class QuestTypeListComponent implements OnInit {
   @ViewChild(DatatableComponent) table!: DatatableComponent;
@@ -85,7 +86,7 @@ export class QuestTypeListComponent implements OnInit {
   public actionTemplate: TemplateRef<any>;
   @ViewChild('imageTemplate', { static: true })
   public imageTemplate: TemplateRef<any>;
-
+  @ViewChild('statusTemplate', { static: true })  public statusTemplate: TemplateRef<any>;
   initTable() {
     this.columns = [
       {
@@ -98,17 +99,18 @@ export class QuestTypeListComponent implements OnInit {
       },
       {
         prop: 'name',
-        name: 'Tên loại Quest',
+        name: 'Tên loại quest',
         sortable: true,
-        minWidth: 300,
+        minWidth: 350,
       },
       {
         prop: 'status',
         maxWidth: 350,
-        minWidth: 200,
+        minWidth: 150,
         name: 'Trạng thái',
         sortable: true,
         canAutoResize: true,
+        cellTemplate:this.statusTemplate
       },
       {
         prop: 'action',
@@ -173,20 +175,7 @@ export class QuestTypeListComponent implements OnInit {
         next: (result) => {
           const data = result as { id: number; name: string };
           if (data.id > 0 && data.name.length > 0) {
-            this.toast.success('Tạo loại Quest thành công!', {
-              position: 'top-center',
-              duration: 5000,
-              style: {
-                border: '1px solid #0a0',
-                padding: '16px',
-              },
-              iconTheme: {
-                primary: '#0a0',
-                secondary: '#fff',
-              },
-              role: 'status',
-              ariaLive: 'polite',
-            });
+            this.toast.success('Tạo loại quest thành công!');
           }
           this.search$.next({
             ...this.search$.getValue(),
@@ -194,32 +183,28 @@ export class QuestTypeListComponent implements OnInit {
         },
       });
   }
-  onDelete(id: string) {
+  onUpdateStatus(id: string, status:string) {
     const bsModalRef = this.modalService.show(DeleteModalComponent, {
       initialState: {
         id: id,
-        title: 'loại Quest',
+        title: 'loại quest',
+        status: status
       },
     });
-    bsModalRef.onHide
-      ?.pipe(
-        take(1),
-        filter((s) => (s as any).success)
-      )
-      .subscribe({
-        next: (result) => {
-          this.search$.next({
-            ...this.search$.getValue(),
-          });
-        },
-      });
+    bsModalRef.onHide?.pipe(take(1),filter((s)=>(s as any).data)).subscribe({
+      next: (result) => {
+        this.search$.next({
+          ...this.search$.getValue(),
+        });
+      },
+    });
   }
 
   onUpdate(id: string) {
     const bsModalRef = this.modalService.show(QuestTypeModalComponent, {
       initialState: {
         id: id,
-        title: 'loại Quest',
+        title: 'loại quest',
         type: 'Cập nhật',
       },
     });
@@ -232,21 +217,7 @@ export class QuestTypeListComponent implements OnInit {
         next: (result) => {
           const data = result as { id: number; name: string };
           if (data.id > 0 && data.name !== undefined) {
-            this.toast.success('Cập nhật loại Quest thành công!', {
-              position: 'top-center',
-              duration: 2000,
-              style: {
-                border: '1px solid #0a0',
-                padding: '16px',
-              },
-              iconTheme: {
-                primary: '#0a0',
-                secondary: '#fff',
-              },
-              role: 'status',
-              ariaLive: 'polite',
-            });
-            window.location.reload();
+            this.toast.success('Cập nhật loại quest thành công!');
             this.search$.next({
               ...this.search$.getValue(),
             });

@@ -9,12 +9,14 @@ import { NgSelectModule } from '@ng-select/ng-select';
 import { HotToastModule } from '@ngneat/hot-toast';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { ModalModule } from 'ngx-bootstrap/modal';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
 
 const lib = [
   NgxDatatableModule,
   ModalModule.forRoot(),
   HotToastModule.forRoot(),
   NgSelectModule,
+  TooltipModule.forRoot(),
 ];
 
 @NgModule({
