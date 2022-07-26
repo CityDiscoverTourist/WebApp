@@ -13,3 +13,4 @@ export * from './user.model';
 export * from './customer.model';
 export * from './payment.model';
 export * from './suggestion.model';
+export * from './notification.model';

@@ -1,19 +1,16 @@
-import { Component, ElementRef, OnInit } from '@angular/core';
-import {
-  Location,
-  LocationStrategy,
-  PathLocationStrategy,
-} from '@angular/common';
-import { NavigationEnd, Router } from '@angular/router';
+import { Location } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { AuthenticateService } from 'src/app/services';
-
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
+import { AuthenticateService, NotificationService } from 'src/app/services';
+import { Notification } from 'src/app/models';
 @Component({
   selector: 'app-navbar',
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.scss'],
 })
 export class NavbarComponent implements OnInit {
+  notications: Notification[] = [];
   public focus: any;
   public listTitles: any[] = [];
   public location: Location;
@@ -22,8 +19,10 @@ export class NavbarComponent implements OnInit {
   public pageUrl = '';
   constructor(
     titleService: Title,
-    router: Router,
-    private auth: AuthenticateService
+    private authService: AuthenticateService,
+    private router: Router,
+    private activatedRoute: ActivatedRoute,
+    private notificationService: NotificationService
   ) {
     router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
@@ -40,7 +39,13 @@ export class NavbarComponent implements OnInit {
       }
     });
   }
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.notificationService
+      .getNotifications()
+      .subscribe((data) => {
+        // this.notications=data.data;
+      });
+  }
 
   // collect that title data properties from all child routes
   // there might be a better way but this worked for me
@@ -67,5 +72,24 @@ export class NavbarComponent implements OnInit {
     return data;
   }
 
-  
+  isShow = false;
+
+  changeShow() {
+    if (this.isShow) {
+      this.isShow = false;
+    } else this.isShow = true;
+  }
+  isShow1 = false;
+
+  changeShow1() {
+    if (this.isShow1) {
+      this.isShow1 = false;
+    } else this.isShow1 = true;
+  }
+  exit() {
+    this.authService.clearToken();
+    this.router.navigate(['../login'], {
+      relativeTo: this.activatedRoute,
+    });
+  }
 }
