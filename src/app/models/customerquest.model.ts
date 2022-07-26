@@ -8,23 +8,26 @@ export interface CustomerQuest {
   rating: number;
   feedBack: string;
   customerId: string;
-  isFinished: true;
+  customerName:string;
+  isFinished: boolean;
   questId: number;
+  paymentId:string;
   status: string;
-  // paymentMethod:{};
+
 }
 
 export interface CustomerQuestListItem {
-  // id: number;
-  //customerId:string;
+  id: number;
   beginPoint: string;
   endPoint: string;
   createdDate: Date;
   rating: number;
   feedBack: string;
   customerId: string;
-  isFinished: true;
+  customerName:string;
+  isFinished: boolean;
   questId: number;
+  paymentId:string;
   status: string;
 }
 
