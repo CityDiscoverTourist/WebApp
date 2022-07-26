@@ -67,6 +67,7 @@ export class QuestItemTypeService extends BaseService {
     );
     return result;
   }
+  
 
   addQuestItemType(
     payload: Partial<QuestItemTypeCreate>

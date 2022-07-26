@@ -200,20 +200,7 @@ export class QuestItemTypeListComponent implements OnInit {
       next: (result) => {
         const data = result as { id: number; name: string };
         if (data.id > 0 && data.name !== undefined) {
-          this.toast.success('Cập nhật loại câu hỏi thành công!', {
-            position: 'top-center',
-            duration: 2000,
-            style: {
-              border: '1px solid #0a0',
-              padding: '16px',
-            },
-            iconTheme: {
-              primary: '#0a0',
-              secondary: '#fff',
-            },
-            role: 'status',
-            ariaLive: 'polite',
-          });
+          this.toast.success('Cập nhật loại câu hỏi thành công!');
           this.search$.next({
             ...this.search$.getValue(),
           });
