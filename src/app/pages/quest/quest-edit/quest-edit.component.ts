@@ -3,7 +3,7 @@ import {
   ChangeDetectorRef,
   Component,
   Inject,
-  OnInit,
+  OnInit
 } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -19,11 +19,8 @@ import {
   partition,
   pipe,
   Subject,
-  switchMap,
-  tap,
-  take,
+  switchMap, take, tap
 } from 'rxjs';
-import { hourValidator } from 'src/app/common/validations';
 import { IdValue, Quest, QuestCreate, QuestListItem } from 'src/app/models';
 import { QuestService } from 'src/app/services';
 import { AreaModalComponent, QuestTypeModalComponent } from '../../share';
