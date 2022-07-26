@@ -25,5 +25,5 @@ export interface CustomerTaskListItem {
 }
 
 export interface CustomerTaskListSearch extends SearchInfo {
-  status?: number[];
+  isFinished?: number[];
 }
