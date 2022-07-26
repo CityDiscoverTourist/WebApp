@@ -17,10 +17,14 @@ import { BaseService } from './base.service';
   providedIn: 'root',
 })
 export class QuestTypeService extends BaseService {
+  private _sharedHeaders = new HttpHeaders();
   constructor(private http: HttpClient) {
     super();
+    this._sharedHeaders = this._sharedHeaders.set(
+      'Content-Type',
+      'application/json'
+    );
   }
-
   httpOptions = {
     headers: new HttpHeaders({ encrypt: 'multipart/form-data' }),
   };
@@ -121,5 +125,21 @@ export class QuestTypeService extends BaseService {
       payload,
       this.httpOptions
     );
+  }
+
+  updateStatus(
+    id: string,
+    status: string
+  ): Observable<QuestTypeListItem | undefined> {
+    return this.http
+      .put<Result<QuestTypeListItem>>(
+        `${environment.apiUrl}/api/v1/quest-types/${
+          status == 'Active' ? 'enable' : 'disable'
+        }/${id}`,
+        {
+          headers: this._sharedHeaders,
+        }
+      )
+      .pipe(map((response: Result<QuestTypeListItem>) => response.data));
   }
 }
