@@ -5,6 +5,7 @@ import {
   OnInit,
 } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { HotToastService } from '@ngneat/hot-toast';
 import { RxState } from '@rx-angular/state';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import {
@@ -39,13 +40,14 @@ export class QuestTypeModalComponent implements OnInit {
   title: string = '';
   type: string = '';
   public img: string = '';
- status: { id: string; value: string }[] = [];
+  status: { id: string; value: string }[] = [];
   constructor(
     public bsModalRef: BsModalRef,
     private fb: FormBuilder,
     private state: RxState<QuestTypeDetailState>,
     private questTypeService: QuestTypeService,
-    private cd: ChangeDetectorRef
+    private cd: ChangeDetectorRef,
+    private toast: HotToastService
   ) {
     this.state.set({
       files: [],
@@ -55,44 +57,38 @@ export class QuestTypeModalComponent implements OnInit {
   ngOnInit(): void {
     this.initForm();
     this.status = this.questTypeService.status;
-    this.search$.next({ id: this.id });
-    this.state.connect(
-      this.search$
-        .pipe(
-          tap((_) => this.state.set({ loading: true })),
-          switchMap((s) => {
-            // var id = s.id > 0 ? s.id : '0';
-            return this.questTypeService.getQuestTypeById(s.id);
-          })
-        )
-        .pipe(
-          tap((data) => {
-            this.form.patchValue({
-              id: data.id,
-              name: data.name,
-              status: data.status,
-            });
-            this.img = data.imagePath;
-          })
-        ),
-      (_, result) => ({
-        quest: result,
-        loading: false,
-      })
-    );
+    if (Number(this.id) > 0) {
+      this.search$.next({ id: this.id });
+      this.state.connect(
+        this.search$
+          .pipe(
+            tap((_) => this.state.set({ loading: true })),
+            switchMap((s) => {
+              return this.questTypeService.getQuestTypeById(s.id);
+            })
+          )
+          .pipe(
+            tap((data) => {
+              this.form.patchValue({
+                id: data.id,
+                name: data.name,
+                status: data.status,
+              });
+              this.img = data.imagePath;
+            })
+          ),
+        (_, result) => ({
+          quest: result,
+          loading: false,
+        })
+      );
+    }
 
     this.state.connect(
       this.selectedFile$
         .pipe(tap(() => setTimeout(() => this.cd.detectChanges(), 100)))
-        .pipe(
-          tap((file) => {
-            this.img = '';
-            this.form.patchValue({ image: file[0] });
-          })
-        ),
-      (_prev, files) => ({
-        files: [...files],
-      })
+        .pipe(tap((file) => this.form.patchValue({ image: file[0] }))),
+      (_prev, files) => ({ files: [...files] })
     );
 
     this.state.connect(
@@ -128,21 +124,19 @@ export class QuestTypeModalComponent implements OnInit {
           }),
           switchMap(({ form }) => {
             if (+this.id > 0) {
-              return this.questTypeService
-                .updateQuestTypeById(form.value)
-                .pipe(
-                  catchError(() =>
-                    of({ status: 'data not modified', data: null })
-                  )
-                );
+              return this.questTypeService.updateQuestTypeById(form.value).pipe(
+                catchError(() => {
+                  this.toast.error('Có lỗi hãy kiểm tra lại!');
+                  return of({ status: 'data not modified', data: null });
+                })
+              );
             } else {
-              return this.questTypeService
-                .addQuestType(form.value)
-                .pipe(
-                  catchError(() =>
-                    of({ status: 'data not modified', data: null })
-                  )
-                );
+              return this.questTypeService.addQuestType(form.value).pipe(
+                catchError(() => {
+                  this.toast.error('Có lỗi hãy kiểm tra lại!');
+                  return of({ status: 'data not modified', data: null });
+                })
+              );
             }
           })
         )

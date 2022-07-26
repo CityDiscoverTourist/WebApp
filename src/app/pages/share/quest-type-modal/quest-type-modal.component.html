@@ -19,10 +19,10 @@
         type="text"
         class="form-control"
         formControlName="name"
-        [ngClass]="{ 'is-invalid': form?.hasError('name') }"
+        [ngClass]="{ 'is-invalid': form.hasError('name') }"
       />
       <div class="invalid-feedback" *ngIf="form.hasErrorOf('name', 'required')">
-        Tên của loại Quest Item không được để trống
+        Tên của loại quest bắt buộc
       </div>
       <small id="name" class="form-text text-muted" *ngIf="name > 0"
         >Dùng | để phân cách nếu thêm tên tiếng anh
@@ -37,17 +37,17 @@
       <ng-select
         [items]="status"
         bindValue="value"
-        bindLabel="value"
+        bindLabel="id"
         placeholder="Chọn trạng thái"
         [clearable]="false"
         formControlName="status"
-        [ngClass]="{ 'is-invalid': form?.hasError('status') }"
+        [ngClass]="{ 'is-invalid': form.hasError('status') }"
       ></ng-select>
       <div
         class="invalid-feedback"
         *ngIf="form.hasErrorOf('status', 'required')"
       >
-        Vui lòng chọn trạng thái
+      Trạng thái bắt buộc
       </div>
     </div>
     <div class="card mb-3 mt-3">
@@ -57,45 +57,42 @@
         </div>
         <div class="border rounded text-center">
           <div
-            class="custom-dropzone"
-            style="border: none"
-            ngx-dropzone
-            [accept]="'image/*'"
-            [multiple]="false"
-            (change)="selectedFile$.next($event.addedFiles)"
+          class="custom-dropzone"
+          style="border: none; height: 150px"
+          ngx-dropzone
+          [accept]="'image/*'"
+          [multiple]="false"
+          (change)="selectedFile$.next($event.addedFiles)"
+        >
+          <div
+            *ngIf="img"
+            style="
+              display: flex;
+              justify-content: center;
+              color: #333;
+              cursor: pointer;
+            "
           >
-            <div
-              *ngIf="img"
-              style="
-                display: flex;
-                justify-content: center;
-                color: #333;
-                cursor: pointer;
-              "
-            >
-              <img style="width: 140px; height: 140px" [src]="img" />
-              <!-- <span><i class="bi bi-x-circle-fill"></i></span> -->
-            </div>
-            <ngx-dropzone-label *ngIf="!img">
-              <div>
-                <i class="bi bi-plus"></i>
-                <span>kéo và thả hình ảnh ở đây hoặc</span>
-                <span class="ms-1 text-decoration-underline text-primary">
-                  tải lên từ máy tính của bạn</span
-                >
-              </div>
-            </ngx-dropzone-label>
-            <ngx-dropzone-image-preview
-              ngProjectAs="ngx-dropzone-preview"
-              *ngFor="let f of vm.files"
-              [file]="f"
-              [removable]="true"
-              (removed)="removedFiles$.next(f)"
-            >
-              <!-- <ngx-dropzone-label
-                >{{ f.name }} ({{ f.type }})</ngx-dropzone-label> -->
-            </ngx-dropzone-image-preview>
+            <img style="width: 140px; height: 140px" [src]="img" />
           </div>
+          <ngx-dropzone-label *ngIf="!img">
+            <div>
+              <i class="bi bi-plus"></i>
+              <span>kéo và thả hình ảnh ở đây hoặc</span>
+              <span class="ms-1 text-decoration-underline text-primary">
+                tải lên từ máy tính của bạn</span
+              >
+            </div>
+          </ngx-dropzone-label>
+          <ngx-dropzone-image-preview
+            ngProjectAs="ngx-dropzone-preview"
+            *ngFor="let f of vm.files"
+            [file]="f"
+            [removable]="true"
+            (removed)="removedFiles$.next(f)"
+          >
+          </ngx-dropzone-image-preview>
+        </div>
         </div>
       </div>
     </div>
