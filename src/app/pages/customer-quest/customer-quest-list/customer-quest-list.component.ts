@@ -3,22 +3,17 @@ import {
   OnInit,
   TemplateRef,
   ViewChild,
-  ViewEncapsulation
+  ViewEncapsulation,
 } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RxState } from '@rx-angular/state';
 import { DatatableComponent, TableColumn } from '@swimlane/ngx-datatable';
-import {
-  BehaviorSubject,
-  Observable,
-  Subject,
-  switchMap, tap
-} from 'rxjs';
+import { BehaviorSubject, Observable, Subject, switchMap, tap } from 'rxjs';
 import {
   CustomerQuestListItem,
   PagingMetadata,
-  SearchInfo
+  SearchInfo,
 } from 'src/app/models';
 import { CustomerquestService } from 'src/app/services';
 import { PageInfo, SortInfo } from 'src/app/types';
@@ -144,7 +139,9 @@ export class CustomerQuestListComponent implements OnInit {
     ];
   }
 
-  submitSearch$ = new Subject<Partial<{ keyword: string; isFinished: string }>>();
+  submitSearch$ = new Subject<
+    Partial<{ keyword: string; isFinished: string }>
+  >();
   resetSearch$ = new Subject<void>();
   search$ = new BehaviorSubject<SearchInfo>({});
   searchForm = new FormGroup({
@@ -152,8 +149,7 @@ export class CustomerQuestListComponent implements OnInit {
     isFinished: new FormControl(),
   });
   get questtypes$(): Observable<CustomerQuestListItem[]> {
-    return this.customerQuestListState
-      .select('customerquests');
+    return this.customerQuestListState.select('customerquests');
   }
   get metadata$(): Observable<PagingMetadata> {
     return this.customerQuestListState.select('metadata');
@@ -176,7 +172,8 @@ export class CustomerQuestListComponent implements OnInit {
   }
   onActivate(event: any) {
     if (event.type == 'click') {
-      console.log(event.row);
+      console.log(event.row.questId);
+      localStorage.setItem('questId', event.row.questId);
       this.router.navigate(['./', event.row.id, 'customer-tasks'], {
         relativeTo: this.activatedRoute,
       });

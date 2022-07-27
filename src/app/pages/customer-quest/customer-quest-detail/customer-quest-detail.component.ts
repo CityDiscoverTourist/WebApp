@@ -19,7 +19,11 @@ import {
   Paging,
   PagingMetadata,
 } from 'src/app/models';
-import { CustomerquestService, SignalrService } from 'src/app/services';
+import {
+  CustomerquestService,
+  QuestService,
+  SignalrService,
+} from 'src/app/services';
 import { CustomerTaskListState } from '../states';
 
 @Component({
@@ -47,6 +51,8 @@ export class CustomerQuestDetailComponent implements OnInit {
     status: '',
   };
 
+  title: string;
+
   @ViewChild(DatatableComponent) table!: DatatableComponent;
   columns: TableColumn[] = [];
 
@@ -57,20 +63,25 @@ export class CustomerQuestDetailComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private cd: ChangeDetectorRef,
-    private customerQuestService: CustomerquestService
+    private customerQuestService: CustomerquestService,
+    private questService: QuestService
   ) {}
 
   ngOnInit(): void {
     this.isFinishes = this.customerQuestService.isFinishes;
     this.id = this.route.snapshot.params['id'];
+    console.log(this.id);
+
     if (Number(this.id) > 0) {
       this.customerQuestService
         .getCustomerQuestById(this.id)
         .subscribe((data) => {
-          console.log(data);
-
           this.customerQuest = data;
         });
+      var questId = localStorage.getItem('questId')?.toString();
+      this.questService
+        .getQuestById(questId)
+        .subscribe((data) => (this.title = data.title));
     }
     this.initTable();
     this.signalRService.startConnection();
