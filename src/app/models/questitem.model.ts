@@ -17,6 +17,7 @@ export interface QuestItem {
   locationId: number;
   questId: number;
   itemId: number;
+  listImages:[];
 }
 
 export interface QuestItemCreate{
