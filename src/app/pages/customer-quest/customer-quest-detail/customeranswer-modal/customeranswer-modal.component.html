@@ -14,11 +14,15 @@
       *ngFor="let item of customerAnswers; let i = index"
     >
       <div class="row">
-        <div class="col-3">Lần {{ i }}:</div>
+        <div class="col-3">Lần {{ i + 1 }}:</div>
         <div class="col-9">
           <span class="me-2">{{ item.customerReply }}</span>
-          <span *ngIf="item.note == 'CorrectAnswer'">Đúng</span>
-          <span *ngIf="item.note == 'WrongAnswer'">Sai</span>
+          <span *ngIf="item.note == 'CorrectAnswer'" style="color: #4caf50"
+            >Đúng</span
+          >
+          <span *ngIf="item.note == 'WrongAnswer'" style="color: #cb2027"
+            >Sai</span
+          >
         </div>
       </div>
     </li>
