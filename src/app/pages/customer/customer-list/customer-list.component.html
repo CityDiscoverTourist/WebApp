@@ -170,7 +170,7 @@
               type="button"
               data-toggle="tooltip"
               data-placement="top"
-              title="unlock"
+              [tooltip]="'Nhấp chuột để mở khóa khách hàng'"
               (click)="isBlock(row.id, row.userName)"
               [disabled]="row.lockoutEnabled ? true : false"
             >
@@ -194,11 +194,28 @@
               "
               data-toggle="tooltip"
               data-placement="top"
-              title="block"
+              [tooltip]="'Nhấp chuột để khóa khách hàng'"
               (click)="block(row.id, row.userName)"
+              placement="left"
               [disabled]="!row.lockoutEnabled ? true : false"
             >
               <i class="bi bi-dash-circle-fill"></i>
+            </button>
+            <button
+              class="btn btn-sm me-2"
+              type="button"
+              [ngStyle]="{
+                color: '#fff',
+                backgroundColor: '#0d6efd',
+                borderColor: '#0d6efd'
+              }"
+              data-toggle="tooltip"
+              data-placement="top"
+              [tooltip]="'Nhấp chuột để xem chi tiết khách hàng'"
+              placement="left"
+              (click)="onUpdate(row.id)"
+            >
+              <i class="bi bi-eye"></i>
             </button>
           </ng-template>
         </ngx-datatable>

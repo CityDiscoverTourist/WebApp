@@ -112,12 +112,12 @@ export class CustomerListComponent implements OnInit {
         minWidth: 50,
         sortable: false,
       },
-      {
-        prop: 'email',
-        name: 'Thư điện tử',
-        minWidth: 50,
-        sortable: false,
-      },
+      // {
+      //   prop: 'email',
+      //   name: 'Thư điện tử',
+      //   minWidth: 50,
+      //   sortable: false,
+      // },
       {
         prop: 'emailConfirmed',
         name: 'Xác thực',
@@ -230,5 +230,11 @@ export class CustomerListComponent implements OnInit {
           });
         },
       });
+  }
+
+  onUpdate(id: string) {
+    this.router.navigate([`./${id}`], {
+      relativeTo: this.activatedRoute,
+    });
   }
 }

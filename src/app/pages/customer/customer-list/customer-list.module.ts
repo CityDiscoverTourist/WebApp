@@ -7,8 +7,9 @@ import { NgSelectModule } from '@ng-select/ng-select';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ModalModule } from 'ngx-bootstrap/modal';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
 
-const lib = [NgxDatatableModule, NgSelectModule,ModalModule.forRoot(),];
+const lib = [NgxDatatableModule, NgSelectModule,ModalModule.forRoot(),TooltipModule.forRoot()];
 
 @NgModule({
   declarations: [CustomerListComponent],
