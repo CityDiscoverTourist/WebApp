@@ -90,6 +90,13 @@ const routes: Routes = [
             (m) => m.PaymentModule
           ),
       },
+      {
+        path: 'reward',
+        loadChildren: () =>
+          import('src/app/pages/reward/reward.module').then(
+            (m) => m.RewardModule
+          ),
+      },
     ],
   },
   {
