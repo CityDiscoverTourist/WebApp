@@ -1,5 +1,5 @@
 import { Location } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { AuthenticateService, NotificationService } from 'src/app/services';
@@ -8,6 +8,7 @@ import { Notification } from 'src/app/models';
   selector: 'app-navbar',
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.scss'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class NavbarComponent implements OnInit {
   notications: Notification[] = [];
@@ -40,11 +41,9 @@ export class NavbarComponent implements OnInit {
     });
   }
   ngOnInit(): void {
-    this.notificationService
-      .getNotifications()
-      .subscribe((data) => {
-        // this.notications=data.data;
-      });
+    this.notificationService.getNotifications().subscribe((result) => {
+      this.notications = result.data;
+    });
   }
 
   // collect that title data properties from all child routes

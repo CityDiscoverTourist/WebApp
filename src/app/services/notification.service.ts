@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Paging, Result } from '../models';
+import { Paging, Notification } from '../models';
 import { BaseService } from './base.service';
 import { environment } from 'src/environments/environment.prod';
 
