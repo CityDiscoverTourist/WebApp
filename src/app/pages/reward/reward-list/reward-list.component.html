@@ -1,0 +1,104 @@
+<div class="pt-3 px-5">
+  <!-- <div class="d-flex align-items-center justify-content-between">
+    <div class="flex-fill"></div>
+    <a class="btn btn-primary" style="min-width: 120px">
+      <i class="bi bi-plus"></i> Thêm thành phố
+    </a>
+  </div> -->
+  <div class="bg-white my-3 p-3 rounded">
+    <div class="rounded bg-white">
+      <form class="mb-4" [formGroup]="searchForm">
+        <div class="d-flex">
+          <div class="input-group me-3">
+            <span
+              class="input-group-text bg-white border-end-0"
+              id="search-icon"
+              ><i class="bi bi-search"></i
+            ></span>
+            <input
+              type="text"
+              class="border-start-0 form-control outline-none"
+              placeholder="Tìm kiếm quà tặng"
+              aria-label="Tìm kiếm quà tặng"
+              aria-describedby="search-icon"
+              formControlName="keyword"
+              (keyup.enter)="search$.next(searchForm.value)"
+            />
+          </div>
+          <ng-select
+            [items]="status"
+            bindValue="value"
+            bindLabel="id"
+            style="min-width: 200px"
+            placeholder="Chọn trạng thái"
+            class="me-3"
+            formControlName="status"
+          ></ng-select>
+
+          <button
+            type="button"
+            class="btn btn-primary"
+            style="min-width: 120px"
+            (click)="submitSearch$.next(searchForm.value)"
+          >
+            <i class="bi bi-search"></i>
+            Tìm kiếm
+          </button>
+          <button
+            type="button"
+            class="btn btn-default"
+            style="min-width: 100px"
+            (click)="resetSearch$.next()"
+          >
+            <i class="bi bi-x-lg"></i>
+            Reset
+          </button>
+        </div>
+      </form>
+      <div class="border overflow-hidden rouded shadow-sm">
+        <ngx-datatable
+          class="material rounded"
+          [rows]="rewards$ | async"
+          [loadingIndicator]="(loading$ | async) === true"
+          [columns]="columns"
+          columnMode="force"
+          [headerHeight]="50"
+          [footerHeight]="50"
+          [rowHeight]="50"
+          [externalPaging]="true"
+          [externalSorting]="true"
+          [messages]="{
+            emptyMessage: 'Không có quà tặng để hiển thị!',
+            totalMessage: 'quà tặng'
+          }"
+          [count]="(metadata$ | async)?.totalCount || 0"
+          [offset]="((metadata$ | async)?.currentPage || 0) - 1"
+          [limit]="10"
+          (page)="onPage($event)"
+          (sort)="onSort($event)"
+        >
+        <ng-template #statusTemplate let-value="value" let-row="row">
+          <span
+             [ngStyle]="{'background-color': row.status == 'Active' ?'#4caf50':'#cb2027', 
+             'color': '#fff',
+              'transition':'200ms',
+              'padding':'5px 0px',
+              'display': 'inline-block',
+              'text-align':'center',
+              'width': '120px',
+              'border-radius': '9px'
+            }"
+            >{{ row.status == 'Active' ? "Khả dụng" : "Không khả dụng"  }}</span
+          >
+        </ng-template>
+        </ngx-datatable>
+      </div>
+    </div>
+  </div>
+  <ng-template #colCreatedAt let-value="value">
+    {{ value | date: "dd/MM/yyyy, h:mm a" }}
+  </ng-template>
+  <ng-template #colPercent let-value="value">
+    {{ value }}%
+  </ng-template>
+</div>
