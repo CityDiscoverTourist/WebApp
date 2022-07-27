@@ -127,16 +127,9 @@
         </div>
       </div>
     </div>
-
     <div class="row pt-2 px-3 flex-wrap">
-      <div
-        class="alert alert-primary"
-        role="alert"
-        *ngIf="payments.length == 0"
-      >
-        <span style="font-weight: 500"
-          >Khách hàng chưa thực hiện đơn hàng nào</span
-        >
+      <div class="bd-callout bd-callout-info" *ngIf="payments.length == 0">
+        Khách hàng chưa thực hiện đơn hàng nào
       </div>
       <div
         class="col-sm-6"
