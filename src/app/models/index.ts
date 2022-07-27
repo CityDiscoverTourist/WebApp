@@ -15,3 +15,4 @@ export * from './payment.model';
 export * from './suggestion.model';
 export * from './notification.model';
 export * from './customeranswer.model';
+export * from './reward.model';

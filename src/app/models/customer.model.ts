@@ -1,5 +1,4 @@
 import { SearchInfo } from './common.model';
-
 export interface Customer {
   id: string;
   userName: string;
@@ -11,14 +10,15 @@ export interface Customer {
   securityStamp: string;
   concurrencyStamp: string;
   phoneNumber: string;
-  phoneNumberConfirmed: true;
-  twoFactorEnabled: true;
-  lockoutEnd: string;
+  phoneNumberConfirmed: boolean;
+  twoFactorEnabled: boolean;
+  lockoutEnd: Date;
   lockoutEnabled: boolean;
   accessFailedCount: number;
   imagePath: string;
   gender: boolean;
   address: string;
+  fullName: string;
 }
 
 export interface CustomerListSearch extends SearchInfo {
