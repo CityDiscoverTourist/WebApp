@@ -74,8 +74,6 @@ export class CustomerQuestDetailComponent implements OnInit {
   ngOnInit(): void {
     this.isFinishes = this.customerQuestService.isFinishes;
     this.id = this.route.snapshot.params['id'];
-    console.log(this.id);
-
     if (Number(this.id) > 0) {
       this.customerQuestService
         .getCustomerQuestById(this.id)

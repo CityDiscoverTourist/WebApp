@@ -86,6 +86,7 @@ export class PaymentListComponent implements OnInit {
         name: 'Tên Quest',
         sortable: false,
         minWidth: 200,
+        cellClass: 'd-flex justify-content-center',
       },
       {
         prop: 'customerEmail',
