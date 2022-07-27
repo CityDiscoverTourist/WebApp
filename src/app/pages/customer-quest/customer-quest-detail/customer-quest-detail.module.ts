@@ -8,6 +8,7 @@ import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { QuestionModalComponent } from './question-modal/question-modal.component';
+import { CustomeranswerModalComponent } from './customeranswer-modal/customeranswer-modal.component';
 const lib = [
   NgxDatatableModule,
   NgSelectModule,
@@ -17,7 +18,8 @@ const lib = [
 @NgModule({
   declarations: [
     CustomerQuestDetailComponent,
-    QuestionModalComponent
+    QuestionModalComponent,
+    CustomeranswerModalComponent
   ],
   imports: [
     CommonModule,

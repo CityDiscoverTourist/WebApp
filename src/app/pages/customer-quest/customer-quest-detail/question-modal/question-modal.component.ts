@@ -39,7 +39,6 @@ export class QuestionModalComponent implements OnInit {
         .getQuestItemById(Number(this.questItemId))
         .subscribe((data) => {
           this.questItem = data;
-          console.log(this.questItem);
         });
     }
   }

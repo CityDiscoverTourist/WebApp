@@ -26,6 +26,7 @@ import {
   SignalrService,
 } from 'src/app/services';
 import { CustomerTaskListState } from '../states';
+import { CustomeranswerModalComponent } from './customeranswer-modal/customeranswer-modal.component';
 import { QuestionModalComponent } from './question-modal/question-modal.component';
 
 @Component({
@@ -158,6 +159,8 @@ export class CustomerQuestDetailComponent implements OnInit {
   isFinishedTemplate!: TemplateRef<any>;
   @ViewChild('questItemTemplate', { static: true })
   questItemTemplate!: TemplateRef<any>;
+  @ViewChild('customerAnswerTemplate', { static: true })
+  customerAnswerTemplate!: TemplateRef<any>;
   initTable() {
     this.columns = [
       // {
@@ -203,7 +206,6 @@ export class CustomerQuestDetailComponent implements OnInit {
       {
         prop: 'countWrongAnswer',
         name: 'Số lần sai',
-
         minWidth: 150,
         sortable: true,
         headerClass: 'd-flex justify-content-center',
@@ -216,6 +218,15 @@ export class CustomerQuestDetailComponent implements OnInit {
         sortable: true,
         headerClass: 'd-flex justify-content-center',
         cellClass: 'd-flex justify-content-center',
+      },
+      {
+        prop: 'id',
+        name: 'Khách trả lời',
+        minWidth: 150,
+        sortable: true,
+        headerClass: 'd-flex justify-content-center',
+        cellClass: 'd-flex justify-content-center',
+        cellTemplate: this.customerAnswerTemplate,
       },
       {
         prop: 'isFinished',
@@ -253,12 +264,17 @@ export class CustomerQuestDetailComponent implements OnInit {
   }
 
   showQuestion(questItemId: string) {
-    console.log('shs');
-    console.log(questItemId);
-
     const modalRef = this.modalService1.open(QuestionModalComponent, {
       windowClass: 'dark-modal',
     });
     modalRef.componentInstance.questItemId = `${questItemId}`;
+  }
+  showCustomerAnswer(id: string) {
+    console.log(id);
+
+    const modalRef = this.modalService1.open(CustomeranswerModalComponent, {
+      scrollable: true,
+    });
+    modalRef.componentInstance.id = `${id}`;
   }
 }

@@ -126,6 +126,24 @@
               Xem câu hỏi
             </span>
           </ng-template>
+          <ng-template #customerAnswerTemplate let-value="value" let-row="row">
+            <span (click)="showCustomerAnswer(row.id)"
+              [ngStyle]="{
+                'background-color': '#0d6efd',
+                color: '#fff',
+                transition: '200ms',
+                padding: '5px 0px',
+                display: 'inline-block',
+                'text-align': 'center',
+                width: '120px',
+                'border-radius': '9px'
+              }"
+
+              [tooltip]="'Nhấp chuột để xem chi tiết câu hỏi'"
+            >
+              Xem khách trả lời
+            </span>
+          </ng-template>
         </ngx-datatable>
       </div>
     </div>
