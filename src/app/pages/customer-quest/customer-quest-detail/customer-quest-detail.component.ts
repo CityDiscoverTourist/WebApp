@@ -9,6 +9,7 @@ import {
 } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { RxState } from '@rx-angular/state';
 import { DatatableComponent, TableColumn } from '@swimlane/ngx-datatable';
 import { BehaviorSubject, Observable, Subject, switchMap, tap } from 'rxjs';
@@ -25,6 +26,7 @@ import {
   SignalrService,
 } from 'src/app/services';
 import { CustomerTaskListState } from '../states';
+import { QuestionModalComponent } from './question-modal/question-modal.component';
 
 @Component({
   selector: 'app-customer-quest-detail',
@@ -64,7 +66,8 @@ export class CustomerQuestDetailComponent implements OnInit {
     private route: ActivatedRoute,
     private cd: ChangeDetectorRef,
     private customerQuestService: CustomerquestService,
-    private questService: QuestService
+    private questService: QuestService,
+    private modalService1: NgbModal
   ) {}
 
   ngOnInit(): void {
@@ -92,17 +95,7 @@ export class CustomerQuestDetailComponent implements OnInit {
     this.customerTaskListState.connect(
       this.search$.pipe(switchMap(() => this.startHttpRequest(this.id))),
       (_, result) => ({
-        customertasks: result.data.map((x) => ({
-          id: x.id,
-          currentPoint: x.currentPoint,
-          status: x.status,
-          createdDate: x.createdDate,
-          questItemId: x.questItemId,
-          customerQuestId: x.customerQuestId,
-          countWrongAnswer: x.countWrongAnswer,
-          countSuggestion: x.countSuggestion,
-          isFinished: x.isFinished,
-        })),
+        customertasks: result.data,
         metadata: { ...result.pagination },
         loading: false,
       })
@@ -163,6 +156,8 @@ export class CustomerQuestDetailComponent implements OnInit {
   @ViewChild('colCreatedAt', { static: true }) colCreatedAt!: TemplateRef<any>;
   @ViewChild('isFinishedTemplate', { static: true })
   isFinishedTemplate!: TemplateRef<any>;
+  @ViewChild('questItemTemplate', { static: true })
+  questItemTemplate!: TemplateRef<any>;
   initTable() {
     this.columns = [
       // {
@@ -200,10 +195,10 @@ export class CustomerQuestDetailComponent implements OnInit {
         prop: 'questItemId',
         minWidth: 150,
         name: 'Câu hỏi',
-        // name: 'Trạng thái',
         sortable: true,
         headerClass: 'd-flex justify-content-center',
         cellClass: 'd-flex justify-content-center',
+        cellTemplate: this.questItemTemplate,
       },
       {
         prop: 'countWrongAnswer',
@@ -244,9 +239,6 @@ export class CustomerQuestDetailComponent implements OnInit {
     isFinished: new FormControl(),
   });
 
-  onUpdate(id: string) {}
-  onDelete(id: string) {}
-
   get customerTasks$(): Observable<CustomerTaskListItem[]> {
     return this.customerTaskListState.select('customertasks');
     // .pipe(tap((data) => console.log(data)));
@@ -258,5 +250,15 @@ export class CustomerQuestDetailComponent implements OnInit {
 
   get metadata$(): Observable<PagingMetadata> {
     return this.customerTaskListState.select('metadata');
+  }
+
+  showQuestion(questItemId: string) {
+    console.log('shs');
+    console.log(questItemId);
+
+    const modalRef = this.modalService1.open(QuestionModalComponent, {
+      windowClass: 'dark-modal',
+    });
+    modalRef.componentInstance.questItemId = `${questItemId}`;
   }
 }

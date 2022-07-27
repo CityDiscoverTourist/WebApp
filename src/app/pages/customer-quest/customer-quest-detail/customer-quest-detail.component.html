@@ -16,7 +16,7 @@
         {{ title }}
       </li>
       <li class="list-group-item">
-        Mã thanh toán: {{ customerQuest.paymentId }}
+        Mã thanh toán: {{ customerQuest.paymentId }} 
       </li>
       <li class="list-group-item">
         Phản hồi:
@@ -107,6 +107,24 @@
                 row.isFinished == true ? "Đã kết thúc" : "Đang hoạt động"
               }}</span
             >
+          </ng-template>
+          <ng-template #questItemTemplate let-value="value" let-row="row">
+            <span (click)="showQuestion(row.questItemId)"
+              [ngStyle]="{
+                'background-color': '#0d6efd',
+                color: '#fff',
+                transition: '200ms',
+                padding: '5px 0px',
+                display: 'inline-block',
+                'text-align': 'center',
+                width: '120px',
+                'border-radius': '9px'
+              }"
+
+              [tooltip]="'Nhấp chuột để xem chi tiết câu hỏi'"
+            >
+              Xem câu hỏi
+            </span>
           </ng-template>
         </ngx-datatable>
       </div>

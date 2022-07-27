@@ -6,14 +6,18 @@ import { CustomerQuestDetailComponent } from './customer-quest-detail.component'
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
+import { QuestionModalComponent } from './question-modal/question-modal.component';
 const lib = [
   NgxDatatableModule,
-  NgSelectModule
+  NgSelectModule,
+  TooltipModule.forRoot(),
 ];
 
 @NgModule({
   declarations: [
-    CustomerQuestDetailComponent
+    CustomerQuestDetailComponent,
+    QuestionModalComponent
   ],
   imports: [
     CommonModule,
