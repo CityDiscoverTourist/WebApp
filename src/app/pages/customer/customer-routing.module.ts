@@ -21,6 +21,13 @@ const routes: Routes = [
             (m) => m.CustomerListModule
           ),
       },
+      {
+        path: ':id',
+        loadChildren: () =>
+          import('./customer-detail/customer-detail.module').then(
+            (m) => m.CustomerDetailModule
+          ),
+      },
     ],
   },
 ];

@@ -1,0 +1,189 @@
+<div class="container">
+  <div class="main-body">
+    <div class="row gutters-sm">
+      <div class="col-md-4 mb-3">
+        <div class="card">
+          <div class="card-body">
+            <div class="d-flex flex-column align-items-center text-center">
+              <img
+                [src]="customer.imagePath"
+                alt="Ảnh đại diện"
+                class="rounded-circle"
+                width="100"
+                height="100"
+              />
+              <div class="mt-3">
+                <p class="fs-4">
+                  {{
+                    customer.fullName
+                      ? customer.fullName
+                      : "Chưa cập nhật họ và tên"
+                  }}
+                </p>
+                <p class="mb-1">
+                  {{
+                    customer.address
+                      ? customer.address
+                      : "Chưa cập nhật địa chỉ"
+                  }}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-8">
+        <div class="bg-white card m-auto rounded-3">
+          <div class="card-body">
+            <div class="row">
+              <div class="col-sm-3">
+                <p class="mb-0" style="font-size: 16px">Tài khoản:</p>
+              </div>
+              <div class="col-sm-9">
+                <p>{{ customer.userName }}</p>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-sm-3">
+                <p class="mb-0" style="font-size: 16px">Thư điện tử:</p>
+              </div>
+              <div class="col-sm-9">
+                <p>
+                  {{ customer.email }}
+                </p>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-sm-3">
+                <p class="mb-0" style="font-size: 16px">Xác thực:</p>
+              </div>
+              <div class="col-sm-9">
+                <p
+                  [ngStyle]="{
+                    'background-color':
+                      customer.emailConfirmed == true ? '#4caf50' : '#ff7221',
+                    color: '#fff',
+                    transition: '200ms',
+                    display: 'inline-block',
+                    'text-align': 'center',
+                    width: '100px',
+                    'border-radius': '9px'
+                  }"
+                >
+                  {{
+                    customer.emailConfirmed == true
+                      ? "Đã xác thực"
+                      : "Chưa xác thực"
+                  }}
+                </p>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-sm-3">
+                <p class="mb-0" style="font-size: 16px">Số điện thoại:</p>
+              </div>
+              <div class="col-sm-9">
+                <p>
+                  {{
+                    customer.phoneNumber
+                      ? customer.phoneNumber
+                      : "Chưa cập nhật số điện thoại"
+                  }}
+                </p>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-sm-3">
+                <p class="mb-0" style="font-size: 16px">Trạng thái:</p>
+              </div>
+              <div class="col-sm-9">
+                <p
+                  [ngStyle]="{
+                    'background-color':
+                      customer.lockoutEnabled == true ? '#4caf50' : '#ff7221',
+                    color: '#fff',
+                    transition: '200ms',
+                    display: 'inline-block',
+                    'text-align': 'center',
+                    width: '100px',
+                    'border-radius': '9px'
+                  }"
+                >
+                  {{
+                    customer.lockoutEnabled == true ? "Hoạt động" : "Đã khóa"
+                  }}
+                </p>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-sm-3">
+                <p class="mb-0" style="font-size: 16px">Giới tính:</p>
+              </div>
+              <div class="col-sm-9">
+                <p>{{ customer.gender == true ? "Nam" : "Nữ" }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row pt-2 px-3 flex-wrap">
+      <div
+        class="alert alert-primary"
+        role="alert"
+        *ngIf="payments.length == 0"
+      >
+        <span style="font-weight: 500"
+          >Khách hàng chưa thực hiện đơn hàng nào</span
+        >
+      </div>
+      <div
+        class="col-sm-6"
+        *ngFor="let q of payments; let index; let i = index"
+      >
+        <div class="card mb-3">
+          <div class="card-header bg-white">
+            <span style="font-weight: 500">Đơn hàng: {{ i + 1 }} </span>
+          </div>
+          <div class="card-body">
+            <div class="row">
+              <div class="col-4">Mã thanh toán:</div>
+              <div class="col-8">{{ q.id }}</div>
+            </div>
+            <div class="row">
+              <div class="col-4">Quest:</div>
+              <div class="col-8">{{ q.questName }}</div>
+            </div>
+            <div class="row">
+              <div class="col-4">Số lượng:</div>
+              <div class="col-8">{{ q.quantity }}</div>
+            </div>
+            <div class="row">
+              <div class="col-4">Tổng tiền:</div>
+              <div class="col-8">{{ q.totalAmount | number }} đ</div>
+            </div>
+            <div class="row">
+              <div class="col-4">Ngày tạo:</div>
+              <div class="col-8">
+                {{ q.createdDate | date: "dd/MM/yyyy, h:mm a" }}
+              </div>
+            </div>
+            <div class="row" [ngSwitch]="q.status">
+              <div class="col-4">Trạng thái:</div>
+              <div class="col-8" *ngSwitchCase="'Success'">
+                <p style="color: #4caf50; font-weight: 500">Thành công</p>
+              </div>
+              <div class="col-8" *ngSwitchCase="'Pending'">
+                <p style="color: #6610f2; font-weight: 500">Đang xử lý</p>
+              </div>
+              <div class="col-8" *ngSwitchCase="'Fail'">
+                <p style="color: #cb2027; font-weight: 500">Thất bại</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

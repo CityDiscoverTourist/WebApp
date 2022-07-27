@@ -40,14 +40,25 @@ export class CustomerService extends BaseService {
     );
   }
 
-  isBlockCustomer(id: string, isBlock: boolean): Observable<Customer | undefined> {
+  isBlockCustomer(
+    id: string,
+    isBlock: boolean
+  ): Observable<Customer | undefined> {
     console.log(isBlock);
-    
+
     return this.http
       .put<Result<Customer>>(
         `${environment.apiUrl}/api/v1/customers/${id}/${isBlock}`,
         { headers: this._sharedHeaders }
-      ).pipe(map((response: Result<Customer>) => response.data));
+      )
+      .pipe(map((response: Result<Customer>) => response.data));
   }
 
+  getCustomerById(id: string | undefined): Observable<Customer> {
+    return this.http
+      .get<Result<Customer>>(`${environment.apiUrl}/api/v1/customers/${id}`, {
+        headers: this._sharedHeaders,
+      })
+      .pipe(map((response: Result<Customer>) => response.data));
+  }
 }

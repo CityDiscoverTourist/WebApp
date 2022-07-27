@@ -7,7 +7,7 @@ import { Paging, Payment, PaymentListSearch } from '../models';
 import { BaseService } from './base.service';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class PaymentService extends BaseService {
   private _sharedHeaders = new HttpHeaders();
@@ -25,7 +25,7 @@ export class PaymentService extends BaseService {
     var sortDir =
       `${search?.sort?.dir}` === 'undefined' ? '' : search.sort?.dir;
     var status = search?.status == null ? undefined : search?.status;
-    
+
     const query = stringify({
       status: status,
       pageNumber: isNaN(search?.currentPage!) ? 1 : search?.currentPage! + 1,
@@ -35,6 +35,12 @@ export class PaymentService extends BaseService {
 
     return this.http.get<Paging<Payment>>(
       `${environment.apiUrl}/api/v1/payments?` + query,
+      { headers: this._sharedHeaders }
+    );
+  }
+  getPaymentsByCustomerId(customerId: string): Observable<Paging<Payment>> {    
+    return this.http.get<Paging<Payment>>(
+      `${environment.apiUrl}/api/v1/payments/get-by-customer-id?CustomerId=${customerId}`,
       { headers: this._sharedHeaders }
     );
   }
