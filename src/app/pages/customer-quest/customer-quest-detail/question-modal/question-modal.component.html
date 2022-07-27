@@ -1,0 +1,22 @@
+<div class="modal-header">
+    <h4 class="modal-title">Câu hỏi</h4>
+    <button type="button" class="btn-close" aria-label="Close" (click)="activeModal.dismiss('Cross click')"></button>
+  </div>
+  <div class="modal-body">
+    <p>Câu hỏi: {{questItem.content}}</p>
+    <p *ngIf="questItem.rightAnswer!=''">
+        Đáp án text: {{questItem.rightAnswer}}
+    </p>
+    <ng-container *ngIf="questItem.listImages.length>0">
+    <div class="d-lg-inline-flex flex-wrap">
+        <div *ngFor="let image of questItem.listImages" class="row row-cols-2">
+          <div class="col m-1">
+            <img style="width: 120px; height: 160px"  [src]="image" />
+          </div>
+        </div>
+      </div>
+    </ng-container>
+</div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-light" (click)="activeModal.close('Close click')">Đóng</button>
+  </div>

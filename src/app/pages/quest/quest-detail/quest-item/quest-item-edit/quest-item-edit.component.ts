@@ -42,7 +42,7 @@ export class QuestItemEditComponent implements OnInit {
   questItemType: number;
   listImages: string[] = [];
   listImage: string[] = [];
- status: { id: string; value: string }[] = [];
+  status: { id: string; value: string }[] = [];
   constructor(
     @Inject(QUEST_ITEM_STATE) private questItemState: RxState<QuestItemState>,
     private fb: FormBuilder,
@@ -75,13 +75,10 @@ export class QuestItemEditComponent implements OnInit {
             this.id = data.id.toString();
             this.questItemType = data.questItemTypeId;
             this.listImages = data.listImages;
-            console.log('data');
-            console.log(data.listImages);
-
+            this.form.patchValue(data);
             if (this.questItemType == 2) {
               this.toggleIsType$.next(2);
             }
-            this.form.patchValue(data);
           })
         ),
       (_, result) => ({
