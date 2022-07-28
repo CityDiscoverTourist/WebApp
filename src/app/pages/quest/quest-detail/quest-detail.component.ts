@@ -72,10 +72,9 @@ export class QuestDetailComponent implements OnInit {
     private areaService: AreaService,
     private questTypeService: QuestTypeService,
     private modalService1: NgbModal,
-    private state: RxState<QuestDetailDescription>,
+    private state: RxState<QuestDetailDescription>
   ) {}
   ngOnInit(): void {
-
     this.state.connect(this.toggleDescription$, (prev, _) => ({
       showQuestDescription: !prev.showQuestDescription,
     }));

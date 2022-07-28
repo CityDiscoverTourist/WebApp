@@ -2,20 +2,52 @@
   <div class="px-5" *rxLet="quest$ as vm">
     <div class="d-flex align-items-center justify-content-between mb-0 px-3">
       <div>
-        <h6>{{ vm.title }}</h6>
+        <h6 style="margin-top: 12px">{{ vm.title }}</h6>
       </div>
       <div class="flex-fill"></div>
-      <a routerLink="../" class="btn btn-default bg-default px-4 mt-2 me-3"
-        >Thoát</a
-      >
       <a
-        type="a"
+        style="
+          background-color: rgb(76, 175, 80);
+          color: rgb(255, 255, 255);
+          transition: all 200ms ease 0s;
+          padding: 5px 0px;
+          display: inline-block;
+          text-align: center;
+          border-color: rgb(76, 175, 80);
+        "
         class="btn btn-danger px-4 mt-2 me-3"
         (click)="deleteQuest(vm.id)"
       >
-        Xóa
+        <i class="bi bi-arrow-counterclockwise"></i>
+        Hoạt động
       </a>
-      <a class="btn btn-primary mt-2" [routerLink]="['./edit']">Sửa quest</a>
+      <a
+        style="
+          background-color: #cb2027;
+          color: rgb(255, 255, 255);
+          transition: all 200ms ease 0s;
+          padding: 5px 0px;
+          display: inline-block;
+          text-align: center;
+        "
+        class="btn btn-danger px-4 mt-2 me-3"
+        (click)="deleteQuest(vm.id)"
+      >
+        <i class="bi bi-dash-circle-fill"></i>
+        Ngừng hoạt động
+      </a>
+      <a
+        class="btn btn-primary px-4 mt-2"
+        style="
+          color: rgb(255, 255, 255);
+          transition: all 200ms ease 0s;
+          padding: 5px 0px;
+          display: inline-block;
+          text-align: center;
+        "
+        [routerLink]="['./edit']"
+        ><i class="bi bi-pencil-square"></i> Sửa quest</a
+      >
     </div>
     <div class="row px-4 pt-2">
       <div class="card mb-1" style="border: 1px solid #fff">
@@ -132,9 +164,10 @@
             <div
               class="mt-3"
               *ngIf="(description$ | async)?.showQuestDescription"
-            ><div class="alert alert-primary fst-italic" role="alert">
-              {{vm.description | descriptionPipe}}
-            </div>
+            >
+              <div class="bd-callout bd-callout-info">
+                {{ vm.description | descriptionPipe }}
+              </div>
             </div>
           </div>
         </div>
@@ -313,7 +346,7 @@
   </div>
   <div *ngIf="questItems$ | async as vm" class="px-5">
     <div *ngIf="vm.length == 0" class="px-3">
-      <div class="alert alert-danger" role="alert">
+      <div class="bd-callout bd-callout-info">
         Không có câu hỏi để hiển thị!
       </div>
     </div>
