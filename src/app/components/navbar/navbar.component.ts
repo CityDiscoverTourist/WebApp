@@ -2,12 +2,20 @@ import { Location } from '@angular/common';
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
-import { AuthenticateService, NotificationService } from 'src/app/services';
-import { Notification } from 'src/app/models';
+import { RxState } from '@rx-angular/state';
+import { Observable, tap, switchMap, BehaviorSubject, filter } from 'rxjs';
+import { Notification, PagingMetadata } from 'src/app/models';
+import {
+  AuthenticateService,
+  NotificationService,
+  SignalrService,
+} from 'src/app/services';
+import { NotificationListState } from '../states';
 @Component({
   selector: 'app-navbar',
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.scss'],
+  providers: [RxState],
   encapsulation: ViewEncapsulation.None,
 })
 export class NavbarComponent implements OnInit {
@@ -23,7 +31,9 @@ export class NavbarComponent implements OnInit {
     private authService: AuthenticateService,
     private router: Router,
     private activatedRoute: ActivatedRoute,
-    private notificationService: NotificationService
+    private notificationService: NotificationService,
+    private notificationListState: RxState<NotificationListState>,
+    private signalRService: SignalrService
   ) {
     router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
@@ -41,13 +51,59 @@ export class NavbarComponent implements OnInit {
     });
   }
   ngOnInit(): void {
-    this.notificationService.getNotifications().subscribe((result) => {
-      this.notications = result.data;
-    });
-  }
+    // this.notificationService.getNotifications().subscribe((result) => {
+    //   this.notications = result.data;
+    // });
 
-  // collect that title data properties from all child routes
-  // there might be a better way but this worked for me
+    this.signalRService.startConnectionNotification();
+    this.signalRService.addTranferDataNotificationTaskListener();
+    // this.signalRService.addTranferDataCustomerTaskListener();
+    // this.signalRService.addTranferDataUpdateCustomerTaskListener();
+
+    this.notificationListState.connect(
+      this.search$
+        .pipe(switchMap(() => this.notificationService.getNotifications()))
+        .pipe(tap((data) => console.log(data))),
+      (_, result) => ({
+        notifications: result.data,
+        metadata: { ...result.pagination },
+        loading: false,
+      })
+    );
+
+    this.notificationListState.connect(
+      this.signalRService.subjectNotification$
+        .pipe(
+          tap((data) => {
+            return data;
+          })
+        )
+        .pipe(tap((data) => console.log(data))),
+      (prev, result) => ({
+        notifications: [result as Notification, ...prev.notifications],
+      })
+    );
+    this.notificationListState.connect(
+      this.signalRService.subjectCustomerTask$.pipe(
+        tap((data) => data as Notification)
+      ),
+      (prev, result) => ({
+        notifications: [...prev.notifications, result],
+      })
+    );
+
+    // this.notificationListState.connect(
+    //   this.signalRService.subjectUpdateCustomerTask$.pipe(
+    //     tap((data) => data as Notification)
+    //   ),
+    //   (prev, result) => ({
+    //     notifications: [
+    //       ...prev.notifications.slice(0, prev.notifications.length - 1),
+    //       result,
+    //     ],
+    //   })
+    // );
+  }
   getTitle(state: any, parent: any): any {
     var data = [];
     if (parent && parent.snapshot.data && parent.snapshot.data.title) {
@@ -90,5 +146,18 @@ export class NavbarComponent implements OnInit {
     this.router.navigate(['../login'], {
       relativeTo: this.activatedRoute,
     });
+  }
+  search$ = new BehaviorSubject<{}>({});
+  get notification$(): Observable<Notification[]> {
+    return this.notificationListState.select('notifications')
+    .pipe(tap(data=>console.log(data)));
+  }
+
+  get loading$(): Observable<boolean> {
+    return this.notificationListState.select('loading');
+  }
+
+  get metadata$(): Observable<PagingMetadata> {
+    return this.notificationListState.select('metadata');
   }
 }

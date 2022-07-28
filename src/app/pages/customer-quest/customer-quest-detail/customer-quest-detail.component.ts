@@ -22,6 +22,7 @@ import {
 } from 'src/app/models';
 import {
   CustomerquestService,
+  CustomertaskService,
   QuestService,
   SignalrService,
 } from 'src/app/services';
@@ -61,6 +62,7 @@ export class CustomerQuestDetailComponent implements OnInit {
 
   constructor(
     private signalRService: SignalrService,
+    private customertaskService: CustomertaskService,
     private httpClient: HttpClient,
     private customerTaskListState: RxState<CustomerTaskListState>,
     private router: Router,
@@ -92,23 +94,19 @@ export class CustomerQuestDetailComponent implements OnInit {
     this.signalRService.addTranferDataUpdateCustomerTaskListener();
 
     this.customerTaskListState.connect(
-      this.search$.pipe(switchMap(() => this.startHttpRequest(this.id))),
+      this.search$.pipe(
+        switchMap(() => this.customertaskService.startHttpRequest(this.id))
+      ),
       (_, result) => ({
         customertasks: result.data,
         metadata: { ...result.pagination },
         loading: false,
       })
     );
-    // this.signalRService.subject.subscribe(data=>{
-    //   console.log("data ne ban");
-    //   console.log(data);
 
-    // })
     this.customerTaskListState.connect(
-      this.signalRService.subject.pipe(
+      this.signalRService.subject$.pipe(
         tap((data) => {
-          // console.log("data1")
-          // console.log(data);
           return data;
         })
       ),
@@ -139,19 +137,6 @@ export class CustomerQuestDetailComponent implements OnInit {
     );
   }
 
-  private startHttpRequest(
-    id: string
-  ): Observable<Paging<CustomerTaskListItem>> {
-    return this.httpClient.get<Paging<CustomerTaskListItem>>(
-      // `https://citytourist.azurewebsites.net/api/v1/customer-tasks`
-      `https://citytourist.azurewebsites.net/api/v1/customer-tasks/get-by-customer-quest-id/${id}?PageSize=100`
-    );
-  }
-  // private startHttpRequest = () => {
-  //   this.httpClient
-  //     .get(`https://citytourist.azurewebsites.net/api/v1/customer-tasks`)
-  //     .subscribe((data) => console.log(data));
-  // };
   @ViewChild('colCreatedAt', { static: true }) colCreatedAt!: TemplateRef<any>;
   @ViewChild('isFinishedTemplate', { static: true })
   isFinishedTemplate!: TemplateRef<any>;
@@ -250,7 +235,6 @@ export class CustomerQuestDetailComponent implements OnInit {
 
   get customerTasks$(): Observable<CustomerTaskListItem[]> {
     return this.customerTaskListState.select('customertasks');
-    // .pipe(tap((data) => console.log(data)));
   }
 
   get loading$(): Observable<boolean> {
@@ -268,8 +252,6 @@ export class CustomerQuestDetailComponent implements OnInit {
     modalRef.componentInstance.questItemId = `${questItemId}`;
   }
   showCustomerAnswer(id: string) {
-    console.log(id);
-
     const modalRef = this.modalService1.open(CustomeranswerModalComponent, {
       scrollable: true,
     });
