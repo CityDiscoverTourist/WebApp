@@ -1,5 +1,5 @@
 <div class="modal-header">
-    <h5 class="modal-title pull-left">Bạn chắc chắn muốn {{status?'khóa':"mở khóa"}} {{title}} với tên đăng nhập {{mail}}?</h5>
+    <h5 class="modal-title pull-left">Bạn chắc chắn muốn {{!status?'khóa':"mở khóa"}} {{title}} với tên đăng nhập {{mail}}?</h5>
     <button
       type="button"
       class="btn-close close pull-right"
@@ -12,19 +12,19 @@
   <div class="modal-body">
     <div class="row">
       <div class="col p-3">
-        Thao tác này sẽ {{status?'khóa':"mở khóa"}} {{title}} bạn đã chọn.
+        Thao tác này sẽ {{!status?'khóa':"mở khóa"}} {{title}} bạn đã chọn.
       </div>
     </div>
   </div>
   <div class="modal-footer">
     <button
       type="button"
-      class="btn  {{status ? 'btn-outline-danger':'btn-outline-primary'}}"
+      class="btn  {{!status ? 'btn-outline-danger':'btn-outline-primary'}}"
       (click)="bsModalRef.hide()"
     >
        Thoát 
     </button>
-    <button type="button" class="btn {{status ? 'btn-danger':'btn-primary'}}" (click)="isBlock(id)">
+    <button type="button" class="btn {{!status ? 'btn-danger':'btn-primary'}}" (click)="isBlock(id)">
       Lưu 
     </button>
   </div>

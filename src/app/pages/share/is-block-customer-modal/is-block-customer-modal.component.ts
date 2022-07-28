@@ -28,9 +28,9 @@ export class IsBlockCustomerModalComponent implements OnInit {
       });
       this.bsModalRef.hide();
       if (this.status) {
-        this.toast.success(`Khóa ${this.title} thành công`);
-      } else {
         this.toast.success(`Mở khóa ${this.title} thành công`);
+      } else {
+        this.toast.success(`Khóa ${this.title} thành công`);
       }
     });
   }
