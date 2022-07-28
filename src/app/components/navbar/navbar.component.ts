@@ -127,13 +127,6 @@ export class NavbarComponent implements OnInit {
     return data;
   }
 
-  isShow = false;
-
-  changeShow() {
-    if (this.isShow) {
-      this.isShow = false;
-    } else this.isShow = true;
-  }
   isShow1 = false;
 
   changeShow1() {
@@ -141,6 +134,8 @@ export class NavbarComponent implements OnInit {
       this.isShow1 = false;
     } else this.isShow1 = true;
   }
+  isShow = false;
+
   exit() {
     this.authService.clearToken();
     this.router.navigate(['../login'], {
@@ -149,8 +144,7 @@ export class NavbarComponent implements OnInit {
   }
   search$ = new BehaviorSubject<{}>({});
   get notification$(): Observable<Notification[]> {
-    return this.notificationListState.select('notifications')
-    .pipe(tap(data=>console.log(data)));
+    return this.notificationListState.select('notifications');
   }
 
   get loading$(): Observable<boolean> {
@@ -159,5 +153,14 @@ export class NavbarComponent implements OnInit {
 
   get metadata$(): Observable<PagingMetadata> {
     return this.notificationListState.select('metadata');
+  }
+
+  isReadNotify(){
+    console.log("shshhsh");
+    this.notificationService.isReadNotification().subscribe(data=>data);
+    if (this.isShow) {
+      this.isShow = false;
+    } else this.isShow = true;
+    
   }
 }

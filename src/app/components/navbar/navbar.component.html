@@ -35,7 +35,7 @@
           style="cursor: pointer"
           data-bs-toggle="dropdown"
           aria-expanded="true"
-          (click)="changeShow()"
+          (click)="isReadNotify()"
         >
           <i class="bi bi-bell"></i>
           <span class="badge bg-primary badge-number">{{ vm.length }}</span> </a
@@ -52,14 +52,14 @@
           data-popper-placement="bottom-end"
         >
           <li class="dropdown-header">
-            Bạn có {{ vm.length }} thông báo
+            Bạn có {{ vm.length }} thông báo mới
             <a href=".admin/payment"
               ><span class="badge rounded-pill bg-primary p-2 ms-2"
                 >Xem thêm</span
               ></a
             >
           </li>
-          <ng-container *ngFor="let x of vm;  let i = index">
+          <ng-container *ngFor="let x of vm; let i = index">
             <ng-container *ngIf="i < 5">
               <li>
                 <hr class="dropdown-divider" />
