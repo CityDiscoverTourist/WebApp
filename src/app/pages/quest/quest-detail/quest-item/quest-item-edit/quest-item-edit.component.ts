@@ -157,7 +157,7 @@ export class QuestItemEditComponent implements OnInit {
           if (!result.data?.id) {
             return;
           }
-          this.toast.success(`Cập nhật quest item thành công`);
+          this.toast.success(`Cập nhật câu hỏi thành công`);
           if (result.redirect) {
             this.router.navigate(['../../../'], {
               relativeTo: this.activatedRoute,
@@ -211,7 +211,7 @@ export class QuestItemEditComponent implements OnInit {
       questItemTypeId: [1, Validators.required],
       locationId: ['', Validators.required],
       questId: [],
-      itemId: [],
+      itemId: [''],
       image: [],
       listImages: [],
     });
