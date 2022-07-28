@@ -1,4 +1,4 @@
-import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Component, OnInit, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RxState } from '@rx-angular/state';
@@ -19,6 +19,7 @@ import { PaymentListState } from '../states';
   templateUrl: './payment-list.component.html',
   styleUrls: ['./payment-list.component.scss'],
   providers: [RxState],
+  encapsulation: ViewEncapsulation.None,
 })
 export class PaymentListComponent implements OnInit {
   @ViewChild(DatatableComponent) table!: DatatableComponent;
@@ -79,20 +80,20 @@ export class PaymentListComponent implements OnInit {
         prop: 'id',
         name: 'Mã thanh toán',
         sortable: false,
-        minWidth: 180,
+        width: 210,
+        headerClass:'d-flex justify-content-center',
       },
       {
         prop: 'questName',
         name: 'Tên Quest',
         sortable: false,
         minWidth: 200,
-        cellClass: 'd-flex justify-content-center',
       },
       {
         prop: 'customerEmail',
         name: 'Khách hàng',
         sortable: false,
-        minWidth: 180,
+        width: 250,
       },
       {
         prop: 'quantity',
@@ -130,12 +131,11 @@ export class PaymentListComponent implements OnInit {
         headerClass: 'd-flex justify-content-center',
         cellClass: 'd-flex justify-content-center',
       },
-
       {
         prop: 'totalAmount',
         name: 'Tổng',
         sortable: false,
-        minWidth:140,
+        width:140,
         cellTemplate:this.formatPrice,
         headerClass: 'd-flex justify-content-center',
         cellClass: 'd-flex justify-content-center',
