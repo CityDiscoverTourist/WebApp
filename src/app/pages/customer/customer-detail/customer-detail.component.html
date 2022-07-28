@@ -141,37 +141,73 @@
           </div>
           <div class="card-body">
             <div class="row">
-              <div class="col-4">Mã thanh toán:</div>
-              <div class="col-8">{{ q.id }}</div>
+              <div class="col-3">Mã thanh toán:</div>
+              <div class="col-9">{{ q.id }}</div>
             </div>
             <div class="row">
-              <div class="col-4">Quest:</div>
-              <div class="col-8">{{ q.questName }}</div>
+              <div class="col-3">Quest:</div>
+              <div class="col-9">{{ q.questName }}</div>
             </div>
             <div class="row">
-              <div class="col-4">Số lượng:</div>
-              <div class="col-8">{{ q.quantity }}</div>
+              <div class="col-3">Số lượng:</div>
+              <div class="col-9">{{ q.quantity }}</div>
             </div>
             <div class="row">
-              <div class="col-4">Tổng tiền:</div>
-              <div class="col-8">{{ q.totalAmount | number }} đ</div>
+              <div class="col-3">Tổng tiền:</div>
+              <div class="col-9">{{ q.totalAmount | number }} đ</div>
             </div>
             <div class="row">
-              <div class="col-4">Ngày tạo:</div>
-              <div class="col-8">
+              <div class="col-3">Ngày tạo:</div>
+              <div class="col-9">
                 {{ q.createdDate | date: "dd/MM/yyyy, h:mm a" }}
               </div>
             </div>
             <div class="row" [ngSwitch]="q.status">
-              <div class="col-4">Trạng thái:</div>
-              <div class="col-8" *ngSwitchCase="'Success'">
-                <p style="color: #4caf50; font-weight: 500">Thành công</p>
+              <div class="col-3">Trạng thái:</div>
+              <div class="col-9" *ngSwitchCase="'Success'">
+                <p
+                  [ngStyle]="{
+                    'background-color': '#4caf50',
+                    color: '#fff',
+                    transition: '200ms',
+                    display: 'inline-block',
+                    'text-align': 'center',
+                    width: '100px',
+                    'border-radius': '9px'
+                  }"
+                >
+                  Thành công
+                </p>
               </div>
               <div class="col-8" *ngSwitchCase="'Pending'">
-                <p style="color: #6610f2; font-weight: 500">Đang xử lý</p>
+                <p
+                  [ngStyle]="{
+                    'background-color': '#fd7e14',
+                    color: '#fff',
+                    transition: '200ms',
+                    display: 'inline-block',
+                    'text-align': 'center',
+                    width: '100px',
+                    'border-radius': '9px'
+                  }"
+                >
+                  Đang xử lý
+                </p>
               </div>
-              <div class="col-8" *ngSwitchCase="'Fail'">
-                <p style="color: #cb2027; font-weight: 500">Thất bại</p>
+              <div class="col-8" *ngSwitchCase="'Failed'">
+                <p
+                  [ngStyle]="{
+                    'background-color': '#cb2027',
+                    color: '#fff',
+                    transition: '200ms',
+                    display: 'inline-block',
+                    'text-align': 'center',
+                    width: '100px',
+                    'border-radius': '9px'
+                  }"
+                >
+                  Thất bại
+                </p>
               </div>
             </div>
           </div>
