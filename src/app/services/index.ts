@@ -18,3 +18,4 @@ export * from './dashboard.service';
 export * from './payment.service';
 export * from './suggestion.service';
 export * from './reward.service';
+export * from './customertask.service';

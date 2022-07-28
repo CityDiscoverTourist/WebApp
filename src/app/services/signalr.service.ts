@@ -6,9 +6,8 @@ import { Subject } from 'rxjs';
   providedIn: 'root',
 })
 export class SignalrService {
-
   hubConnection: signalR.HubConnection | undefined;
-  subject: Subject<any> = new Subject<any>();
+  subject$: Subject<any> = new Subject<any>();
   subjectCustomerTask$: Subject<any> = new Subject<any>();
   subjectUpdateCustomerTask$: Subject<any> = new Subject<any>();
   constructor() {}
@@ -23,15 +22,9 @@ export class SignalrService {
       .catch((err) => console.log(`Error while starting connection ` + err));
   };
 
-
-  // public addTranferDataListener=()=>{
-  //   this.hubConnection?.on('AddCustomerTask',(data)=>{
-  //     console.log(data);
-  //   })
-  // }
   public addTranferDataListener=()=>{
     this.hubConnection?.on('AddCustomerTask',(data)=>{
-     this.subject.next(data);
+     this.subject$.next(data);
     })
   }
   public addTranferDataCustomerTaskListener=()=>{
@@ -41,9 +34,27 @@ export class SignalrService {
   }
   public addTranferDataUpdateCustomerTaskListener=()=>{
     this.hubConnection?.on('UpdateCustomerTask',(data)=>{
-      console.log("awww");
-      console.log(data);
      this.subjectUpdateCustomerTask$.next(data);
     })
   }
+
+  subjectNotification$: Subject<any> = new Subject<any>();
+  // subjectGetNotification$: Subject<any> = new Subject<any>();
+
+  public startConnectionNotification = () => {
+    this.hubConnection = new signalR.HubConnectionBuilder()
+      .withUrl(`https://citytourist.azurewebsites.net/notify`)
+      .build();
+    this.hubConnection
+      .start()
+      .then(() => console.log('start connect'))
+      .catch((err) => console.log(`Error while starting connection ` + err));
+  };
+
+  public addTranferDataNotificationTaskListener=()=>{
+    this.hubConnection?.on('GetNotification',(data)=>{
+     this.subjectNotification$.next(data);
+    })
+  }
+  
 }

@@ -19,8 +19,9 @@ export class NotificationService extends BaseService {
   }
 
   getNotifications(): Observable<Paging<Notification>> {
+    var userId=localStorage.getItem('userId');
     var result = this.http.get<Paging<Notification>>(
-      `${environment.apiUrl}/api/v1/notifications?`,
+      `${environment.apiUrl}/api/v1/notifications?userId=${userId}`,
       { headers: this._sharedHeaders }
     );
     return result;

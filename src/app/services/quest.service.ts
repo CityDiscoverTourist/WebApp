@@ -46,9 +46,10 @@ export class QuestService extends BaseService {
   }
 
   addQuest(quest: QuestCreate): Observable<Result<Quest>> {
+    var userId=localStorage.getItem('userId');
     const { image, ...payload } = quest;
     return this.http.post<Result<Quest>>(
-      `${environment.apiUrl}/api/v1/quests/`,
+      `${environment.apiUrl}/api/v1/quests?userId=${userId}`,
       this.toFormData(payload, image),
       this.httpOptions
     );
