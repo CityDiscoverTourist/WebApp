@@ -234,11 +234,12 @@ export class QuestDetailComponent implements OnInit {
     });
   }
 
-  deleteQuest(id: number) {
+  onUpdateStatus(id: number, status: string) {
     const bsModalRef = this.modalService.show(DeleteModalComponent, {
       initialState: {
-        id: id.toString(),
+        id: id + '',
         title: 'Quest',
+        status: status,
       },
     });
     bsModalRef.onHide
@@ -248,7 +249,7 @@ export class QuestDetailComponent implements OnInit {
       )
       .subscribe({
         next: (result) => {
-          window.location.reload();
+          // setTimeout(()=>  window.location.reload(), 4000);
         },
       });
   }

@@ -5,7 +5,7 @@
         <h6 style="margin-top: 12px">{{ vm.title }}</h6>
       </div>
       <div class="flex-fill"></div>
-      <a
+      <button
         style="
           background-color: rgb(76, 175, 80);
           color: rgb(255, 255, 255);
@@ -16,12 +16,13 @@
           border-color: rgb(76, 175, 80);
         "
         class="btn btn-danger px-4 mt-2 me-3"
-        (click)="deleteQuest(vm.id)"
+        (click)="onUpdateStatus(vm.id,'Active')"
+        [disabled]="vm.status == 'Active' ? true : false"
       >
         <i class="bi bi-arrow-counterclockwise"></i>
         Hoạt động
-      </a>
-      <a
+      </button>
+      <button
         style="
           background-color: #cb2027;
           color: rgb(255, 255, 255);
@@ -31,11 +32,12 @@
           text-align: center;
         "
         class="btn btn-danger px-4 mt-2 me-3"
-        (click)="deleteQuest(vm.id)"
+        (click)="onUpdateStatus(vm.id,'Inactive')"
+        [disabled]="vm.status == 'Inactive' ? true : false"
       >
         <i class="bi bi-dash-circle-fill"></i>
         Ngừng hoạt động
-      </a>
+    </button>
       <a
         class="btn btn-primary px-4 mt-2"
         style="

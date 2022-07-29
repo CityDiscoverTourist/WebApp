@@ -17,8 +17,13 @@ import { BaseService } from './base.service';
   providedIn: 'root',
 })
 export class QuestService extends BaseService {
+  private _sharedHeaders = new HttpHeaders();
   constructor(private http: HttpClient) {
     super();
+    this._sharedHeaders = this._sharedHeaders.set(
+      'Content-Type',
+      'application/json'
+    );
   }
 
   httpOptions = {
@@ -103,5 +108,21 @@ export class QuestService extends BaseService {
       this.toFormData(payload, image),
       this.httpOptions
     );
+  }
+
+  updateStatus(
+    id: string,
+    status: string
+  ): Observable<QuestListItem | undefined> {
+    return this.http
+      .put<Result<QuestListItem>>(
+        `${environment.apiUrl}/api/v1/quests/${
+          status == 'Active' ? 'enable' : 'disable'
+        }/${id}`,
+        {
+          headers: this._sharedHeaders,
+        }
+      )
+      .pipe(map((response: Result<QuestListItem>) => response.data));
   }
 }

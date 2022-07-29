@@ -40,42 +40,44 @@ export class DeleteModalComponent implements OnInit {
     switch (this.title) {
       case 'loại câu hỏi':
         {
-          this.questItemTypeService.updateStatus(id, status).subscribe((data) => {
-            try {
-              if (data?.questItems?.length) {
-                this.bsModalRef.hide();
-                this.toast.error(
-                  `${
-                    status == 'Active'
-                      ? 'Hoạt động lại'
-                      : 'Không thể ngừng hoạt động'
-                  } ${this.title} ${data.name}!
+          this.questItemTypeService
+            .updateStatus(id, status)
+            .subscribe((data) => {
+              try {
+                if (data?.questItems?.length) {
+                  this.bsModalRef.hide();
+                  this.toast.error(
+                    `${
+                      status == 'Active'
+                        ? 'Hoạt động lại'
+                        : 'Không thể ngừng hoạt động'
+                    } ${this.title} ${data.name}!
                   <br> 
                   Loại câu hỏi này đang chứa câu hỏi khác nên không thể ngừng hoạt động!
                 `,
-                  {
-                    autoClose: false,
-                    dismissible: true,
-                  }
-                );
-              } else {
-                this.bsModalRef.onHide?.emit({
-                  data: data,
-                });
-                this.bsModalRef.hide();
-                this.toast.success(
-                  `${
-                    status == 'Active' ? 'Hoạt động lại' : 'Ngừng hoạt động'
-                  } ${this.title} ${data?.name} thành công!`,
-                  {
-                    duration: 5000,
-                  }
-                );
+                    {
+                      autoClose: false,
+                      dismissible: true,
+                    }
+                  );
+                } else {
+                  this.bsModalRef.onHide?.emit({
+                    data: data,
+                  });
+                  this.bsModalRef.hide();
+                  this.toast.success(
+                    `${
+                      status == 'Active' ? 'Hoạt động lại' : 'Ngừng hoạt động'
+                    } ${this.title} ${data?.name} thành công!`,
+                    {
+                      duration: 5000,
+                    }
+                  );
+                }
+              } catch (error) {
+                this.toast.error('Có lỗi hãy kiểm tra lại!');
               }
-            } catch (error) {
-              this.toast.error('Có lỗi hãy kiểm tra lại!');
-            }
-          });
+            });
         }
         break;
       case 'thành phố':
@@ -285,19 +287,22 @@ export class DeleteModalComponent implements OnInit {
         break;
       case 'Quest':
         {
-          this.questService.deleteQuestById(id).subscribe((data) => {
-            if (data?.questItems?.length) {
-              this.bsModalRef.hide();
-              this.toast.error(`Xóa ${this.title} không thành công`);
-              this.toast.info(
-                `Quest này đang chứa các quest item khác nên không xóa được`
-              );
-            } else {
+          this.questService.updateStatus(id, status).subscribe((data) => {
+            try {
               this.bsModalRef.onHide?.emit({
                 data: data,
               });
               this.bsModalRef.hide();
-              this.toast.success(`Xóa ${this.title} thành công`);
+              this.toast.success(
+                `${status == 'Active' ? 'Hoạt động lại' : 'Ngừng hoạt động'} ${
+                  this.title
+                } thành công!`,
+                {
+                  duration: 5000,
+                }
+              );
+            } catch (error) {
+              this.toast.error('Có lỗi hãy kiểm tra lại!');
             }
           });
         }
