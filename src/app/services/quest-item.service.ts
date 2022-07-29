@@ -68,7 +68,6 @@ export class QuestItemService extends BaseService {
     const formData = new FormData();
     const payload = {
       ...questItem,
-      itemId:  '',
       duration: questItem.duration || 0,
       triggerMode: questItem.triggerMode || 0,
       updatedDate: questItem.updatedDate || '',
