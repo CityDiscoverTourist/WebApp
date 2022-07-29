@@ -79,17 +79,19 @@ export class SuggestionModalComponent implements OnInit {
               return this.suggestioService
                 .updateSuggesionById(form.value)
                 .pipe(
-                  catchError(() =>
-                    of({ status: 'data not modified', data: null })
-                  )
+                  catchError(() => {
+                    this.toast.error('Có lỗi hãy kiểm tra lại!');
+                    return of({ status: 'data not modified', data: null });
+                  }),
                 );
             } else {
               return this.suggestioService
                 .addSuggesion(form.value)
                 .pipe(
-                  catchError(() =>
-                    of({ status: 'data not modified', data: null })
-                  )
+                  catchError(() => {
+                    this.toast.error('Có lỗi hãy kiểm tra lại!');
+                    return of({ status: 'data not modified', data: null });
+                  }),
                 );
             }
           })
@@ -100,8 +102,10 @@ export class SuggestionModalComponent implements OnInit {
             this.activeModal.close();
             if (Number(this.id) > 0) {
               this.toast.success('Cập nhật gợi ý thành công!');
+              setTimeout(()=>  window.location.reload(), 3000);
             } else {
               this.toast.success('Tạo gợi ý thành công!');
+              setTimeout(()=>  window.location.reload(), 3000);
             }
           })
         ),

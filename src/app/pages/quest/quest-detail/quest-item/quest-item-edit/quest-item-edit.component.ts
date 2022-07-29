@@ -149,7 +149,10 @@ export class QuestItemEditComponent implements OnInit {
           this.questItemService
             .updateQuestItemById(form.value as QuestItemCreate)
             .pipe(
-              catchError(() => of({ status: 'data not modified', data: null })),
+              catchError(() => {
+                this.toast.error('Có lỗi hãy kiểm tra lại!');
+                return of({ status: 'data not modified', data: null });
+              }),
               map((r) => ({ ...r, redirect }))
             )
         ),
@@ -245,5 +248,9 @@ export class QuestItemEditComponent implements OnInit {
     this.listImages = this.listImages.filter((x) => x != url);
     this.listImage.map((item) => "'" + item + "'");
     console.log(this.listImage);
+  }
+
+  public get submitting$(): Observable<boolean> {
+    return this.state.select('submitting');
   }
 }

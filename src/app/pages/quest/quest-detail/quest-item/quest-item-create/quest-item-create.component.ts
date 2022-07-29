@@ -110,7 +110,10 @@ export class QuestItemCreateComponent implements OnInit {
           this.questItemService
             .addQuestItem(form.value as QuestItemCreate)
             .pipe(
-              catchError(() => of({ status: 'data not modified', data: null })),
+              catchError(() => {
+                this.toast.error('Có lỗi hãy kiểm tra lại!');
+                return of({ status: 'data not modified', data: null });
+              }),
               map((r) => ({ ...r, redirect }))
             )
         ),
@@ -118,7 +121,7 @@ export class QuestItemCreateComponent implements OnInit {
           if (!result.data?.id) {
             return;
           }
-          this.toast.success(`Tạo quest item thành công`);
+          this.toast.success(`Tạo câu hỏi thành công`);
           if (result.redirect) {
             this.router.navigate(['../../'], {
               relativeTo: this.activatedRoute,
@@ -228,5 +231,9 @@ export class QuestItemCreateComponent implements OnInit {
     }else if(id==3){
       this.contentTooltip="Tạo câu hỏi nghịch đảo";
     }
+  }
+  
+  public get submitting$(): Observable<boolean> {
+    return this.state.select('submitting');
   }
 }

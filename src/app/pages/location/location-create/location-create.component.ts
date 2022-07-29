@@ -47,7 +47,7 @@ interface LocationCreateState {
 export class LocationCreateComponent implements OnInit, AfterViewChecked {
   geoCoder: any;
   map: any;
- status: { id: string; value: string }[] = [];
+  status: { id: string; value: string }[] = [];
   constructor(
     @Inject(LOCATION_STATE) private locationState: RxState<LocationState>,
     private fb: FormBuilder,
@@ -126,7 +126,10 @@ export class LocationCreateComponent implements OnInit, AfterViewChecked {
         tap(() => this.state.set({ submitting: true })),
         switchMap(({ form, redirect }) =>
           this.locationService.addLocation(form.value as LocationCreate).pipe(
-            catchError(() => of({ status: 'data not modified', data: null })),
+            catchError(() => {
+              this.toast.error('Có lỗi hãy kiểm tra lại!');
+              return of({ status: 'data not modified', data: null });
+            }),
             map((r) => ({ ...r, redirect }))
           )
         ),
