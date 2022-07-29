@@ -22,12 +22,16 @@
                     [value]="qt[i].id"
                     (click)="toggleIsType$.next(qt[i].id)"
                   />
-                  
-                  <label class="form-check-label " for="{{ qt[i].id }}">
+
+                  <label class="form-check-label" for="{{ qt[i].id }}">
                     {{ qt[i].name }}
                   </label>
-                  <i class="ms-1 bi bi-info-circle-fill text-primary" (mouseenter)="changeTooltip(qt[i].id)"  [tooltip]="tolTemplate"></i>
-                  <ng-template #tolTemplate>{{contentTooltip}}</ng-template>
+                  <i
+                    class="ms-1 bi bi-info-circle-fill text-primary"
+                    (mouseenter)="changeTooltip(qt[i].id)"
+                    [tooltip]="tolTemplate"
+                  ></i>
+                  <ng-template #tolTemplate>{{ contentTooltip }}</ng-template>
                 </div>
               </div>
             </div>
@@ -146,11 +150,11 @@
               <small
                 id="content"
                 class="form-text text-muted"
-                *ngIf="vm.image.length>0"
-                >Tải lên từ bốn ảnh với các góc khác nhau để đạt hiệu quả tốt hơn!
+                *ngIf="vm.image.length > 0"
+                >Tải lên từ bốn ảnh với các góc khác nhau để đạt hiệu quả tốt
+                hơn!
               </small>
             </div>
-            
           </div>
         </div>
       </div>
@@ -194,7 +198,7 @@
             <ng-select
               [items]="status"
               bindValue="value"
-              bindLabel="value"
+              bindLabel="id"
               placeholder="Chọn trạng thái"
               [clearable]="false"
               formControlName="status"
@@ -214,13 +218,15 @@
           <div class="btn-group" dropdown>
             <button
               type="button"
-              class="btn btn-primary"
+              class="btn btn-primary mt-3 me-3"
               (click)="submit$.next({form,redirect:true})"
             >
-              Thêm
+              {{ (submitting$ | async) ? "Lưu ..." : "Lưu" }}
             </button>
+            <a routerLink="../../" class="btn btn-outline-primary mt-3"
+              >Thoát</a
+            >
           </div>
-          <a routerLink="../" class="btn btn-outline-primary ms-3">Thoát</a>
         </div>
       </div>
     </div>

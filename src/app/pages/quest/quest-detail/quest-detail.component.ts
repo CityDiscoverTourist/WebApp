@@ -249,7 +249,7 @@ export class QuestDetailComponent implements OnInit {
       )
       .subscribe({
         next: (result) => {
-          // setTimeout(()=>  window.location.reload(), 4000);
+          setTimeout(()=>  window.location.reload(), 3000);
         },
       });
   }
