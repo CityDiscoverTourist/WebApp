@@ -6,8 +6,16 @@ import { CommemtListComponent } from './commemt-list.component';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
+import { HotToastModule } from '@ngneat/hot-toast';
 
-const lib = [NgSelectModule, NgxDatatableModule];
+const lib = [
+  NgSelectModule,
+  NgxDatatableModule,
+  TooltipModule.forRoot(),
+  HotToastModule.forRoot(),
+];
+
 @NgModule({
   declarations: [CommemtListComponent],
   imports: [

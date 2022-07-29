@@ -6,6 +6,7 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
+import { HotToastService } from '@ngneat/hot-toast';
 import { RxState } from '@rx-angular/state';
 import { DatatableComponent, TableColumn } from '@swimlane/ngx-datatable';
 import { BehaviorSubject, Observable, Subject, tap, switchMap } from 'rxjs';
@@ -24,7 +25,8 @@ import { CommentListState } from '../states';
 export class CommemtListComponent implements OnInit {
   constructor(
     private commentListState: RxState<CommentListState>,
-    private commentService: CommentService
+    private commentService: CommentService,
+    private toast: HotToastService
   ) {}
 
   ngOnInit(): void {
@@ -67,6 +69,8 @@ export class CommemtListComponent implements OnInit {
     });
   }
   @ViewChild('colCreatedAt', { static: true }) colCreatedAt!: TemplateRef<any>;
+  @ViewChild('statusTemplate', { static: true })
+  statusTemplate!: TemplateRef<any>;
   @ViewChild('actionTemplate', { static: true })
   public actionTemplate: TemplateRef<any>;
   //Comment
@@ -113,10 +117,11 @@ export class CommemtListComponent implements OnInit {
         canAutoResize: true,
         headerClass: 'd-flex justify-content-center',
         cellClass: 'd-flex justify-content-center',
+        cellTemplate: this.statusTemplate,
       },
       {
         prop: 'action',
-        width: 60,
+        width: 80,
         name: 'Hành động',
         sortable: false,
         canAutoResize: true,
@@ -173,4 +178,12 @@ export class CommemtListComponent implements OnInit {
     });
   }
 
+  approveFeedback(id: string) {
+    this.commentService.updateApprove(id).subscribe((data) => {
+      if (data == null) {
+        setTimeout(() => window.location.reload(), 3000);
+        this.toast.success('Duyệt thành công phản hồi!');
+      }
+    });
+  }
 }
