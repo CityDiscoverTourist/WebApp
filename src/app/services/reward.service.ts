@@ -25,7 +25,7 @@ export class RewardService extends BaseService {
       `${search?.sort?.dir}` === 'undefined' ? '' : search.sort?.dir;
   
     const query = stringify({
-      customerEmail: search.keyword,
+      name: search.keyword,
       status: search?.status,
       pageNumber: isNaN(search?.currentPage!) ? 1 : search?.currentPage! + 1,
       pagesize: 10,

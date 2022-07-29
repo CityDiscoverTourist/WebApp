@@ -24,11 +24,11 @@ export class CommentService extends BaseService {
     var sortDir =
       `${search?.sort?.dir}` === 'undefined' ? '' : search.sort?.dir;
     const query = stringify({
-      customerEmail: search.keyword,
+      // customerEmail: search.keyword,
       pageNumber: isNaN(search?.currentPage!) ? 1 : search?.currentPage! + 1,
       pagesize: 10,
       orderby: `${sortBy} ${sortDir}`,
-      status: search?.status,
+      isFeedbackApproved: search?.isFeedbackApproved,
     });
     var questId=localStorage.getItem('questId');
     var result = this.http.get<Paging<Comment>>(
