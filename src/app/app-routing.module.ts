@@ -97,6 +97,13 @@ const routes: Routes = [
             (m) => m.RewardModule
           ),
       },
+      {
+        path: 'notification',
+        loadChildren: () =>
+          import('src/app/pages/notification/notification.module').then(
+            (m) => m.NotificationModule
+          ),
+      },
     ],
   },
   {
