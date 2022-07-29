@@ -38,6 +38,7 @@
     "date-fns": "^2.28.0",
     "jwt-decode": "^3.1.2",
     "ngx-bootstrap": "^8.0.0",
+    "ngx-csv": "^0.3.2",
     "ngx-dropzone": "^3.1.0",
     "ngx-quill": "^7.3.0",
     "ngx-spinner": "^13.1.1",

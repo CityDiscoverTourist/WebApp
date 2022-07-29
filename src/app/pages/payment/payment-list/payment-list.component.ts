@@ -1,7 +1,14 @@
-import { Component, OnInit, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  TemplateRef,
+  ViewChild,
+  ViewEncapsulation,
+} from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RxState } from '@rx-angular/state';
+import { ngxCsv } from 'ngx-csv/ngx-csv';
 import {
   ColumnMode,
   DatatableComponent,
@@ -9,7 +16,12 @@ import {
 } from '@swimlane/ngx-datatable';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { BehaviorSubject, Observable, Subject, tap, switchMap } from 'rxjs';
-import { PagingMetadata, Payment, SearchInfo } from 'src/app/models';
+import {
+  PagingMetadata,
+  Payment,
+  PaymentExcel,
+  SearchInfo,
+} from 'src/app/models';
 import { PaymentService } from 'src/app/services';
 import { PageInfo, SortInfo } from 'src/app/types';
 import { PaymentListState } from '../states';
@@ -27,8 +39,9 @@ export class PaymentListComponent implements OnInit {
   ColumnMode = ColumnMode;
 
   status: { id: string; value: string }[] = [
-    { id: 'Đang xử lý', value: "Pending" },
-    { id: 'Thành công', value: "Success" },
+    { id: 'Đang xử lý', value: 'Pending' },
+    { id: 'Thành công', value: 'Success' },
+    { id: 'Thất bại', value: 'Failed' },
   ];
 
   constructor(
@@ -81,7 +94,7 @@ export class PaymentListComponent implements OnInit {
         name: 'Mã thanh toán',
         sortable: false,
         width: 210,
-        headerClass:'d-flex justify-content-center',
+        headerClass: 'd-flex justify-content-center',
       },
       {
         prop: 'questName',
@@ -102,14 +115,13 @@ export class PaymentListComponent implements OnInit {
         sortable: false,
         headerClass: 'd-flex justify-content-center',
         cellClass: 'd-flex justify-content-center',
-        
       },
       {
         prop: 'status',
         name: 'Trạng thái',
         minWidth: 90,
         sortable: false,
-        cellTemplate:this.statusTemplate,
+        cellTemplate: this.statusTemplate,
         headerClass: 'd-flex justify-content-center',
         cellClass: 'd-flex justify-content-center',
       },
@@ -118,7 +130,7 @@ export class PaymentListComponent implements OnInit {
         name: 'Ngày tạo',
         sortable: false,
         cellTemplate: this.colCreatedAt,
-        minWidth:100,
+        minWidth: 100,
         headerClass: 'd-flex justify-content-center',
         cellClass: 'd-flex justify-content-center',
       },
@@ -135,8 +147,8 @@ export class PaymentListComponent implements OnInit {
         prop: 'totalAmount',
         name: 'Tổng',
         sortable: false,
-        width:140,
-        cellTemplate:this.formatPrice,
+        width: 140,
+        cellTemplate: this.formatPrice,
         headerClass: 'd-flex justify-content-center',
         cellClass: 'd-flex justify-content-center',
       },
@@ -153,9 +165,12 @@ export class PaymentListComponent implements OnInit {
 
   get payments$(): Observable<Payment[]> {
     return this.paymentListState.select('payments');
+    // .pipe(tap(data=>console.log(data)));
   }
   get metadata$(): Observable<PagingMetadata> {
-    return this.paymentListState.select('metadata');
+    return this.paymentListState
+      .select('metadata')
+      .pipe(tap((data) => (this.totalCount = data.totalCount)));
   }
   get loading$(): Observable<boolean> {
     return this.paymentListState.select('loading');
@@ -175,5 +190,39 @@ export class PaymentListComponent implements OnInit {
   }
   @ViewChild('colCreatedAt', { static: true }) colCreatedAt!: TemplateRef<any>;
   @ViewChild('formatPrice', { static: true }) formatPrice!: TemplateRef<any>;
-  @ViewChild('statusTemplate', { static: true }) statusTemplate!: TemplateRef<any>;
+  @ViewChild('statusTemplate', { static: true })
+  statusTemplate!: TemplateRef<any>;
+
+  totalCount = 0;
+  data: PaymentExcel[] = [];
+  count: number = 0;
+  fileDownload() {
+    var status = this.searchForm.controls['status'].value;
+    this.paymentService
+      .getAllPayments(status, this.totalCount)
+      .subscribe((result) => {
+        this.data = result;
+        var options = {
+          fieldSeparator: ',',
+          quoteStrings: '"',
+          decimalseparator: '.',
+          showLabels: true,
+          // showTitle: true,
+          // title: 'Report Data',
+          useBom: true,
+          // noDownload: true,
+          headers: [
+            'Mã thanh toán',
+            'Tên Quest',
+            'Khách hàng',
+            'Số lượng',
+            'Trạng thái',
+            'Ngày tạo',
+            'Phương thức thanh toán',
+            'Tổng tiền',
+          ],
+        };
+        new ngxCsv(this.data, 'Report', options);
+      });
+    }
 }
