@@ -4,6 +4,7 @@ import {
   OnInit,
   TemplateRef,
   ViewChild,
+  ViewEncapsulation,
 } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -29,9 +30,12 @@ import {
   QuestItemListSearch,
   QuestItemType,
   QuestListItem,
+  Comment,
+  SearchInfo,
 } from 'src/app/models';
 import {
   AreaService,
+  CommentService,
   QuestItemService,
   QuestItemTypeService,
   QuestService,
@@ -43,6 +47,7 @@ import { QuestItemListState } from '../states';
 import { QuestDetailState } from '../states/questdetail.state';
 import { QuestItemState, QUEST_ITEM_STATE } from './quest-item/states';
 import { ImageModalComponent } from './image-modal/image-modal.component';
+import { CommentListState } from './states';
 
 interface QuestDetailDescription {
   showQuestDescription: boolean;
@@ -53,6 +58,7 @@ interface QuestDetailDescription {
   templateUrl: './quest-detail.component.html',
   styleUrls: ['./quest-detail.component.scss'],
   providers: [RxState],
+  encapsulation: ViewEncapsulation.None,
 })
 export class QuestDetailComponent implements OnInit {
   private id: string;
@@ -72,7 +78,9 @@ export class QuestDetailComponent implements OnInit {
     private areaService: AreaService,
     private questTypeService: QuestTypeService,
     private modalService1: NgbModal,
-    private state: RxState<QuestDetailDescription>
+    private state: RxState<QuestDetailDescription>,
+    private commentListState: RxState<CommentListState>,
+    private commentService: CommentService
   ) {}
   ngOnInit(): void {
     this.state.connect(this.toggleDescription$, (prev, _) => ({
@@ -146,18 +154,54 @@ export class QuestDetailComponent implements OnInit {
       })
     );
 
-    this.initTable();
-
     this.questItemListState.hold(this.submitSearch$, (form) => {
       this.searchQuestItem$.next({
         ...this.searchQuestItem$.getValue(),
         ...form,
         currentPage: 0,
-      });
+      }),
+        (this.table.offset = 0);
     });
     this.questItemListState.hold(this.resetSearch$, () => {
+      var questId = localStorage.getItem('questId');
       this.searchForm.reset();
-      this.searchQuestItem$.next({ currentPage: 0 });
+      this.searchQuestItem$.next({ currentPage: 0, questId: Number(questId) });
+      this.table.offset = 0;
+    });
+
+    //Comment
+    this.initTable();
+    this.commentListState.connect(
+      this.searchComment$.pipe(
+        tap(() => this.commentListState.set({ loading: true })),
+        switchMap((s) => this.commentService.getComment(s))
+      ),
+      (_, result) => ({
+        comments: result.data,
+        metadata: { ...result.pagination },
+        loading: false,
+      })
+    );
+
+    this.status = this.commentService.status;
+
+    this.commentListState.hold(this.submitSearchComment$, (form) => {
+      this.searchComment$.next({
+        ...this.searchComment$.getValue(),
+        ...form,
+        currentPage: 0,
+      }),
+        (this.table.offset = 0);
+    });
+
+    this.commentListState.connect(this.resetSearchComment$, (prev, _) => ({
+      metadata: { ...prev.metadata, currentPage: 0 },
+    }));
+
+    this.commentListState.hold(this.resetSearchComment$, () => {
+      this.searchFormComment.reset();
+      this.searchComment$.next({ currentPage: 0 });
+      this.table.offset = 0;
     });
   }
 
@@ -168,52 +212,61 @@ export class QuestDetailComponent implements OnInit {
   @ViewChild('colCreatedAt', { static: true }) colCreatedAt!: TemplateRef<any>;
   @ViewChild('actionTemplate', { static: true })
   public actionTemplate: TemplateRef<any>;
-  //QuestItem
 
+  //Comment
   initTable() {
     this.columns = [
       {
-        prop: 'index',
-        name: 'STT',
-        sortable: false,
-        canAutoResize: true,
-        maxWidth: 75,
-      },
-      {
-        prop: 'content',
-        name: 'Nội dung câu hỏi',
+        prop: 'name',
+        name: 'Khách hàng',
         sortable: true,
         canAutoResize: true,
+        width: 150,
       },
       {
-        prop: 'rightAnswer',
-        name: 'Đáp án',
+        prop: 'feedBack',
+        name: 'Nội dung phản hồi',
         sortable: true,
         canAutoResize: true,
-        maxWidth: 250,
+        width: 300,
+      },
+      {
+        prop: 'rating',
+        name: 'Đánh giá',
+        sortable: true,
+        canAutoResize: true,
+        width: 60,
+        headerClass: 'd-flex justify-content-center',
+        cellClass: 'd-flex justify-content-center',
       },
       {
         prop: 'createdDate',
         name: 'Ngày tạo',
         sortable: true,
         cellTemplate: this.colCreatedAt,
-        maxWidth: 150,
+        canAutoResize: true,
+        headerClass: 'd-flex justify-content-center',
+        cellClass: 'd-flex justify-content-center',
+        width: 60,
       },
       {
         prop: 'status',
         name: 'Trạng thái',
         sortable: true,
-        maxWidth: 150,
+        width: 60,
+        canAutoResize: true,
+        headerClass: 'd-flex justify-content-center',
+        cellClass: 'd-flex justify-content-center',
       },
       {
         prop: 'action',
-        minWidth: 180,
+        width: 60,
         name: 'Hành động',
         sortable: false,
-        maxWidth: 200,
         canAutoResize: true,
         cellTemplate: this.actionTemplate,
-        cellClass: 'align-items-center d-flex',
+        headerClass: 'd-flex justify-content-center',
+        cellClass: 'd-flex justify-content-center',
       },
     ];
   }
@@ -249,7 +302,7 @@ export class QuestDetailComponent implements OnInit {
       )
       .subscribe({
         next: (result) => {
-          setTimeout(()=>  window.location.reload(), 3000);
+          setTimeout(() => window.location.reload(), 3000);
         },
       });
   }
@@ -273,20 +326,17 @@ export class QuestDetailComponent implements OnInit {
   get loading$(): Observable<boolean> {
     return this.questItemListState.select('loading');
   }
-  columns: TableColumn[] = [];
-
-  @ViewChild(DatatableComponent) table!: DatatableComponent;
 
   onPage(paging: PageInfo) {
-    this.searchQuestItem$.next({
-      ...this.searchQuestItem$.getValue(),
+    this.searchComment$.next({
+      ...this.searchComment$.getValue(),
       currentPage: paging.offset,
     });
   }
   onSort(event: SortInfo) {
     this.table.offset - 1;
-    this.searchQuestItem$.next({
-      ...this.searchQuestItem$.getValue(),
+    this.searchComment$.next({
+      ...this.searchComment$.getValue(),
       sort: { sortBy: event.column.prop, dir: event.newValue },
     });
   }
@@ -331,4 +381,30 @@ export class QuestDetailComponent implements OnInit {
   get description$(): Observable<QuestDetailDescription> {
     return this.state.select();
   }
+
+  columns: TableColumn[] = [];
+  @ViewChild(DatatableComponent) table!: DatatableComponent;
+  status: { id: string; value: string }[] = [];
+
+  get comments$(): Observable<Comment[]> {
+    return this.commentListState.select('comments');
+  }
+
+  get metadataComment$(): Observable<PagingMetadata> {
+    return this.commentListState.select('metadata');
+  }
+  get loadingComment$(): Observable<boolean> {
+    return this.commentListState.select('loading');
+  }
+
+  searchComment$ = new BehaviorSubject<SearchInfo>({});
+  searchFormComment = new FormGroup({
+    keyword: new FormControl(),
+    status: new FormControl(),
+  });
+
+  submitSearchComment$ = new Subject<
+    Partial<{ keyword: string; status: string }>
+  >();
+  resetSearchComment$ = new Subject<void>();
 }
