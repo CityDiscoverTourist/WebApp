@@ -15,6 +15,17 @@ export interface Payment {
   questDescription: string;
 }
 
+export interface PaymentExcel {
+  id: string;
+    questName: string;
+    customerEmail: string;
+    quantity: number;
+    status: string;
+    createdDate: Date,
+    paymentMethod: string,
+    totalAmount: number,
+}
+
 export interface PaymentListSearch extends SearchInfo {
   status?: boolean;
 }

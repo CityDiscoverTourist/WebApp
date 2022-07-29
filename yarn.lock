@@ -4821,6 +4821,11 @@ ngx-bootstrap@^8.0.0:
   dependencies:
     tslib "^2.0.0"
 
+ngx-csv@^0.3.2:
+  version "0.3.2"
+  resolved "https://registry.yarnpkg.com/ngx-csv/-/ngx-csv-0.3.2.tgz#d3f2464829c50e943e833fa13f5891fc27008f90"
+  integrity sha512-rtR5kUUxH1RgZegyRuFaoy3KoeRnP4oi6lHTZkNWoQ19bpVqXOwMFOkdwWjElI4RsMEFCnaFcJQ5iARFsjE86Q==
+
 ngx-dropzone@^3.1.0:
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/ngx-dropzone/-/ngx-dropzone-3.1.0.tgz#f2045a9ca90903fa96304f1b2aa33a922f14b15a"
