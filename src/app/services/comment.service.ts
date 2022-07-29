@@ -2,11 +2,11 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { stringify } from 'query-string';
 import { Observable } from 'rxjs';
-import { CommentListSearch, Paging,Comment } from '../models';
+import { CommentListSearch, Paging, Comment } from '../models';
 import { BaseService } from './base.service';
 import { environment } from 'src/environments/environment.prod';
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class CommentService extends BaseService {
   private _sharedHeaders = new HttpHeaders();
@@ -30,14 +30,19 @@ export class CommentService extends BaseService {
       orderby: `${sortBy} ${sortDir}`,
       isFeedbackApproved: search?.isFeedbackApproved,
     });
-    var questId=localStorage.getItem('questId');
+    var questId = localStorage.getItem('questId');
     var result = this.http.get<Paging<Comment>>(
-      `${environment.apiUrl}/api/v1/customer-quests/show-comments/${questId}?` + query,
+      `${environment.apiUrl}/api/v1/customer-quests/show-comments/${questId}?` +
+        query,
       { headers: this._sharedHeaders }
     );
     return result;
   }
 
-
-  
+  updateApprove(id: string): Observable<any> {
+    return this.http.put(
+      `${environment.apiUrl}/api/v1/customer-quests/approve-feedback/${id}`,
+      { headers: this._sharedHeaders }
+    );
+  }
 }
