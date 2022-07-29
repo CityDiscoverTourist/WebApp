@@ -6,17 +6,23 @@ const routes: Routes = [
   {
     path: '',
     component: CommemtListComponent,
-    data: { title: 'Danh sách thành phố', url: 'city' },
+    data: {
+      title: 'Quay lại chi tiết quest',
+      url: `./quest/${localStorage.getItem(`questId`)}`,
+    },
   },
   {
     path: 'list',
     component: CommemtListComponent,
-    data: { title: 'Danh sách thành phố', url: 'city' },
+    data: {
+      title: 'Quay lại chi tiết quest',
+      url: `./quest/${localStorage.getItem(`questId`)}`,
+    },
   },
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class CommemtListRoutingModule { }
+export class CommemtListRoutingModule {}
