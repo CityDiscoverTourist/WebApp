@@ -63,7 +63,7 @@ export class NavbarComponent implements OnInit {
     this.notificationListState.connect(
       this.search$
         .pipe(switchMap(() => this.notificationService.getNotifications()))
-        .pipe(tap((data) => console.log(data))),
+        ,
       (_, result) => ({
         notifications: result.data,
         metadata: { ...result.pagination },

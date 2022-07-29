@@ -22,6 +22,19 @@ const routes: Routes = [
       },
     ],
   },
+  {
+    path: 'comment',
+    component: QuestItemComponent,
+    children: [
+      {
+        path: '',
+        loadChildren: () =>
+          import('./comment/comment.module').then(
+            (m) => m.CommentModule
+          ),
+      },
+    ],
+  },
 ];
 
 @NgModule({

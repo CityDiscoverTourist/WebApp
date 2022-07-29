@@ -47,7 +47,7 @@ import { QuestItemListState } from '../states';
 import { QuestDetailState } from '../states/questdetail.state';
 import { QuestItemState, QUEST_ITEM_STATE } from './quest-item/states';
 import { ImageModalComponent } from './image-modal/image-modal.component';
-import { CommentListState } from './states';
+import { CommentListState } from './comment/states';
 
 interface QuestDetailDescription {
   showQuestDescription: boolean;
@@ -78,9 +78,7 @@ export class QuestDetailComponent implements OnInit {
     private areaService: AreaService,
     private questTypeService: QuestTypeService,
     private modalService1: NgbModal,
-    private state: RxState<QuestDetailDescription>,
-    private commentListState: RxState<CommentListState>,
-    private commentService: CommentService
+    private state: RxState<QuestDetailDescription>
   ) {}
   ngOnInit(): void {
     this.state.connect(this.toggleDescription$, (prev, _) => ({
@@ -154,121 +152,24 @@ export class QuestDetailComponent implements OnInit {
       })
     );
 
-    this.questItemListState.hold(this.submitSearch$, (form) => {
-      this.searchQuestItem$.next({
-        ...this.searchQuestItem$.getValue(),
-        ...form,
-        currentPage: 0,
-      }),
-        (this.table.offset = 0);
-    });
-    this.questItemListState.hold(this.resetSearch$, () => {
-      var questId = localStorage.getItem('questId');
-      this.searchForm.reset();
-      this.searchQuestItem$.next({ currentPage: 0, questId: Number(questId) });
-      this.table.offset = 0;
-    });
-
-    //Comment
-    this.initTable();
-    this.commentListState.connect(
-      this.searchComment$.pipe(
-        tap(() => this.commentListState.set({ loading: true })),
-        switchMap((s) => this.commentService.getComment(s))
-      ),
-      (_, result) => ({
-        comments: result.data,
-        metadata: { ...result.pagination },
-        loading: false,
-      })
-    );
-
-    this.status = this.commentService.status;
-
-    this.commentListState.hold(this.submitSearchComment$, (form) => {
-      this.searchComment$.next({
-        ...this.searchComment$.getValue(),
-        ...form,
-        currentPage: 0,
-      }),
-        (this.table.offset = 0);
-    });
-
-    this.commentListState.connect(this.resetSearchComment$, (prev, _) => ({
-      metadata: { ...prev.metadata, currentPage: 0 },
-    }));
-
-    this.commentListState.hold(this.resetSearchComment$, () => {
-      this.searchFormComment.reset();
-      this.searchComment$.next({ currentPage: 0 });
-      this.table.offset = 0;
-    });
+    // this.questItemListState.hold(this.submitSearch$, (form) => {
+    //   this.searchQuestItem$.next({
+    //     ...this.searchQuestItem$.getValue(),
+    //     ...form,
+    //     currentPage: 0,
+    //   }),
+    //     (this.table.offset = 0);
+    // });
+    // this.questItemListState.hold(this.resetSearch$, () => {
+    //   var questId = localStorage.getItem('questId');
+    //   this.searchForm.reset();
+    //   this.searchQuestItem$.next({ currentPage: 0, questId: Number(questId) });
+    //   this.table.offset = 0;
+    // });
   }
 
   get quest$(): Observable<QuestListItem> {
     return this.questDetailState.select('quest');
-  }
-
-  @ViewChild('colCreatedAt', { static: true }) colCreatedAt!: TemplateRef<any>;
-  @ViewChild('actionTemplate', { static: true })
-  public actionTemplate: TemplateRef<any>;
-
-  //Comment
-  initTable() {
-    this.columns = [
-      {
-        prop: 'name',
-        name: 'Khách hàng',
-        sortable: true,
-        canAutoResize: true,
-        width: 150,
-      },
-      {
-        prop: 'feedBack',
-        name: 'Nội dung phản hồi',
-        sortable: true,
-        canAutoResize: true,
-        width: 300,
-      },
-      {
-        prop: 'rating',
-        name: 'Đánh giá',
-        sortable: true,
-        canAutoResize: true,
-        width: 60,
-        headerClass: 'd-flex justify-content-center',
-        cellClass: 'd-flex justify-content-center',
-      },
-      {
-        prop: 'createdDate',
-        name: 'Ngày tạo',
-        sortable: true,
-        cellTemplate: this.colCreatedAt,
-        canAutoResize: true,
-        headerClass: 'd-flex justify-content-center',
-        cellClass: 'd-flex justify-content-center',
-        width: 60,
-      },
-      {
-        prop: 'status',
-        name: 'Trạng thái',
-        sortable: true,
-        width: 60,
-        canAutoResize: true,
-        headerClass: 'd-flex justify-content-center',
-        cellClass: 'd-flex justify-content-center',
-      },
-      {
-        prop: 'action',
-        width: 60,
-        name: 'Hành động',
-        sortable: false,
-        canAutoResize: true,
-        cellTemplate: this.actionTemplate,
-        headerClass: 'd-flex justify-content-center',
-        cellClass: 'd-flex justify-content-center',
-      },
-    ];
   }
 
   onDelete(id: number) {
@@ -327,19 +228,6 @@ export class QuestDetailComponent implements OnInit {
     return this.questItemListState.select('loading');
   }
 
-  onPage(paging: PageInfo) {
-    this.searchComment$.next({
-      ...this.searchComment$.getValue(),
-      currentPage: paging.offset,
-    });
-  }
-  onSort(event: SortInfo) {
-    this.table.offset - 1;
-    this.searchComment$.next({
-      ...this.searchComment$.getValue(),
-      sort: { sortBy: event.column.prop, dir: event.newValue },
-    });
-  }
   searchQuestItem$ = new BehaviorSubject<QuestItemListSearch>({});
 
   searchForm = new FormGroup({
@@ -381,30 +269,4 @@ export class QuestDetailComponent implements OnInit {
   get description$(): Observable<QuestDetailDescription> {
     return this.state.select();
   }
-
-  columns: TableColumn[] = [];
-  @ViewChild(DatatableComponent) table!: DatatableComponent;
-  status: { id: string; value: string }[] = [];
-
-  get comments$(): Observable<Comment[]> {
-    return this.commentListState.select('comments');
-  }
-
-  get metadataComment$(): Observable<PagingMetadata> {
-    return this.commentListState.select('metadata');
-  }
-  get loadingComment$(): Observable<boolean> {
-    return this.commentListState.select('loading');
-  }
-
-  searchComment$ = new BehaviorSubject<SearchInfo>({});
-  searchFormComment = new FormGroup({
-    keyword: new FormControl(),
-    status: new FormControl(),
-  });
-
-  submitSearchComment$ = new Subject<
-    Partial<{ keyword: string; status: string }>
-  >();
-  resetSearchComment$ = new Subject<void>();
 }
