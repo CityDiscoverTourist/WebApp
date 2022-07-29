@@ -133,7 +133,7 @@ export class RewardListComponent implements OnInit {
   }
 
   get rewards$(): Observable<Reward[]> {
-    return this.rewardListState.select('cities');
+    return this.rewardListState.select('cities').pipe(tap(data=>console.log(data)));
   }
   get metadata$(): Observable<PagingMetadata> {
     return this.rewardListState.select('metadata');
