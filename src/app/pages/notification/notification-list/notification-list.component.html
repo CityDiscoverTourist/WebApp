@@ -1,1 +1,31 @@
-<p>notification-list works!</p>
+<div class="pt-3 px-5">
+  <div class="bg-white my-3 p-3 rounded">
+    <div class="rounded bg-white">
+      <div class="border overflow-hidden rouded shadow-sm">
+        <ngx-datatable
+          class="material rounded"
+          [rows]="notifications$ | async"
+          [loadingIndicator]="(loading$ | async) === true"
+          [columns]="columns"
+          columnMode="force"
+          [headerHeight]="50"
+          [footerHeight]="50"
+          [rowHeight]="50"
+          [externalPaging]="true"
+          [externalSorting]="true"
+          [messages]="{
+            emptyMessage: 'Không có thông báo mới để hiển thị!',
+            totalMessage: 'thông báo mới'
+          }"
+          [count]="(metadata$ | async)?.totalCount || 0"
+          [offset]="((metadata$ | async)?.currentPage || 0) - 1"
+          [limit]="10"
+        >
+        <ng-template #colCreatedAt let-value="value">
+            {{ value | date: "dd/MM/yyyy" }}
+          </ng-template>
+        </ngx-datatable>
+      </div>
+    </div>
+  </div>
+</div>
