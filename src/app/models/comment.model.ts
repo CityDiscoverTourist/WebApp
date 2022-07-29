@@ -8,10 +8,11 @@ export interface Comment {
   feedBack: string;
   rating: number;
   createdDate: Date;
+  isFeedbackApproved:boolean;
 }
 
 
 export interface CommentListSearch extends SearchInfo {
-    status?: boolean;
+  isFeedbackApproved?: boolean;
   }
   
