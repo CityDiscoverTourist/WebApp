@@ -14,13 +14,13 @@
     <div class="form-group" [ngClass]="{ col: !simpleForm }">
       <input type="hidden" formControlName="id" />
       <label for="content" class="form-label">Nội dung {{ title }} </label>
-      <input
+      <textarea
         id="content"
         type="text"
         class="form-control"
         formControlName="content"
-        [ngClass]="{ 'is-invalid': form.hasError('content') }"
-      />
+        [ngClass]="{ 'is-invalid': form.hasError('content') }">
+      </textarea>
       <div
         class="invalid-feedback"
         *ngIf="form.hasErrorOf('content', 'required')"
