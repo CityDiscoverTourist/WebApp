@@ -47,4 +47,17 @@ export class SuggestionService extends BaseService {
       { headers: this._sharedHeaders }
     );
   }
+
+  updateStatus(id: string, status: string): Observable<Suggestion | undefined> {
+    return this.http
+      .put<Result<Suggestion>>(
+        `${environment.apiUrl}/api/v1/suggestions/${
+          status == 'Active' ? 'enable' : 'disable'
+        }/${id}`,
+        {
+          headers: this._sharedHeaders,
+        }
+      )
+      .pipe(map((response: Result<Suggestion>) => response.data));
+  }
 }
