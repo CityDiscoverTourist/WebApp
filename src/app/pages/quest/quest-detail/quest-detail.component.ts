@@ -152,20 +152,18 @@ export class QuestDetailComponent implements OnInit {
       })
     );
 
-    // this.questItemListState.hold(this.submitSearch$, (form) => {
-    //   this.searchQuestItem$.next({
-    //     ...this.searchQuestItem$.getValue(),
-    //     ...form,
-    //     currentPage: 0,
-    //   }),
-    //     (this.table.offset = 0);
-    // });
-    // this.questItemListState.hold(this.resetSearch$, () => {
-    //   var questId = localStorage.getItem('questId');
-    //   this.searchForm.reset();
-    //   this.searchQuestItem$.next({ currentPage: 0, questId: Number(questId) });
-    //   this.table.offset = 0;
-    // });
+    this.questItemListState.hold(this.submitSearch$, (form) => {
+      this.searchQuestItem$.next({
+        ...this.searchQuestItem$.getValue(),
+        ...form,
+        currentPage: 0,
+      });
+    });
+    this.questItemListState.hold(this.resetSearch$, () => {
+      var questId = localStorage.getItem('questId');
+      this.searchForm.reset();
+      this.searchQuestItem$.next({ currentPage: 0, questId: Number(questId) });
+    });
   }
 
   get quest$(): Observable<QuestListItem> {
@@ -237,6 +235,7 @@ export class QuestDetailComponent implements OnInit {
 
   submitSearch$ = new Subject<Partial<{ keyword: string }>>();
   resetSearch$ = new Subject<void>();
+  submitEdit$ = new Subject<Partial<{ id: number; status: string }>>();
 
   showAddSuggestion(questItemId: number) {
     const modalRef = this.modalService1.open(SuggestionModalComponent, {
@@ -285,7 +284,7 @@ export class QuestDetailComponent implements OnInit {
       )
       .subscribe({
         next: (result) => {
-          setTimeout(() => window.location.reload(), 3000);
+          this.resetSearch$.next();
         },
       });
   }
