@@ -68,7 +68,6 @@ export class AuthenticateService {
     }
 
     //check expiry
-    console.log(claims);
     if (!claims || Date.now().valueOf() > claims.exp * 1000) {
       return of(null);
     }

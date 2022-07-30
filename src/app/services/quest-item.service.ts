@@ -125,4 +125,20 @@ export class QuestItemService extends BaseService {
       { headers: this._sharedHeaders }
     );
   }
+
+  updateStatus(
+    id: string,
+    status: string
+  ): Observable<QuestItemListItem | undefined> {
+    return this.http
+      .put<Result<QuestItemListItem>>(
+        `${environment.apiUrl}/api/v1/quest-items/${
+          status == 'Active' ? 'enable' : 'disable'
+        }/${id}`,
+        {
+          headers: this._sharedHeaders,
+        }
+      )
+      .pipe(map((response: Result<QuestItemListItem>) => response.data));
+  }
 }
