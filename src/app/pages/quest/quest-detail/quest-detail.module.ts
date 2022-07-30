@@ -14,6 +14,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ImageModalComponent } from './image-modal/image-modal.component';
 import { QuillModule } from 'ngx-quill';
 import { DescriptionPipe } from './pipes/description.pipe';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
 
 const lib = [
   LetModule,
@@ -21,6 +22,7 @@ const lib = [
   NgxDatatableModule,
   HotToastModule.forRoot(),
   QuillModule.forRoot(),
+  TooltipModule.forRoot(),
 ];
 @NgModule({
   declarations: [QuestDetailComponent, ImageModalComponent, DescriptionPipe,],

@@ -269,4 +269,24 @@ export class QuestDetailComponent implements OnInit {
   get description$(): Observable<QuestDetailDescription> {
     return this.state.select();
   }
+
+  onUpdateStatusQuestItem(id: number, status: string) {
+    const bsModalRef = this.modalService.show(DeleteModalComponent, {
+      initialState: {
+        id: id + '',
+        title: 'câu hỏi',
+        status: status,
+      },
+    });
+    bsModalRef.onHide
+      ?.pipe(
+        take(1),
+        filter((s) => (s as any).data)
+      )
+      .subscribe({
+        next: (result) => {
+          setTimeout(() => window.location.reload(), 3000);
+        },
+      });
+  }
 }
