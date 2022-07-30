@@ -35,7 +35,7 @@ export class NotificationListComponent implements OnInit {
     this.notificationListState.connect(
       this.search$.pipe(
         tap(() => this.notificationListState.set({ loading: true })),
-        switchMap((s) => this.notificationService.getNotificationList(s))
+        switchMap((s) => this.notificationService.getNotificationList())
       ),
       (_, result) => ({
         notifications: result.data,

@@ -27,21 +27,10 @@ export class NotificationService extends BaseService {
     );
     return result;
   }
-  getNotificationList(search: SearchInfo): Observable<Paging<Notification>> {
-    var sortBy =
-      `${search.sort?.sortBy}` === 'undefined' ? '' : search.sort?.sortBy;
-    var sortDir =
-      `${search?.sort?.dir}` === 'undefined' ? '' : search.sort?.dir;
+  getNotificationList(): Observable<Paging<Notification>> {
     var userId = localStorage.getItem('userId');
-    const query = stringify({
-      userId: userId,
-      pageNumber: isNaN(search?.currentPage!) ? 1 : search?.currentPage! + 1,
-      pagesize: 10,
-      orderby: `${sortBy} ${sortDir}`,
-    });
-
     var result = this.http.get<Paging<Notification>>(
-      `${environment.apiUrl}/api/v1/notifications?${query}`,
+      `${environment.apiUrl}/api/v1/notifications/get-all?userId=${userId}`,
       { headers: this._sharedHeaders }
     );
     return result;
