@@ -20,9 +20,11 @@
           [count]="(metadata$ | async)?.totalCount || 0"
           [offset]="((metadata$ | async)?.currentPage || 0) - 1"
           [limit]="10"
+          (page)="onPage($event)"
+          (sort)="onSort($event)"
         >
         <ng-template #colCreatedAt let-value="value">
-            {{ value | date: "dd/MM/yyyy" }}
+          {{ value | date: "dd/MM/yyyy, h:mm a" }}
           </ng-template>
         </ngx-datatable>
       </div>

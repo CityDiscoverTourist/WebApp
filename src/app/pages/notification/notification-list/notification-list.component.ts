@@ -35,7 +35,7 @@ export class NotificationListComponent implements OnInit {
     this.notificationListState.connect(
       this.search$.pipe(
         tap(() => this.notificationListState.set({ loading: true })),
-        switchMap((s) => this.notificationService.getNotifications())
+        switchMap((s) => this.notificationService.getNotificationList(s))
       ),
       (_, result) => ({
         notifications: result.data,
@@ -80,11 +80,12 @@ export class NotificationListComponent implements OnInit {
         prop: 'content',
         name: 'Nội dung',
         sortable: false,
+        minWidth: 900,
         canAutoResize: true,
       },
       {
         prop: 'createdDate',
-        width: 180,
+        minWidth: 180,
         name: 'Ngày tạo',
         sortable: false,
         cellTemplate: this.colCreatedAt,
@@ -93,9 +94,7 @@ export class NotificationListComponent implements OnInit {
   }
 
   get notifications$(): Observable<Notification[]> {
-    return this.notificationListState
-      .select('notifications')
-      .pipe(tap((data) => console.log(data)));
+    return this.notificationListState.select('notifications');
   }
   get metadata$(): Observable<PagingMetadata> {
     return this.notificationListState.select('metadata');
