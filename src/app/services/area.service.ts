@@ -86,7 +86,7 @@ export class AreaService extends BaseService {
 
   getAreaById(id: string | undefined): Observable<Area> {
     return this.http
-      .get<Result<Area>>(`${environment.apiUrl}/api/v1/areas/${id}`, {
+      .get<Result<Area>>(`${environment.apiUrl}/api/v1/areas/${id}/not-language`, {
         headers: this._sharedHeaders,
       })
       .pipe(
