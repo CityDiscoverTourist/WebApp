@@ -165,7 +165,6 @@ export class PaymentListComponent implements OnInit {
 
   get payments$(): Observable<Payment[]> {
     return this.paymentListState.select('payments');
-    // .pipe(tap(data=>console.log(data)));
   }
   get metadata$(): Observable<PagingMetadata> {
     return this.paymentListState
