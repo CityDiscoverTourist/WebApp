@@ -288,4 +288,23 @@ export class QuestDetailComponent implements OnInit {
         },
       });
   }
+  onUpdateStatusSuggestion(id: number, status: string) {
+    const bsModalRef = this.modalService.show(DeleteModalComponent, {
+      initialState: {
+        id: id + '',
+        title: 'gợi ý',
+        status: status,
+      },
+    });
+    bsModalRef.onHide
+      ?.pipe(
+        take(1),
+        filter((s) => (s as any).data)
+      )
+      .subscribe({
+        next: (result) => {
+          this.resetSearch$.next();
+        },
+      });
+  }
 }
