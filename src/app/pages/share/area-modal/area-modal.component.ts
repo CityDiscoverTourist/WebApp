@@ -33,7 +33,7 @@ export class AreaModalComponent implements OnInit {
   id: string = '';
   title: string = '';
   type: string = '';
- status: { id: string; value: string }[] = [];
+  status: { id: string; value: string }[] = [];
 
   constructor(
     public bsModalRef: BsModalRef,
@@ -81,25 +81,32 @@ export class AreaModalComponent implements OnInit {
       $valid
         .pipe(
           tap(() => this.state.set({ submitting: true })),
+          tap((form) => {
+            var name = form.controls['name'].value + ' ';
+            var arrName = name.split('|');
+            if (arrName.length == 1) {
+              name = arrName[0] + '()' + arrName[0];
+            } else {
+              name = arrName[0] + '()' + arrName[1];
+            }
+            form.value['name'] = name;
+            return form;
+          }),
           switchMap((form) => {
             if (+this.id > 0) {
-              return this.areaSerice
-                .updateAreaById(form.value)
-                .pipe(
-                  catchError(() => {
-                    this.toast.error('Có lỗi hãy kiểm tra lại!');
-                    return of({ status: 'data not modified', data: null });
-                  })
-                );
+              return this.areaSerice.updateAreaById(form.value).pipe(
+                catchError(() => {
+                  this.toast.error('Có lỗi hãy kiểm tra lại!');
+                  return of({ status: 'data not modified', data: null });
+                })
+              );
             } else {
-              return this.areaSerice
-                .addArea(form.value)
-                .pipe(
-                  catchError(() => {
-                    this.toast.error('Có lỗi hãy kiểm tra lại!');
-                    return of({ status: 'data not modified', data: null });
-                  })
-                );
+              return this.areaSerice.addArea(form.value).pipe(
+                catchError(() => {
+                  this.toast.error('Có lỗi hãy kiểm tra lại!');
+                  return of({ status: 'data not modified', data: null });
+                })
+              );
             }
           })
         )
@@ -152,11 +159,13 @@ export class AreaModalComponent implements OnInit {
     return this.areaState.select('cityIds');
   }
 
-  get name() {
-    return this.form.get('name');
+  get nameLength() {
+    return this.form.get('name')?.value?.length;
   }
-
   public get submitting$(): Observable<boolean> {
     return this.state.select('submitting');
+  }
+  get name() {
+    return this.form.get('name');
   }
 }
