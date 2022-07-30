@@ -22,7 +22,7 @@
         [ngClass]="{ 'is-invalid': form.hasError('name') }"
       />
       <div class="invalid-feedback" *ngIf="form.hasErrorOf('name', 'required')">
-        Tên của loại quest bắt buộc
+        Tên loại quest bắt buộc
       </div>
       <small id="name" class="form-text text-muted" *ngIf="name > 0"
         >Dùng | để phân cách nếu thêm tên tiếng anh

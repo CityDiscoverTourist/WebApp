@@ -47,13 +47,8 @@ export class SuggestionModalComponent implements OnInit {
   ngOnInit(): void {
     this.initForm();
     this.status = this.suggestioService.status;
-
-    console.log(this.id);
-
     if (Number(this.id) > 0) {
       this.suggestioService.getSuggesionById(this.id).subscribe((data) => {
-        console.log(data);
-
         this.form.patchValue({
           id: data.id,
           content: data.content,

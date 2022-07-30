@@ -10,6 +10,7 @@ import {
   QuestItemTypeService,
   QuestService,
   QuestTypeService,
+  SuggestionService,
 } from 'src/app/services';
 
 @Component({
@@ -32,7 +33,9 @@ export class DeleteModalComponent implements OnInit {
     private questTypeService: QuestTypeService,
     private locationService: LocationService,
     private questItemService: QuestItemService,
-    private questService: QuestService
+    private questService: QuestService,
+    private suggestionService: SuggestionService,
+
   ) {}
 
   ngOnInit(): void {}
@@ -307,14 +310,47 @@ export class DeleteModalComponent implements OnInit {
           });
         }
         break;
-      case 'Quest Item':
+      case 'câu hỏi':
         {
-          this.questItemService.deleteQuestItemById(id).subscribe((data) => {
-            this.bsModalRef.onHide?.emit({
-              status: data,
-            });
-            this.bsModalRef.hide();
-            this.toast.success(`Xóa ${this.title} thành công`);
+          this.questItemService.updateStatus(id, status).subscribe((data) => {
+            try {
+              this.bsModalRef.onHide?.emit({
+                data: data,
+              });
+              this.bsModalRef.hide();
+              this.toast.success(
+                `${status == 'Active' ? 'Hoạt động lại' : 'Ngừng hoạt động'} ${
+                  this.title
+                } thành công!`,
+                {
+                  duration: 5000,
+                }
+              );
+            } catch (error) {
+              this.toast.error('Có lỗi hãy kiểm tra lại!');
+            }
+          });
+        }
+        break;
+      case 'gợi ý':
+        {
+          this.suggestionService.updateStatus(id, status).subscribe((data) => {
+            try {
+              this.bsModalRef.onHide?.emit({
+                data: data,
+              });
+              this.bsModalRef.hide();
+              this.toast.success(
+                `${status == 'Active' ? 'Hoạt động lại' : 'Ngừng hoạt động'} ${
+                  this.title
+                } thành công!`,
+                {
+                  duration: 5000,
+                }
+              );
+            } catch (error) {
+              this.toast.error('Có lỗi hãy kiểm tra lại!');
+            }
           });
         }
         break;

@@ -176,6 +176,7 @@ export class QuestTypeModalComponent implements OnInit {
       image: [],
     });
   }
+  
 
   submit$ = new Subject<{ form: FormGroup }>();
 
