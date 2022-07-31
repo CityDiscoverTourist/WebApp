@@ -178,7 +178,7 @@ export class QuestItemEditComponent implements OnInit {
     );
 
     this.state.hold(invalid$.pipe(), ({ form }) => {
-      this.toast.error('Giá trị bạn nhập không hợp lệ');
+      this.toast.error('Giá trị nhập không hợp lệ!');
       form.revalidateControls([]);
     });
 
@@ -210,7 +210,7 @@ export class QuestItemEditComponent implements OnInit {
       triggerMode: [0],
       rightAnswer: [''],
       answerImageUrl: [],
-      status: [],
+      status: ['', Validators.required],
       questItemTypeId: [1, Validators.required],
       locationId: ['', Validators.required],
       questId: [],

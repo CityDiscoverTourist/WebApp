@@ -121,7 +121,7 @@ export class QuestItemCreateComponent implements OnInit {
           if (!result.data?.id) {
             return;
           }
-          this.toast.success(`Tạo câu hỏi thành công`);
+          this.toast.success(`Thêm câu hỏi thành công!`);
           if (result.redirect) {
             this.router.navigate(['../../'], {
               relativeTo: this.activatedRoute,
@@ -139,7 +139,7 @@ export class QuestItemCreateComponent implements OnInit {
     );
 
     this.state.hold(invalid$.pipe(), ({ form }) => {
-      this.toast.error('Giá trị bạn nhập không hợp lệ');
+      this.toast.error('Giá trị nhập không hợp lệ!');
       form.revalidateControls([]);
     });
     this.state.connect(
@@ -197,7 +197,7 @@ export class QuestItemCreateComponent implements OnInit {
       triggerMode: [0],
       rightAnswer: [''],
       answerImageUrl: [],
-      status: [],
+      status: ['', Validators.required],
       questItemTypeId: [1, Validators.required],
       locationId: ['', Validators.required],
       questId: [],

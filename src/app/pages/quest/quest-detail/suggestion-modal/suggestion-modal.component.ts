@@ -99,7 +99,7 @@ export class SuggestionModalComponent implements OnInit {
               this.toast.success('Cập nhật gợi ý thành công!');
               setTimeout(()=>  window.location.reload(), 3000);
             } else {
-              this.toast.success('Tạo gợi ý thành công!');
+              this.toast.success('Thêm gợi ý thành công!');
               setTimeout(()=>  window.location.reload(), 3000);
             }
           })
