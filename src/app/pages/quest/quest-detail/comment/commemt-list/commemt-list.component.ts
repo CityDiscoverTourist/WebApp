@@ -143,7 +143,7 @@ export class CommemtListComponent implements OnInit {
     return this.commentListState.select('loading');
   }
   get comments$(): Observable<Comment[]> {
-    return this.commentListState.select('comments');
+    return this.commentListState.select('comments').pipe(tap(data=>console.log(data)));
   }
 
   get metadataComment$(): Observable<PagingMetadata> {

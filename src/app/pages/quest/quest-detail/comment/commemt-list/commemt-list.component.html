@@ -88,7 +88,7 @@
                 'border-radius': '9px'
               }"
               >{{
-                row.isFeedbackApproved == true ? "Đã duyệt" : "Không được duyệt"
+                row.isFeedbackApproved == true ? "Hoạt động" : "Không được duyệt"
               }}</span
             >
           </ng-template>
@@ -105,7 +105,7 @@
               data-placement="top"
               [tooltip]="'Nhấp chuột để duyệt phản hồi'"
               placement="left"
-              [disabled]="row.isFeedbackApproved == true ? true : false"
+              [disabled]="!row.isFeedbackApproved == true ? true : false"
               (click)="approveFeedback(row.id)"
             >
             <i class="bi bi-plus-lg"></i>
