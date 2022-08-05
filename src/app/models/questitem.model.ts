@@ -19,6 +19,7 @@ export interface QuestItem {
   questId: number;
   itemId: number;
   listImages:[];
+  // imageDescription:File[];
 }
 
 export interface QuestItemCreate{
@@ -39,6 +40,7 @@ export interface QuestItemCreate{
   questId: number;
   itemId: number;
   image:File[];
+  imageDescription:File[];
   listImages:[];
 
 }
@@ -67,6 +69,7 @@ export interface QuestItemListItem {
   questId: number;
   itemId: number;
   listImages:[];
+  // imageDescription:File[];
   suggestions:Suggestion[];
 }
 
