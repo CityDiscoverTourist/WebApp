@@ -20,3 +20,5 @@ export * from './suggestion.service';
 export * from './reward.service';
 export * from './customertask.service';
 export * from './comment.service';
+export * from './message.service';
+export * from './sound.service';
