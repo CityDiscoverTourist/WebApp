@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AuthenticateService } from 'src/app/services';
+import { BehaviorSubject } from 'rxjs';
+import { UserChatBox, Message } from 'src/app/models';
+import { AuthenticateService, MessageService, SoundService } from 'src/app/services';
 
 @Component({
   selector: 'app-admin-layout',
@@ -14,9 +16,109 @@ export class AdminLayoutComponent implements OnInit {
   constructor(
     private authService: AuthenticateService,
     private router: Router,
-    private activatedRoute: ActivatedRoute
-  ) {}
-  ngOnInit(): void {}
+    private activatedRoute: ActivatedRoute,
+    private messageService: MessageService,
+    private soundService:SoundService,
+  ) {
+    this.unReadMessageFromSenderUsername();
+  }
+  ngOnInit(): void {
+    this.messageService.connect();
+    this.messageService.userSource$.subscribe((data) => {
+      console.log('Xem co msg ko');
+      console.log(data);
+    });
+    const userChatBox: UserChatBox[] = [];
+    // = JSON.parse(localStorage.getItem('chatboxusers'));
+    if (userChatBox) {
+      this.chatBoxUsers = userChatBox;
+    } else {
+      this.chatBoxUsers = [];
+    }
+  }
+
+  chatBoxUsers: UserChatBox[] = [];
+  usernameActived: string;
+  private messageThreadSource = new BehaviorSubject<Message[]>([]);
+  messageThread$ = this.messageThreadSource.asObservable();
+
+  unReadMessageFromSenderUsername() {
+    this.messageService.userSource$.subscribe((data) => {
+      data.forEach((element) => {
+        let sum: number = 0;
+        if (this.chatBoxUsers.length < 3 && !element.User.startsWith('admin')) {
+          this.soundService.playAudioMessage();
+          this.selectUser(element); //display chat-box
+          sum += 1;
+        }
+      });
+      console.log(data);
+    });
+  }
+  selectUser(user: Message) {
+    // this.clearUnreadMessage(user.userName);
+    this.usernameActived = user.User;
+    switch (this.chatBoxUsers.length % 2) {
+      case 2: {
+        var u = this.chatBoxUsers.find((x) => x.user.User === user.User);
+        if (u != undefined) {
+          this.chatBoxUsers = this.chatBoxUsers.filter(
+            (x) => x.user.User !== user.User
+          );
+          this.chatBoxUsers.push(u);
+        } else {
+          this.chatBoxUsers.push(new UserChatBox(user, 250));
+        }
+        localStorage.setItem('chatboxusers', JSON.stringify(this.chatBoxUsers));
+        break;
+      }
+      case 1: {
+        var u = this.chatBoxUsers.find((x) => x.user.User === user.User);
+        if (u != undefined) {
+          this.chatBoxUsers = this.chatBoxUsers.filter(
+            (x) => x.user.User !== user.User
+          );
+          this.chatBoxUsers.push(u);
+        } else {
+          this.chatBoxUsers.push(new UserChatBox(user, 250 + 325));
+        }
+        localStorage.setItem('chatboxusers', JSON.stringify(this.chatBoxUsers));
+        break;
+      }
+      default: {
+        //0
+        var u = this.chatBoxUsers.find((x) => x.user.User == user.User);
+        if (u != undefined) {
+          this.chatBoxUsers = this.chatBoxUsers.filter(
+            (x) => x.user.User !== user.User
+          );
+          this.chatBoxUsers.push(u);
+        } else {
+          this.chatBoxUsers.push(new UserChatBox(user, 250));
+        }
+        localStorage.setItem('chatboxusers', JSON.stringify(this.chatBoxUsers));
+        break;
+      }
+    }
+  }
+
+  removeChatBox(event: string) {
+    this.chatBoxUsers = this.chatBoxUsers.filter((x) => x.user.User !== event);
+    localStorage.setItem('chatboxusers', JSON.stringify(this.chatBoxUsers));
+  }
+
+  activedChatBox(event: string) {
+    this.usernameActived = event;
+    var u = this.chatBoxUsers.find((x) => x.user.User === event);
+    if (u) {
+      this.chatBoxUsers = this.chatBoxUsers.filter(
+        (x) => x.user.User !== event
+      ); //remove
+      this.chatBoxUsers.push(u); // add to end of array
+      localStorage.setItem('chatboxusers', JSON.stringify(this.chatBoxUsers));
+    }
+  }
+
   changeShow() {
     if (this.isClose) {
       this.isClose = false;

@@ -15,6 +15,7 @@ import {
   HttpClient,
 } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { CollapseModule } from 'ngx-bootstrap/collapse';
 import { LocationTypeModalComponent } from './pages/share/location-type-modal/location-type-modal.component';
 import { QuestTypeModalComponent } from './pages/share/quest-type-modal/quest-type-modal.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
@@ -29,6 +30,7 @@ import { NgxSpinnerModule } from 'ngx-spinner';
 import { AuthorizeInterceptor } from './interceptors';
 import { SuggestionModalComponent } from './pages/quest/quest-detail/suggestion-modal/suggestion-modal.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { ChatBoxComponent } from './pages/chat-box/chat-box.component';
 
 const lib = [
   QuillModule.forRoot(),
@@ -51,6 +53,8 @@ const lib = [
     QuestItemTypeModalComponent,
     AreaModalComponent,
     SuggestionModalComponent,
+    ChatBoxComponent,
+    
   ],
   imports: [
     BrowserModule,
@@ -61,6 +65,7 @@ const lib = [
     ReactiveFormsModule,
     NgxSpinnerModule,
     NgxDropzoneModule,
+    CollapseModule.forRoot(),
     ...lib,
     NgbModule,
   ],
