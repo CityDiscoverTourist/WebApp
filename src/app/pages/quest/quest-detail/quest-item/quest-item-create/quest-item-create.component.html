@@ -65,7 +65,7 @@
             </div>
             <button
               type="button"
-              class="btn btn-sm btn-primary"
+              class="btn btn-sm btn-primary d-block mb-2"
               (click)="toggleDescription$.next()"
             >
               Mô tả
@@ -75,7 +75,7 @@
                 <quill-editor
                   [styles]="{ height: '200px' }"
                   formControlName="description"
-                  placeholder="Dùng | để phân cách nếu thêm tên tiếng anh"
+                  placeholder="Dùng | để phân cách nếu thêm mô tả tiếng anh"
                 ></quill-editor>
                 <small
                   id="description"
@@ -97,11 +97,17 @@
                     id="rightAnswer"
                     formControlName="rightAnswer"
                   ></textarea>
+                  <small
+                id="rightAnswer"
+                class="form-text text-muted"
+                *ngIf="form?.hasValue('rightAnswer')"
+                >Dùng | để phân cách nếu thêm câu trả lời text tiếng anh
+              </small>
                 </div>
               </div>
               <div class="card-body" *ngIf="vm.showTypeQuestsion">
                 <div class="d-flex bg-white border-bottom-0 mb-3 p-0 px-0">
-                  <div>Ảnh</div>
+                  <div>Ảnh trả lời</div>
                   <div class="flex-fill"></div>
                 </div>
                 <div
@@ -151,9 +157,87 @@
                 id="content"
                 class="form-text text-muted"
                 *ngIf="vm.image.length > 0"
-                >Tải lên từ bốn ảnh với các góc khác nhau để đạt hiệu quả tốt
+                >Tải lên từ 3 ảnh với các góc khác nhau để đạt hiệu quả tốt
                 hơn!
               </small>
+            </div>
+            <button
+              type="button"
+              class="btn btn-sm btn-primary"
+              (click)="toggleStory$.next()"
+            >
+              Câu chuyện
+            </button>
+            <div class="mt-3" *ngIf="vm.showStory">
+              <div class="mt-3">
+                <quill-editor
+                  [styles]="{ height: '200px' }"
+                  formControlName="story"
+                  placeholder="Dùng | để phân cách nếu thêm câu chuyện tiếng anh"
+                ></quill-editor>
+                <small
+                  id="story"
+                  class="form-text text-muted"
+                  *ngIf="form?.hasValue('story')"
+                  >Dùng | để phân cách nếu thêm câu chuyện tiếng anh
+                </small>
+              </div>
+            </div>
+
+            
+          </div>
+          <div class="card-body">
+            <div>Ảnh mô tả</div>
+            <div class="d-flex bg-white border-bottom-0 mb-3 p-0 px-0">
+              <div class="flex-fill"></div>
+              <!-- <div class="me-3" style="color: #0d6efd">
+              <p
+                (click)="deleteImage()"
+              >
+                Xóa ảnh
+              </p>
+            </div> -->
+            </div>
+            <div
+              class="border rounded text-center"
+              style="border-style: dashed !important"
+            >
+              <div
+                class="custom-dropzone"
+                style="border: none; height: 150px"
+                ngx-dropzone
+                [accept]="'image/*'"
+                [multiple]="false"
+                (change)="selectedFileImageDescription$.next($event.addedFiles)"
+              >
+                <div
+                  style="
+                    display: flex;
+                    justify-content: center;
+                    color: #333;
+                    cursor: pointer;
+                  "
+                >
+                  <!-- <span><i class="bi bi-x-circle-fill"></i></span> -->
+                </div>
+                <ngx-dropzone-label>
+                  <div>
+                    <i class="bi bi-plus"></i>
+                    <span>kéo và thả hình ảnh ở đây hoặc</span>
+                    <span class="ms-1 text-decoration-underline text-primary">
+                      tải lên từ máy tính của bạn</span
+                    >
+                  </div>
+                </ngx-dropzone-label>
+                <ngx-dropzone-image-preview
+                  ngProjectAs="ngx-dropzone-preview"
+                  *ngFor="let f of vm.files"
+                  [file]="f"
+                  [removable]="true"
+                  (removed)="removedImageDescription$.next(f)"
+                >
+                </ngx-dropzone-image-preview>
+              </div>
             </div>
           </div>
         </div>
@@ -208,26 +292,20 @@
               class="invalid-feedback"
               *ngIf="form.hasErrorOf('status', 'required')"
             >
-              Vui lòng chọn trạng thái
+              Trạng thái bắt buộc
             </div>
           </div>
         </div>
       </div>
       <div>
-        <div class="mb-3">
-          <div class="btn-group" dropdown>
-            <button
-              type="button"
-              class="btn btn-primary mt-3 me-3"
-              (click)="submit$.next({form,redirect:true})"
-            >
-              {{ (submitting$ | async) ? "Lưu ..." : "Lưu" }}
-            </button>
-            <a routerLink="../../" class="btn btn-outline-primary mt-3"
-              >Thoát</a
-            >
-          </div>
-        </div>
+        <button
+          type="button"
+          class="btn btn-primary mt-3 me-3"
+          (click)="submit$.next({form,redirect:true})"
+        >
+          {{ (submitting$ | async) ? "Lưu ..." : "Lưu" }}
+        </button>
+        <a routerLink="../../" class="btn btn-outline-primary mt-3">Thoát</a>
       </div>
     </div>
   </form>

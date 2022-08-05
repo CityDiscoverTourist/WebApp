@@ -21,10 +21,12 @@ import { QuestItemState, QUEST_ITEM_STATE } from '../states';
 
 interface QuestItemCreateState {
   showQuestDescription: boolean;
+  showStory: boolean;
   showTypeQuestsion: boolean;
   image: File[];
   error?: string;
   submitting: boolean;
+  files: File[];
 }
 
 @Component({
@@ -51,6 +53,8 @@ export class QuestItemCreateComponent implements OnInit {
       showQuestDescription: false,
       image: [],
       showTypeQuestsion: false,
+      showStory: false,
+      files: [],
     });
   }
 
@@ -58,6 +62,28 @@ export class QuestItemCreateComponent implements OnInit {
     this.state.connect(this.toggleDescription$, (prev, curr) => ({
       showQuestDescription: !prev.showQuestDescription,
     }));
+    this.state.connect(this.toggleStory$, (prev, curr) => ({
+      showStory: !prev.showStory,
+    }));
+
+    this.state.connect(
+      this.selectedFileImageDescription$
+        .pipe(tap(() => setTimeout(() => this.cd.detectChanges(), 100)))
+        .pipe(tap((file) => this.form.patchValue({ imageDescription: file[0] }))),
+      (_prev, files) => ({ files: [...files] })
+    );
+
+    this.state.connect(
+      this.removedImageDescription$.pipe(
+        tap(() => setTimeout(() => this.cd.markForCheck(), 100))
+      ),
+      (prev, curr) => {
+        prev.files.splice(prev.files.indexOf(curr), 1);
+        return {
+          files: prev.files,
+        };
+      }
+    );
 
     this.state.connect(this.toggleIsType$, (prev, curr) => {
       var check = false;
@@ -95,14 +121,33 @@ export class QuestItemCreateComponent implements OnInit {
               content = arrName[0] + '()' + arrName[1];
             }
             form.value['content'] = content;
-            var description = form.controls['description'].value + '';
+            
+            var story = form.controls['story'].value + ' ';
+            var arrStory = story.split('|');
+            if (arrStory.length == 1) {
+              story = arrStory[0] + '()' + arrStory[0];
+            } else {
+              story = arrStory[0] + '()' + arrStory[1];
+            }
+            form.value['story'] = story;
+
+            var description = form.controls['description'].value + ' ';
             var arrDescription = description.split('|');
-            if (arrDescription.length == 1 && description != null) {
+            if (arrDescription.length == 1) {
               description = arrDescription[0] + '()' + arrDescription[0];
             } else {
               description = arrDescription[0] + '()' + arrDescription[1];
             }
             form.value['description'] = description;
+
+            var rightAnswer = form.controls['rightAnswer'].value + ' ';
+            var arrRightAnswer = rightAnswer.split('|');
+            if (arrRightAnswer.length == 1) {
+              rightAnswer = arrRightAnswer[0] + '()' + arrRightAnswer[0];
+            } else {
+              rightAnswer = arrRightAnswer[0] + '()' + arrRightAnswer[1];
+            }
+            form.value['rightAnswer'] = rightAnswer;
             return form;
           })
         ),
@@ -204,9 +249,11 @@ export class QuestItemCreateComponent implements OnInit {
       questId: [],
       itemId: [0],
       image: [],
+      imageDescription:[]
     });
   }
   toggleDescription$ = new Subject<void>();
+  toggleStory$ = new Subject<void>();
   toggleIsType$ = new Subject<number>();
   get vm$(): Observable<QuestItemCreateState> {
     return this.state.select();
@@ -216,6 +263,9 @@ export class QuestItemCreateComponent implements OnInit {
 
   selectedFile$ = new Subject<File[]>();
   removedFiles$ = new Subject<File>();
+
+  selectedFileImageDescription$ = new Subject<File[]>();
+  removedImageDescription$ = new Subject<File>();
 
   showAddLocation() {
     this.router.navigate(['../../../../location/create', 'redirect'], {
