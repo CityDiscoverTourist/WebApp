@@ -29,7 +29,7 @@
           class="invalid-feedback"
           *ngIf="name?.errors?.['nameAlreadyExists']"
         >
-          Tên loại địa điểm đã tồn tại!
+          Loại địa điểm đã tồn tại!
         </div>
       </ng-container>
     </div>
@@ -59,7 +59,7 @@
       *ngIf="hasError$ | async"
       class="d-block p-2 bg-danger text-white p-2 mb-2 mt-3 text-center"
     >
-      Giá trị nhập không hợp lệ! Hãy kiểm tra lại
+      Giá trị nhập không hợp lệ! 
     </div>
   </form>
 </div>

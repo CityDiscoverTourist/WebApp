@@ -184,7 +184,7 @@ export class QuestEditComponent implements OnInit {
       })
     );
     this.state.hold(invalid$.pipe(), ({ form }) => {
-      this.toast.error('Giá trị bạn nhập không đúng');
+      this.toast.error('Giá trị nhập không hợp lệ!');
       form.revalidateControls([]);
     });
 

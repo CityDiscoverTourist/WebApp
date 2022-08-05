@@ -159,7 +159,7 @@ export class LocationCreateComponent implements OnInit, AfterViewChecked {
     );
 
     this.state.hold(invalid$.pipe(), ({ form, redirect }) => {
-      this.toast.error('Giá trị nhập không hợp lệ! Hãy kiểm tra lại');
+      this.toast.error('Giá trị nhập không hợp lệ!');
       form.revalidateControls([]);
     });
 

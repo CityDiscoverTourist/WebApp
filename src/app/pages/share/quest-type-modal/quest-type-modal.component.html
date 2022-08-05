@@ -13,7 +13,7 @@
   <form [formGroup]="form">
     <div class="form-group" [ngClass]="{ col: !simpleForm }">
       <input id="id" type="hidden" formControlName="id" />
-      <label for="name" class="form-label">Tên loại {{ title }} </label>
+      <label for="name" class="form-label">Tên {{ title }} </label>
       <input
         id="name"
         type="text"
@@ -100,7 +100,7 @@
       *ngIf="hasError$ | async"
       class="d-block p-2 bg-danger text-white p-2 mb-2 mt-3 text-center"
     >
-      Giá trị nhập không hợp lệ! Hãy kiểm tra lại
+      Giá trị nhập không hợp lệ! 
     </div>
   </form>
 </div>
