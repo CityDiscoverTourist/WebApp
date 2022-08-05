@@ -5,6 +5,7 @@ export interface QuestItem {
   id: number;
   content: string;
   description: string;
+  story:string;
   duration: number;
   createdDate: Date;
   updatedDate: Date;
@@ -23,6 +24,7 @@ export interface QuestItem {
 export interface QuestItemCreate{
   id: number;
   content: string;
+  story:string;
   description: string;
   duration: number;
   createdDate: Date;
@@ -50,6 +52,7 @@ export interface QuestItemListItem {
   index: number;
   id: number;
   content: string;
+  story:string;
   description: string;
   duration: number;
   createdDate: Date;

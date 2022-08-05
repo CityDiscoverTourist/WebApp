@@ -190,6 +190,7 @@ export class QuestItemCreateComponent implements OnInit {
       id: [0],
       content: ['', Validators.required],
       description: [''],
+      story:[''],
       duration: [0],
       createdDate: [],
       updatedDate: [],

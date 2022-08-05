@@ -19,6 +19,7 @@ export class QuestionModalComponent implements OnInit {
     id: 0,
     content: '',
     description: '',
+    story:'',
     duration: 0,
     createdDate: new Date(),
     updatedDate: new Date(),
