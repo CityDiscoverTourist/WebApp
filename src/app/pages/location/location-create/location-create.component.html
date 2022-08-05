@@ -20,13 +20,13 @@
                     class="invalid-feedback"
                     *ngIf="form.hasErrorOf('name', 'required')"
                   >
-                    Tên của địa điểm bắt buộc
+                    Tên địa điểm bắt buộc
                   </div>
                   <div
                     class="invalid-feedback"
                     *ngIf="name?.errors?.['nameAlreadyExists']"
                   >
-                    Tên địa điểm đã tồn tại!
+                  Địa điểm đã tồn tại!
                   </div>
                 </div>
               </div>
@@ -89,7 +89,7 @@
                         class="invalid-feedback"
                         *ngIf="form.hasErrorOf('locationTypeId', 'required')"
                       >
-                        Vui lòng chọn loại địa điểm
+                        Loại địa điểm bắt buộc
                       </div>
                     </div>
                     
@@ -119,7 +119,7 @@
                         class="invalid-feedback"
                         *ngIf="form.hasErrorOf('areaId', 'required')"
                       >
-                        Vui lòng chọn khu vực
+                        Khu vực bắt buộc
                       </div>
                     </div>
                   </div>
