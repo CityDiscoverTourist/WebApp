@@ -17,3 +17,5 @@ export * from './notification.model';
 export * from './customeranswer.model';
 export * from './reward.model';
 export * from './comment.model';
+export * from './message.model';
+export * from './userchat.model';
