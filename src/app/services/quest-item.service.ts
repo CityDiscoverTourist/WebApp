@@ -72,7 +72,13 @@ export class QuestItemService extends BaseService {
       duration: questItem.duration || 0,
       triggerMode: questItem.triggerMode || 0,
       updatedDate: questItem.updatedDate || '',
+      qrCode:questItem.qrCode||'',
+      answerImageUrl: questItem.answerImageUrl||''
     };
+    console.log("ll");
+    
+    console.log(payload);
+    
     Object.keys(payload).forEach((key) =>
       formData.append(key, (payload as any)[key])
     );
@@ -85,6 +91,8 @@ export class QuestItemService extends BaseService {
       for (let f of listImages) {
         formData.append('listImages', f);
       }
+    }else{
+      formData.append('listImages', '');
     }
     return formData;
   }
