@@ -1,0 +1,92 @@
+<div id="{{ user.User }}" class="card chat-box">
+  <div class="card-header">
+    <div class="d-flex">
+      <div class="mr">
+        <img src="./assets/user.png" alt="" class="rounded-circle img-person" />
+      </div>
+      <div>
+        <a href="/" class="text-primary" style="text-decoration: none"
+          >&nbsp; Khách hàng</a
+        >
+        <div class="text-muted">&nbsp;&nbsp;{{ user.User }}</div>
+      </div>
+      <div class="child-right">
+        <a
+          class="mr btn"
+          (click)="isCollapsed = !isCollapsed"
+          [attr.aria-expanded]="!isCollapsed"
+          aria-controls="collapseChatBox"
+          ><i class="bi bi-dash"></i
+        ></a>
+        <a class="mr" (click)="closeBoxChat()"><i class="bi bi-x"></i></a>
+      </div>
+    </div>
+  </div>
+  <div [collapse]="isCollapsed" [isAnimated]="true" id="collapseChatBox">
+    <div class="card-body">
+      <ul
+        #scrollMe
+        [scrollTop]="scrollMe.scrollHeight"
+        class="chat chat-frame"
+        (scroll)="onScroll($event)"
+        style="height: 350px"
+      >
+        <li
+          class="pd-5"
+          *ngFor="let message of messageService.messageThread$ | async"
+        >
+          <ng-container *ngIf="isTrue(message.User, user.User)">
+            <div
+              [ngClass]="message.User === user.User ? 'd-flex' : 'parent-sent'"
+            >
+              <!-- message.ConId === user.ConId -->
+              <!-- <div class="mr" *ngIf="message.recipientUsername === userCurrent.userName">
+                          <img class="rounded-circle small-img" src="{{message.recipientPhotoUrl || './assets/user.png'}}" alt="">
+                      </div> -->
+              <!-- message.User === user.User -->
+              <div
+                class="message-body"
+                [class.message-send]="message.User === user.User"
+              >
+                <div>{{ message.Message }}</div>
+              </div>
+
+              <!-- hiện trạng thái đã xem tin nhắn 
+                        <div *ngIf="(messageService.seenMessage$ | async) === message.id">
+                          <img class="rounded-circle" src="{{user.photoUrl || './assets/user.png'}}" alt="{{user.userName}}" style="max-height: 15px;">
+                      </div>    -->
+            </div>
+          </ng-container>
+        </li>
+      </ul>
+    </div>
+    <div class="card-footer">
+      <form
+        #messageForm="ngForm"
+        (ngSubmit)="sendMessage(user.ConId)"
+        autocomplete="off"
+      >
+        <div class="input-group">
+          <input
+            type="text"
+            name="messageContent"
+            required
+            [(ngModel)]="messageContent"
+            class="form-control input-sm"
+            placeholder="Send a private message"
+            (focus)="onFocusEvent($event)"
+          />
+          <div class="input-group-append">
+            <button
+              [disabled]="!messageForm.valid"
+              class="btn btn-primary"
+              type="submit"
+            >
+              Send
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
