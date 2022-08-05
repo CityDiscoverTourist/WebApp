@@ -26,8 +26,10 @@ import {
 
 interface QuestItemEditState {
   showQuestDescription: boolean;
+  showStory: boolean;
   showTypeQuestsion: boolean;
   image: File[];
+  files: File[],
   error?: string;
   submitting: boolean;
 }
@@ -56,8 +58,10 @@ export class QuestItemEditComponent implements OnInit {
   ) {
     this.state.set({
       showQuestDescription: false,
+      showStory: false,
       image: [],
       showTypeQuestsion: false,
+      files: [],
     });
   }
 
@@ -112,6 +116,29 @@ export class QuestItemEditComponent implements OnInit {
     this.state.connect(this.toggleDescription$, (prev, curr) => ({
       showQuestDescription: !prev.showQuestDescription,
     }));
+    this.state.connect(this.toggleStory$, (prev, curr) => ({
+      showStory: !prev.showStory,
+    }));
+
+    this.state.connect(
+      this.selectedFileImageDescription$
+        .pipe(tap(() => setTimeout(() => this.cd.detectChanges(), 100)))
+        .pipe(tap((file) => this.form.patchValue({ imageDescription: file[0] }))),
+      (_prev, files) => ({ files: [...files] })
+    );
+
+    this.state.connect(
+      this.removedImageDescription$.pipe(
+        tap(() => setTimeout(() => this.cd.markForCheck(), 100))
+      ),
+      (prev, curr) => {
+        prev.files.splice(prev.files.indexOf(curr), 1);
+        return {
+          files: prev.files,
+        };
+      }
+    );
+
     const [valid$, invalid$] = partition(
       this.submit$,
       ({ form }) => form.valid
@@ -138,9 +165,30 @@ export class QuestItemEditComponent implements OnInit {
               description = arrDescription[0] + '()' + arrDescription[1];
             }
             form.value['description'] = description;
-            var ssss = this.listImages;
 
+            
+            var story = form.controls['story'].value + ' ';
+            var arrStory = story.split('|');
+            if (arrStory.length == 1) {
+              story = arrStory[0] + '()' + arrStory[0];
+            } else {
+              story = arrStory[0] + '()' + arrStory[1];
+            }
+            form.value['story'] = story;
+
+
+            var rightAnswer = form.controls['rightAnswer'].value + ' ';
+            var arrRightAnswer = rightAnswer.split('|');
+            if (arrRightAnswer.length == 1) {
+              rightAnswer = arrRightAnswer[0] + '()' + arrRightAnswer[0];
+            } else {
+              rightAnswer = arrRightAnswer[0] + '()' + arrRightAnswer[1];
+            }
+            form.value['rightAnswer'] = rightAnswer;
+
+            var ssss = this.listImages;
             console.log(ssss);
+            
             form.value['listImages'] = this.listImages;
             return form;
           })
@@ -218,13 +266,19 @@ export class QuestItemEditComponent implements OnInit {
       itemId: [''],
       image: [],
       listImages: [],
+      imageDescription:[]
     });
   }
   get vm$(): Observable<QuestItemEditState> {
     return this.state.select();
   }
   toggleDescription$ = new Subject<void>();
+  toggleStory$ = new Subject<void>();
   toggleIsType$ = new Subject<number>();
+
+  selectedFileImageDescription$ = new Subject<File[]>();
+  removedImageDescription$ = new Subject<File>();
+
   get locationIds(): Observable<IdValue[]> {
     return this.questItemState.select('locationIds');
   }
