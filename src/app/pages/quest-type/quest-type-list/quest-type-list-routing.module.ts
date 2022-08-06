@@ -7,12 +7,12 @@ const routes: Routes = [
   {
     path: '',
     component: QuestTypeListComponent,
-    data: { title: 'Danh sách loại quest', url: 'quest-type' },
+    data: { title: 'Danh sách loại quest', url: 'quest-type',titleTab:'Danh sách loại quest' }
   },
   {
     path: 'list',
     component: QuestTypeListComponent,
-    data: { title: 'Danh sách loại quest', url: 'quest-type' },
+    data: { title: 'Danh sách loại quest', url: 'quest-type' ,titleTab:'Danh sách loại quest' }
   },
 ]
 @NgModule({

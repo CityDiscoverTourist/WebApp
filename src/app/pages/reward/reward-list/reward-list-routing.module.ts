@@ -6,12 +6,12 @@ const routes: Routes = [
   {
     path: '',
     component: RewardListComponent,
-    data: { title: 'Danh sách quà tặng', url: 'reward' },
+    data: { title: 'Danh sách quà tặng', url: 'reward', titleTab: 'Danh sách quà tặng', },
   },
   {
     path: 'list',
     component: RewardListComponent,
-    data: { title: 'Danh sách quà tặng', url: 'reward' },
+    data: { title: 'Danh sách quà tặng', url: 'reward' , titleTab: 'Danh sách quà tặng', },
   },
 ];
 

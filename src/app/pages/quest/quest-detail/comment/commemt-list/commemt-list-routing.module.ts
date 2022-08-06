@@ -9,14 +9,17 @@ const routes: Routes = [
     data: {
       title: 'Quay lại chi tiết quest',
       url: `./quest/${localStorage.getItem(`questId`)}`,
+      titleTab: 'Danh sách phản hồi',
     },
   },
+
   {
     path: 'list',
     component: CommemtListComponent,
     data: {
       title: 'Quay lại chi tiết quest',
       url: `./quest/${localStorage.getItem(`questId`)}`,
+      titleTab: 'Danh sách phản hồi',
     },
   },
 ];

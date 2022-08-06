@@ -45,8 +45,12 @@ export class NavbarComponent implements OnInit {
         var url = this.getUrl(router.routerState, router.routerState.root).join(
           '-'
         );
+        var titleTab=this.getTitleTab(
+          router.routerState,
+          router.routerState.root
+        ).join('-');
         this.pageUrl = url;
-        titleService.setTitle(title);
+        titleService.setTitle(titleTab);
       }
     });
   }
@@ -78,7 +82,8 @@ export class NavbarComponent implements OnInit {
             return data;
           })
         )
-        .pipe(tap((data) => console.log(data))),
+        // .pipe(tap((data) => console.log(data)))
+        ,
       (prev, result) => ({
         notifications: [result as Notification, ...prev.notifications],
       })
@@ -92,17 +97,6 @@ export class NavbarComponent implements OnInit {
       })
     );
 
-    // this.notificationListState.connect(
-    //   this.signalRService.subjectUpdateCustomerTask$.pipe(
-    //     tap((data) => data as Notification)
-    //   ),
-    //   (prev, result) => ({
-    //     notifications: [
-    //       ...prev.notifications.slice(0, prev.notifications.length - 1),
-    //       result,
-    //     ],
-    //   })
-    // );
   }
   getTitle(state: any, parent: any): any {
     var data = [];
@@ -115,6 +109,19 @@ export class NavbarComponent implements OnInit {
     }
     return data;
   }
+
+  getTitleTab(state: any, parent: any): any {
+    var data = [];
+    if (parent && parent.snapshot.data && parent.snapshot.data.titleTab) {
+      data.push(parent.snapshot.data.titleTab);
+    }
+
+    if (state && parent) {
+      data.push(...this.getTitleTab(state, state.firstChild(parent)));
+    }
+    return data;
+  }
+
   getUrl(state: any, parent: any): any {
     var data = [];
     if (parent && parent.snapshot.data && parent.snapshot.data.url) {

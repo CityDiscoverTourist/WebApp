@@ -6,12 +6,16 @@ const routes: Routes = [
   {
     path: '',
     component: QuestItemEditComponent,
-    data: { title: 'Quay lại chi tiết Quest', url: `./quest/${localStorage.getItem(`questId`)}` },
+    data: {
+      title: 'Quay lại chi tiết quest',
+      url: `./quest/${localStorage.getItem(`questId`)}`,
+      titleTab: 'Cập nhật câu hỏi',
+    },
   },
-]
+];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class QuestItemEditRoutingModule { }
+export class QuestItemEditRoutingModule {}

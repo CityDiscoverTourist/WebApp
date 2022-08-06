@@ -6,12 +6,20 @@ const routes: Routes = [
   {
     path: '',
     component: CustomerListComponent,
-    data: { title: 'Danh sách khách hàng', url: 'customer' },
+    data: {
+      title: 'Danh sách khách hàng',
+      url: 'customer',
+      titleTab: 'Danh sách khách hàng',
+    },
   },
   {
     path: 'list',
     component: CustomerListComponent,
-    data: { title: 'Danh sách khách hàng', url: 'customer' },
+    data: {
+      title: 'Danh sách khách hàng',
+      url: 'customer',
+      titleTab: 'Danh sách khách hàng',
+    },
   },
 ];
 

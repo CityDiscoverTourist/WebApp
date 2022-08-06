@@ -6,12 +6,12 @@ const routes: Routes = [
   {
     path: '',
     component: LocationTypeListComponent,
-    data: { title: 'Danh sách loại địa điểm', url: 'location-type' },
+    data: { title: 'Danh sách loại địa điểm', url: 'location-type' ,titleTab:'Danh sách loại địa điểm' }
   },
   {
     path: 'list',
     component: LocationTypeListComponent,
-    data: { title: 'Danh sách loại địa điểm', url: 'location-type' },
+    data: { title: 'Danh sách loại địa điểm', url: 'location-type' ,titleTab:'Danh sách loại địa điểm' }
   },
 ];
 

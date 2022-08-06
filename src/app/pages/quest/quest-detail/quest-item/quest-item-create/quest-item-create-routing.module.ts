@@ -7,8 +7,9 @@ const routes: Routes = [
     path: '',
     component: QuestItemCreateComponent,
     data: {
-      title: 'Quay lại chi tiết Quest',
+      title: 'Quay lại chi tiết quest',
       url: `./quest/${localStorage.getItem(`questId`)}`,
+      titleTab: 'Thêm câu hỏi',
     },
   },
 ];

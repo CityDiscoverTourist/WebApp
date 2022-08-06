@@ -6,7 +6,7 @@ const routes: Routes = [
   {
     path: '',
     component: DashboardComponent,
-    data: { title: 'Bảng điều khiển'},
+    data: { title: 'Bảng điều khiển',url: 'dashboard' ,titleTab:'Bảng điều khiển' }
   }
 ]
 

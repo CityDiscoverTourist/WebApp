@@ -6,12 +6,12 @@ const routes: Routes = [
   {
     path: '',
     component: LocationCreateComponent,
-    data: { title: 'Quay lại danh sách địa điểm', url: 'location' },
+    data: { title: 'Quay lại danh sách địa điểm', url: 'location' ,titleTab:'Thêm địa điểm' }
   },
   {
     path: 'redirect',
     component: LocationCreateComponent,
-    data: { title: 'Quay lại trang tạo câu hỏi', url: 'location' },
+    data: { title: 'Quay lại trang tạo câu hỏi', url: 'location'  ,titleTab:'Thêm địa điểm' }
   },
 ];
 

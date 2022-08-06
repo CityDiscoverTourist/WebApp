@@ -6,12 +6,12 @@ const routes: Routes = [
   {
     path: '',
     component: CityListComponent,
-    data: { title: 'Danh sách thành phố', url: 'city' },
+    data: { title: 'Danh sách thành phố', url: 'city',titleTab:'Danh sách thành phố' }
   },
   {
     path: 'list',
     component: CityListComponent,
-    data: { title: 'Danh sách thành phố', url: 'city' },
+    data: { title: 'Danh sách thành phố', url: 'city',titleTab:'Danh sách thành phố' }
   },
 ];
 

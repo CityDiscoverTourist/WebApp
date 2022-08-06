@@ -6,7 +6,7 @@ const routes: Routes = [
   {
     path: '',
     component: LocationEditComponent,
-    data: { title: 'Quay lại danh sách địa điểm', url: 'location' },
+    data: { title: 'Quay lại danh sách địa điểm', url: 'location' ,titleTab:'Cập nhật địa điểm' }
   },
 ];
 

@@ -7,7 +7,7 @@ const routes: Routes = [
   {
     path: '',
     component: QuestDetailComponent,
-    data: { title: 'Quay lại danh sách quest', url: 'quest' },
+    data: { title: 'Quay lại danh sách quest', url: 'quest' ,titleTab:'Chi tiết quest' }
   },
   {
     path: 'quest-item',
