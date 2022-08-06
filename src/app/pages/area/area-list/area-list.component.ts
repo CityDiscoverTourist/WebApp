@@ -66,6 +66,7 @@ export class AreaListComponent implements OnInit {
               name: x.name,
               status: x.status,
               cityId: this.citys.get(x.cityId),
+              createdDate:x.createdDate
             } as AreaListItem)
         ),
         metadata: { ...result.pagination },
@@ -96,6 +97,7 @@ export class AreaListComponent implements OnInit {
   public actionTemplate: TemplateRef<any>;
   @ViewChild('statusTemplate', { static: true })
   public statusTemplate: TemplateRef<any>;
+  @ViewChild('colCreatedAt', { static: true }) colCreatedAt!: TemplateRef<any>;
   initTable() {
     this.columns = [
       {
@@ -105,9 +107,16 @@ export class AreaListComponent implements OnInit {
         canAutoResize: true,
       },
       {
+        prop: 'createdDate',
+        name: 'Ngày tạo',
+        sortable: true,
+        maxWidth:200,
+        cellTemplate: this.colCreatedAt,
+        // headerClass: 'd-flex justify-content-center',
+      },
+      {
         prop: 'status',
-        maxWidth: 150,
-        minWidth: 200,
+        maxWidth:200,
         name: 'Trạng thái',
         sortable: true,
         canAutoResize: true,
@@ -115,17 +124,16 @@ export class AreaListComponent implements OnInit {
       },
       {
         prop: 'cityId',
-        maxWidth: 150,
+        maxWidth:200,
         name: 'Thành phố',
         sortable: false,
       },
 
       {
         prop: 'action',
-        minWidth: 200,
+        maxWidth: 200,
         name: 'Hành động',
         sortable: false,
-        maxWidth: 200,
         canAutoResize: true,
         cellTemplate: this.actionTemplate,
         cellClass: 'align-items-center d-flex',
