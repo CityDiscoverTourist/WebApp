@@ -69,6 +69,17 @@ export class SuggestionModalComponent implements OnInit {
       $valid
         .pipe(
           tap(() => this.state.set({ submitting: true })),
+          tap((form) => {
+            var content = form.controls['content'].value + ' ';
+            var arrContent = content.split('|');
+            if (arrContent.length == 1) {
+              content = arrContent[0] + '()' + arrContent[0];
+            } else {
+              content = arrContent[0] + '()' + arrContent[1];
+            }
+            form.value['content'] = content;
+            return form;
+          }),
           switchMap((form) => {
             if (+this.id > 0) {
               return this.suggestioService

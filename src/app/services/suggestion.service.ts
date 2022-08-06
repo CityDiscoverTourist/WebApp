@@ -30,7 +30,7 @@ export class SuggestionService extends BaseService {
   getSuggesionById(id: string | undefined): Observable<Suggestion> {
     return this.http
       .get<Result<Suggestion>>(
-        `${environment.apiUrl}/api/v1/suggestions/${id}`,
+        `${environment.apiUrl}/api/v1/suggestions/${id}/not-language`,
         {
           headers: this._sharedHeaders,
         }
