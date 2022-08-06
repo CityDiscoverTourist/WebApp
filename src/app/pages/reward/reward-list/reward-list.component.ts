@@ -83,17 +83,22 @@ export class RewardListComponent implements OnInit {
     this.columns = [
       {
         prop: 'name',
-        name: 'Tên quà tặng',
-        minWidth: 30,
+        name: 'Quà tặng',
+        width:115,
+        sortable:false,
         headerClass: 'd-flex justify-content-center',
       },
       {
-        prop: 'customerName',
-        name: 'Tên khách hàng',
+        prop: 'customerEmail',
+        name: 'Khách hàng',
+        sortable:false,
+        minWidth: 215,
+        headerClass: 'd-flex justify-content-center',
       },
       {
         prop: 'code',
         name: 'Mã quà tặng',
+        sortable:false,
         minWidth: 280,
         headerClass: 'd-flex justify-content-center',
       },
@@ -101,7 +106,7 @@ export class RewardListComponent implements OnInit {
         prop: 'receivedDate',
         name: 'Ngày nhận',
         cellTemplate: this.colCreatedAt,
-        width: 115,
+        width: 110,
         headerClass: 'd-flex justify-content-center',
         cellClass: 'd-flex justify-content-center',
       },
@@ -109,7 +114,7 @@ export class RewardListComponent implements OnInit {
         prop: 'expiredDate',
         name: 'Ngày hết hạn',
         cellTemplate: this.colCreatedAt,
-        width: 115,
+        width: 110,
         headerClass: 'd-flex justify-content-center',
         cellClass: 'd-flex justify-content-center',
       },
@@ -120,6 +125,7 @@ export class RewardListComponent implements OnInit {
         headerClass: 'd-flex justify-content-center',
         cellClass: 'd-flex justify-content-center',
         cellTemplate: this.colPercent,
+        sortable:false,
       },
       {
         prop: 'status',
@@ -133,7 +139,7 @@ export class RewardListComponent implements OnInit {
   }
 
   get rewards$(): Observable<Reward[]> {
-    return this.rewardListState.select('cities').pipe(tap(data=>console.log(data)));
+    return this.rewardListState.select('cities');
   }
   get metadata$(): Observable<PagingMetadata> {
     return this.rewardListState.select('metadata');
@@ -164,78 +170,4 @@ export class RewardListComponent implements OnInit {
 
   submitSearch$ = new Subject<Partial<{ keyword: string; status: string }>>();
   resetSearch$ = new Subject<void>();
-
-  // showAddCity() {
-  //   const bsModalRef = this.modalService.show(CityModalComponent, {
-  //     initialState: {
-  //       simpleForm: false,
-  //       title: 'thành phố',
-  //       type: 'Thêm',
-  //       id:'0',
-  //     },
-  //   });
-  //   bsModalRef.onHide
-  //     ?.pipe(
-  //       take(1),
-  //       filter((s) => (s as any).success)
-  //     )
-  //     .subscribe({
-  //       next: (result) => {
-  //         const data = result as { id: string; name: string };
-  //         console.log(data);
-
-  //         if (Number(data.id) > 0 && data.name.length > 0) {
-  //           this.toast.success('Tạo thành phố thành công!', {
-  //             duration: 5000,
-  //             dismissible: true,
-  //           });
-  //         }
-  //         this.search$.next({
-  //           ...this.search$.getValue(),
-  //         });
-  //       }
-  //     });
-  // }
-  // onUpdateStatus(id: string, status:string) {
-  //   const bsModalRef = this.modalService.show(DeleteModalComponent, {
-  //     initialState: {
-  //       id: id,
-  //       title: 'thành phố',
-  //       status: status
-  //     },
-  //   });
-  //   bsModalRef.onHide?.pipe(take(1),filter((s)=>(s as any).data)).subscribe({
-  //     next: (result) => {
-  //       this.search$.next({
-  //         ...this.search$.getValue(),
-  //       });
-  //     },
-  //   });
-  // }
-
-  // onUpdate(id: string) {
-  //   const bsModalRef = this.modalService.show(CityModalComponent, {
-  //     initialState: {
-  //       id: id,
-  //       title: 'thành phố',
-  //       type: 'Cập nhật',
-  //     },
-  //   });
-  //   bsModalRef.onHide
-  //     ?.pipe(
-  //       take(1),
-  //       filter((s) => (s as any).success)
-  //     )
-  //     .subscribe({
-  //       next: (result) => {
-  //         const data = result as { id: number; name: string };
-  //         if (data.id > 0 && data.name !== undefined) {
-  //           this.toast.success('Cập nhật thành phố thành công!');
-  //           this.search$.next({
-  //             ...this.search$.getValue(),
-  //           });
-  //         }
-  //       },
-  //     });
-  // }
 }

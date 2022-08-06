@@ -23,9 +23,10 @@ export class RewardService extends BaseService {
       `${search.sort?.sortBy}` === 'undefined' ? '' : search.sort?.sortBy;
     var sortDir =
       `${search?.sort?.dir}` === 'undefined' ? '' : search.sort?.dir;
-  
+
     const query = stringify({
-      name: search.keyword,
+      name: !search.keyword?.includes('@') ? search.keyword : undefined,
+      customerEmail: search.keyword?.includes('@') ? search.keyword : undefined,
       status: search?.status,
       pageNumber: isNaN(search?.currentPage!) ? 1 : search?.currentPage! + 1,
       pagesize: 10,
@@ -38,5 +39,4 @@ export class RewardService extends BaseService {
     );
     return result;
   }
-
 }

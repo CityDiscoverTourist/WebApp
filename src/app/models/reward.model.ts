@@ -7,7 +7,7 @@ export interface Reward {
   expiredDate: Date;
   percentDiscount: number;
   customerId: string;
-  customerName:string;
+  customerEmail:string;
   status: string;
 }
 
