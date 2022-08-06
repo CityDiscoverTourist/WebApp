@@ -182,7 +182,7 @@ export class CommemtListComponent implements OnInit {
     this.commentService.updateApprove(id).subscribe((data) => {
       if (data == null) {
         setTimeout(() => window.location.reload(), 3000);
-        this.toast.success('Duyệt thành công phản hồi!');
+        this.toast.success('Ngừng hoạt động thành công phản hồi!');
       }
     });
   }

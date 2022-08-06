@@ -41,7 +41,7 @@
           <button
             type="button"
             class="btn btn-default"
-            style="min-width: 100px; background-color: #c1d8f3;"
+            style="min-width: 100px; background-color: #c1d8f3"
             (click)="resetSearchComment$.next()"
           >
             <i class="bi bi-x-lg"></i>
@@ -88,7 +88,9 @@
                 'border-radius': '9px'
               }"
               >{{
-                row.isFeedbackApproved == true ? "Hoạt động" : "Không được duyệt"
+                row.isFeedbackApproved == true
+                  ? "Hoạt động"
+                  : "Ngừng hoạt động"
               }}</span
             >
           </ng-template>
@@ -97,8 +99,8 @@
               class="btn btn-sm me-2"
               style="
                 color: #fff;
-                background-color: #4caf50;
-                border-color: #4caf50;
+                background-color: #f44335;
+                border-color: #f44335;
               "
               type="button"
               data-toggle="tooltip"
@@ -108,7 +110,7 @@
               [disabled]="!row.isFeedbackApproved == true ? true : false"
               (click)="approveFeedback(row.id)"
             >
-            <i class="bi bi-plus-lg"></i>
+              <i class="bi bi-dash-circle-fill"></i>
             </button>
             <!-- <button
               class="btn btn-sm me-2"
