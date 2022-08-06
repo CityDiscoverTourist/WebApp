@@ -26,7 +26,7 @@ export class LocationService extends BaseService {
 
   getLocationIds(): Observable<IdValue[]> {
     var result = this.http
-      .get<Paging<Location>>(`${environment.apiUrl}/api/v1/locations`, {
+      .get<Paging<Location>>(`${environment.apiUrl}/api/v1/locations?pageSize=100`, {
         headers: this._sharedHeaders,
       })
       .pipe(
