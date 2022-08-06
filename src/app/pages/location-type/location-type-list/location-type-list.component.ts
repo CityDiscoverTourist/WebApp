@@ -1,4 +1,10 @@
-import { Component, OnInit, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  TemplateRef,
+  ViewChild,
+  ViewEncapsulation,
+} from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { HotToastService } from '@ngneat/hot-toast';
 import { RxState } from '@rx-angular/state';
@@ -11,12 +17,12 @@ import {
   Subject,
   switchMap,
   take,
-  tap
+  tap,
 } from 'rxjs';
 import {
   LocationTypeListItem,
   PagingMetadata,
-  SearchInfo
+  SearchInfo,
 } from 'src/app/models';
 import { LocationtypeService } from 'src/app/services';
 import { PageInfo, SortInfo } from 'src/app/types';
@@ -34,7 +40,7 @@ import { LocationTypeListState } from '../states';
 export class LocationTypeListComponent implements OnInit {
   @ViewChild(DatatableComponent) table!: DatatableComponent;
   columns: TableColumn[] = [];
- status: { id: string; value: string }[] = [];
+  status: { id: string; value: string }[] = [];
   constructor(
     private locationTypeListState: RxState<LocationTypeListState>,
     private locationTypeService: LocationtypeService,
@@ -49,7 +55,7 @@ export class LocationTypeListComponent implements OnInit {
           tap(() => this.locationTypeListState.set({ loading: true })),
           switchMap((s) => this.locationTypeService.getLocationTypes(s))
         )
-        .pipe(tap((data) => console.log(data))),
+       ,
       (_, result) => ({
         locationtypes: result.data.map(
           (x, i) =>
@@ -58,6 +64,7 @@ export class LocationTypeListComponent implements OnInit {
               id: x.id,
               name: x.name,
               status: x.status,
+              createdDate: x.createdDate,
             } as LocationTypeListItem)
         ),
         metadata: { ...result.pagination },
@@ -90,29 +97,36 @@ export class LocationTypeListComponent implements OnInit {
   public actionTemplate: TemplateRef<any>;
   @ViewChild('statusTemplate', { static: true })
   public statusTemplate: TemplateRef<any>;
+  @ViewChild('colCreatedAt', { static: true }) colCreatedAt!: TemplateRef<any>;
   initTable() {
     this.columns = [
       {
         prop: 'name',
         name: 'Tên loại địa điểm',
         sortable: true,
-        minWidth: 300,
+        canAutoResize: true,
+      },
+      {
+        prop: 'createdDate',
+        name: 'Ngày tạo',
+        sortable: true,
+       maxWidth:250,
+        cellTemplate: this.colCreatedAt,
+        // headerClass: 'd-flex justify-content-center',
       },
       {
         prop: 'status',
-        maxWidth: 350,
-        minWidth: 200,
+       maxWidth:250,
         name: 'Trạng thái',
         sortable: true,
         canAutoResize: true,
-        cellTemplate:this.statusTemplate
+        cellTemplate: this.statusTemplate,
       },
       {
         prop: 'action',
-        minWidth: 180,
         name: 'Hành động',
         sortable: false,
-        maxWidth: 200,
+       maxWidth:250,
         canAutoResize: true,
         cellTemplate: this.actionTemplate,
         cellClass: 'align-items-center d-flex',
@@ -181,21 +195,26 @@ export class LocationTypeListComponent implements OnInit {
         },
       });
   }
-  onUpdateStatus(id: string, status:string) {
+  onUpdateStatus(id: string, status: string) {
     const bsModalRef = this.modalService.show(DeleteModalComponent, {
       initialState: {
         id: id,
         title: 'loại địa điểm',
-        status: status
+        status: status,
       },
     });
-    bsModalRef.onHide?.pipe(take(1),filter((s)=>(s as any).data)).subscribe({
-      next: (result) => {
-        this.search$.next({
-          ...this.search$.getValue(),
-        });
-      },
-    });
+    bsModalRef.onHide
+      ?.pipe(
+        take(1),
+        filter((s) => (s as any).data)
+      )
+      .subscribe({
+        next: (result) => {
+          this.search$.next({
+            ...this.search$.getValue(),
+          });
+        },
+      });
   }
 
   onUpdate(id: string) {
