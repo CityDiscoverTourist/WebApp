@@ -39,8 +39,8 @@ export class CustomerListComponent implements OnInit {
   @ViewChild(DatatableComponent) table!: DatatableComponent;
   columns: TableColumn[] = [];
   isLock: { id: string; value: boolean }[] = [
-    { id: 'Đã  khóa', value: true },
-    { id: 'Hoạt động', value: false },
+    { id: 'Hoạt động', value: true },
+    { id: 'Đã  khóa', value: false },
   ];
   constructor(
     private customerListState: RxState<CustomerListState>,
@@ -108,7 +108,7 @@ export class CustomerListComponent implements OnInit {
       },
       {
         prop: 'userName',
-        name: 'Tên đăng nhập',
+        name: 'Tài khoản',
         minWidth: 50,
         sortable: false,
       },
