@@ -11,6 +11,7 @@ export interface LocationTypeListItem {
   index: number;
   id: number;
   name: string;
+  createdDate:Date;
   status: string;
   locations:Location[]
 }

@@ -18,6 +18,7 @@ export interface QuestTypeListItem{
   index:number;
   id:number;
   name:string;
+  createdDate:Date;
   status:string;
   imagePath:string;
   quests:[];

@@ -16,6 +16,7 @@ export interface CityListItem {
   index: number;
   id: number;
   name: string;
+  createdDate:Date;
   status: string;
   areas:Area[]
 }

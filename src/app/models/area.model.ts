@@ -7,6 +7,7 @@ export interface AreaListItem {
   name: string;
   status: string;
   cityId: string;
+  createdDate:Date;
   locations:Location[]
 }
 
@@ -16,6 +17,7 @@ export interface Area{
   name: string;
   status: string;
   cityId: number;
+  createdDate:Date;
 }
 
 export interface AreaListSearch extends SearchInfo{

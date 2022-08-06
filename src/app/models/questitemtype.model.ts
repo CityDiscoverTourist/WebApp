@@ -17,6 +17,7 @@ export interface QuestItemTypeListItem {
   id: number;
   name: string;
   status: string;
+  createdDate:Date;
   questItems: [];
 }
 
