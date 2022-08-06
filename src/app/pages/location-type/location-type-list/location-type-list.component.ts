@@ -93,12 +93,6 @@ export class LocationTypeListComponent implements OnInit {
   initTable() {
     this.columns = [
       {
-        prop: 'index',
-        name: 'STT',
-        sortable: false,
-        width: 50,
-      },
-      {
         prop: 'name',
         name: 'Tên loại địa điểm',
         sortable: true,
@@ -208,7 +202,7 @@ export class LocationTypeListComponent implements OnInit {
     const bsModalRef = this.modalService.show(LocationTypeModalComponent, {
       initialState: {
         id: id,
-        title: 'loại vị trí',
+        title: 'loại địa điểm',
         type: 'Cập nhật',
       },
     });

@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { HotToastService } from '@ngneat/hot-toast';
 import { RxState } from '@rx-angular/state';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import {
@@ -37,7 +38,8 @@ export class LocationTypeModalComponent implements OnInit {
     public bsModalRef: BsModalRef,
     private fb: FormBuilder,
     private state: RxState<LocationTypeState>,
-    private locationTypeService: LocationtypeService
+    private locationTypeService: LocationtypeService,
+    private toast: HotToastService
   ) {}
 
   ngOnInit(): void {
@@ -71,22 +73,35 @@ export class LocationTypeModalComponent implements OnInit {
       $valid
         .pipe(
           tap(() => this.state.set({ submitting: true })),
+          tap((form) => {
+            var name = form.controls['name'].value + ' ';
+            var arrName = name.split('|');
+            if (arrName.length == 1) {
+              name = arrName[0] + '()' + arrName[0];
+            } else {
+              name = arrName[0] + '()' + arrName[1];
+            }
+            form.value['name'] = name;
+            return form;
+          }),
           switchMap((form) => {
             if (+this.id > 0) {
               return this.locationTypeService
                 .updateLocationTypeById(form.value)
                 .pipe(
-                  catchError(() =>
-                    of({ status: 'data not modified', data: null })
-                  )
+                  catchError(() => {
+                    this.toast.error('Có lỗi hãy kiểm tra lại!');
+                    return of({ status: 'data not modified', data: null });
+                  })
                 );
             } else {
               return this.locationTypeService
                 .addLocationType(form.value)
                 .pipe(
-                  catchError(() =>
-                    of({ status: 'data not modified', data: null })
-                  )
+                  catchError(() => {
+                    this.toast.error('Có lỗi hãy kiểm tra lại!');
+                    return of({ status: 'data not modified', data: null });
+                  })
                 );
             }
           })

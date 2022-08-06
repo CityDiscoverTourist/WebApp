@@ -34,8 +34,7 @@ export class DeleteModalComponent implements OnInit {
     private locationService: LocationService,
     private questItemService: QuestItemService,
     private questService: QuestService,
-    private suggestionService: SuggestionService,
-
+    private suggestionService: SuggestionService
   ) {}
 
   ngOnInit(): void {}
@@ -132,13 +131,12 @@ export class DeleteModalComponent implements OnInit {
               try {
                 if (data?.locations?.length) {
                   this.bsModalRef.hide();
-                  var title = data.locations.map((x) => x.name).join(', ');
                   this.toast.error(
                     `${
                       status == 'Active'
                         ? 'Hoạt động lại'
                         : 'Không thể ngừng hoạt động'
-                    } ${this.title} ${data.name}!
+                    } loại địa điểm!
                   <br> 
                   Loại địa này này đang chứa địa điểm khác nên không thể ngừng hoạt động!
                 `,
@@ -155,7 +153,7 @@ export class DeleteModalComponent implements OnInit {
                   this.toast.success(
                     `${
                       status == 'Active' ? 'Hoạt động lại' : 'Ngừng hoạt động'
-                    } ${this.title} ${data?.name} thành công!`,
+                    } loại địa điểm thành công!`,
                     {
                       duration: 5000,
                     }

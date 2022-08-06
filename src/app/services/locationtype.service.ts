@@ -69,7 +69,7 @@ export class LocationtypeService extends BaseService {
   getLocationTypeById(id: string | undefined): Observable<LocationType> {
     return this.http
       .get<Result<LocationType>>(
-        `${environment.apiUrl}/api/v1/location-types/${id}`,
+        `${environment.apiUrl}/api/v1/location-types/${id}/not-language`,
         { headers: this._sharedHeaders }
       )
       .pipe(
