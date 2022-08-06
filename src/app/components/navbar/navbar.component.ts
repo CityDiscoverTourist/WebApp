@@ -55,10 +55,6 @@ export class NavbarComponent implements OnInit {
     });
   }
   ngOnInit(): void {
-    // this.notificationService.getNotifications().subscribe((result) => {
-    //   this.notications = result.data;
-    // });
-
     this.signalRService.startConnectionNotification();
     this.signalRService.addTranferDataNotificationTaskListener();
     // this.signalRService.addTranferDataCustomerTaskListener();
@@ -72,6 +68,7 @@ export class NavbarComponent implements OnInit {
         notifications: result.data,
         metadata: { ...result.pagination },
         loading: false,
+        notificationLength:result.data.length
       })
     );
 
@@ -82,10 +79,10 @@ export class NavbarComponent implements OnInit {
             return data;
           })
         )
-        // .pipe(tap((data) => console.log(data)))
         ,
       (prev, result) => ({
         notifications: [result as Notification, ...prev.notifications],
+        notificationLength:prev.notifications.length +1,
       })
     );
     this.notificationListState.connect(
@@ -153,6 +150,9 @@ export class NavbarComponent implements OnInit {
   get notification$(): Observable<Notification[]> {
     return this.notificationListState.select('notifications');
   }
+  get notificationLength$(): Observable<number> {
+    return this.notificationListState.select('notificationLength');
+  }
 
   get loading$(): Observable<boolean> {
     return this.notificationListState.select('loading');
@@ -163,11 +163,11 @@ export class NavbarComponent implements OnInit {
   }
 
   isReadNotify(){
-    console.log("shshhsh");
+   this.notificationListState.set({notificationLength:0})
     this.notificationService.isReadNotification().subscribe(data=>data);
     if (this.isShow) {
       this.isShow = false;
     } else this.isShow = true;
-    
   }
+
 }

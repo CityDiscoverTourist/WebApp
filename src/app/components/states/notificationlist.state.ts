@@ -6,6 +6,7 @@ export interface NotificationListState {
   notifications: Notification[];
   metadata: PagingMetadata;
   loading: boolean;
+  notificationLength:number;
 }
 export const NOTIFICATION_LIST_STATE = new InjectionToken<
   RxState<NotificationListState>
