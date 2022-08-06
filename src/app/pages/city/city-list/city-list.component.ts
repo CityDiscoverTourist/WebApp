@@ -53,6 +53,7 @@ export class CityListComponent implements OnInit {
               id: x.id,
               name: x.name,
               status: x.status,
+              createdDate:x.createdDate
             } as CityListItem)
         ),
         metadata: { ...result.pagination },
@@ -83,18 +84,26 @@ export class CityListComponent implements OnInit {
   }
   @ViewChild('actionTemplate', { static: true })  public actionTemplate: TemplateRef<any>;
   @ViewChild('statusTemplate', { static: true })  public statusTemplate: TemplateRef<any>;
+  @ViewChild('colCreatedAt', { static: true }) colCreatedAt!: TemplateRef<any>;
   initTable() {
     this.columns = [
       {
         prop: 'name',
         name: 'Tên thành phố',
         sortable: true,
-        minWidth: 300,
+        canAutoResize:true
+      },
+      {
+        prop: 'createdDate',
+        name: 'Ngày tạo',
+        sortable: true,
+        maxWidth:250,
+        cellTemplate: this.colCreatedAt,
+        // headerClass: 'd-flex justify-content-center',
       },
       {
         prop: 'status',
-        maxWidth: 350,
-        minWidth: 200,
+        maxWidth:250,
         name: 'Trạng thái',
         sortable: true,
         canAutoResize: true,
@@ -102,10 +111,10 @@ export class CityListComponent implements OnInit {
       },
       {
         prop: 'action',
-        minWidth: 180,
+        maxWidth:250,
         name: 'Thao tác',
-        maxWidth: 150,
         canAutoResize: true,
+        sortable:false,
         cellTemplate: this.actionTemplate,
       },
     ];
