@@ -2,7 +2,17 @@
   <div class="px-5" *rxLet="quest$ as vm">
     <div class="d-flex align-items-center justify-content-between mb-0 px-3">
       <div>
-        <h6 style="margin-top: 12px">{{ vm.title }}</h6>
+        <h6
+          style="
+            margin-top: 12px;
+            font-size: 1.1rem;
+            font-weight: 500;
+            line-height: 20px;
+            text-decoration: none;
+          "
+        >
+          {{ vm.title }}
+        </h6>
       </div>
       <div class="flex-fill"></div>
       <button
@@ -168,7 +178,11 @@
               *ngIf="(description$ | async)?.showQuestDescription"
             >
               <div class="bd-callout bd-callout-info">
-                {{ vm.description | descriptionPipe }}
+                {{
+                  vm.description != 'null'
+                    ? (vm.description | descriptionPipe)
+                    : "Không có mô tả"
+                }}
               </div>
             </div>
           </div>
@@ -194,63 +208,74 @@
         <i class="bi bi-plus"></i> Thêm câu hỏi
       </a>
     </div>
-    <div class="bg-white mx-3 p-3 rounded mt-2">
-      <div>
-        <p>Câu hỏi</p>
+    <div class="pt-3">
+      <div class="px-3">
+        <p
+          style="
+            font-size: 1.1rem;
+            font-weight: 500;
+            line-height: 20px;
+            text-decoration: none;
+          "
+        >
+          Danh sách câu hỏi
+        </p>
       </div>
-      <div class="rounded bg-white">
-        <form [formGroup]="searchForm">
-          <div class="d-flex">
-            <div class="input-group me-3">
-              <span
-                class="input-group-text bg-white border-end-0"
-                id="search-icon"
-                ><i class="bi bi-search"></i
-              ></span>
-              <input
-                type="text"
-                class="border-start-0 form-control outline-none"
-                style="width: 50px"
-                placeholder="Tìm kiếm theo nội dung câu hỏi"
-                aria-label="Tìm kiếm"
-                aria-describedby="search-icon"
-                formControlName="keyword"
-                (keyup.enter)="searchQuestItem$.next(searchForm.value)"
-              />
+      <div class="bg-white mx-3 p-3 rounded mt-1">
+        <div class="rounded bg-white">
+          <form [formGroup]="searchForm">
+            <div class="d-flex">
+              <div class="input-group me-3">
+                <span
+                  class="input-group-text bg-white border-end-0"
+                  id="search-icon"
+                  ><i class="bi bi-search"></i
+                ></span>
+                <input
+                  type="text"
+                  class="border-start-0 form-control outline-none"
+                  style="width: 50px"
+                  placeholder="Tìm kiếm theo nội dung câu hỏi"
+                  aria-label="Tìm kiếm"
+                  aria-describedby="search-icon"
+                  formControlName="keyword"
+                  (keyup.enter)="searchQuestItem$.next(searchForm.value)"
+                />
+              </div>
+              <ng-select
+                [items]="questItemTypeIds | async"
+                bindValue="id"
+                bindLabel="name"
+                placeholder="Chọn loại câu hỏi"
+                [clearable]="true"
+                [closeOnSelect]="true"
+                style="min-width: 200px"
+                formControlName="questItemTypeIds"
+                class="me-3"
+              ></ng-select>
+              <div class="btn-group">
+                <button
+                  type="button"
+                  class="btn btn-primary"
+                  style="min-width: 120px"
+                  (click)="submitSearch$.next(searchForm.value)"
+                >
+                  <i class="bi bi-search"></i>
+                  Tìm kiếm
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-default"
+                  style="min-width: 100px"
+                  (click)="resetSearch$.next()"
+                >
+                  <i class="bi bi-x-lg"></i>
+                  Reset
+                </button>
+              </div>
             </div>
-            <ng-select
-              [items]="questItemTypeIds | async"
-              bindValue="id"
-              bindLabel="name"
-              placeholder="Chọn loại câu hỏi"
-              [clearable]="true"
-              [closeOnSelect]="true"
-              style="min-width: 200px"
-              formControlName="questItemTypeIds"
-              class="me-3"
-            ></ng-select>
-            <div class="btn-group">
-              <button
-                type="button"
-                class="btn btn-primary"
-                style="min-width: 120px"
-                (click)="submitSearch$.next(searchForm.value)"
-              >
-                <i class="bi bi-search"></i>
-                Tìm kiếm
-              </button>
-              <button
-                type="button"
-                class="btn btn-default"
-                style="min-width: 100px"
-                (click)="resetSearch$.next()"
-              >
-                <i class="bi bi-x-lg"></i>
-                Reset
-              </button>
-            </div>
-          </div>
-        </form>
+          </form>
+        </div>
       </div>
     </div>
   </div>
@@ -261,7 +286,7 @@
         *ngFor="let q of questItems$ | async; let index; let i = index"
       >
         <div class="card mb-3">
-          <div class="card-header bg-white py-3">
+          <div class="card-header bg-white" style="min-height: 110px">
             <span style="font-weight: 600">Câu hỏi {{ i + 1 }}: </span>
             <span>{{ q.content }}</span>
           </div>

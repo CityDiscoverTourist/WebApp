@@ -102,8 +102,8 @@ export class QuestDetailComponent implements OnInit {
           forkJoin(
             [
               this.questService.getQuestById(data.id.toString()),
-              this.areaService.getAreaById(data.areaId.toString()),
-              this.questTypeService.getQuestTypeById(
+              this.areaService.getAreaByIdVi(data.areaId.toString()),
+              this.questTypeService.getQuestTypeByIdVi(
                 data.questTypeId.toString()
               ),
             ],

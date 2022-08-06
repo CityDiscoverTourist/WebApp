@@ -101,6 +101,23 @@ export class AreaService extends BaseService {
         )
       );
   }
+  getAreaByIdVi(id: string | undefined): Observable<Area> {
+    return this.http
+      .get<Result<Area>>(`${environment.apiUrl}/api/v1/areas/${id}`, {
+        headers: this._sharedHeaders,
+      })
+      .pipe(
+        map(
+          (response: Result<Area>) =>
+            ({
+              id: response.data?.id,
+              name: response.data?.name,
+              status: response.data?.status,
+              cityId: response.data?.cityId,
+            } as Area)
+        )
+      );
+  }
   updateAreaById(
     payload: Partial<AreaCreate>
   ): Observable<Result<Partial<Area>>> {

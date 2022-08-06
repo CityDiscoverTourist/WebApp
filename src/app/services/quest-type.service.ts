@@ -112,6 +112,24 @@ export class QuestTypeService extends BaseService {
         )
       );
   }
+  getQuestTypeByIdVi(id: string | undefined): Observable<QuestType> {
+    return this.http
+      .get<Result<QuestType>>(
+        `${environment.apiUrl}/api/v1/quest-types/${id}`,
+        this.httpOptions
+      )
+      .pipe(
+        map(
+          (response: Result<QuestType>) =>
+            ({
+              id: response.data?.id,
+              name: response.data?.name,
+              status: response.data?.status,
+              imagePath: response.data?.imagePath,
+            } as QuestType)
+        )
+      );
+  }
   updateQuestTypeById(
     questTypeCreate: QuestTypeCreate
   ): Observable<Result<Partial<QuestType>>> {
