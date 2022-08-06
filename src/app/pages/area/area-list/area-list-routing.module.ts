@@ -6,12 +6,12 @@ const routes: Routes = [
   {
     path: '',
     component: AreaListComponent,
-    data: { title: 'Danh sách khu vực', url: 'area' },
+    data: { title: 'Danh sách khu vực', url: 'area',titleTab:'Danh sách khu vực' }
   },
   {
     path: 'list',
     component: AreaListComponent,
-    data: { title: 'Danh sách khu vực', url: 'area' },
+    data: { title: 'Danh sách khu vực', url: 'area' ,titleTab:'Danh sách khu vực' }
   },
 ]
 
