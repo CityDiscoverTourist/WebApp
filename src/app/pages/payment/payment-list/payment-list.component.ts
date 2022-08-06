@@ -39,7 +39,7 @@ export class PaymentListComponent implements OnInit {
   ColumnMode = ColumnMode;
 
   status: { id: string; value: string }[] = [
-    { id: 'Đang xử lý', value: 'Pending' },
+    { id: 'Chờ thanh toán', value: 'Pending' },
     { id: 'Thành công', value: 'Success' },
     { id: 'Thất bại', value: 'Failed' },
   ];
