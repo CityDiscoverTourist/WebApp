@@ -88,15 +88,14 @@ export class DeleteModalComponent implements OnInit {
             try {
               if (data?.areas?.length) {
                 this.bsModalRef.hide();
-                var title = data.areas.map((x) => x.name).join(', ');
                 this.toast.error(
                   `${
                     status == 'Active'
                       ? 'Hoạt động lại'
                       : 'Không thể ngừng hoạt động'
-                  } ${this.title} ${data.name}!
+                  } thành phố!
                   <br> 
-                  Thành phồ này đang chứa khu vực ${title} nên không thể ngừng hoạt động!
+                  Thành phồ này đang chứa khu vực khác nên không thể ngừng hoạt động!
                 `,
                   {
                     autoClose: false,
@@ -111,7 +110,7 @@ export class DeleteModalComponent implements OnInit {
                 this.toast.success(
                   `${
                     status == 'Active' ? 'Hoạt động lại' : 'Ngừng hoạt động'
-                  } ${this.title} ${data?.name} thành công!`,
+                  } thành phố thành công!`,
                   {
                     duration: 5000,
                   }
@@ -211,15 +210,14 @@ export class DeleteModalComponent implements OnInit {
             try {
               if (data?.locations?.length) {
                 this.bsModalRef.hide();
-                var title = data.locations.map((x) => x.name).join(', ');
                 this.toast.error(
                   `${
                     status == 'Active'
                       ? 'Hoạt động lại'
-                      : 'Không thể ngừng hoạt động'
-                  } ${this.title} ${data.name}!
+                      : 'Không thể ngừng hoạt động khu vực!'
+                  }
                   <br> 
-                  Khu vực này đang chứa địa điểm ${title} nên không thể ngừng hoạt động!
+                  Khu vực này đang chứa địa điểm khác nên không thể ngừng hoạt động!
                 `,
                   {
                     autoClose: false,
@@ -234,7 +232,7 @@ export class DeleteModalComponent implements OnInit {
                 this.toast.success(
                   `${
                     status == 'Active' ? 'Hoạt động lại' : 'Ngừng hoạt động'
-                  } ${this.title} ${data?.name} thành công!`,
+                  } khu vực thành công!`,
                   {
                     duration: 5000,
                   }

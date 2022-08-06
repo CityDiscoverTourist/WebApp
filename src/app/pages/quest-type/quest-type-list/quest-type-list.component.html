@@ -22,8 +22,8 @@
             <input
               type="text"
               class="border-start-0 form-control outline-none"
-              placeholder="Tìm kiếm loại Quest"
-              aria-label="Tìm kiếm loại Quest"
+              placeholder="Tìm kiếm loại quest"
+              aria-label="Tìm kiếm loại quest"
               aria-describedby="search-icon"
               formControlName="keyword"
               (keyup.enter)="search$.next(searchForm.value)"
@@ -80,6 +80,9 @@
           (page)="onPage($event)"
           (sort)="onSort($event)"
         >
+        <ng-template #colCreatedAt let-value="value">
+          {{ value | date: "dd/MM/yyyy" }}
+        </ng-template>
         <ng-template #statusTemplate let-value="value" let-row="row">
           <span
              [ngStyle]="{'background-color': row.status == 'Active' ?'#4caf50':'#cb2027', 

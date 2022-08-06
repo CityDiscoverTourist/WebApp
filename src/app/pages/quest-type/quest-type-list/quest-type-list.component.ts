@@ -1,4 +1,10 @@
-import { Component, OnInit, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  TemplateRef,
+  ViewChild,
+  ViewEncapsulation,
+} from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { HotToastService } from '@ngneat/hot-toast';
 import { RxState } from '@rx-angular/state';
@@ -28,8 +34,9 @@ import { QuestTypeListState } from '../states';
 })
 export class QuestTypeListComponent implements OnInit {
   @ViewChild(DatatableComponent) table!: DatatableComponent;
+  @ViewChild('colCreatedAt', { static: true }) colCreatedAt!: TemplateRef<any>;
   columns: TableColumn[] = [];
- status: { id: string; value: string }[] = [];
+  status: { id: string; value: string }[] = [];
   constructor(
     private questTypeListState: RxState<QuestTypeListState>,
     private questTypeService: QuestTypeService,
@@ -43,17 +50,16 @@ export class QuestTypeListComponent implements OnInit {
         .pipe(
           tap(() => this.questTypeListState.set({ loading: true })),
           switchMap((s) => this.questTypeService.getQuestTypes(s))
-        )
-        .pipe(tap((data) => console.log(data))),
+        ),
       (_, result) => ({
         questtypes: result.data.map(
           (x, i) =>
             ({
-              index: ++i,
               id: x.id,
               name: x.name,
               status: x.status,
               imagePath: x.imagePath,
+              createdDate:x.createdDate
             } as QuestTypeListItem)
         ),
         metadata: { ...result.pagination },
@@ -86,7 +92,8 @@ export class QuestTypeListComponent implements OnInit {
   public actionTemplate: TemplateRef<any>;
   @ViewChild('imageTemplate', { static: true })
   public imageTemplate: TemplateRef<any>;
-  @ViewChild('statusTemplate', { static: true })  public statusTemplate: TemplateRef<any>;
+  @ViewChild('statusTemplate', { static: true })
+  public statusTemplate: TemplateRef<any>;
   initTable() {
     this.columns = [
       {
@@ -94,23 +101,31 @@ export class QuestTypeListComponent implements OnInit {
         name: 'Hình ảnh',
         sortable: false,
         cellTemplate: this.imageTemplate,
-        cellClass: 'align-items-center d-flex',
         width: 50,
       },
       {
         prop: 'name',
         name: 'Tên loại quest',
         sortable: true,
-        minWidth: 350,
+        width: 250,
+        cellClass: 'ms-2',
+      },
+      {
+        prop: 'createdDate',
+        name: 'Ngày tạo',
+        sortable: true,
+        width: 100,
+        cellTemplate: this.colCreatedAt,
+        // headerClass: 'd-flex justify-content-center',
       },
       {
         prop: 'status',
-        maxWidth: 350,
-        minWidth: 150,
+        width: 100,
         name: 'Trạng thái',
         sortable: true,
-        canAutoResize: true,
-        cellTemplate:this.statusTemplate
+        cellTemplate: this.statusTemplate,
+        headerClass: 'd-flex justify-content-center',
+        cellClass: 'd-flex justify-content-center',
       },
       {
         prop: 'action',
@@ -120,13 +135,16 @@ export class QuestTypeListComponent implements OnInit {
         maxWidth: 200,
         canAutoResize: true,
         cellTemplate: this.actionTemplate,
-        cellClass: 'align-items-center d-flex',
+        headerClass: 'd-flex justify-content-center',
+        cellClass: 'd-flex justify-content-center',
       },
     ];
   }
 
   get questtypes$(): Observable<QuestTypeListItem[]> {
-    return this.questTypeListState.select('questtypes');
+    return this.questTypeListState
+      .select('questtypes')
+      .pipe(tap((data) => console.log(data)));
   }
   get metadata$(): Observable<PagingMetadata> {
     return this.questTypeListState.select('metadata');
@@ -155,7 +173,9 @@ export class QuestTypeListComponent implements OnInit {
     status: new FormControl(),
   });
 
-  submitSearch$ = new Subject<Partial<{ keyword: string; status: string;language: string; }>>();
+  submitSearch$ = new Subject<
+    Partial<{ keyword: string; status: string; language: string }>
+  >();
   resetSearch$ = new Subject<void>();
 
   showAddQuestType() {
@@ -183,21 +203,26 @@ export class QuestTypeListComponent implements OnInit {
         },
       });
   }
-  onUpdateStatus(id: string, status:string) {
+  onUpdateStatus(id: string, status: string) {
     const bsModalRef = this.modalService.show(DeleteModalComponent, {
       initialState: {
         id: id,
         title: 'loại quest',
-        status: status
+        status: status,
       },
     });
-    bsModalRef.onHide?.pipe(take(1),filter((s)=>(s as any).data)).subscribe({
-      next: (result) => {
-        this.search$.next({
-          ...this.search$.getValue(),
-        });
-      },
-    });
+    bsModalRef.onHide
+      ?.pipe(
+        take(1),
+        filter((s) => (s as any).data)
+      )
+      .subscribe({
+        next: (result) => {
+          this.search$.next({
+            ...this.search$.getValue(),
+          });
+        },
+      });
   }
 
   onUpdate(id: string) {
