@@ -9,7 +9,8 @@
 </div>
 <div class="modal-body">
   <ul class="list-group list-group-flush">
-    <li
+    <ng-container *ngIf="customerAnswers.length ;else templateName">
+      <li
       class="list-group-item"
       *ngFor="let item of customerAnswers; let i = index"
     >
@@ -26,6 +27,10 @@
         </div>
       </div>
     </li>
+    </ng-container>
+    <ng-template #templateName>
+      Khách chưa trả lời
+  </ng-template>
   </ul>
 </div>
 <div class="modal-footer">
