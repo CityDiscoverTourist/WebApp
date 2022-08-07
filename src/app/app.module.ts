@@ -8,6 +8,8 @@ import { AdminLayoutComponent } from './layouts/admin-layout/admin-layout.compon
 import { QuestOwnerLayoutComponent } from './layouts/quest-owner-layout/quest-owner-layout.component';
 import { QuestTypeComponent } from './pages/quest-type/quest-type.component';
 
+import { NgxChartsModule } from '@swimlane/ngx-charts';
+
 import { QuillModule } from 'ngx-quill';
 import {
   HttpClientModule,
@@ -66,6 +68,7 @@ const lib = [
     NgxSpinnerModule,
     NgxDropzoneModule,
     CollapseModule.forRoot(),
+    NgxChartsModule,
     ...lib,
     NgbModule,
   ],
