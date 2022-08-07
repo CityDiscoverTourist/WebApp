@@ -37,10 +37,32 @@
             </div>
           </div>
         </div>
-        <div class="card mb-3">
+        <div class="card mb-1">
           <div class="card-header bg-white py-3">Thông tin chung</div>
           <div class="card-body">
-            <div class="form-group mb-3">
+            <button
+              type="button"
+              class="btn btn-sm btn-primary"
+              (click)="toggleStory$.next()"
+            >
+              Câu chuyện
+            </button>
+            <div class="mt-3" *ngIf="vm.showStory">
+              <div class="mt-3">
+                <quill-editor
+                  [styles]="{ height: '200px' }"
+                  formControlName="story"
+                  placeholder="Dùng | để phân cách nếu thêm câu chuyện tiếng anh"
+                ></quill-editor>
+                <small
+                  id="story"
+                  class="form-text text-muted"
+                  *ngIf="form?.hasValue('story')"
+                  >Dùng | để phân cách nếu thêm câu chuyện tiếng anh
+                </small>
+              </div>
+            </div>
+            <div class="form-group mt-3 mb-3">
               <label class="form-label" for="content">Nội dung câu hỏi</label>
               <textarea
                 class="form-control"
@@ -85,7 +107,7 @@
                 </small>
               </div>
             </div>
-            <div class="row mb-3 mt-3">
+            <div class="row mb-1 mt-3">
               <div class="col" *ngIf="!vm.showTypeQuestsion">
                 <div class="form-group">
                   <label class="form-label" for="rightAnswer"
@@ -161,28 +183,7 @@
                 hơn!
               </small>
             </div>
-            <button
-              type="button"
-              class="btn btn-sm btn-primary"
-              (click)="toggleStory$.next()"
-            >
-              Câu chuyện
-            </button>
-            <div class="mt-3" *ngIf="vm.showStory">
-              <div class="mt-3">
-                <quill-editor
-                  [styles]="{ height: '200px' }"
-                  formControlName="story"
-                  placeholder="Dùng | để phân cách nếu thêm câu chuyện tiếng anh"
-                ></quill-editor>
-                <small
-                  id="story"
-                  class="form-text text-muted"
-                  *ngIf="form?.hasValue('story')"
-                  >Dùng | để phân cách nếu thêm câu chuyện tiếng anh
-                </small>
-              </div>
-            </div>
+            
 
             
           </div>

@@ -180,8 +180,12 @@ export class QuestItemEditComponent implements OnInit {
             }
             form.value['story'] = story;
 
+            var checkTypeAnswerImageText=form.controls['questItemTypeId'].value + ' ';
 
-            var rightAnswer = form.controls['rightAnswer'].value + ' ';
+            if(Number(checkTypeAnswerImageText)==2){
+              form.value['rightAnswer'] = '';
+            }else{
+              var rightAnswer = form.controls['rightAnswer'].value + ' ';
             var arrRightAnswer = rightAnswer.split('|');
             if (arrRightAnswer.length == 1) {
               rightAnswer = arrRightAnswer[0] + '()' + arrRightAnswer[0];
@@ -189,11 +193,13 @@ export class QuestItemEditComponent implements OnInit {
               rightAnswer = arrRightAnswer[0] + '()' + arrRightAnswer[1];
             }
             form.value['rightAnswer'] = rightAnswer;
-
-            var ssss = this.listImages;
-            console.log(ssss);
-            
+            form.value['answerImageUrl'] = 'NULL';  
+            }
             form.value['listImages'] = this.listImages;
+            console.log("ppp");
+            
+            console.log(form);
+            
             return form;
           })
         ),

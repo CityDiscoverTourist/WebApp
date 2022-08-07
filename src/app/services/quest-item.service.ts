@@ -59,7 +59,6 @@ export class QuestItemService extends BaseService {
       this.httpOptions
     );
   }
-
   toFormData(
     questItem: Partial<QuestItem>,
     image: File[],
@@ -75,9 +74,6 @@ export class QuestItemService extends BaseService {
       qrCode:questItem.qrCode||'',
       answerImageUrl: questItem.answerImageUrl||''
     };
-    console.log("ll");
-    
-    console.log(payload);
     
     Object.keys(payload).forEach((key) =>
       formData.append(key, (payload as any)[key])

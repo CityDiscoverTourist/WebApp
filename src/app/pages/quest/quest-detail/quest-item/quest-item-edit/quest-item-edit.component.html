@@ -16,7 +16,7 @@
                   <input
                     class="form-check-input"
                     type="radio"
-                    [attr.disabled]="(qt[i].id!=questItemType)?true:false"
+                    [attr.disabled]="qt[i].id != questItemType ? true : false"
                     name="questItemTypeId"
                     id="{{ qt[i].id }}"
                     formControlName="questItemTypeId"
@@ -201,7 +201,6 @@
                 <!-- <input type="hidden" formControlName="listImages"> -->
               </div>
             </div>
-           
           </div>
 
           <div class="card-body">
@@ -228,53 +227,51 @@
                 [multiple]="false"
                 (change)="selectedFileImageDescription$.next($event.addedFiles)"
               >
-              <div
-              *ngIf="imageDescription!= ''"
-              style="
-                display: flex;
-                justify-content: center;
-                color: #333;
-                cursor: pointer;
-              "
-            >
-              <div class="wrapper" style="background-color: #000">
                 <div
-                  class="content"
+                  [ngStyle]="{'display': imageDescription != '' ?'flex':'none'}"
+                  style="
+                    justify-content: center;
+                    color: #333;
+                    cursor: pointer;
+                  "
                 >
-                  <img
-                    style="width: 105px; height: 140px"
-                    class="me-2 d-block"
-                    [src]="imageDescription"
-                  />
-                  <a
-                    style="
-                      font-size: 20px;
-                      position: absolute;
-                      top: 1px;
-                      right: 12px;
-                      cursor: pointer;
-                    "
-                    (click)="removeImageDescription()"
+                  <div
+                    class="wrapper"
+                    style="background-color: #000"
+                    [ngStyle]="{'display': imageDescription == '' ?'none':'block'}"
+                    
                   >
-                    <i
-                      class="bi bi-x-circle-fill"
-                      style="color: #fff"
-                    ></i>
-                  </a>
+                    <div class="content" *ngIf="imageDescription != ''">
+                      <img
+                      
+                        style="width: 105px; height: 140px"
+                        class="me-2 d-block"
+                        [src]="imageDescription"
+                      />
+                      <a
+                        style="
+                          font-size: 20px;
+                          position: absolute;
+                          top: 1px;
+                          right: 12px;
+                          cursor: pointer;
+                        "
+                        (click)="removeImageDescription()"
+                      >
+                        <i class="bi bi-x-circle-fill" style="color: #fff"></i>
+                      </a>
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </div>
-            <ngx-dropzone-label *ngIf="listImages.length <= 0">
-              <div>
-                <i class="bi bi-plus"></i>
-                <span>kéo và thả hình ảnh ở đây hoặc</span>
-                <span
-                  class="ms-1 text-decoration-underline text-primary"
-                >
-                  tải lên từ máy tính của bạn</span
-                >
-              </div>
-            </ngx-dropzone-label>
+                <ngx-dropzone-label *ngIf="imageDescription == ''">
+                  <div>
+                    <i class="bi bi-plus"></i>
+                    <span>kéo và thả hình ảnh ở đây hoặc</span>
+                    <span class="ms-1 text-decoration-underline text-primary">
+                      tải lên từ máy tính của bạn</span
+                    >
+                  </div>
+                </ngx-dropzone-label>
 
                 <ngx-dropzone-image-preview
                   ngProjectAs="ngx-dropzone-preview"

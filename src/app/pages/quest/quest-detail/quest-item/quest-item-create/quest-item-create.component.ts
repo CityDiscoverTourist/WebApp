@@ -140,7 +140,12 @@ export class QuestItemCreateComponent implements OnInit {
             }
             form.value['description'] = description;
 
-            var rightAnswer = form.controls['rightAnswer'].value + ' ';
+            var checkTypeAnswerImageText=form.controls['questItemTypeId'].value + ' ';
+
+            if(Number(checkTypeAnswerImageText)==2){
+              form.value['rightAnswer'] = '';
+            }else{
+              var rightAnswer = form.controls['rightAnswer'].value + ' ';
             var arrRightAnswer = rightAnswer.split('|');
             if (arrRightAnswer.length == 1) {
               rightAnswer = arrRightAnswer[0] + '()' + arrRightAnswer[0];
@@ -148,6 +153,8 @@ export class QuestItemCreateComponent implements OnInit {
               rightAnswer = arrRightAnswer[0] + '()' + arrRightAnswer[1];
             }
             form.value['rightAnswer'] = rightAnswer;
+            form.value['answerImageUrl'] = '';  
+            }
             return form;
           })
         ),
