@@ -16,6 +16,7 @@
                   <input
                     class="form-check-input"
                     type="radio"
+                    [attr.disabled]="(qt[i].id!=questItemType)?true:false"
                     name="questItemTypeId"
                     id="{{ qt[i].id }}"
                     formControlName="questItemTypeId"
@@ -30,11 +31,33 @@
             </div>
           </div>
         </div>
-        <div class="card mb-3">
+        <div class="card mb-1">
           <div class="card-header bg-white py-3">Thông tin chung</div>
           <input type="hidden" formControlName="itemId" />
           <div class="card-body">
-            <div class="form-group mb-3">
+            <button
+              type="button"
+              class="btn btn-sm btn-primary"
+              (click)="toggleStory$.next()"
+            >
+              Câu chuyện
+            </button>
+            <div class="mt-3" *ngIf="vm.showStory">
+              <div class="mt-3">
+                <quill-editor
+                  [styles]="{ height: '200px' }"
+                  formControlName="story"
+                  placeholder="Dùng | để phân cách nếu thêm câu chuyện tiếng anh"
+                ></quill-editor>
+                <small
+                  id="story"
+                  class="form-text text-muted"
+                  *ngIf="form?.hasValue('story')"
+                  >Dùng | để phân cách nếu thêm câu chuyện tiếng anh
+                </small>
+              </div>
+            </div>
+            <div class="form-group mt-3 mb-3">
               <label class="form-label" for="content">Nội dung câu hỏi</label>
               <textarea
                 class="form-control"
@@ -178,32 +201,11 @@
                 <!-- <input type="hidden" formControlName="listImages"> -->
               </div>
             </div>
-            <button
-              type="button"
-              class="btn btn-sm btn-primary"
-              (click)="toggleStory$.next()"
-            >
-              Câu chuyện
-            </button>
-            <div class="mt-3" *ngIf="vm.showStory">
-              <div class="mt-3">
-                <quill-editor
-                  [styles]="{ height: '200px' }"
-                  formControlName="story"
-                  placeholder="Dùng | để phân cách nếu thêm câu chuyện tiếng anh"
-                ></quill-editor>
-                <small
-                  id="story"
-                  class="form-text text-muted"
-                  *ngIf="form?.hasValue('story')"
-                  >Dùng | để phân cách nếu thêm câu chuyện tiếng anh
-                </small>
-              </div>
-            </div>
+           
           </div>
 
           <div class="card-body">
-            <div class="d-flex bg-white border-bottom-0 mb-3 p-0 px-0">
+            <div class="d-flex bg-white border-bottom-0 p-0 px-0">
               <div>Ảnh mô tả</div>
               <div class="flex-fill"></div>
               <!-- <div class="me-3" style="color: #0d6efd">
@@ -226,25 +228,54 @@
                 [multiple]="false"
                 (change)="selectedFileImageDescription$.next($event.addedFiles)"
               >
+              <div
+              *ngIf="imageDescription!= ''"
+              style="
+                display: flex;
+                justify-content: center;
+                color: #333;
+                cursor: pointer;
+              "
+            >
+              <div class="wrapper" style="background-color: #000">
                 <div
-                  style="
-                    display: flex;
-                    justify-content: center;
-                    color: #333;
-                    cursor: pointer;
-                  "
+                  class="content"
                 >
-                  <!-- <span><i class="bi bi-x-circle-fill"></i></span> -->
+                  <img
+                    style="width: 105px; height: 140px"
+                    class="me-2 d-block"
+                    [src]="imageDescription"
+                  />
+                  <a
+                    style="
+                      font-size: 20px;
+                      position: absolute;
+                      top: 1px;
+                      right: 12px;
+                      cursor: pointer;
+                    "
+                    (click)="removeImageDescription()"
+                  >
+                    <i
+                      class="bi bi-x-circle-fill"
+                      style="color: #fff"
+                    ></i>
+                  </a>
                 </div>
-                <ngx-dropzone-label>
-                  <div>
-                    <i class="bi bi-plus"></i>
-                    <span>kéo và thả hình ảnh ở đây hoặc</span>
-                    <span class="ms-1 text-decoration-underline text-primary">
-                      tải lên từ máy tính của bạn</span
-                    >
-                  </div>
-                </ngx-dropzone-label>
+              </div>
+            </div>
+            <ngx-dropzone-label *ngIf="listImages.length <= 0">
+              <div>
+                <i class="bi bi-plus"></i>
+                <span>kéo và thả hình ảnh ở đây hoặc</span>
+                <span
+                  class="ms-1 text-decoration-underline text-primary"
+                >
+                  tải lên từ máy tính của bạn</span
+                >
+              </div>
+            </ngx-dropzone-label>
+
                 <ngx-dropzone-image-preview
                   ngProjectAs="ngx-dropzone-preview"
                   *ngFor="let f of vm.files"

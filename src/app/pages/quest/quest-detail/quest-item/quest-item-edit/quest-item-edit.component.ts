@@ -43,6 +43,7 @@ export class QuestItemEditComponent implements OnInit {
   id: string = '';
   questItemType: number;
   listImages: string[] = [];
+  imageDescription:string='';
   listImage: string[] = [];
   status: { id: string; value: string }[] = [];
   constructor(
@@ -76,9 +77,12 @@ export class QuestItemEditComponent implements OnInit {
         )
         .pipe(
           tap((data) => {
+            console.log(data);
+            
             this.id = data.id.toString();
             this.questItemType = data.questItemTypeId;
             this.listImages = data.listImages;
+            this.imageDescription=data.imageDescription
             this.form.patchValue(data);
             if (this.questItemType == 2) {
               this.toggleIsType$.next(2);
@@ -307,5 +311,8 @@ export class QuestItemEditComponent implements OnInit {
 
   public get submitting$(): Observable<boolean> {
     return this.state.select('submitting');
+  }
+  removeImageDescription(){
+    this.imageDescription='';
   }
 }
