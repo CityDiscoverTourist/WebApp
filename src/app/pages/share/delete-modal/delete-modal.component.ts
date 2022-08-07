@@ -53,7 +53,7 @@ export class DeleteModalComponent implements OnInit {
                       status == 'Active'
                         ? 'Hoạt động lại'
                         : 'Không thể ngừng hoạt động'
-                    } ${this.title} ${data.name}!
+                    } loại câu hỏi!
                   <br> 
                   Loại câu hỏi này đang chứa câu hỏi khác nên không thể ngừng hoạt động!
                 `,
@@ -70,7 +70,7 @@ export class DeleteModalComponent implements OnInit {
                   this.toast.success(
                     `${
                       status == 'Active' ? 'Hoạt động lại' : 'Ngừng hoạt động'
-                    } ${this.title} ${data?.name} thành công!`,
+                    } loại câu hỏi thành công!`,
                     {
                       duration: 5000,
                     }

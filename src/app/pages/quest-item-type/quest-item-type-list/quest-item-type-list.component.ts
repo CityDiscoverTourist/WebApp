@@ -56,6 +56,7 @@ export class QuestItemTypeListComponent implements OnInit {
               id: x.id,
               name: x.name,
               status: x.status,
+              createdDate:x.createdDate
             } as QuestItemTypeListItem)
         ),
         metadata: { ...result.pagination },
@@ -87,18 +88,26 @@ export class QuestItemTypeListComponent implements OnInit {
   @ViewChild('actionTemplate', { static: true })
   public actionTemplate: TemplateRef<any>;
   @ViewChild('statusTemplate', { static: true })  public statusTemplate: TemplateRef<any>;
+  @ViewChild('colCreatedAt', { static: true }) colCreatedAt!: TemplateRef<any>;
   initTable() {
     this.columns = [
       {
         prop: 'name',
         name: 'Tên loại câu hỏi',
         sortable: true,
-        minWidth: 300,
+        canAutoResize:true
+      },
+      {
+        prop: 'createdDate',
+        name: 'Ngày tạo',
+        sortable: true,
+       maxWidth:250,
+        cellTemplate: this.colCreatedAt,
+        // headerClass: 'd-flex justify-content-center',
       },
       {
         prop: 'status',
-        maxWidth: 350,
-        minWidth: 200,
+        maxWidth:250,
         name: 'Trạng thái',
         sortable: true,
         canAutoResize: true,
@@ -106,10 +115,9 @@ export class QuestItemTypeListComponent implements OnInit {
       },
       {
         prop: 'action',
-        minWidth: 180,
         name: 'Hành động',
         sortable: false,
-        maxWidth: 200,
+        maxWidth:250,
         canAutoResize: true,
         cellTemplate: this.actionTemplate,
         cellClass: 'align-items-center d-flex',
