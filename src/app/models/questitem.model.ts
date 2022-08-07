@@ -69,7 +69,7 @@ export interface QuestItemListItem {
   questId: number;
   itemId: number;
   listImages:[];
-  // imageDescription:File[];
+  imageDescription:string;
   suggestions:Suggestion[];
 }
 
