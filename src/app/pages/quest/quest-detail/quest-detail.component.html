@@ -375,8 +375,9 @@
                   data-placement="top"
                   [tooltip]="'Nhấp chuột để ngừng hoạt động câu hỏi'"
                   placement="top"
-                  [disabled]="q.status == 'Inactive' ? true : false"
+                  [disabled]="(q.status == 'Inactive' ? true : false)||(q.itemId==0?true:false)"
                   (click)="onUpdateStatusQuestItem(q.id, 'Inactive')"
+
                 >
                   <i class="bi bi-dash-circle-fill"></i>
                 </button>
