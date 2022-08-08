@@ -76,7 +76,6 @@ export class QuestEditComponent implements OnInit {
         .pipe(
           tap((data) => {
             this.id = data.id.toString();
-            var da = data.availableTime;
             var availableTime = data.availableTime
               .toString()
               .toLocaleLowerCase()
@@ -245,6 +244,7 @@ export class QuestEditComponent implements OnInit {
       // questOwnerId: [2],
       areaId: ['', [Validators.required]],
       status: ['', [Validators.required]],
+      imagePath:[]
     });
   }
 
@@ -274,10 +274,10 @@ export class QuestEditComponent implements OnInit {
   submit$ = new Subject<{ form: FormGroup; redirect: boolean }>();
   questypeIds$ = new Subject<{ id: number; name: string }>();
 
-  deleteImage() {
-    this.img = '';
-    this.form.controls['image'].setValue('');
-  }
+  // deleteImage() {
+  //   this.img = '';
+  //   this.form.controls['image'].setValue('');
+  // }
 
   showAddQuestType() {
     const bsModalRef = this.modalService.show(QuestTypeModalComponent, {

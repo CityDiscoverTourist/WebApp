@@ -29,7 +29,7 @@ interface QuestItemEditState {
   showStory: boolean;
   showTypeQuestsion: boolean;
   image: File[];
-  files: File[],
+  files: File[];
   error?: string;
   submitting: boolean;
 }
@@ -43,7 +43,8 @@ export class QuestItemEditComponent implements OnInit {
   id: string = '';
   questItemType: number;
   listImages: string[] = [];
-  imageDescription:string='';
+  pathImageDescription: string = '';
+  pathImageDescriptionRemove: string = '';
   listImage: string[] = [];
   status: { id: string; value: string }[] = [];
   constructor(
@@ -78,12 +79,21 @@ export class QuestItemEditComponent implements OnInit {
         .pipe(
           tap((data) => {
             console.log(data);
-            
+
             this.id = data.id.toString();
             this.questItemType = data.questItemTypeId;
             this.listImages = data.listImages;
-            this.imageDescription=data.imageDescription
+            var pathImageDescription = data.imageDescription;
+            this.pathImageDescription = pathImageDescription;
+            this.pathImageDescriptionRemove = pathImageDescription;
+            console.log(pathImageDescription);
+            
+            console.log(this.pathImageDescription);
+            
             this.form.patchValue(data);
+            this.form.value['pathImageDescription'] = pathImageDescription;
+            console.log(this.form);
+            
             if (this.questItemType == 2) {
               this.toggleIsType$.next(2);
             }
@@ -127,7 +137,9 @@ export class QuestItemEditComponent implements OnInit {
     this.state.connect(
       this.selectedFileImageDescription$
         .pipe(tap(() => setTimeout(() => this.cd.detectChanges(), 100)))
-        .pipe(tap((file) => this.form.patchValue({ imageDescription: file[0] }))),
+        .pipe(
+          tap((file) => this.form.patchValue({ imageDescription: file[0] }))
+        ),
       (_prev, files) => ({ files: [...files] })
     );
 
@@ -153,6 +165,7 @@ export class QuestItemEditComponent implements OnInit {
         tap(() => this.state.set({ submitting: true })),
         pipe(
           tap(({ form }) => {
+            form.value['pathImageDescription'] = this.pathImageDescription;
             var content = form.controls['content'].value + ' ';
             var arrName = content.split('|');
             if (arrName.length == 1) {
@@ -170,7 +183,6 @@ export class QuestItemEditComponent implements OnInit {
             }
             form.value['description'] = description;
 
-            
             var story = form.controls['story'].value + ' ';
             var arrStory = story.split('|');
             if (arrStory.length == 1) {
@@ -180,26 +192,27 @@ export class QuestItemEditComponent implements OnInit {
             }
             form.value['story'] = story;
 
-            var checkTypeAnswerImageText=form.controls['questItemTypeId'].value + ' ';
+            var checkTypeAnswerImageText =
+              form.controls['questItemTypeId'].value + ' ';
 
-            if(Number(checkTypeAnswerImageText)==2){
+            if (Number(checkTypeAnswerImageText) == 2) {
               form.value['rightAnswer'] = '';
-            }else{
-              var rightAnswer = form.controls['rightAnswer'].value + ' ';
-            var arrRightAnswer = rightAnswer.split('|');
-            if (arrRightAnswer.length == 1) {
-              rightAnswer = arrRightAnswer[0] + '()' + arrRightAnswer[0];
             } else {
-              rightAnswer = arrRightAnswer[0] + '()' + arrRightAnswer[1];
-            }
-            form.value['rightAnswer'] = rightAnswer;
-            form.value['answerImageUrl'] = 'NULL';  
+              var rightAnswer = form.controls['rightAnswer'].value + ' ';
+              var arrRightAnswer = rightAnswer.split('|');
+              if (arrRightAnswer.length == 1) {
+                rightAnswer = arrRightAnswer[0] + '()' + arrRightAnswer[0];
+              } else {
+                rightAnswer = arrRightAnswer[0] + '()' + arrRightAnswer[1];
+              }
+              form.value['rightAnswer'] = rightAnswer;
+              form.value['answerImageUrl'] = 'NULL';
             }
             form.value['listImages'] = this.listImages;
-            console.log("ppp");
-            
+            console.log('ppp');
+
             console.log(form);
-            
+
             return form;
           })
         ),
@@ -261,7 +274,7 @@ export class QuestItemEditComponent implements OnInit {
       id: [0],
       content: ['', Validators.required],
       description: [''],
-      story:[''],
+      story: [''],
       duration: [0],
       createdDate: [''],
       updatedDate: [],
@@ -276,7 +289,8 @@ export class QuestItemEditComponent implements OnInit {
       itemId: [''],
       image: [],
       listImages: [],
-      imageDescription:[]
+      imageDescription: [],
+      pathImageDescription: [''],
     });
   }
   get vm$(): Observable<QuestItemEditState> {
@@ -318,7 +332,7 @@ export class QuestItemEditComponent implements OnInit {
   public get submitting$(): Observable<boolean> {
     return this.state.select('submitting');
   }
-  removeImageDescription(){
-    this.imageDescription='';
+  removeImageDescription() {
+    this.pathImageDescriptionRemove = '';
   }
 }

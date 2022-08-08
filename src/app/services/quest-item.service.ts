@@ -67,14 +67,14 @@ export class QuestItemService extends BaseService {
     const formData = new FormData();
     const payload = {
       ...questItem,
-      itemId:questItem.itemId||'',
+      itemId: questItem.itemId || '',
       duration: questItem.duration || 0,
       triggerMode: questItem.triggerMode || 0,
       updatedDate: questItem.updatedDate || '',
-      qrCode:questItem.qrCode||'',
-      answerImageUrl: questItem.answerImageUrl||''
+      qrCode: questItem.qrCode || '',
+      answerImageUrl: questItem.answerImageUrl || '',
     };
-    
+
     Object.keys(payload).forEach((key) =>
       formData.append(key, (payload as any)[key])
     );
@@ -87,7 +87,66 @@ export class QuestItemService extends BaseService {
       for (let f of listImages) {
         formData.append('listImages', f);
       }
-    }else{
+    } else {
+      formData.append('listImages', '');
+    }
+    return formData;
+  }
+
+  toFormDataUpdate(
+    questItem: Partial<QuestItemCreate>,
+    image: File[],
+    imageDescription: File,
+    listImages: string[]
+  ): FormData {
+    console.log(questItem);
+
+    const formData = new FormData();
+    const payload = {
+      ...questItem,
+      itemId: questItem.itemId || '',
+      duration: questItem.duration || 0,
+      triggerMode: questItem.triggerMode || 0,
+      updatedDate: questItem.updatedDate || '',
+      qrCode: questItem.qrCode || '',
+      answerImageUrl: questItem.answerImageUrl || '',
+      pathImageDescription: questItem.imageDescription,
+    };
+
+    Object.keys(payload).forEach((key) => {
+      formData.append(key, (payload as any)[key]);
+    });
+    if (image?.length > 0) {
+      for (let f of image) {
+        formData.append('Image', f, f.name);
+      }
+    }
+
+    // if(imageDescription){
+
+    try {
+      if (typeof imageDescription.name.length) {
+        formData.delete('pathImageDescription');
+        formData.append('imageDescription', imageDescription);
+      } else {
+        formData.append(
+          'pathImageDescription',
+          questItem.pathImageDescription!
+        );
+      }
+    } catch (error) {
+      formData.delete('pathImageDescription');
+      formData.append(
+        'pathImageDescription',
+        questItem.pathImageDescription!
+      );
+    }
+
+    if (listImages?.length > 0) {
+      for (let f of listImages) {
+        formData.append('listImages', f);
+      }
+    } else {
       formData.append('listImages', '');
     }
     return formData;
@@ -115,10 +174,10 @@ export class QuestItemService extends BaseService {
   ): Observable<Result<QuestItem>> {
     console.log(questItemCreate);
 
-    const { image, listImages, ...payload } = questItemCreate;
+    const { image, listImages, imageDescription, ...payload } = questItemCreate;
     return this.http.put<Result<QuestItem>>(
       `${environment.apiUrl}/api/v1/quest-items/`,
-      this.toFormData(payload, image, listImages),
+      this.toFormDataUpdate(payload, image, imageDescription, listImages),
       this.httpOptions
     );
   }

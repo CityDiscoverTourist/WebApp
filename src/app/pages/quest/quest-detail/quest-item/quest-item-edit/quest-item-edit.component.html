@@ -34,6 +34,7 @@
         <div class="card mb-1">
           <div class="card-header bg-white py-3">Thông tin chung</div>
           <input type="hidden" formControlName="itemId" />
+          <input type="hidden" formControlName="pathImageDescription"/>
           <div class="card-body">
             <button
               type="button"
@@ -228,7 +229,7 @@
                 (change)="selectedFileImageDescription$.next($event.addedFiles)"
               >
                 <div
-                  [ngStyle]="{'display': imageDescription != '' ?'flex':'none'}"
+                  [ngStyle]="{'display': pathImageDescriptionRemove != '' ?'flex':'none'}"
                   style="
                     justify-content: center;
                     color: #333;
@@ -238,15 +239,15 @@
                   <div
                     class="wrapper"
                     style="background-color: #000"
-                    [ngStyle]="{'display': imageDescription == '' ?'none':'block'}"
+                    [ngStyle]="{'display': pathImageDescriptionRemove == '' ?'none':'block'}"
                     
                   >
-                    <div class="content" *ngIf="imageDescription != ''">
+                    <div class="content" *ngIf="pathImageDescriptionRemove != ''">
                       <img
                       
                         style="width: 105px; height: 140px"
                         class="me-2 d-block"
-                        [src]="imageDescription"
+                        [src]="pathImageDescriptionRemove"
                       />
                       <a
                         style="
@@ -263,7 +264,7 @@
                     </div>
                   </div>
                 </div>
-                <ngx-dropzone-label *ngIf="imageDescription == ''">
+                <ngx-dropzone-label *ngIf="pathImageDescription == ''">
                   <div>
                     <i class="bi bi-plus"></i>
                     <span>kéo và thả hình ảnh ở đây hoặc</span>

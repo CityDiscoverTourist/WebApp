@@ -40,9 +40,9 @@ export interface QuestItemCreate{
   questId: number;
   itemId: number;
   image:File[];
-  imageDescription:File[];
+  imageDescription:File;
   listImages:[];
-
+  pathImageDescription:string;
 }
 
 export interface QuestItemListSearch extends SearchInfo {
