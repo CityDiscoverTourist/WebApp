@@ -49,4 +49,11 @@ export class DashboardService extends BaseService {
       { headers: this._sharedHeaders }
     );
   }
+
+  getTotalRevenueByYear(year:string):Observable<number[]> {
+    return this.http.get<number[]>(
+      `${environment.apiUrl}/api/v1/dashboards/revenue-all-month?year=${year}`,
+      { headers: this._sharedHeaders }
+    );
+  }
 }

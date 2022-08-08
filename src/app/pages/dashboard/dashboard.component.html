@@ -1,5 +1,6 @@
 <div class="container">
-  <div class="row py-3 px-5">
+  <div class="px-4 ms-2">
+   <div class="row" style="margin-left: -6.9px;">
     <div class="col-md-3">
       <div
         class="shadow stati wet_asphalt d-flex justify-content-center align-items-center p-3 rounded"
@@ -33,22 +34,74 @@
         </div>
       </div>
     </div>
+   </div>
   </div>
-
   <div class="row py-1 px-5">
-    <div class="col">
+    <div class=" bg-white pt-3">
+      <form  [formGroup]="searchForm">
+      <ng-select
+            [items]="years"
+            bindValue="value"
+            bindLabel="id"
+            style="width: 200px"
+            placeholder="Chọn năm"
+            class="me-3"
+            formControlName="year"
+            (change)="search$.next(searchForm.value)"
+            (click)="searchRevenueByYear()"
+          ></ng-select>
+        </form>
+      <table>
+        <tr>
+          <td>
+            <!-- [scheme]="colorScheme" -->
+            <!-- [legendTitle]="legendTitle" [legendPosition]="legendPosition" [legend]="legend" -->
+            <ngx-charts-bar-vertical
+              [results]="valueRevenue"
+              [view]="view"
+              [schemeType]="schemeType"
+              [gradient]="gradient"
+              [xAxis]="xAxis"
+              [yAxis]="yAxis"
+              [showXAxisLabel]="showXAxisLabel"
+              [showYAxisLabel]="showYAxisLabel"
+              [xAxisLabel]="xAxisLabel"
+              [yAxisLabel]="xAxisLabel"
+              [animations]="animations"
+              [showGridLines]="showGridLines"
+              [trimXAxisTicks]="trimXAxisTicks"
+              [trimYAxisTicks]="trimYAxisTicks"
+              [rotateXAxisTicks]="rotateXAxisTicks"
+              [maxXAxisTickLength]="maxXAxisTickLength"
+              [maxYAxisTickLength]="maxYAxisTickLength"
+              [xAxisTickFormatting]="formatString"
+              [yAxisTickFormatting]="formatNumber"
+              [yAxisTicks]="yAxisTicks"
+              [showDataLabel]="showDataLabel"
+              [barPadding]="barPadding"
+              [tooltipDisabled]="tooltipDisabled"
+              [roundEdges]="roundEdges"
+            >
+            </ngx-charts-bar-vertical>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </div>
+  <div class="row py-3 px-5">
+    <div class="col bg-white me-1">
       <span class="fw-bold fs-5 mb-4">Top người chơi</span>
       <ul class="list-group list-group-flush">
         <li class="list-group-item" *ngFor="let item of listTopUserPoint">
           <div class="row">
-            <div class="col 10">Mail: {{ item.email }}</div>
+            <div class="col 10">Tài khoản: {{ item.email }}</div>
             <div class="col 2">Số tiền: {{ item.point }} vnđ</div>
           </div>
         </li>
       </ul>
     </div>
-    <div class="col">
-      <span class="fw-bold fs-5 mb-4">Top Quest</span>
+    <div class="col bg-white ms-1">
+      <span class="fw-bold fs-5 mb-4 ">Top Quest</span>
       <ul class="list-group list-group-flush">
         <li class="list-group-item" *ngFor="let item of listTopQuest">
           {{ item }}
@@ -57,3 +110,17 @@
     </div>
   </div>
 </div>
+
+<!-- <table>
+  <tr>
+      <td> -->
+<!-- [scheme]="colorScheme" -->
+<!-- [legendTitle]="legendTitle" [legendPosition]="legendPosition" [legend]="legend" -->
+<!-- <ngx-charts-bar-vertical [results]="valueRevenue" [view]="view"  [schemeType]="schemeType" [gradient]="gradient" [xAxis]="xAxis" [yAxis]="yAxis"  [showXAxisLabel]="showXAxisLabel" [showYAxisLabel]="showYAxisLabel"
+              [xAxisLabel]="xAxisLabel" [yAxisLabel]="xAxisLabel"  [animations]="animations" [showGridLines]="showGridLines" [trimXAxisTicks]="trimXAxisTicks" [trimYAxisTicks]="trimYAxisTicks"
+              [rotateXAxisTicks]="rotateXAxisTicks" [maxXAxisTickLength]="maxXAxisTickLength" [maxYAxisTickLength]="maxYAxisTickLength" [xAxisTickFormatting]="formatString" [yAxisTickFormatting]="formatNumber" [yAxisTicks]="yAxisTicks" [showDataLabel]="showDataLabel"
+              [barPadding]="barPadding" [tooltipDisabled]="tooltipDisabled" [roundEdges]="roundEdges">
+          </ngx-charts-bar-vertical>
+      </td>
+  </tr>
+</table>  -->
