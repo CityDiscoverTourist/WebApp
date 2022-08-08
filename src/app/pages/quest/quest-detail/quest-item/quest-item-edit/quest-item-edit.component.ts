@@ -4,7 +4,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { HotToastService } from '@ngneat/hot-toast';
 import { RxState } from '@rx-angular/state';
 import {
-  BehaviorSubject,
   catchError,
   filter,
   map,
@@ -14,14 +13,14 @@ import {
   pipe,
   Subject,
   switchMap,
-  tap,
+  tap
 } from 'rxjs';
 import { IdValue, QuestItemCreate, QuestItemType } from 'src/app/models';
 import { QuestItemService } from 'src/app/services';
 import {
   QuestItemDetailState,
   QuestItemState,
-  QUEST_ITEM_STATE,
+  QUEST_ITEM_STATE
 } from '../states';
 
 interface QuestItemEditState {
@@ -71,29 +70,21 @@ export class QuestItemEditComponent implements OnInit {
     this.questItemDetailState.connect(
       this.activatedRoute.paramMap
         .pipe(
-          tap((p) => console.log(p)),
+          // tap((p) => console.log(p)),
           filter((p) => p.has('id') && Number(p.get('id')) > 0),
           map((p) => Number(p.get('id'))),
           switchMap((id) => this.questItemService.getQuestItemById(id))
         )
         .pipe(
           tap((data) => {
-            console.log(data);
-
             this.id = data.id.toString();
             this.questItemType = data.questItemTypeId;
             this.listImages = data.listImages;
             var pathImageDescription = data.imageDescription;
             this.pathImageDescription = pathImageDescription;
-            this.pathImageDescriptionRemove = pathImageDescription;
-            console.log(pathImageDescription);
-            
-            console.log(this.pathImageDescription);
-            
+            this.pathImageDescriptionRemove = pathImageDescription;            
             this.form.patchValue(data);
-            this.form.value['pathImageDescription'] = pathImageDescription;
-            console.log(this.form);
-            
+            this.form.value['pathImageDescription'] = pathImageDescription;            
             if (this.questItemType == 2) {
               this.toggleIsType$.next(2);
             }
@@ -209,10 +200,6 @@ export class QuestItemEditComponent implements OnInit {
               form.value['answerImageUrl'] = 'NULL';
             }
             form.value['listImages'] = this.listImages;
-            console.log('ppp');
-
-            console.log(form);
-
             return form;
           })
         ),
@@ -326,7 +313,7 @@ export class QuestItemEditComponent implements OnInit {
   removeImage(url: string) {
     this.listImages = this.listImages.filter((x) => x != url);
     this.listImage.map((item) => "'" + item + "'");
-    console.log(this.listImage);
+    // console.log(this.listImage);
   }
 
   public get submitting$(): Observable<boolean> {

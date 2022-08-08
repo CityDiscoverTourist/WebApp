@@ -13,7 +13,7 @@ import {
   pipe,
   Subject,
   switchMap,
-  tap,
+  tap
 } from 'rxjs';
 import { IdValue, QuestItemCreate, QuestItemType } from 'src/app/models';
 import { LocationService, QuestItemService } from 'src/app/services';

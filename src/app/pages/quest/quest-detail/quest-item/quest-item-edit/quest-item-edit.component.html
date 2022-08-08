@@ -70,7 +70,7 @@
               ></textarea>
               <div
                 class="invalid-feedback"
-                *ngIf="form?.hasErrorOf('content', 'required')"
+                *ngIf="form.hasErrorOf('content', 'required')"
               >
                 Nội dung câu hỏi bắt buộc
               </div>
@@ -298,7 +298,7 @@
                 bindLabel="value"
                 class="header-p-0"
                 formControlName="locationId"
-                [ngClass]="{ 'is-invalid': form?.hasError('locationId') }"
+                [ngClass]="{ 'is-invalid': form.hasError('locationId') }"
               >
                 <ng-template ng-header-tmp>
                   <button
@@ -312,7 +312,7 @@
               </ng-select>
               <div
                 class="invalid-feedback"
-                *ngIf="form?.hasErrorOf('locationId', 'required')"
+                *ngIf="form.hasErrorOf('locationId', 'required')"
               >
                 Địa điểm bắt buộc
               </div>
@@ -329,7 +329,7 @@
               placeholder="Chọn trạng thái"
               [clearable]="false"
               formControlName="status"
-              [ngClass]="{ 'is-invalid': form?.hasError('status') }"
+              [ngClass]="{ 'is-invalid': form.hasError('status') }"
             ></ng-select>
             <div
               class="invalid-feedback"

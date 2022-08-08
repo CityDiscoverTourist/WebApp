@@ -70,7 +70,7 @@
                 id="content"
                 rows="2"
                 formControlName="content"
-                [ngClass]="{ 'is-invalid': form?.hasError('content') }"
+                [ngClass]="{ 'is-invalid': form.hasError('content') }"
               ></textarea>
               <div
                 class="invalid-feedback"
@@ -255,7 +255,7 @@
                 bindLabel="value"
                 class="header-p-0"
                 formControlName="locationId"
-                [ngClass]="{ 'is-invalid': form?.hasError('locationId') }"
+                [ngClass]="{ 'is-invalid': form.hasError('locationId') }"
               >
                 <ng-template ng-header-tmp>
                   <button
@@ -287,7 +287,7 @@
               placeholder="Chọn trạng thái"
               [clearable]="false"
               formControlName="status"
-              [ngClass]="{ 'is-invalid': form?.hasError('status') }"
+              [ngClass]="{ 'is-invalid': form.hasError('status') }"
             ></ng-select>
             <div
               class="invalid-feedback"
