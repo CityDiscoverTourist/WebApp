@@ -3,7 +3,7 @@ import {
   OnInit,
   TemplateRef,
   ViewChild,
-  ViewEncapsulation,
+  ViewEncapsulation
 } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { HotToastService } from '@ngneat/hot-toast';
@@ -17,7 +17,7 @@ import {
   Subject,
   switchMap,
   take,
-  tap,
+  tap
 } from 'rxjs';
 import { PagingMetadata, QuestTypeListItem, SearchInfo } from 'src/app/models';
 import { QuestTypeService } from 'src/app/services';
@@ -116,7 +116,6 @@ export class QuestTypeListComponent implements OnInit {
         sortable: true,
         width: 100,
         cellTemplate: this.colCreatedAt,
-        // headerClass: 'd-flex justify-content-center',
       },
       {
         prop: 'status',

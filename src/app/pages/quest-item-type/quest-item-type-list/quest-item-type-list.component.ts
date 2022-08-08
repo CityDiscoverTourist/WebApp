@@ -103,7 +103,6 @@ export class QuestItemTypeListComponent implements OnInit {
         sortable: true,
        maxWidth:250,
         cellTemplate: this.colCreatedAt,
-        // headerClass: 'd-flex justify-content-center',
       },
       {
         prop: 'status',
