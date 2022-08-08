@@ -57,6 +57,7 @@ export interface QuestCreate {
   questTypeId: number;
   // questOwnerId: number;
   areaId: number;
+  imagePath:string;
 }
 
 export interface QuestCreateResult {

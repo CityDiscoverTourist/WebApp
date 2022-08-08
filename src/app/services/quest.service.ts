@@ -51,7 +51,7 @@ export class QuestService extends BaseService {
   }
 
   addQuest(quest: QuestCreate): Observable<Result<Quest>> {
-    var userId=localStorage.getItem('userId');
+    var userId = localStorage.getItem('userId');
     const { image, ...payload } = quest;
     return this.http.post<Result<Quest>>(
       `${environment.apiUrl}/api/v1/quests?userId=${userId}`,
@@ -66,6 +66,7 @@ export class QuestService extends BaseService {
       id: quest.id || 0,
       createdate: quest.createdDate || '',
       updatedDate: quest.updatedDate || '',
+      ImagePath: quest.imagePath,
     };
 
     Object.keys(payload).forEach((key) =>
@@ -73,6 +74,31 @@ export class QuestService extends BaseService {
     );
     if (image != null) {
       formData.append('Image', image);
+    }
+    return formData;
+  }
+  toFormDataUpdate(quest: Partial<QuestCreate>, image: File): FormData {
+    const formData = new FormData();
+    const payload = {
+      ...quest,
+      id: quest.id || 0,
+      createdate: quest.createdDate || '',
+      updatedDate: quest.updatedDate || '',
+    };
+    Object.keys(payload).forEach((key) =>
+      formData.append(key, (payload as any)[key])
+    );
+    try {
+      if (typeof image.name.length) {
+        formData.delete('imagePath');
+        formData.append('image', image);
+      } else {
+        formData.delete('imagePath');
+        formData.append('imagePath', quest.imagePath!);
+      }
+    } catch (error) {
+      formData.delete('imagePath');
+      formData.append('imagePath', quest.imagePath!);
     }
     return formData;
   }
@@ -105,7 +131,7 @@ export class QuestService extends BaseService {
     const { image, ...payload } = quest;
     return this.http.put<Result<Quest>>(
       `${environment.apiUrl}/api/v1/quests/`,
-      this.toFormData(payload, image),
+      this.toFormDataUpdate(payload, image),
       this.httpOptions
     );
   }
