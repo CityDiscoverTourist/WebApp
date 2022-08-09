@@ -137,15 +137,6 @@ export class QuestListComponent implements OnInit {
     ];
   }
 
-
-  // onActivate(event: any) {
-  //   if (event.type == 'click') {
-  //     console.log(event.row);
-  //     this.router.navigate(['./', event.row.id], {
-  //       relativeTo: this.activatedRoute,
-  //     });
-  //   }
-  // }
   onPage(paging: PageInfo) {
     this.search$.next({
       ...this.search$.getValue(),

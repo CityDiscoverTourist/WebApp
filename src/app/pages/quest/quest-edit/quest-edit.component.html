@@ -13,17 +13,17 @@
                 placeholder="Nhập tên quest tiếng việt | tiếng anh"
                 id="title"
                 formControlName="title"
-                [ngClass]="{ 'is-invalid': form?.hasError('title') }"
+                [ngClass]="{ 'is-invalid': form.hasError('title') }"
               />
               <div
                 class="invalid-feedback"
-                *ngIf="form?.hasErrorOf('title', 'required')"
+                *ngIf="form.hasErrorOf('title', 'required')"
               >
                 Tên quest bắt buộc
               </div>
               <div
                 class="invalid-feedback"
-                *ngIf="form?.hasErrorOf('title', 'minlength')"
+                *ngIf="form.hasErrorOf('title', 'minlength')"
               >
                 Độ dài tên ít nhất 8 kí tự
               </div>
@@ -44,7 +44,7 @@
                       class="form-control"
                       id="price"
                       formControlName="price"
-                      [ngClass]="{ 'is-invalid': form?.hasError('price') }"
+                      [ngClass]="{ 'is-invalid': form.hasError('price') }"
                     />
                     <div class="input-group-append">
                       <span
@@ -55,13 +55,13 @@
                     </div>
                     <div
                       class="invalid-feedback"
-                      *ngIf="form?.hasErrorOf('price', 'required')"
+                      *ngIf="form.hasErrorOf('price', 'required')"
                     >
                       Giá tiền bắt buộc
                     </div>
                     <div
                       class="invalid-feedback"
-                      *ngIf="form?.hasErrorOf('price', 'min')"
+                      *ngIf="form.hasErrorOf('price', 'min')"
                     >
                       Giá lớn hơn 10
                     </div>
@@ -81,7 +81,7 @@
                       id="estimatedTime"
                       formControlName="estimatedTime"
                       [ngClass]="{
-                        'is-invalid': form?.hasError('estimatedTime')
+                        'is-invalid': form.hasError('estimatedTime')
                       }"
                     />
                     <div class="input-group-append">
@@ -94,7 +94,7 @@
 
                     <div
                       class="invalid-feedback"
-                      *ngIf="form?.hasErrorOf('estimatedTime', 'required')"
+                      *ngIf="form.hasErrorOf('estimatedTime', 'required')"
                     >
                       Thời gian dự tính bắt buộc
                     </div>
@@ -116,7 +116,7 @@
                       placeholder="07:00"
                       formControlName="availableTime1"
                       [ngClass]="{
-                        'is-invalid': form?.hasError('availableTime1')
+                        'is-invalid': form.hasError('availableTime1')
                       }"
                     />
                     <div class="input-group-append">
@@ -133,7 +133,7 @@
                       placeholder="06:00"
                       formControlName="availableTime2"
                       [ngClass]="{
-                        'is-invalid': form?.hasError('availableTime2')
+                        'is-invalid': form.hasError('availableTime2')
                       }"
                     />
                     <div class="input-group-append">
@@ -149,7 +149,7 @@
                       id="availableTime"
                       formControlName="availableTime"
                       [ngClass]="{
-                        'is-invalid': form?.hasError('availableTime')
+                        'is-invalid': form.hasError('availableTime')
                       }"
                     />
                     <div
@@ -191,7 +191,7 @@
                       id="estimatedDistance"
                       formControlName="estimatedDistance"
                       [ngClass]="{
-                        'is-invalid': form?.hasError('estimatedDistance')
+                        'is-invalid': form.hasError('estimatedDistance')
                       }"
                     />
                     <div class="input-group-append">
@@ -301,7 +301,7 @@
                 formControlName="questTypeId"
                 class="header-p-0"
                 [ngClass]="{
-                  'is-invalid': form?.hasError('questTypeId')
+                  'is-invalid': form.hasError('questTypeId')
                 }"
               >
                 <ng-template ng-header-tmp>
@@ -329,7 +329,7 @@
                 bindLabel="value"
                 class="header-p-0"
                 formControlName="areaId"
-                [ngClass]="{ 'is-invalid': form?.hasError('areaId') }"
+                [ngClass]="{ 'is-invalid': form.hasError('areaId') }"
               >
                 <ng-template ng-header-tmp>
                   <button
@@ -360,7 +360,7 @@
               placeholder="Chọn trạng thái"
               [clearable]="true"
               formControlName="status"
-              [ngClass]="{ 'is-invalid': form?.hasError('status') }"
+              [ngClass]="{ 'is-invalid': form.hasError('status') }"
             ></ng-select>
             <div
               class="invalid-feedback"
