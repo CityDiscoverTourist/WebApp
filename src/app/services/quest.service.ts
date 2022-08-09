@@ -89,7 +89,7 @@ export class QuestService extends BaseService {
       formData.append(key, (payload as any)[key])
     );
     try {
-      if (typeof image.name.length) {
+      if (image.name.length>0) {
         formData.delete('imagePath');
         formData.append('image', image);
       } else {
