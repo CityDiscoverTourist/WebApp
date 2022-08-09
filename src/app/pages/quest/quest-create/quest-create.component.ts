@@ -133,7 +133,7 @@ export class QuestCreateComponent implements OnInit {
           if (!result.data?.id) {
             return;
           }
-          this.toast.success(`Tạo quest thành công`);
+          this.toast.success(`Tạo quest thành công!`);
           if (result.redirect) {
             this.router.navigate(['../', result.data?.id], {
               relativeTo: this.activatedRoute,
