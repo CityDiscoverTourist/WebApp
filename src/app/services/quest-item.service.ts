@@ -125,7 +125,7 @@ export class QuestItemService extends BaseService {
     // if(imageDescription){
 
     try {
-      if (typeof imageDescription.name.length) {
+      if (imageDescription.name.length>0) {
         formData.delete('pathImageDescription');
         formData.append('imageDescription', imageDescription);
       } else {
@@ -141,6 +141,23 @@ export class QuestItemService extends BaseService {
         questItem.pathImageDescription!
       );
     }
+    // try {
+    //   if (typeof imageDescription.name.length) {
+    //     formData.delete('pathImageDescription');
+    //     formData.append('imageDescription', imageDescription);
+    //   } else {
+    //     formData.append(
+    //       'pathImageDescription',
+    //       questItem.pathImageDescription!
+    //     );
+    //   }
+    // } catch (error) {
+    //   formData.delete('pathImageDescription');
+    //   formData.append(
+    //     'pathImageDescription',
+    //     questItem.pathImageDescription!
+    //   );
+    // }
 
     if (listImages?.length > 0) {
       for (let f of listImages) {
