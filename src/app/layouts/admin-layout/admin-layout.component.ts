@@ -67,7 +67,7 @@ export class AdminLayoutComponent implements OnInit {
           );
           this.chatBoxUsers.push(u);
         } else {
-          this.chatBoxUsers.push(new UserChatBox(user, 250));
+          this.chatBoxUsers.push(new UserChatBox(user, 50));
         }
         localStorage.setItem('chatboxusers', JSON.stringify(this.chatBoxUsers));
         break;
@@ -80,7 +80,7 @@ export class AdminLayoutComponent implements OnInit {
           );
           this.chatBoxUsers.push(u);
         } else {
-          this.chatBoxUsers.push(new UserChatBox(user, 250 + 325));
+          this.chatBoxUsers.push(new UserChatBox(user, 50 + 350));
         }
         localStorage.setItem('chatboxusers', JSON.stringify(this.chatBoxUsers));
         break;
@@ -94,7 +94,7 @@ export class AdminLayoutComponent implements OnInit {
           );
           this.chatBoxUsers.push(u);
         } else {
-          this.chatBoxUsers.push(new UserChatBox(user, 250));
+          this.chatBoxUsers.push(new UserChatBox(user, 50));
         }
         localStorage.setItem('chatboxusers', JSON.stringify(this.chatBoxUsers));
         break;

@@ -1,7 +1,5 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-// import * as signalR from '@aspnet/signalr';
-// import { HubConnection } from '@aspnet/signalr';
 import { HubConnection, HubConnectionBuilder } from '@microsoft/signalr';
 import { MessagePackHubProtocol } from '@microsoft/signalr-protocol-msgpack';
 import { BehaviorSubject, take } from 'rxjs';
@@ -13,7 +11,6 @@ import { Message } from '../models';
 })
 export class MessageService {
   private hubConnection: HubConnection;
-  // public messages: Message[] = [];
 
   constructor(private http: HttpClient) {}
 
@@ -24,29 +21,49 @@ export class MessageService {
     this.addListeners();
   };
   public sendMessageToHub(conId: string, content: string, User: string) {
-    console.log('Admim gửi người dùng');
-    console.log(User);
-    console.log(conId);
-    console.log(content);
     this.hubConnection
       .invoke('AdminSendMessageToCustomer', {
-        // ConId: conId,
         ConId: conId,
         Message: content,
         User: User,
+        AdminId: 'sangnd@gmail.com',
       })
       .then((data) => {
-        var message: Message = {
-          User: User,
-          Message: content,
-          ConId: conId,
-        };
-        this.messageThread$.pipe(take(1)).subscribe((messages) => {
-          this.messageThreadSource.next([...messages, message]);
-        });
-        this.userSource$.pipe(take(1)).subscribe((users) => {
-          this.userSource.next([...users, message]);
-        });
+        // var message: Message = {
+        //   User: User,
+        //   Message: content,
+        //   ConId: conId,
+
+        // };
+        // this.messageThread$.pipe(take(1)).subscribe((messages) => {
+        //   this.messageThreadSource.next([...messages, message]);
+        // });
+        // this.userSource$.pipe(take(1)).subscribe((users) => {
+        //   this.userSource.next([...users, message]);
+        // });
+        console.log('message sent successfully to hub');
+      });
+
+    this.hubConnection
+      .invoke('AppendMessage', {
+        // ConId: this.hubConnection.connectionId!,
+        ConId: conId,
+        Message: content,
+        User: User,
+        AdminId: 'sangnd@gmail.com',
+      })
+      .then((data) => {
+        // var message: Message = {
+        //   User: User,
+        //   Message: content,
+        //   ConId: conId,
+        // };
+        // this.messageThread$.pipe(take(1)).subscribe((messages) => {
+        //   this.messageThreadSource.next([...messages, message]);
+        // });
+        // this.userSource$.pipe(take(1)).subscribe((users) => {
+        //   this.userSource.next([...users, message]);
+        // });
         console.log('message sent successfully to hub');
       });
   }
@@ -75,18 +92,34 @@ export class MessageService {
   }
 
   private addListeners() {
-    // this.hubConnection.on('AdminSendMessageToCustomer', (data: Message) => {
-    //   console.log('On Admin gửi người dùng');
-    //   console.log('234');
-    //   console.log(data);
-    //   const json = JSON.stringify(data);
-    //   const parsed: Message = JSON.parse(json);
-    //   const r = Object.keys(parsed);
-    //   const conIdd = Object.values(parsed)[2];
-    //   this.conIdd = conIdd;
-    // });
     this.hubConnection.on('CustomerSendMessageToAdmin', (data: Message) => {
       console.log('on khách gửi Admin');
+      console.log(data);
+
+      if (data.ConId == '') {
+        data.ConId = this.hubConnection.connectionId!;
+      }
+
+      this.messageThread$.pipe(take(1)).subscribe((messages) => {
+        this.messageThreadSource.next([...messages, data]);
+      });
+      this.userSource$.pipe(take(1)).subscribe((users) => {
+        this.userSource.next([...users, data]);
+      });
+    });
+    this.hubConnection.on('AdminSendMessageToCustomer', (data: any) => {
+      if (data.ConId == '') {
+        data.ConId = this.hubConnection.connectionId!;
+      }
+
+      this.messageThread$.pipe(take(1)).subscribe((messages) => {
+        this.messageThreadSource.next([...messages, data]);
+      });
+      this.userSource$.pipe(take(1)).subscribe((users) => {
+        this.userSource.next([...users, data]);
+      });
+    });
+    this.hubConnection.on('AppendMessage', (data: any) => {
       if (data.ConId == '') {
         data.ConId = this.hubConnection.connectionId!;
       }
