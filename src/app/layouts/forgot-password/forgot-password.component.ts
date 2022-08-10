@@ -3,14 +3,8 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HotToastService } from '@ngneat/hot-toast';
 import { RxState } from '@rx-angular/state';
 import {
-  Observable,
-  partition,
-  Subject,
-  tap,
-  switchMap,
-  catchError,
-  of,
-  filter,
+  catchError, Observable, of, partition,
+  Subject, switchMap, tap
 } from 'rxjs';
 import { UserService } from 'src/app/services';
 interface ForgetPasswordState {

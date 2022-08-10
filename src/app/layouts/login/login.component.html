@@ -1,7 +1,6 @@
 <section
   class="section register min-vh-100 d-flex flex-column align-items-center justify-content-center bg-image"
 >
-  <!-- style="background-color: #f0f1f1" -->
   <div class="container">
     <div class="row justify-content-center">
       <div
@@ -39,7 +38,7 @@
                   type="text"
                   class="form-control"
                   formControlName="username"
-                  [ngClass]="{ 'is-invalid': form?.hasError('username') }"
+                  [ngClass]="{ 'is-invalid': form.hasError('username') }"
                 />
                 <div
                   class="invalid-feedback"
@@ -61,7 +60,7 @@
                   type="password"
                   class="form-control"
                   formControlName="password"
-                  [ngClass]="{ 'is-invalid': form?.hasError('password') }"
+                  [ngClass]="{ 'is-invalid': form.hasError('password') }"
                 />
                 <div
                   class="invalid-feedback"
