@@ -33,7 +33,7 @@ export class SignalrService {
     })
   }
   public addTranferDataUpdateCustomerTaskListener=()=>{
-    this.hubConnection?.on('UpdateCustomerTask',(data)=>{
+    this.hubConnection?.on('UpdateCustomerTask',(data)=>{      
      this.subjectUpdateCustomerTask$.next(data);
     })
   }
