@@ -104,17 +104,20 @@ export class CustomerQuestDetailComponent implements OnInit {
       })
     );
 
-    this.customerTaskListState.connect(
-      this.signalRService.subject$.pipe(
-        tap((data) => {
-          return data;
-        })
-      ),
+    // this.customerTaskListState.connect(
+    //   this.signalRService.subject$.pipe(
+    //     tap((data) => {
+    //       console.log("data");
+    //       console.log(data);
+          
+    //       return data;
+    //     })
+    //   ),
 
-      (prev, result) => ({
-        customertasks: [result as CustomerTask, ...prev.customertasks],
-      })
-    );
+    //   (prev, result) => ({
+    //     customertasks: [result as CustomerTask, ...prev.customertasks],
+    //   })
+    // );
     this.customerTaskListState.connect(
       this.signalRService.subjectCustomerTask$.pipe(
         tap((data) => data as CustomerTask)
@@ -126,7 +129,8 @@ export class CustomerQuestDetailComponent implements OnInit {
 
     this.customerTaskListState.connect(
       this.signalRService.subjectUpdateCustomerTask$.pipe(
-        tap((data) => data as CustomerTask)
+        tap((data) => console.log(data)
+        )
       ),
       (prev, result) => ({
         customertasks: [
@@ -135,6 +139,18 @@ export class CustomerQuestDetailComponent implements OnInit {
         ],
       })
     );
+    // this.customerTaskListState.connect(
+    //   this.signalRService.subjectUpdateCustomerTask$.pipe(
+    //     tap((data) => data as CustomerTask)
+    //   ),
+    //   (prev, result) => ({
+    //     customertasks: [
+    //       ...prev.customertasks.slice(0, prev.customertasks.length - 1),
+    //       result,
+    //     ],
+    //   })
+    // );
+
   }
 
   @ViewChild('colCreatedAt', { static: true }) colCreatedAt!: TemplateRef<any>;

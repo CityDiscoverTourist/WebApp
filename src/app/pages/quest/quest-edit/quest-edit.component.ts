@@ -167,7 +167,7 @@ export class QuestEditComponent implements OnInit {
           if (!result.data?.id) {
             return;
           }
-          this.toast.success(`Cập nhật quest thành công`);
+          this.toast.success(`Cập nhật quest thành công!`);
           if (result.redirect) {
             this.router.navigate(['../../', result.data?.id], {
               relativeTo: this.activatedRoute,

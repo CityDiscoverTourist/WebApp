@@ -5,7 +5,7 @@
   <div class="modal-body">
     <p>Câu hỏi: {{questItem.content}}</p>
     <p *ngIf="questItem.rightAnswer!=''">
-        Đáp án text: {{questItem.rightAnswer}}
+        Đáp án: {{questItem.rightAnswer}}
     </p>
     <ng-container *ngIf="questItem.listImages.length>0">
     <div class="d-lg-inline-flex flex-wrap">
