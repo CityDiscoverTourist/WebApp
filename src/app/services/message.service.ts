@@ -21,12 +21,16 @@ export class MessageService {
     this.addListeners();
   };
   public sendMessageToHub(conId: string, content: string, User: string) {
+    var adminId=localStorage.getItem('emailAdmin');
+    if(adminId==''){
+      adminId='sangnd@gmail.com';
+    }
     this.hubConnection
       .invoke('AdminSendMessageToCustomer', {
         ConId: conId,
         Message: content,
         User: User,
-        AdminId: 'sangnd@gmail.com',
+        AdminId: adminId,
       })
       .then((data) => {
         // var message: Message = {
@@ -50,7 +54,7 @@ export class MessageService {
         ConId: conId,
         Message: content,
         User: User,
-        AdminId: 'sangnd@gmail.com',
+        AdminId: adminId,
       })
       .then((data) => {
         // var message: Message = {
@@ -64,7 +68,7 @@ export class MessageService {
         // this.userSource$.pipe(take(1)).subscribe((users) => {
         //   this.userSource.next([...users, message]);
         // });
-        console.log('message sent successfully to hub');
+        // console.log('message sent successfully to hub');
       });
   }
 

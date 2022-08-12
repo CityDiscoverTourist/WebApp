@@ -55,6 +55,7 @@ export class LoginComponent implements OnInit, OnDestroy {
           if (userToken?.jwtToken.length) {
             this.router.navigate(['/']);
             localStorage.setItem('userId',userToken.accountId);
+            localStorage.setItem('emailAdmin',userToken.email);
             this.authService.persistToken(userToken?.jwtToken);
             this.toast.success('Đăng nhập thành công');
           }

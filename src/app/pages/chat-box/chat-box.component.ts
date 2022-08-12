@@ -47,20 +47,17 @@ export class ChatBoxComponent implements OnInit, AfterViewInit {
     let pos = event.target.scrollTop + event.target.offsetHeight;
     let max = event.target.scrollHeight;
     //pos/max will give you the distance between scroll bottom and and bottom of screen in percentage.
-    // if (pos == max) {
-    //   this.messageService.seenMessage(this.user.userName);
-    // }
   }
 
   sendMessage(conId:string): void {  
     this.messageService.sendMessageToHub(conId,this.messageContent,`${'admin'+this.user.User}`);
+    this.messageForm.reset();
   }
   closeBoxChat() {
     this.removeChatBox.emit(this.user.User);
   }
 
   onFocusEvent(event: any) {
-    //console.log(event.target.value);
     this.activedChatBox();
   }
 

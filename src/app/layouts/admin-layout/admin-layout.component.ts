@@ -24,10 +24,6 @@ export class AdminLayoutComponent implements OnInit {
   }
   ngOnInit(): void {
     this.messageService.connect();
-    this.messageService.userSource$.subscribe((data) => {
-      console.log('Xem co msg ko');
-      console.log(data);
-    });
     const userChatBox: UserChatBox[] = [];
     // = JSON.parse(localStorage.getItem('chatboxusers'));
     if (userChatBox) {
@@ -52,7 +48,6 @@ export class AdminLayoutComponent implements OnInit {
           sum += 1;
         }
       });
-      console.log(data);
     });
   }
   selectUser(user: Message) {
@@ -60,6 +55,8 @@ export class AdminLayoutComponent implements OnInit {
     this.usernameActived = user.User;
     switch (this.chatBoxUsers.length % 2) {
       case 2: {
+        console.log("case 2");
+        
         var u = this.chatBoxUsers.find((x) => x.user.User === user.User);
         if (u != undefined) {
           this.chatBoxUsers = this.chatBoxUsers.filter(
@@ -67,12 +64,13 @@ export class AdminLayoutComponent implements OnInit {
           );
           this.chatBoxUsers.push(u);
         } else {
-          this.chatBoxUsers.push(new UserChatBox(user, 50));
+          this.chatBoxUsers.push(new UserChatBox(user, 20));
         }
         localStorage.setItem('chatboxusers', JSON.stringify(this.chatBoxUsers));
         break;
       }
       case 1: {
+        console.log("case 1");
         var u = this.chatBoxUsers.find((x) => x.user.User === user.User);
         if (u != undefined) {
           this.chatBoxUsers = this.chatBoxUsers.filter(
@@ -80,13 +78,14 @@ export class AdminLayoutComponent implements OnInit {
           );
           this.chatBoxUsers.push(u);
         } else {
-          this.chatBoxUsers.push(new UserChatBox(user, 50 + 350));
+          this.chatBoxUsers.push(new UserChatBox(user, 100 + 400));
         }
         localStorage.setItem('chatboxusers', JSON.stringify(this.chatBoxUsers));
         break;
       }
       default: {
         //0
+        console.log("case 0");
         var u = this.chatBoxUsers.find((x) => x.user.User == user.User);
         if (u != undefined) {
           this.chatBoxUsers = this.chatBoxUsers.filter(
@@ -94,7 +93,7 @@ export class AdminLayoutComponent implements OnInit {
           );
           this.chatBoxUsers.push(u);
         } else {
-          this.chatBoxUsers.push(new UserChatBox(user, 50));
+          this.chatBoxUsers.push(new UserChatBox(user, 100));
         }
         localStorage.setItem('chatboxusers', JSON.stringify(this.chatBoxUsers));
         break;

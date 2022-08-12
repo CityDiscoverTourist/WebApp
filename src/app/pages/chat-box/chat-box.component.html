@@ -5,20 +5,33 @@
         <img src="./assets/user.png" alt="" class="rounded-circle img-person" />
       </div>
       <div>
-        <a href="/" class="text-primary" style="text-decoration: none"
-          >&nbsp; Khách hàng</a
+        <span
+          style="
+            font-size: 1.1rem;
+    font-weight: 600;
+    line-height: 20px;
+    text-decoration: none;
+    color: #747c87;
+          "
+          >&nbsp; Khách hàng</span
         >
-        <div class="text-muted">&nbsp;&nbsp;{{ user.User }}</div>
+        <div class="text-muted" style="text-overflow: ellipsis;">
+          &nbsp;&nbsp;{{ user.User }}
+        </div>
       </div>
-      <div class="child-right">
+      <div class="child-right" >
         <a
           class="mr btn"
           (click)="isCollapsed = !isCollapsed"
           [attr.aria-expanded]="!isCollapsed"
+          style="cursor: pointer;"
           aria-controls="collapseChatBox"
-          ><i class="bi bi-dash"></i
+          ><i class="bi bi-dash" style="color: #747c87; cursor: pointer;"></i
         ></a>
-        <a class="mr" (click)="closeBoxChat()"><i class="bi bi-x"></i></a>
+        <a class="mr" (click)="closeBoxChat()"
+        style="cursor: pointer;"
+          ><i class="bi bi-x-lg" style="color: #747c87; cursor: pointer;"></i
+        ></a>
       </div>
     </div>
   </div>
@@ -39,22 +52,12 @@
             <div
               [ngClass]="message.User === user.User ? 'd-flex' : 'parent-sent'"
             >
-              <!-- message.ConId === user.ConId -->
-              <!-- <div class="mr" *ngIf="message.recipientUsername === userCurrent.userName">
-                          <img class="rounded-circle small-img" src="{{message.recipientPhotoUrl || './assets/user.png'}}" alt="">
-                      </div> -->
-              <!-- message.User === user.User -->
               <div
                 class="message-body"
                 [class.message-send]="message.User === user.User"
               >
                 <div>{{ message.Message }}</div>
               </div>
-
-              <!-- hiện trạng thái đã xem tin nhắn 
-                        <div *ngIf="(messageService.seenMessage$ | async) === message.id">
-                          <img class="rounded-circle" src="{{user.photoUrl || './assets/user.png'}}" alt="{{user.userName}}" style="max-height: 15px;">
-                      </div>    -->
             </div>
           </ng-container>
         </li>
@@ -73,7 +76,7 @@
             required
             [(ngModel)]="messageContent"
             class="form-control input-sm"
-            placeholder="Nhập tin nhắn"
+            placeholder="Nhập tin nhắn..."
             (focus)="onFocusEvent($event)"
           />
           <div class="input-group-append">
