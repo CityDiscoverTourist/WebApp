@@ -34,7 +34,7 @@ img{
 .chat-box{
     position: fixed;
     // max-width: 400px;
-    min-width: 380px;
+    width: 380px;
     z-index: 999;
     right: 250px;
     bottom: 1px;
@@ -50,7 +50,7 @@ img{
 
 .chat-frame{
     // max-height: 350px;
-    min-height: 400px;
+    height: 400px;
     overflow-y: scroll;
 }
 
@@ -59,4 +59,5 @@ input::placeholder {
     font-size: 1rem;
     line-height: 20px;
     color: #747c87;
+    padding-left: 4px;
 }

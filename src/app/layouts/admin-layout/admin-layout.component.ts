@@ -25,7 +25,6 @@ export class AdminLayoutComponent implements OnInit {
   ngOnInit(): void {
     this.messageService.connect();
     const userChatBox: UserChatBox[] = [];
-    // = JSON.parse(localStorage.getItem('chatboxusers'));
     if (userChatBox) {
       this.chatBoxUsers = userChatBox;
     } else {
@@ -51,12 +50,9 @@ export class AdminLayoutComponent implements OnInit {
     });
   }
   selectUser(user: Message) {
-    // this.clearUnreadMessage(user.userName);
     this.usernameActived = user.User;
     switch (this.chatBoxUsers.length % 2) {
       case 2: {
-        console.log("case 2");
-        
         var u = this.chatBoxUsers.find((x) => x.user.User === user.User);
         if (u != undefined) {
           this.chatBoxUsers = this.chatBoxUsers.filter(
@@ -70,7 +66,6 @@ export class AdminLayoutComponent implements OnInit {
         break;
       }
       case 1: {
-        console.log("case 1");
         var u = this.chatBoxUsers.find((x) => x.user.User === user.User);
         if (u != undefined) {
           this.chatBoxUsers = this.chatBoxUsers.filter(
@@ -85,7 +80,6 @@ export class AdminLayoutComponent implements OnInit {
       }
       default: {
         //0
-        console.log("case 0");
         var u = this.chatBoxUsers.find((x) => x.user.User == user.User);
         if (u != undefined) {
           this.chatBoxUsers = this.chatBoxUsers.filter(
