@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
 import { UserChatBox, Message } from 'src/app/models';
@@ -9,7 +9,7 @@ import { AuthenticateService, MessageService, SoundService } from 'src/app/servi
   templateUrl: './admin-layout.component.html',
   styleUrls: ['./admin-layout.component.scss'],
 })
-export class AdminLayoutComponent implements OnInit {
+export class AdminLayoutComponent implements OnInit ,OnDestroy{
   isClose = false;
   isClose1 = false;
   isClose2 = false;
@@ -20,22 +20,29 @@ export class AdminLayoutComponent implements OnInit {
     private messageService: MessageService,
     private soundService:SoundService,
   ) {
-    this.unReadMessageFromSenderUsername();
+    
+  }
+  ngOnDestroy(): void {
+    // this.messageThreadSource.unsubscribe();
+    // this.messageService.userSource.unsubscribe()
   }
   ngOnInit(): void {
-    this.messageService.connect();
+     this.messageService.connect();
+    
     const userChatBox: UserChatBox[] = [];
     if (userChatBox) {
       this.chatBoxUsers = userChatBox;
     } else {
       this.chatBoxUsers = [];
     }
+
+    this.unReadMessageFromSenderUsername();
   }
 
   chatBoxUsers: UserChatBox[] = [];
   usernameActived: string;
-  private messageThreadSource = new BehaviorSubject<Message[]>([]);
-  messageThread$ = this.messageThreadSource.asObservable();
+  //  messageThreadSource = new BehaviorSubject<Message[]>([]);
+  // messageThread$ = this.messageThreadSource.asObservable();
 
   unReadMessageFromSenderUsername() {
     this.messageService.userSource$.subscribe((data) => {
@@ -47,6 +54,11 @@ export class AdminLayoutComponent implements OnInit {
           sum += 1;
         }
       });
+
+      console.log("---");
+      
+      console.log(data);
+      
     });
   }
   selectUser(user: Message) {

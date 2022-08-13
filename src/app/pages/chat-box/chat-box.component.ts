@@ -5,7 +5,7 @@ import {
   ElementRef,
   EventEmitter,
   HostListener,
-  Input, OnInit,
+  Input, OnDestroy, OnInit,
   Output,
   ViewChild
 } from '@angular/core';
@@ -20,7 +20,7 @@ import { MessageService } from 'src/app/services';
   styleUrls: ['./chat-box.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ChatBoxComponent implements OnInit, AfterViewInit {
+export class ChatBoxComponent implements OnInit, AfterViewInit ,OnDestroy {
   @Input() user: Message;//information of chat box
   messageContent: string;
   @ViewChild('ChatBox', { static: true }) element: ElementRef;
@@ -33,6 +33,10 @@ export class ChatBoxComponent implements OnInit, AfterViewInit {
 
   constructor(public messageService: MessageService) {
   
+  }
+  ngOnDestroy(): void {
+    this.messageService.messageThreadSource.unsubscribe();
+    this.messageService.userSource.unsubscribe();
   }
 
   ngOnInit(): void {
@@ -68,5 +72,6 @@ export class ChatBoxComponent implements OnInit, AfterViewInit {
   isTrue(msgValue:string, msgUser:string){
     return msgValue.includes(msgUser);
   }
+  
 
 }

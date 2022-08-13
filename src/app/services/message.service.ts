@@ -13,7 +13,7 @@ export class MessageService {
   private hubConnection: HubConnection;
 
   constructor(private http: HttpClient) {}
-
+  currentMessage: Message;
   conIdd = '';
 
   public connect = () => {
@@ -21,9 +21,9 @@ export class MessageService {
     this.addListeners();
   };
   public sendMessageToHub(conId: string, content: string, User: string) {
-    var adminId=localStorage.getItem('emailAdmin');
-    if(adminId==''){
-      adminId='sangnd@gmail.com';
+    var adminId = localStorage.getItem('emailAdmin');
+    if (adminId == '') {
+      adminId = 'sangnd@gmail.com';
     }
     this.hubConnection
       .invoke('AdminSendMessageToCustomer', {
@@ -104,12 +104,33 @@ export class MessageService {
         data.ConId = this.hubConnection.connectionId!;
       }
 
-      this.messageThread$.pipe(take(1)).subscribe((messages) => {
-        this.messageThreadSource.next([...messages, data]);
-      });
-      this.userSource$.pipe(take(1)).subscribe((users) => {
-        this.userSource.next([...users, data]);
-      });
+        this.messageThread$.pipe(take(1)).subscribe((messages) => {
+          if (messages.length > 0 && messages[0].Message != data.Message) {       
+            var arrMsg=messages;
+            console.log();
+            
+            this.messageThreadSource.next([...messages, data]);
+            console.log("1");
+            // console.log([...messages, data]);
+            this.currentMessage = data;
+          } else if (messages.length == 0) {
+            console.log("2");
+            console.log([ data]);
+            
+            this.messageThreadSource.next([...messages,data]);
+            // this.currentMessage = data;
+            
+          }
+          console.log(messages);
+          
+        });
+        this.userSource$.pipe(take(1)).subscribe((users) => {
+          this.userSource.next([...users, data]);
+          console.log(users);
+        });
+
+
+      
     });
     this.hubConnection.on('AdminSendMessageToCustomer', (data: any) => {
       if (data.ConId == '') {
@@ -128,17 +149,26 @@ export class MessageService {
         data.ConId = this.hubConnection.connectionId!;
       }
 
+      // this.messageThread$.pipe(take(1)).subscribe((messages) => {
+      //   this.messageThreadSource.next([...messages, data]);
+      // });
+
       this.messageThread$.pipe(take(1)).subscribe((messages) => {
-        this.messageThreadSource.next([...messages, data]);
+        if (messages.length > 0 && messages[0].Message != data.Message) {
+          this.messageThreadSource.next([...messages, data]);
+        } else if (messages.length == 0) {
+          this.messageThreadSource.next([data]);
+        }
       });
+
       this.userSource$.pipe(take(1)).subscribe((users) => {
         this.userSource.next([...users, data]);
       });
     });
   }
-  private messageThreadSource = new BehaviorSubject<Message[]>([]);
+  messageThreadSource = new BehaviorSubject<Message[]>([]);
   messageThread$ = this.messageThreadSource.asObservable();
 
-  private userSource = new BehaviorSubject<Message[]>([]);
+  userSource = new BehaviorSubject<Message[]>([]);
   userSource$ = this.userSource.asObservable();
 }
