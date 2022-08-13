@@ -9,7 +9,8 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RxState } from '@rx-angular/state';
 import { DatatableComponent, TableColumn } from '@swimlane/ngx-datatable';
-import { BehaviorSubject, Observable, Subject, switchMap, tap } from 'rxjs';
+import { BsModalService } from 'ngx-bootstrap/modal';
+import { BehaviorSubject, Observable, Subject, switchMap, tap,take,filter } from 'rxjs';
 import {
   CustomerQuestListItem,
   PagingMetadata,
@@ -17,6 +18,7 @@ import {
 } from 'src/app/models';
 import { CustomerquestService } from 'src/app/services';
 import { PageInfo, SortInfo } from 'src/app/types';
+import { ForceDeleteCustomerquestModalComponent } from '../../share/force-delete-customerquest-modal/force-delete-customerquest-modal.component';
 import { CustomerQuestListState } from '../states';
 
 @Component({
@@ -34,7 +36,8 @@ export class CustomerQuestListComponent implements OnInit {
     private customerQuestListState: RxState<CustomerQuestListState>,
     private customerQuestService: CustomerquestService,
     private router: Router,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
+    private modalService: BsModalService,
   ) {}
 
   ngOnInit(): void {
@@ -78,6 +81,10 @@ export class CustomerQuestListComponent implements OnInit {
   statusTemplate!: TemplateRef<any>;
   @ViewChild('isFinishedTemplate', { static: true })
   isFinishedTemplate!: TemplateRef<any>;
+  @ViewChild('actionTemplate', { static: true })
+  actionTemplate!: TemplateRef<any>;
+  @ViewChild('click', { static: true })
+  click!: TemplateRef<any>;
 
   initTable() {
     this.columns = [
@@ -86,6 +93,7 @@ export class CustomerQuestListComponent implements OnInit {
         name: 'Khách hàng',
         sortable: false,
         minWidth: 230,
+        cellTemplate:this.click
       },
       {
         prop: 'beginPoint',
@@ -94,6 +102,7 @@ export class CustomerQuestListComponent implements OnInit {
         sortable: false,
         minWidth: 40,
         cellClass: 'd-flex justify-content-center',
+        cellTemplate:this.click
       },
       {
         prop: 'endPoint',
@@ -106,7 +115,7 @@ export class CustomerQuestListComponent implements OnInit {
       {
         prop: 'createdDate',
         name: 'Ngày tạo',
-        cellTemplate: this.colCreatedAt,
+        cellTemplate:this.colCreatedAt,
         sortable: false,
         minWidth: 150,
         cellClass: 'd-flex justify-content-center',
@@ -128,14 +137,15 @@ export class CustomerQuestListComponent implements OnInit {
         cellTemplate: this.isFinishedTemplate,
         cellClass: 'd-flex justify-content-center',
       },
-      // {
-      //   prop: 'status',
-      //   name: 'Trạng thái',
-      //   sortable: false,
-      //   canAutoResize: true,
-      //   minWidth:90,
-      //   cellTemplate:this.statusTemplate
-      // },
+      {
+        prop: 'action',
+        name: 'Thao tác',
+        sortable: false,
+        minWidth:90,
+        cellTemplate:this.actionTemplate,
+        cellClass: 'd-flex justify-content-center',
+        headerClass:'d-flex justify-content-center',
+      },
     ];
   }
 
@@ -170,13 +180,37 @@ export class CustomerQuestListComponent implements OnInit {
       sort: { sortBy: event.column.prop, dir: event.newValue },
     });
   }
-  onActivate(event: any) {
-    if (event.type == 'click') {
-      console.log(event.row.questId);
-      localStorage.setItem('questId', event.row.questId);
-      this.router.navigate(['./', event.row.id, 'customer-tasks'], {
+  // onActivate(event: any) {
+  //   if (event.type == 'click') {
+  //     console.log(event.row.questId);
+  //     localStorage.setItem('questId', event.row.questId);
+  //     this.router.navigate(['./', event.row.id, 'customer-tasks'], {
+  //       relativeTo: this.activatedRoute,
+  //     });
+  //   }    
+  // }
+
+  onClick(customerQuestId:string, questId:string) {
+      localStorage.setItem('questId',questId);
+      this.router.navigate(['./', customerQuestId, 'customer-tasks'], {
         relativeTo: this.activatedRoute,
       });
-    }
+  }
+
+
+  onForceDelete(customerQuestId:string,forceDelete:string){
+    const bsModalRef = this.modalService.show(ForceDeleteCustomerquestModalComponent, {
+      initialState: {
+        id: customerQuestId,
+        status: forceDelete
+      },
+    });
+    bsModalRef.onHide?.pipe(take(1),filter((s)=>(s as any).data)).subscribe({
+      next: (result) => {
+        this.search$.next({
+          ...this.search$.getValue(),
+        });
+      },
+    });
   }
 }

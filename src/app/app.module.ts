@@ -33,6 +33,7 @@ import { AuthorizeInterceptor } from './interceptors';
 import { SuggestionModalComponent } from './pages/quest/quest-detail/suggestion-modal/suggestion-modal.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ChatBoxComponent } from './pages/chat-box/chat-box.component';
+import { ForceDeleteCustomerquestModalComponent } from './pages/share/force-delete-customerquest-modal/force-delete-customerquest-modal.component';
 
 const lib = [
   QuillModule.forRoot(),
@@ -56,6 +57,7 @@ const lib = [
     AreaModalComponent,
     SuggestionModalComponent,
     ChatBoxComponent,
+    ForceDeleteCustomerquestModalComponent,
     
   ],
   imports: [
