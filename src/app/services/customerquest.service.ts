@@ -47,9 +47,21 @@ export class CustomerquestService extends BaseService {
 
   getCustomerQuestById(id: string | undefined): Observable<CustomerQuest> {
     return this.http
-      .get<Result<CustomerQuest>>(`${environment.apiUrl}/api/v1/customer-quests/${id}`, {
-        headers: this._sharedHeaders,
-      })
+      .get<Result<CustomerQuest>>(
+        `${environment.apiUrl}/api/v1/customer-quests/${id}`,
+        {
+          headers: this._sharedHeaders,
+        }
+      )
       .pipe(map((response: Result<CustomerQuest>) => response.data));
+  }
+
+  forceDelete(customerQuestId: string, status:string): Observable<any> {
+    return this.http.put(
+      `${
+        environment.apiUrl
+      }/api/v1/customer-quests/force-delete/${customerQuestId}?forceDelete=${status}`,
+      { headers: this._sharedHeaders }
+    );
   }
 }
