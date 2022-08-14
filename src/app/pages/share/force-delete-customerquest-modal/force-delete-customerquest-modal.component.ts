@@ -30,7 +30,7 @@ export class ForceDeleteCustomerquestModalComponent implements OnInit {
           });
           this.bsModalRef.hide();
           this.toast.success(
-            `Xóa customer quest thành công!`,
+            `Kết thúc customer quest thành công!`,
             {
               duration: 5000,
             }
