@@ -79,7 +79,7 @@ export class DashboardComponent implements OnInit {
     'Genre 6',
     'Genre 7',
   ];
-  yAxisTicks: any[] = [500000, 1000000, 5000000, 10000000];
+  yAxisTicks: any[] = [2500000,5000000, 10000000,25000000];
 
   animations: boolean = true; // animations on load
 
