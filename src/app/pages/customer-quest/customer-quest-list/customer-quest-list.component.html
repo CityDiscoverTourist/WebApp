@@ -113,21 +113,21 @@
             ngx-datatable-cell-template
           >
             <button
-              class="btn btn-sm me-2"
+              class="btn btn-sm fs-4"
               type="button"
               style="
-                color: #fff;
-                background-color: #f44335;
-                border-color: #f44335;
+                color: #5ec65f;
+                background-color: #fff;
+                border-color: #dff2eb;
               "
               data-toggle="tooltip"
               data-placement="top"
-              [tooltip]="'Nhấp chuột để xóa customer quest'"
+              [tooltip]="'Nhấp chuột để kết thúc customer quest'"
               placement="left"
               (click)="onForceDelete(row.id, 'true')"
               [disabled]="row.isFinished == true ? true : false"
             >
-              <i class="bi bi-trash3"></i>
+            <i class="bi bi-check-circle-fill"></i>
             </button>
           </ng-template>
           <ng-template
