@@ -49,9 +49,12 @@ export class AdminLayoutComponent implements OnInit ,OnDestroy{
       data.forEach((element) => {
         let sum: number = 0;
         if (this.chatBoxUsers.length < 3 && !element.User.startsWith('admin')) {
+
           this.soundService.playAudioMessage();
           this.selectUser(element); //display chat-box
           sum += 1;
+          console.log("123");
+          
         }
       });
 
