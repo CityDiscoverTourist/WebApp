@@ -104,6 +104,13 @@ const routes: Routes = [
             (m) => m.NotificationModule
           ),
       },
+      {
+        path: 'account',
+        loadChildren: () =>
+          import('src/app/pages/account/account.module').then(
+            (m) => m.AccountModule
+          ),
+      },
     ],
   },
   {
