@@ -154,6 +154,9 @@ export class MessageService {
       // });
 
       this.messageThread$.pipe(take(1)).subscribe((messages) => {
+        console.log("12---");
+        console.log(messages);
+        
         if (messages.length > 0 && messages[0].Message != data.Message) {
           this.messageThreadSource.next([...messages, data]);
         } else if (messages.length == 0) {
