@@ -1,20 +1,34 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import {
-  AbstractControl,
   FormBuilder,
-  FormGroup,
-  ValidationErrors,
-  ValidatorFn,
-  Validators,
+  FormGroup, Validators
 } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+import { HotToastService } from '@ngneat/hot-toast';
+import { RxState } from '@rx-angular/state';
+import { catchError, Observable, of, partition, Subject, switchMap, tap } from 'rxjs';
+import { UserService } from 'src/app/services';
+
+interface AccountCreateState {
+  error?: string;
+  submitting: boolean;
+}
 
 @Component({
   selector: 'app-account-create',
   templateUrl: './account-create.component.html',
   styleUrls: ['./account-create.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [RxState],
 })
 export class AccountCreateComponent implements OnInit {
-  constructor(private fb: FormBuilder) {}
+  constructor(private fb: FormBuilder,
+    private state: RxState<AccountCreateState>,
+    private toast: HotToastService,
+    private userService:UserService,
+    private router: Router,
+    private activatedRoute: ActivatedRoute,
+    ) {}
 
   ngOnInit(): void {
     this.initForm();
@@ -32,5 +46,46 @@ export class AccountCreateComponent implements OnInit {
       password: ['', [Validators.required]],
       passwordConfirm: ['', [Validators.required]],
     });
+
+    
+    const [valid$, invalid$] = partition(
+      this.submit$,
+      ({ form }) => form.valid
+    );
+
+    this.state.connect(
+      valid$.pipe(
+        tap(() => this.state.set({ submitting: true })),
+        switchMap(({ form, redirect }) =>
+          this.userService.addAdminAccount(form.controls['email'].value + '',form.controls['password'].value + '').pipe(
+            catchError(() => {
+              this.toast.error('Có lỗi hãy kiểm tra lại!');
+              return of({ status: 'data not modified', data: null });
+            })
+          )
+        ),
+        tap((result) => {
+          if (result) {
+            this.toast.success(`Kiểm tra email để xác nhận!`);
+            this.form.reset();
+          }
+        })
+      ),
+      (_prev, curr) => ({
+        error: undefined,
+        submitting: false,
+      })
+    );
+
+    this.state.hold(invalid$.pipe(), ({ form, redirect }) => {
+      this.toast.error('Giá trị nhập không hợp lệ!');
+      form.revalidateControls([]);
+    });
+  }
+
+  submit$ = new Subject<{ form: FormGroup; redirect: boolean }>();
+
+  public get submitting$(): Observable<boolean> {
+    return this.state.select('submitting');
   }
 }
