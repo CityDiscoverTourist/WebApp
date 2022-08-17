@@ -1,11 +1,11 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { QuestCreateComponent } from '../../quest/quest-create/quest-create.component';
+import { AccountCreateComponent } from './account-create.component';
 
 const routes: Routes = [
   {
     path: '',
-    component: QuestCreateComponent,
+    component: AccountCreateComponent,
     data: { title: 'Tạo tài khoản', url: 'create',titleTab: 'Tạo tài khoản' },
   }
 ]
