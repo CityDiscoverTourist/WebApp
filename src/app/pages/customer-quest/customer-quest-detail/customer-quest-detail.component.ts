@@ -105,26 +105,43 @@ export class CustomerQuestDetailComponent implements OnInit {
     );
     this.customerTaskListState.connect(
       this.signalRService.subjectCustomerTask$.pipe(
-        tap((data) => data as CustomerTask)
+        // tap((data) => data as CustomerTask)
+        tap((data) => {
+          console.log('1');
+          console.log(data);
+          console.log(data?.customerEmail);
+          console.log(localStorage.getItem('customerEmail'));
+          console.log(data.countSuggestion);
+        })
       ),
+
       (prev, result) => ({
-        customertasks: [...prev.customertasks, result],
+        customertasks: result.customerEmail == localStorage.getItem('customerEmail')?[...prev.customertasks, result]:[...prev.customertasks],
       })
     );
 
     this.customerTaskListState.connect(
       this.signalRService.subjectUpdateCustomerTask$.pipe(
-        tap((data) => console.log(data)
-        )
+        tap((data) => {
+          console.log('2');
+          console.log(data);
+          console.log(data?.customerEmail);
+          console.log(localStorage.getItem('customerEmail'));
+        })
       ),
       (prev, result) => ({
-        customertasks: [
+        customertasks: result.customerEmail == localStorage.getItem('customerEmail')? [
           ...prev.customertasks.slice(0, prev.customertasks.length - 1),
           result,
-        ],
+        ]:[...prev.customertasks],
       })
+      // (prev, result) => ({
+      //   customertasks: [
+      //     ...prev.customertasks.slice(0, prev.customertasks.length - 1),
+      //     result,
+      //   ],
+      // })
     );
-  
   }
 
   @ViewChild('colCreatedAt', { static: true }) colCreatedAt!: TemplateRef<any>;
