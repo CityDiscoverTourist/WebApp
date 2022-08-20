@@ -1,56 +1,56 @@
 <div class="container">
   <div class="px-4 ms-2">
-   <div class="row" style="margin-left: -6.9px;">
-    <div class="col-md-3">
-      <div
-        class="shadow stati wet_asphalt d-flex justify-content-center align-items-center p-3 rounded"
-      >
-        <i class="bi bi-bar-chart-line"></i>
-        <div>
-          <span class="fw-bold fs-5">Tổng doanh thu</span>
-          <span>{{ totalValue|number }} vnđ</span>
+    <div class="row" style="margin-left: -6.9px">
+      <div class="col-md-3">
+        <div
+          class="shadow stati wet_asphalt d-flex justify-content-center align-items-center p-3 rounded"
+        >
+          <i class="bi bi-bar-chart-line"></i>
+          <div>
+            <span class="fw-bold fs-5">Tổng doanh thu</span>
+            <span>{{ totalValue | number }} vnđ</span>
+          </div>
         </div>
       </div>
-    </div>  
-    <div class="col-md-3">
-      <div
-        class="shadow stati wet_asphalt d-flex justify-content-center align-items-center p-3 rounded"
-      >
-        <i class="bi bi-journal-album"></i>
-        <div>
-          <span class="fw-bold fs-5">Tổng Quest</span>
-          <span>{{ totalQuest }}</span>
+      <div class="col-md-3">
+        <div
+          class="shadow stati wet_asphalt d-flex justify-content-center align-items-center p-3 rounded"
+        >
+          <i class="bi bi-journal-album"></i>
+          <div>
+            <span class="fw-bold fs-5">Tổng Quest</span>
+            <span>{{ totalQuest }}</span>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div
+          class="shadow stati bg-wet_asphalt d-flex justify-content-center align-items-center p-3 rounded"
+        >
+          <i class="bi bi-people-fill"></i>
+          <div>
+            <span class="fw-bold fs-5">Tổng người dùng</span>
+            <span>{{ totalUser }}</span>
+          </div>
         </div>
       </div>
     </div>
-    <div class="col-md-3">
-      <div
-        class="shadow stati bg-wet_asphalt d-flex justify-content-center align-items-center p-3 rounded"
-      >
-        <i class="bi bi-people-fill"></i>
-        <div>
-          <span class="fw-bold fs-5">Tổng người dùng</span>
-          <span>{{ totalUser }}</span>
-        </div>
-      </div>
-    </div>
-   </div>
   </div>
   <div class="row py-1 px-5">
-    <div class=" bg-white pt-3">
-      <form  [formGroup]="searchForm">
-      <ng-select
-            [items]="years"
-            bindValue="value"
-            bindLabel="id"
-            style="width: 200px"
-            placeholder="Chọn năm"
-            class="me-3"
-            formControlName="year"
-            (change)="search$.next(searchForm.value)"
-            (click)="searchRevenueByYear()"
-          ></ng-select>
-        </form>
+    <div class="bg-white pt-3">
+      <form [formGroup]="searchForm">
+        <ng-select
+          [items]="years"
+          bindValue="value"
+          bindLabel="id"
+          style="width: 200px"
+          placeholder="Chọn năm"
+          class="me-3"
+          formControlName="year"
+          (change)="search$.next(searchForm.value)"
+          (click)="searchRevenueByYear()"
+        ></ng-select>
+      </form>
       <table>
         <tr>
           <td>
@@ -95,17 +95,98 @@
         <li class="list-group-item" *ngFor="let item of listTopUserPoint">
           <div class="row">
             <div class="col 10">Tài khoản: {{ item.email }}</div>
-            <div class="col 2">Số tiền: {{ item.point|number }} vnđ</div>
+            <div class="col 2">Số tiền: {{ item.point | number }} vnđ</div>
           </div>
         </li>
       </ul>
     </div>
     <div class="col bg-white ms-1">
-      <span class="fw-bold fs-5 mb-4 ">Top Quest</span>
+      <span class="fw-bold fs-5 mb-4">Top Quest</span>
       <ul class="list-group list-group-flush">
         <li class="list-group-item" *ngFor="let item of listTopQuest">
           {{ item }}
         </li>
+      </ul>
+    </div>
+  </div>
+  <div class="row py-3 px-5">
+    <div class="col bg-white me-1">
+      <div class="mb-2 mt-3 d-flex">
+        <span class="fw-bold fs-5">Top quest bán ra theo tháng</span>
+        <form [formGroup]="searchFormTopQuestByMonth" class="d-flex ms-2">
+          <ng-select
+            [items]="months"
+            bindValue="value"
+            bindLabel="id"
+            style="width: 120px"
+            placeholder="Chọn tháng"
+            class="me-3"
+            formControlName="monthTopQuestByMonth"
+            (change)="
+              searchTopQuestByMonth$.next(searchFormTopQuestByMonth.value)
+            "
+            (click)="searchTopQuestByMonth()"
+          ></ng-select>
+          <ng-select
+            [items]="years"
+            bindValue="value"
+            bindLabel="id"
+            style="width: 130px"
+            placeholder="Chọn năm"
+            class="me-3"
+            formControlName="yearTopQuestByMonth"
+            (change)="
+              searchTopQuestByMonth$.next(searchFormTopQuestByMonth.value)
+            "
+            (click)="searchTopQuestByMonth()"
+          ></ng-select>
+        </form>
+      </div>
+      <ul class="list-group list-group-flush">
+        <ng-container *ngIf="listTopQuestByMonth.length == 0">
+          <p>Không có dữ liệu để hiển thị</p>
+        </ng-container>
+        <ng-container *ngIf="listTopQuestByMonth.length > 0">
+          <li class="list-group-item" *ngFor="let item of listTopQuestByMonth">
+            <div class="row">
+              <div class="col 10">Tên: {{ item.name }}</div>
+              <div class="col 2">Số lượng: {{ item.count }}</div>
+            </div>
+          </li>
+        </ng-container>
+      </ul>
+    </div>
+    <div class="col bg-white ms-1">
+      <div class="mb-2 mt-3 d-flex">
+        <span class="fw-bold fs-5">Top Quest bán ra theo năm</span>
+        <form [formGroup]="searchFormTopQuestByYear" class="d-flex ms-2">
+          <ng-select
+            [items]="years"
+            bindValue="value"
+            bindLabel="id"
+            style="width: 130px"
+            placeholder="Chọn năm"
+            class="me-3"
+            formControlName="yearTopQuest"
+            (change)="
+              searchTopQuestByYear$.next(searchFormTopQuestByYear.value)
+            "
+            (click)="searchTopQuestByYear()"
+          ></ng-select>
+        </form>
+      </div>
+      <ul class="list-group list-group-flush">
+        <ng-container *ngIf="listTopQuestByYear.length == 0">
+          <p>Không có dữ liệu để hiển thị</p>
+        </ng-container>
+        <ng-container *ngIf="listTopQuestByYear.length > 0">
+          <li class="list-group-item" *ngFor="let item of listTopQuestByYear">
+            <div class="row">
+              <div class="col 10">Tên: {{ item.name }}</div>
+              <div class="col 2">Số lượng: {{ item.count }}</div>
+            </div>
+          </li>
+        </ng-container>
       </ul>
     </div>
   </div>

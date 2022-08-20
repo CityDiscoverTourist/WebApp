@@ -20,12 +20,29 @@ export class DashboardComponent implements OnInit {
   listTopQuest: string[] = [];
   valueRevenue: any[];
 
+  listTopQuestByMonth: any[] = [];
+  listTopQuestByYear: any[] = [];
+
   years: { id: string; value: string }[] = [
     { id: `${new Date().getFullYear()}`, value: `${new Date().getFullYear()}` },
     {
       id: `${Number(new Date().getFullYear() + 1)}`,
       value: `${Number(new Date().getFullYear() + 1)}`,
     },
+  ];
+  months: { id: number; value: number }[] = [
+    { id: 1, value: 1 },
+    { id: 2, value: 2 },
+    { id: 3, value: 3 },
+    { id: 4, value: 4 },
+    { id: 5, value: 5 },
+    { id: 6, value: 6 },
+    { id: 7, value: 7 },
+    { id: 8, value: 8 },
+    { id: 9, value: 9 },
+    { id: 10, value: 10 },
+    { id: 11, value: 11 },
+    { id: 12, value: 12 },
   ];
   constructor(
     private httpClient: HttpClient,
@@ -79,7 +96,7 @@ export class DashboardComponent implements OnInit {
     'Genre 6',
     'Genre 7',
   ];
-  yAxisTicks: any[] = [2500000,5000000, 10000000,25000000];
+  yAxisTicks: any[] = [2500000, 5000000, 10000000, 25000000];
 
   animations: boolean = true; // animations on load
 
@@ -139,11 +156,26 @@ export class DashboardComponent implements OnInit {
     this.dashboardService
       .getTopQuestPlay()
       .subscribe((data) => (this.listTopQuest = data));
+
+    this.dashboardService
+      .getTopQuestByMonth('8', '2022')
+      .subscribe((data) => (this.listTopQuestByMonth = data));
+    this.dashboardService
+      .getTopQuestByYear('2022')
+      .subscribe((data) => (this.listTopQuestByYear = data));
   }
 
   search$ = new BehaviorSubject<{ year: string }>({ year: '' });
   searchForm = new FormGroup({
     year: new FormControl(),
+  });
+  searchTopQuestByMonth$ = new BehaviorSubject<{
+    monthTopQuestByMonth: string;
+    yearTopQuestByMonth: string;
+  }>({ monthTopQuestByMonth: '', yearTopQuestByMonth: '' });
+  searchFormTopQuestByMonth = new FormGroup({
+    monthTopQuestByMonth: new FormControl(),
+    yearTopQuestByMonth: new FormControl(),
   });
 
   searchRevenueByYear() {
@@ -157,6 +189,45 @@ export class DashboardComponent implements OnInit {
               value: i,
             }));
             setTimeout(() => Object.assign(this.valueRevenue), 1000);
+          });
+      }
+    });
+  }
+  searchTopQuestByMonth() {
+    this.searchTopQuestByMonth$.subscribe((data) => {
+      if (
+        Number(data.monthTopQuestByMonth) ||
+        Number(data.yearTopQuestByMonth) ||
+        (Number(data.monthTopQuestByMonth) && Number(data.yearTopQuestByMonth))
+      ) {
+        this.dashboardService
+          .getTopQuestByMonth(
+            data.monthTopQuestByMonth,
+            data.yearTopQuestByMonth
+          )
+          .subscribe((data) => {
+            this.listTopQuestByMonth = data;
+          });
+      }
+    });
+  }
+
+  searchTopQuestByYear$ = new BehaviorSubject<{
+    yearTopQuest: string;
+  }>({ yearTopQuest: '' });
+
+  searchFormTopQuestByYear = new FormGroup({
+    yearTopQuest: new FormControl(),
+  });
+
+  searchTopQuestByYear() {
+    this.searchTopQuestByYear$.subscribe((data) => {
+      console.log(data);
+      if (Number(data.yearTopQuest)) {
+        this.dashboardService
+          .getTopQuestByYear(data.yearTopQuest)
+          .subscribe((data) => {
+            this.listTopQuestByYear = data;
           });
       }
     });
