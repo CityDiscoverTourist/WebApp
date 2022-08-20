@@ -31,7 +31,6 @@ export class UserService extends BaseService {
   }
 
   addAdminAccount(email: string, password: string):Observable<boolean>{
-
     return this.httpClient.post<boolean>(
       `${environment.apiUrl}/api/v1/auths/register-admin`,
       {email,password},

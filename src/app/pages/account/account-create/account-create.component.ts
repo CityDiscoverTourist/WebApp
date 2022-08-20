@@ -1,12 +1,17 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import {
-  FormBuilder,
-  FormGroup, Validators
-} from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HotToastService } from '@ngneat/hot-toast';
 import { RxState } from '@rx-angular/state';
-import { catchError, Observable, of, partition, Subject, switchMap, tap } from 'rxjs';
+import {
+  catchError,
+  Observable,
+  of,
+  partition,
+  Subject,
+  switchMap,
+  tap,
+} from 'rxjs';
 import { UserService } from 'src/app/services';
 
 interface AccountCreateState {
@@ -22,13 +27,14 @@ interface AccountCreateState {
   providers: [RxState],
 })
 export class AccountCreateComponent implements OnInit {
-  constructor(private fb: FormBuilder,
+  constructor(
+    private fb: FormBuilder,
     private state: RxState<AccountCreateState>,
     private toast: HotToastService,
-    private userService:UserService,
+    private userService: UserService,
     private router: Router,
-    private activatedRoute: ActivatedRoute,
-    ) {}
+    private activatedRoute: ActivatedRoute
+  ) {}
 
   ngOnInit(): void {
     this.initForm();
@@ -47,7 +53,6 @@ export class AccountCreateComponent implements OnInit {
       passwordConfirm: ['', [Validators.required]],
     });
 
-    
     const [valid$, invalid$] = partition(
       this.submit$,
       ({ form }) => form.valid
@@ -57,12 +62,17 @@ export class AccountCreateComponent implements OnInit {
       valid$.pipe(
         tap(() => this.state.set({ submitting: true })),
         switchMap(({ form, redirect }) =>
-          this.userService.addAdminAccount(form.controls['email'].value + '',form.controls['password'].value + '').pipe(
-            catchError(() => {
-              this.toast.error('Có lỗi hãy kiểm tra lại!');
-              return of({ status: 'data not modified', data: null });
-            })
-          )
+          this.userService
+            .addAdminAccount(
+              form.controls['email'].value + '',
+              form.controls['password'].value + ''
+            )
+            .pipe(
+              catchError(() => {
+                this.toast.error('Tài khoản đã tồn tại!');
+                return of(false);
+              })
+            )
         ),
         tap((result) => {
           if (result) {
