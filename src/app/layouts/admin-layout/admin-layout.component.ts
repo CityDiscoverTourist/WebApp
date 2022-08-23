@@ -13,6 +13,8 @@ export class AdminLayoutComponent implements OnInit ,OnDestroy{
   isClose = false;
   isClose1 = false;
   isClose2 = false;
+
+  role='';
   constructor(
     private authService: AuthenticateService,
     private router: Router,
@@ -37,6 +39,8 @@ export class AdminLayoutComponent implements OnInit ,OnDestroy{
     }
 
     this.unReadMessageFromSenderUsername();
+
+    this.role=localStorage.getItem('role')!;
   }
 
   chatBoxUsers: UserChatBox[] = [];
