@@ -63,6 +63,9 @@ export class AuthenticateService {
     try {
       //decode token
       claims = jwt_decode(token);
+      var role =
+        claims['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'];
+      localStorage.setItem('role', role);
     } catch (error) {
       return of(null);
     }
@@ -71,7 +74,7 @@ export class AuthenticateService {
     if (!claims || Date.now().valueOf() > claims.exp * 1000) {
       return of(null);
     }
-  
+
     const user: CurrentUser = {
       fullName: claims[
         'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name'
@@ -80,6 +83,7 @@ export class AuthenticateService {
         'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress'
       ] as string,
     };
+
     return of(user);
   }
 }
