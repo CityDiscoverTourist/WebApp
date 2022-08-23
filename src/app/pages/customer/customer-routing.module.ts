@@ -1,11 +1,13 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { ClaimGuard } from 'src/app/guards/claim.guard';
 import { CustomerComponent } from './customer.component';
 
 const routes: Routes = [
   {
     path: '',
     component: CustomerComponent,
+    canActivate: [ClaimGuard],
     children: [
       {
         path: '',

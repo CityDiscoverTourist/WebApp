@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { ClaimGuard } from 'src/app/guards/claim.guard';
 import { AccountComponent } from './account.component';
 
 // const routes: Routes = [
@@ -20,6 +21,7 @@ const routes: Routes = [
   {
     path: '',
     component: AccountComponent,
+    canActivate: [ClaimGuard],
     children: [
       {
         path: '',
