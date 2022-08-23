@@ -35,9 +35,19 @@ export class AccountCreateComponent implements OnInit {
     private router: Router,
     private activatedRoute: ActivatedRoute
   ) {}
-
+  roles: { id: string; value: string }[] = [];
   ngOnInit(): void {
     this.initForm();
+    this.roles = [
+      {
+        id: 'Admin',
+        value: '1',
+      },
+      {
+        id: 'Quest Owner',
+        value: '2',
+      },
+    ];
   }
   form!: FormGroup;
   initForm() {
@@ -49,6 +59,7 @@ export class AccountCreateComponent implements OnInit {
           Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$'),
         ],
       ],
+      role: ['', [Validators.required]],
       password: ['', [Validators.required]],
       passwordConfirm: ['', [Validators.required]],
     });

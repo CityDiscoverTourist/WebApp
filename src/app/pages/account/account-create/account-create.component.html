@@ -2,7 +2,7 @@
   class="container"
   style="display: flex; justify-content: center; align-items: center"
 >
-  <div class="d-block py-5 row" style="width: 35%">
+  <div class="d-block py-5 row" style="width: 40%">
     <div class="bg-white rounded-4 pb-2">
       <div class="d-flex h4 justify-content-center pt-3">Tạo tài khoản</div>
       <form [formGroup]="form">
@@ -28,6 +28,24 @@
             >
               Định dạng tài khoản email
             </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="role" class="form-label">Quyền</label>
+          <ng-select
+            [items]="roles"
+            bindValue="value"
+            bindLabel="id"
+            placeholder="Chọn trạng thái"
+            [clearable]="false"
+            formControlName="role"
+            [ngClass]="{ 'is-invalid': form.hasError('role') }"
+          ></ng-select>
+          <div
+            class="invalid-feedback"
+            *ngIf="form.hasErrorOf('role', 'required')"
+          >
+            Quyền bắt buộc
           </div>
         </div>
         <div class="form-group">
@@ -62,14 +80,13 @@
               [ngClass]="{ 'is-invalid': form.hasError('passwordConfirm') }"
             />
             <div
-            class="invalid-feedback"
-            *ngIf="form.hasErrorOf('passwordConfirm', 'required')"
-          >
-            Xác nhận mật khẩu bắt buộc
-          </div>
+              class="invalid-feedback"
+              *ngIf="form.hasErrorOf('passwordConfirm', 'required')"
+            >
+              Xác nhận mật khẩu bắt buộc
+            </div>
           </div>
         </div>
-       
       </form>
       <div>
         <a routerLink="../" class="btn btn-outline-primary mt-3 me-2">Thoát</a>
@@ -83,6 +100,5 @@
         </button>
       </div>
     </div>
-    </div>
   </div>
-
+</div>
