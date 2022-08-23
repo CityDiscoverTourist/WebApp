@@ -75,6 +75,7 @@ export class AccountCreateComponent implements OnInit {
         switchMap(({ form, redirect }) =>
           this.userService
             .addAdminAccount(
+              form.controls['role'].value + '',
               form.controls['email'].value + '',
               form.controls['password'].value + ''
             )

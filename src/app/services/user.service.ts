@@ -30,9 +30,9 @@ export class UserService extends BaseService {
     );
   }
 
-  addAdminAccount(email: string, password: string):Observable<boolean>{
+  addAdminAccount(role:string,email: string, password: string):Observable<boolean>{
     return this.httpClient.post<boolean>(
-      `${environment.apiUrl}/api/v1/auths/register-admin`,
+      `${environment.apiUrl}/api/v1/auths/register-admin?role=${role}`,
       {email,password},
       { headers: this._sharedHeaders }
     );
