@@ -160,9 +160,9 @@ export class DashboardComponent implements OnInit {
     this.dashboardService
       .getTopQuestByMonth('8', '2022')
       .subscribe((data) => (this.listTopQuestByMonth = data));
-    this.dashboardService
-      .getTopQuestByYear('2022')
-      .subscribe((data) => (this.listTopQuestByYear = data));
+    // this.dashboardService
+    //   .getTopQuestByYear('2022')
+    //   .subscribe((data) => (this.listTopQuestByYear = data));
   }
 
   search$ = new BehaviorSubject<{ year: string }>({ year: '' });
@@ -220,16 +220,16 @@ export class DashboardComponent implements OnInit {
     yearTopQuest: new FormControl(),
   });
 
-  searchTopQuestByYear() {
-    this.searchTopQuestByYear$.subscribe((data) => {
-      console.log(data);
-      if (Number(data.yearTopQuest)) {
-        this.dashboardService
-          .getTopQuestByYear(data.yearTopQuest)
-          .subscribe((data) => {
-            this.listTopQuestByYear = data;
-          });
-      }
-    });
-  }
+  // searchTopQuestByYear() {
+  //   this.searchTopQuestByYear$.subscribe((data) => {
+      
+  //     if (Number(data.yearTopQuest)) {
+  //       this.dashboardService
+  //         .getTopQuestByYear(data.yearTopQuest)
+  //         .subscribe((data) => {
+  //           this.listTopQuestByYear = data;
+  //         });
+  //     }
+  //   });
+  // }
 }

@@ -89,27 +89,73 @@
     </div>
   </div>
   <div class="row py-3 px-5">
-    <div class="col bg-white me-1">
-      <span class="fw-bold fs-5 mb-4">Top người chơi</span>
+    <div class="col-6 bg-white me-1">
+      <span class="fw-bold fs-5 mb-2 mt-3 d-flex">Top người chơi chi tiêu</span>
       <ul class="list-group list-group-flush">
         <li class="list-group-item" *ngFor="let item of listTopUserPoint">
           <div class="row">
-            <div class="col 10">Tài khoản: {{ item.email }}</div>
-            <div class="col 2">Số tiền: {{ item.point | number }} vnđ</div>
+            <div class="col-8">Tài khoản: {{ item.email }}</div>
+            <div class="col-4">Số tiền: {{ item.point | number }} vnđ</div>
           </div>
         </li>
       </ul>
     </div>
-    <div class="col bg-white ms-1">
+    <!-- <div class="col bg-white ms-1">
       <span class="fw-bold fs-5 mb-4">Top Quest</span>
       <ul class="list-group list-group-flush">
         <li class="list-group-item" *ngFor="let item of listTopQuest">
           {{ item }}
         </li>
       </ul>
+    </div> -->
+    <div class="col-5 bg-white ms-4">
+      <div class="mb-2 mt-3 d-flex">
+        <span class="fw-bold fs-5 mb-4">Top quest bán ra</span>
+        <form [formGroup]="searchFormTopQuestByMonth" class="d-flex ms-2">
+          <ng-select
+            [items]="months"
+            bindValue="value"
+            bindLabel="id"
+            style="width: 120px"
+            placeholder="Chọn tháng"
+            class="me-3"
+            formControlName="monthTopQuestByMonth"
+            (change)="
+              searchTopQuestByMonth$.next(searchFormTopQuestByMonth.value)
+            "
+            (click)="searchTopQuestByMonth()"
+          ></ng-select>
+          <ng-select
+            [items]="years"
+            bindValue="value"
+            bindLabel="id"
+            style="width: 130px"
+            placeholder="Chọn năm"
+            class="me-3"
+            formControlName="yearTopQuestByMonth"
+            (change)="
+              searchTopQuestByMonth$.next(searchFormTopQuestByMonth.value)
+            "
+            (click)="searchTopQuestByMonth()"
+          ></ng-select>
+        </form>
+      </div>
+      <ul class="list-group list-group-flush">
+        <ng-container *ngIf="listTopQuestByMonth.length == 0">
+          <p>Không có dữ liệu để hiển thị</p>
+        </ng-container>
+        <ng-container *ngIf="listTopQuestByMonth.length > 0">
+          <li class="list-group-item" *ngFor="let item of listTopQuestByMonth">
+            <div class="row">
+              <div class="col-9">Tên: {{ item.name }}</div>
+              <div class="col-3">Số lượng: {{ item.count }}</div>
+            </div>
+          </li>
+        </ng-container>
+      </ul>
     </div>
   </div>
-  <div class="row py-3 px-5">
+  <!-- <div class="row py-3 px-5">
     <div class="col bg-white me-1">
       <div class="mb-2 mt-3 d-flex">
         <span class="fw-bold fs-5">Top quest bán ra theo tháng</span>
@@ -189,7 +235,7 @@
         </ng-container>
       </ul>
     </div>
-  </div>
+  </div> -->
 </div>
 
 <!-- <table>
