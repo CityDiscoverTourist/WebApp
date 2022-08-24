@@ -22,3 +22,4 @@ export * from './customertask.service';
 export * from './comment.service';
 export * from './message.service';
 export * from './sound.service';
+export * from './hour.service';
