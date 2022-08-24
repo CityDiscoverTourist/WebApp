@@ -1,11 +1,17 @@
 <div class="d-flex master">
   <aside class="aside overflow-hidden">
     <h2 class="mb-0">
-      <a
+      <a *ngIf="role=='Admin'"
         class="border-bottom border-secondary branding px-4 text-white"
         href="./dashboard"
         routerLink="./dashboard"
-        >CDT-Admin
+        > CDT_Admin
+      </a>
+      <a *ngIf="role=='QuestOwner'"
+        class="border-bottom border-secondary branding px-4 text-white"
+        href="./dashboard"
+        routerLink="./dashboard"
+        > CDT_QN
       </a>
     </h2>
     <aside id="sidebar" class="sidebar">
