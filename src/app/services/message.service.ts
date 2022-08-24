@@ -79,6 +79,8 @@ export class MessageService {
         // return new signalR.HubConnectionBuilder()
         .withUrl(`${environment.apiUrl}/chat`)
         .withHubProtocol(new MessagePackHubProtocol())
+        //add reconnection
+        .withAutomaticReconnect()
         .build()
     );
   }
