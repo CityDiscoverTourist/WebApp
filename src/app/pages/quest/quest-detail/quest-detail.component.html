@@ -1,4 +1,10 @@
 <div>
+  <div class="alert alert-primary" role="alert" *ngIf="checkHour">
+    <div class="px-5">
+      Thông báo! Hệ thống chỉ cho phép sửa đổi Quest cũng như thêm sữa đổi các câu hỏi và gợi ý
+      từ 7h tối đến 7h sáng
+    </div>
+  </div>
   <div class="px-5" *rxLet="quest$ as vm">
     <div class="d-flex align-items-center justify-content-between mb-0 px-3">
       <div>
@@ -261,7 +267,7 @@
         [disabled]="checkHour"
       >
         <i class="bi bi-plus"></i> Thêm câu hỏi
-    </button>
+      </button>
     </div>
     <div class="pt-3">
       <div class="px-3">
@@ -439,12 +445,14 @@
                   data-placement="top"
                   [tooltip]="'Nhấp chuột để câu hỏi hoạt động'"
                   placement="top"
-                  [disabled]="(q.status == 'Active' ? true : false)|| checkHour"
+                  [disabled]="
+                    (q.status == 'Active' ? true : false) || checkHour
+                  "
                   (click)="onUpdateStatusQuestItem(q.id, 'Active')"
                 >
                   <i class="bi bi-arrow-counterclockwise"></i>
                 </button>
-                
+
                 <!-- <button
                   class="btn btn-sm me-2"
                   type="button"
@@ -494,8 +502,9 @@
                   [tooltip]="'Nhấp chuột để ngừng hoạt động câu hỏi'"
                   placement="top"
                   [disabled]="
-                    ((q.status == 'Inactive' ? true : false) ||
-                    (q.itemId == 0 ? true : false)) || checkHour
+                    (q.status == 'Inactive' ? true : false) ||
+                    (q.itemId == 0 ? true : false) ||
+                    checkHour
                   "
                   (click)="onUpdateStatusQuestItem(q.id, 'Inactive')"
                 >
@@ -609,7 +618,8 @@
                   [tooltip]="'Nhấp chuột để gợi hoạt động'"
                   placement="top"
                   [disabled]="
-                    (q.suggestions[0].status == 'Active' ? true : false)|| checkHour
+                    (q.suggestions[0].status == 'Active' ? true : false) ||
+                    checkHour
                   "
                   (click)="
                     onUpdateStatusSuggestion(q.suggestions[0].id, 'Active')
@@ -669,7 +679,8 @@
                   [tooltip]="'Nhấp chuột để ngừng hoạt động gợi ý'"
                   placement="top"
                   [disabled]="
-                    (q.suggestions[0].status == 'Inactive' ? true : false)|| checkHour
+                    (q.suggestions[0].status == 'Inactive' ? true : false) ||
+                    checkHour
                   "
                   (click)="
                     onUpdateStatusSuggestion(q.suggestions[0].id, 'Inactive')
