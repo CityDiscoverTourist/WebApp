@@ -26,6 +26,7 @@ export class NavbarComponent implements OnInit {
   public url = '';
   public pageTitle = '';
   public pageUrl = '';
+  role = '';
   constructor(
     titleService: Title,
     private authService: AuthenticateService,
@@ -45,7 +46,7 @@ export class NavbarComponent implements OnInit {
         var url = this.getUrl(router.routerState, router.routerState.root).join(
           '-'
         );
-        var titleTab=this.getTitleTab(
+        var titleTab = this.getTitleTab(
           router.routerState,
           router.routerState.root
         ).join('-');
@@ -55,34 +56,33 @@ export class NavbarComponent implements OnInit {
     });
   }
   ngOnInit(): void {
+    this.role = localStorage.getItem('emailAdmin')!.split('@')[0];
     this.signalRService.startConnectionNotification();
     this.signalRService.addTranferDataNotificationTaskListener();
     // this.signalRService.addTranferDataCustomerTaskListener();
     // this.signalRService.addTranferDataUpdateCustomerTaskListener();
 
     this.notificationListState.connect(
-      this.search$
-        .pipe(switchMap(() => this.notificationService.getNotifications()))
-        ,
+      this.search$.pipe(
+        switchMap(() => this.notificationService.getNotifications())
+      ),
       (_, result) => ({
         notifications: result.data,
         metadata: { ...result.pagination },
         loading: false,
-        notificationLength:result.data.length
+        notificationLength: result.data.length,
       })
     );
 
     this.notificationListState.connect(
-      this.signalRService.subjectNotification$
-        .pipe(
-          tap((data) => {
-            return data;
-          })
-        )
-        ,
+      this.signalRService.subjectNotification$.pipe(
+        tap((data) => {
+          return data;
+        })
+      ),
       (prev, result) => ({
         notifications: [result as Notification, ...prev.notifications],
-        notificationLength:prev.notifications.length +1,
+        notificationLength: prev.notifications.length + 1,
       })
     );
     this.notificationListState.connect(
@@ -93,7 +93,6 @@ export class NavbarComponent implements OnInit {
         notifications: [...prev.notifications, result],
       })
     );
-
   }
   getTitle(state: any, parent: any): any {
     var data = [];
@@ -162,12 +161,11 @@ export class NavbarComponent implements OnInit {
     return this.notificationListState.select('metadata');
   }
 
-  isReadNotify(){
-   this.notificationListState.set({notificationLength:0})
-    this.notificationService.isReadNotification().subscribe(data=>data);
+  isReadNotify() {
+    this.notificationListState.set({ notificationLength: 0 });
+    this.notificationService.isReadNotification().subscribe((data) => data);
     if (this.isShow) {
       this.isShow = false;
     } else this.isShow = true;
   }
-
 }

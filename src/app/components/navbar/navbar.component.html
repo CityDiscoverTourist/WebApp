@@ -106,14 +106,16 @@
           data-bs-toggle="dropdown"
           style="cursor: pointer"
           aria-expanded="true"
-          (click)="changeShow1()"
+          
         >
           <!-- <img
             src="assets/img/profile-img.jpg"
             alt="Profile"
             class="rounded-circle"
           /> -->
-          <span class="d-none d-md-block dropdown-toggle ps-2">Admin</span> </a
+          <div>
+            <span (click)="changeShow1()" class="d-none d-md-block dropdown-toggle ps-2">{{role}}</span>
+          </div></a
         ><!-- End Profile Iamge Icon -->
 
         <ul
