@@ -213,7 +213,7 @@ export class QuestCreateComponent implements OnInit {
         '',
         [
           Validators.required,
-          Validators.pattern('^([1-6]|0[1-6]):[0-5][0-9]$'),
+          Validators.pattern('^([1-6]|0[1-7]):[0-5][0-9]$'),
         ],
       ],
       questTypeId: [null, [Validators.required]],
