@@ -36,6 +36,7 @@ import {
 import {
   AreaService,
   CommentService,
+  HourService,
   QuestItemService,
   QuestItemTypeService,
   QuestService,
@@ -63,6 +64,7 @@ interface QuestDetailDescription {
 export class QuestDetailComponent implements OnInit {
   private id: string;
   listImages: string[] = [];
+  checkHour = false;
   constructor(
     @Inject(QUEST_ITEM_STATE) private questItemState: RxState<QuestItemState>,
     private readonly questItemTypeService: QuestItemTypeService,
@@ -78,9 +80,11 @@ export class QuestDetailComponent implements OnInit {
     private areaService: AreaService,
     private questTypeService: QuestTypeService,
     private modalService1: NgbModal,
-    private state: RxState<QuestDetailDescription>
+    private state: RxState<QuestDetailDescription>,
+    private hourService: HourService
   ) {}
   ngOnInit(): void {
+    this.checkHour = this.hourService.getHour();
     this.state.connect(this.toggleDescription$, (prev, _) => ({
       showQuestDescription: !prev.showQuestDescription,
     }));

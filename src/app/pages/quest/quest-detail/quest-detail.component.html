@@ -27,12 +27,45 @@
         "
         class="btn btn-danger px-4 mt-2 me-3"
         (click)="onUpdateStatus(vm.id, 'Active')"
-        [disabled]="vm.status == 'Active' ? true : false"
+        [disabled]="(vm.status == 'Active' ? true : false) || checkHour"
       >
         <i class="bi bi-arrow-counterclockwise"></i>
         Hoạt động
       </button>
+      <!-- <button
+        style="
+          background-color: rgb(76, 175, 80);
+          color: rgb(255, 255, 255);
+          transition: all 200ms ease 0s;
+          padding: 5px 0px;
+          display: inline-block;
+          text-align: center;
+          border-color: rgb(76, 175, 80);
+        "
+        class="btn btn-danger px-4 mt-2 me-3"
+        (click)="onUpdateStatus(vm.id, 'Active')"
+        [disabled]="vm.status == 'Active' ? true : false"
+      >
+        <i class="bi bi-arrow-counterclockwise"></i>
+        Hoạt động
+      </button> -->
       <button
+        style="
+          background-color: #cb2027;
+          color: rgb(255, 255, 255);
+          transition: all 200ms ease 0s;
+          padding: 5px 0px;
+          display: inline-block;
+          text-align: center;
+        "
+        class="btn btn-danger px-4 mt-2 me-3"
+        (click)="onUpdateStatus(vm.id, 'Inactive')"
+        [disabled]="(vm.status == 'Inactive' ? true : false) || checkHour"
+      >
+        <i class="bi bi-dash-circle-fill"></i>
+        Ngừng hoạt động
+      </button>
+      <!-- <button
         style="
           background-color: #cb2027;
           color: rgb(255, 255, 255);
@@ -47,8 +80,8 @@
       >
         <i class="bi bi-dash-circle-fill"></i>
         Ngừng hoạt động
-      </button>
-      <a
+      </button> -->
+      <!-- <a
         class="btn btn-primary px-4 mt-2"
         style="
           color: rgb(255, 255, 255);
@@ -59,7 +92,21 @@
         "
         [routerLink]="['./edit']"
         ><i class="bi bi-pencil-square"></i> Sửa quest</a
+      > -->
+      <button
+        class="btn btn-primary px-4 mt-2"
+        style="
+          color: rgb(255, 255, 255);
+          transition: all 200ms ease 0s;
+          padding: 5px 0px;
+          display: inline-block;
+          text-align: center;
+        "
+        [disabled]="checkHour"
+        [routerLink]="['./edit']"
       >
+        <i class="bi bi-pencil-square"></i> Sửa quest
+      </button>
     </div>
     <div class="row px-4 pt-2">
       <div class="card mb-1" style="border: 1px solid #fff">
@@ -179,7 +226,7 @@
             >
               <div class="bd-callout bd-callout-info">
                 {{
-                  vm.description != 'null'
+                  vm.description != "null"
                     ? (vm.description | descriptionPipe)
                     : "Không có mô tả"
                 }}
@@ -200,13 +247,21 @@
         <i class="bi bi-eye"></i> Phản hồi khách hàng
       </a>
       <div class="flex-fill"></div>
-      <a
+      <!-- <a
         routerLink="./quest-item/create"
         class="btn btn-primary"
         style="min-width: 120px"
       >
         <i class="bi bi-plus"></i> Thêm câu hỏi
-      </a>
+      </a> -->
+      <button
+        routerLink="./quest-item/create"
+        class="btn btn-primary"
+        style="min-width: 120px"
+        [disabled]="checkHour"
+      >
+        <i class="bi bi-plus"></i> Thêm câu hỏi
+    </button>
     </div>
     <div class="pt-3">
       <div class="px-3">
@@ -323,7 +378,7 @@
             <div class="row mt-3">
               <div class="col-4">Thao tác</div>
               <div class="col-8">
-                <button
+                <!-- <button
                   class="btn btn-sm me-2"
                   style="
                     color: #fff;
@@ -337,7 +392,41 @@
                   (click)="onUpdate(q.id)"
                 >
                   <i class="bi bi-pencil"></i>
+                </button> -->
+                <button
+                  class="btn btn-sm me-2"
+                  style="
+                    color: #fff;
+                    background-color: #127eff;
+                    border-color: #127eff;
+                  "
+                  type="button"
+                  data-toggle="tooltip"
+                  data-placement="top"
+                  [tooltip]="'Nhấp chuột để cập nhật câu hỏi'"
+                  (click)="onUpdate(q.id)"
+                  [disabled]="checkHour"
+                >
+                  <i class="bi bi-pencil"></i>
                 </button>
+                <!-- <button
+                  class="btn btn-sm me-2"
+                  style="
+                    color: #fff;
+                    background-color: #4caf50;
+                    border-color: #4caf50;
+                  "
+                  type="button"
+                  data-toggle="tooltip"
+                  data-placement="top"
+                  [tooltip]="'Nhấp chuột để câu hỏi hoạt động'"
+                  placement="top"
+                  [disabled]="(q.status == 'Active' ? true : false)"
+                  (click)="onUpdateStatusQuestItem(q.id, 'Active')"
+                >
+                  <i class="bi bi-arrow-counterclockwise"></i>
+                </button> -->
+
                 <button
                   class="btn btn-sm me-2"
                   style="
@@ -350,11 +439,40 @@
                   data-placement="top"
                   [tooltip]="'Nhấp chuột để câu hỏi hoạt động'"
                   placement="top"
-                  [disabled]="q.status == 'Active' ? true : false"
+                  [disabled]="(q.status == 'Active' ? true : false)|| checkHour"
                   (click)="onUpdateStatusQuestItem(q.id, 'Active')"
                 >
                   <i class="bi bi-arrow-counterclockwise"></i>
                 </button>
+                
+                <!-- <button
+                  class="btn btn-sm me-2"
+                  type="button"
+                  [ngStyle]="
+                    q.status == 'InActive'
+                      ? {
+                          color: '#fff',
+                          backgroundColor: '#f44335',
+                          borderColor: '#f44335'
+                        }
+                      : {
+                          color: '#fff',
+                          backgroundColor: '#f44335',
+                          borderColor: '#f44335'
+                        }
+                  "
+                  data-toggle="tooltip"
+                  data-placement="top"
+                  [tooltip]="'Nhấp chuột để ngừng hoạt động câu hỏi'"
+                  placement="top"
+                  [disabled]="
+                    ((q.status == 'Inactive' ? true : false) ||
+                    (q.itemId == 0 ? true : false))
+                  "
+                  (click)="onUpdateStatusQuestItem(q.id, 'Inactive')"
+                >
+                  <i class="bi bi-dash-circle-fill"></i>
+                </button> -->
                 <button
                   class="btn btn-sm me-2"
                   type="button"
@@ -375,9 +493,11 @@
                   data-placement="top"
                   [tooltip]="'Nhấp chuột để ngừng hoạt động câu hỏi'"
                   placement="top"
-                  [disabled]="(q.status == 'Inactive' ? true : false)||(q.itemId==0?true:false)"
+                  [disabled]="
+                    ((q.status == 'Inactive' ? true : false) ||
+                    (q.itemId == 0 ? true : false)) || checkHour
+                  "
                   (click)="onUpdateStatusQuestItem(q.id, 'Inactive')"
-
                 >
                   <i class="bi bi-dash-circle-fill"></i>
                 </button>
@@ -387,7 +507,7 @@
             <div class="row mt-3">
               <div class="col-4">Gợi ý:</div>
               <div class="col-8">
-                <button
+                <!-- <button
                   class="btn btn-sm me-2"
                   style="
                     color: #fff;
@@ -402,8 +522,25 @@
                   (click)="editSuggestion(q.suggestions[0].id)"
                 >
                   <i class="bi bi-pencil"></i>
-                </button>
+                </button> -->
                 <button
+                  class="btn btn-sm me-2"
+                  style="
+                    color: #fff;
+                    background-color: #127eff;
+                    border-color: #127eff;
+                  "
+                  type="button"
+                  data-toggle="tooltip"
+                  data-placement="top"
+                  [tooltip]="'Nhấp chuột để cập nhật gợi ý'"
+                  *ngIf="q.suggestions?.length != 0"
+                  (click)="editSuggestion(q.suggestions[0].id)"
+                  [disabled]="checkHour"
+                >
+                  <i class="bi bi-pencil"></i>
+                </button>
+                <!-- <button
                   *ngIf="q.suggestions?.length == 0"
                   class="btn btn-sm me-2"
                   style="
@@ -418,8 +555,26 @@
                   (click)="showAddSuggestion(q.id)"
                 >
                   <i class="bi bi-plus-lg"></i>
-                </button>
+                </button> -->
                 <button
+                  *ngIf="q.suggestions?.length == 0"
+                  class="btn btn-sm me-2"
+                  style="
+                    color: #fff;
+                    background-color: #127eff;
+                    border-color: #127eff;
+                  "
+                  type="button"
+                  data-toggle="tooltip"
+                  data-placement="top"
+                  [tooltip]="'Nhấp chuột để thêm gợi ý'"
+                  (click)="showAddSuggestion(q.id)"
+                  [disabled]="checkHour"
+                >
+                  <i class="bi bi-plus-lg"></i>
+                </button>
+
+                <!-- <button
                   class="btn btn-sm me-2"
                   style="
                     color: #fff;
@@ -440,8 +595,30 @@
                   *ngIf="q.suggestions?.length != 0"
                 >
                   <i class="bi bi-arrow-counterclockwise"></i>
-                </button>
+                </button> -->
                 <button
+                  class="btn btn-sm me-2"
+                  style="
+                    color: #fff;
+                    background-color: #4caf50;
+                    border-color: #4caf50;
+                  "
+                  type="button"
+                  data-toggle="tooltip"
+                  data-placement="top"
+                  [tooltip]="'Nhấp chuột để gợi hoạt động'"
+                  placement="top"
+                  [disabled]="
+                    (q.suggestions[0].status == 'Active' ? true : false)|| checkHour
+                  "
+                  (click)="
+                    onUpdateStatusSuggestion(q.suggestions[0].id, 'Active')
+                  "
+                  *ngIf="q.suggestions?.length != 0"
+                >
+                  <i class="bi bi-arrow-counterclockwise"></i>
+                </button>
+                <!-- <button
                   class="btn btn-sm me-2"
                   type="button"
                   [ngStyle]="
@@ -463,6 +640,36 @@
                   placement="top"
                   [disabled]="
                     q.suggestions[0].status == 'Inactive' ? true : false
+                  "
+                  (click)="
+                    onUpdateStatusSuggestion(q.suggestions[0].id, 'Inactive')
+                  "
+                  *ngIf="q.suggestions?.length != 0"
+                >
+                  <i class="bi bi-dash-circle-fill"></i>
+                </button> -->
+                <button
+                  class="btn btn-sm me-2"
+                  type="button"
+                  [ngStyle]="
+                    q.status == 'InActive'
+                      ? {
+                          color: '#fff',
+                          backgroundColor: '#f44335',
+                          borderColor: '#f44335'
+                        }
+                      : {
+                          color: '#fff',
+                          backgroundColor: '#f44335',
+                          borderColor: '#f44335'
+                        }
+                  "
+                  data-toggle="tooltip"
+                  data-placement="top"
+                  [tooltip]="'Nhấp chuột để ngừng hoạt động gợi ý'"
+                  placement="top"
+                  [disabled]="
+                    (q.suggestions[0].status == 'Inactive' ? true : false)|| checkHour
                   "
                   (click)="
                     onUpdateStatusSuggestion(q.suggestions[0].id, 'Inactive')
