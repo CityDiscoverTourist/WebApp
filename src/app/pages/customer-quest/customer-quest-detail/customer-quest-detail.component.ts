@@ -107,8 +107,7 @@ export class CustomerQuestDetailComponent implements OnInit {
       this.signalRService.subjectCustomerTask$.pipe(
         // tap((data) => data as CustomerTask)
         tap((data) => {
-          console.log('1');
-          console.log(data);
+          
           console.log(data?.customerEmail);
           console.log(localStorage.getItem('customerEmail'));
           console.log(data.countSuggestion);
@@ -123,7 +122,6 @@ export class CustomerQuestDetailComponent implements OnInit {
     this.customerTaskListState.connect(
       this.signalRService.subjectUpdateCustomerTask$.pipe(
         tap((data) => {
-          console.log('2');
           console.log(data);
           console.log(data?.customerEmail);
           console.log(localStorage.getItem('customerEmail'));

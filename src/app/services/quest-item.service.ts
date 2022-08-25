@@ -189,8 +189,7 @@ export class QuestItemService extends BaseService {
   updateQuestItemById(
     questItemCreate: QuestItemCreate
   ): Observable<Result<QuestItem>> {
-    console.log(questItemCreate);
-
+    
     const { image, listImages, imageDescription, ...payload } = questItemCreate;
     return this.http.put<Result<QuestItem>>(
       `${environment.apiUrl}/api/v1/quest-items/`,

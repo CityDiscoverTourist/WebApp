@@ -56,15 +56,9 @@ export class AdminLayoutComponent implements OnInit ,OnDestroy{
 
           this.soundService.playAudioMessage();
           this.selectUser(element); //display chat-box
-          sum += 1;
-          console.log("123");
-          
+          sum += 1; 
         }
       });
-
-      console.log("---");
-      
-      console.log(data);
       
     });
   }

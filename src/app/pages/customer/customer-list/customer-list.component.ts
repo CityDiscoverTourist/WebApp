@@ -58,7 +58,8 @@ export class CustomerListComponent implements OnInit {
           tap(() => this.customerListState.set({ loading: true })),
           switchMap((s) => this.customerService.getCustomers(s))
         )
-        .pipe(tap((data) => console.log(data))),
+        // .pipe(tap((data) => console.log(data)))
+        ,
       (_, result) => ({
         customers: result.data,
         metadata: { ...result.pagination },

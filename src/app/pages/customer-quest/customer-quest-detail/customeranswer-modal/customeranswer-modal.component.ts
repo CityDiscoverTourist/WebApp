@@ -29,12 +29,7 @@ export class CustomeranswerModalComponent implements OnInit {
     this.customerAnserService
       .getCustomerAnwerByCustomerTask(this.id)
       .subscribe((data) => {
-        // console.log(this.customerAnswers);
-        console.log(data);
-
         this.customerAnswers = data;
-        console.log(this.customerAnswers);
       });
-    // }
   }
 }

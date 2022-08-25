@@ -56,7 +56,6 @@ export class CustomerDetailComponent implements OnInit {
     });
 
     this.paymentService.getPaymentsByCustomerId(this.id).subscribe((result) => {
-      console.log(result);
       this.payments = result.data;
     });
   }

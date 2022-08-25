@@ -200,8 +200,7 @@ export class CustomerQuestListComponent implements OnInit {
 
   onClick(customerQuestId: string, questId: string, customerEmail: string) {
     localStorage.setItem('questId', questId);
-    console.log('halo');
-
+    
     console.log(customerEmail);
 
     localStorage.setItem('customerEmail', customerEmail);

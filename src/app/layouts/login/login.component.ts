@@ -50,8 +50,6 @@ export class LoginComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.sub$))
       .subscribe({
         next: (userToken) => {
-          console.log(userToken?.jwtToken);
-          console.log(userToken?.jwtToken.length);
           if (userToken?.jwtToken.length) {
             this.router.navigate(['/']);
             localStorage.setItem('userId',userToken.accountId);

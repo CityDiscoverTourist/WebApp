@@ -170,7 +170,6 @@ export class CityListComponent implements OnInit {
       .subscribe({
         next: (result) => {
           const data = result as { id: string; name: string };
-          console.log(data);
           
           if (Number(data.id) > 0 && data.name.length > 0) {
             this.toast.success('Tạo thành phố thành công!', {
