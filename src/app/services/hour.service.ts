@@ -10,7 +10,7 @@ export class HourService {
     var date = new Date();
     let hour = date.getHours();
 
-    if (hour < 19 && hour > 7) {
+    if (hour < 20 && hour > 7) {
       return true;
     }
     return false;
