@@ -108,10 +108,10 @@ export class SuggestionModalComponent implements OnInit {
             this.activeModal.close();
             if (Number(this.id) > 0) {
               this.toast.success('Cập nhật gợi ý thành công!');
-              setTimeout(()=>  window.location.reload(), 3000);
+              // setTimeout(()=>  window.location.reload(), 3000);
             } else {
               this.toast.success('Thêm gợi ý thành công!');
-              setTimeout(()=>  window.location.reload(), 3000);
+              // setTimeout(()=>  window.location.reload(), 3000);
             }
           })
         ),
