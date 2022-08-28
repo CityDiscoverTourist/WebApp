@@ -142,8 +142,7 @@ export class QuestTypeListComponent implements OnInit {
 
   get questtypes$(): Observable<QuestTypeListItem[]> {
     return this.questTypeListState
-      .select('questtypes')
-      .pipe(tap((data) => console.log(data)));
+      .select('questtypes');
   }
   get metadata$(): Observable<PagingMetadata> {
     return this.questTypeListState.select('metadata');

@@ -79,8 +79,8 @@ export class MessageService {
         // return new signalR.HubConnectionBuilder()
         .withUrl(`${environment.apiUrl}/chat`)
         .withHubProtocol(new MessagePackHubProtocol())
-        //add reconnection
-        .withAutomaticReconnect()
+        //addpp reconnection
+       // .withAutomaticReconnect()
         .build()
     );
   }
@@ -99,8 +99,8 @@ export class MessageService {
 
   private addListeners() {
     this.hubConnection.on('CustomerSendMessageToAdmin', (data: Message) => {
-      console.log('on khách gửi Admin');
-      console.log(data);
+      // console.log('on khách gửi Admin');
+      // console.log(data);
 
       if (data.ConId == '') {
         data.ConId = this.hubConnection.connectionId!;
@@ -109,26 +109,22 @@ export class MessageService {
         this.messageThread$.pipe(take(1)).subscribe((messages) => {
           if (messages.length > 0 && messages[0].Message != data.Message) {       
             var arrMsg=messages;
-            console.log();
+            
             
             this.messageThreadSource.next([...messages, data]);
-            console.log("1");
+            
             // console.log([...messages, data]);
             this.currentMessage = data;
           } else if (messages.length == 0) {
-            console.log("2");
-            console.log([ data]);
             
             this.messageThreadSource.next([...messages,data]);
             // this.currentMessage = data;
             
           }
-          console.log(messages);
           
         });
         this.userSource$.pipe(take(1)).subscribe((users) => {
           this.userSource.next([...users, data]);
-          console.log(users);
         });
 
 
@@ -155,10 +151,7 @@ export class MessageService {
       //   this.messageThreadSource.next([...messages, data]);
       // });
 
-      this.messageThread$.pipe(take(1)).subscribe((messages) => {
-        console.log("12---");
-        console.log(messages);
-        
+      this.messageThread$.pipe(take(1)).subscribe((messages) => {        
         if (messages.length > 0 && messages[0].Message != data.Message) {
           this.messageThreadSource.next([...messages, data]);
         } else if (messages.length == 0) {

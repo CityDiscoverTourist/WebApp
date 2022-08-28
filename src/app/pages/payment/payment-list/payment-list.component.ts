@@ -168,8 +168,8 @@ export class PaymentListComponent implements OnInit {
   }
   get metadata$(): Observable<PagingMetadata> {
     return this.paymentListState
-      .select('metadata')
-      .pipe(tap((data) => (this.totalCount = data.totalCount)));
+      .select('metadata');
+      // .pipe(tap((data) => (this.totalCount = data.totalCount)));
   }
   get loading$(): Observable<boolean> {
     return this.paymentListState.select('loading');
